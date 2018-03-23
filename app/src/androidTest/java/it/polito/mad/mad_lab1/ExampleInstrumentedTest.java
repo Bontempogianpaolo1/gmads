@@ -1,4 +1,4 @@
-package gmads.it.gmads_lab1;
+package it.polito.mad.mad_lab1;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -20,8 +20,7 @@ public class ExampleInstrumentedTest {
     public void useAppContext() throws Exception {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
-        //ciao
 
-        assertEquals("gmads.it.gmads_lab1", appContext.getPackageName());
+        assertEquals("it.polito.mad.mad_lab1", appContext.getPackageName());
     }
 }

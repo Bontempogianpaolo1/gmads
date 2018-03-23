@@ -1,4 +1,4 @@
-package gmads.it.gmads_lab1;
+package it.polito.mad.mad_lab1;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
