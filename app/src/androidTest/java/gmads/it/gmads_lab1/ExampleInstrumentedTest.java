@@ -20,6 +20,7 @@ public class ExampleInstrumentedTest {
     public void useAppContext() throws Exception {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
+        //ciao
 
         assertEquals("gmads.it.gmads_lab1", appContext.getPackageName());
     }
