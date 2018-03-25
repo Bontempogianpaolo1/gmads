@@ -19,9 +19,9 @@ public class showProfile extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    //ciao
-        setContentView(R.layout.activity_show_profile);
 
+        setContentView(R.layout.activity_show_profile);
+//ciao
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         //prefs.edit().putString("Name", findViewById(R.id.name));
         String name = prefs.getString("name", getResources().getString(R.string.name));
