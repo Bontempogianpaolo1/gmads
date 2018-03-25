@@ -8,13 +8,13 @@ android:layout_height="match_parent"
 android:orientation="vertical"
 tools:context="gmads.it.gmads_lab1.showProfile">
 
-<ImageButton
-    android:id="@+id/mod_profile_button"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_margin="12dp"
-    android:layout_gravity="right"
-    android:src="@drawable/pencil_mod"/>
+    <ImageButton
+        android:id="@+id/mod_profile_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_margin="12dp"
+        android:src="@drawable/pencil_mod" />
 
 <ImageView
     android:id="@+id/profile_image"
@@ -28,7 +28,7 @@ tools:context="gmads.it.gmads_lab1.showProfile">
     android:layout_height="wrap_content"
     android:text="Name + Surname"
     android:textStyle="bold"
-    android:textSize="20dp"
+    android:textSize="20sp"
     android:layout_margin="16dp" />
 
 <View
