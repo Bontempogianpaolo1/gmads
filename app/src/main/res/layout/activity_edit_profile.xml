@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 xmlns:app="http://schemas.android.com/apk/res-auto"
 xmlns:tools="http://schemas.android.com/tools"
@@ -8,92 +9,136 @@ android:layout_height="match_parent"
 android:orientation="vertical"
 tools:context="gmads.it.gmads_lab1.editProfile">
 
-<TextView
-    android:id="@+id/name"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="@string/name"
-    android:textStyle="bold"
-    android:layout_marginTop="16dp"
-    android:layout_marginBottom="6dp"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/scrollView"
+        android:layout_gravity="center_horizontal">
 
-<EditText
-    android:id="@+id/name_input"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="6dp"
-    android:layout_marginBottom="16dp"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-<TextView
-    android:id="@+id/surname"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="@string/surname"
-    android:textStyle="bold"
-    android:layout_marginTop="16dp"
-    android:layout_marginBottom="6dp"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp" />
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/name"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="6dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp" />
 
-<EditText
-    android:id="@+id/surname_input"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="6dp"
-    android:layout_marginBottom="16dp"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp" />
+        <EditText
+            android:id="@+id/name_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="6dp"
+            android:inputType="text" />
 
-<TextView
-    android:id="@+id/email"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="@string/email"
-    android:textStyle="bold"
-    android:layout_marginTop="16dp"
-    android:layout_marginBottom="6dp"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp" />
+        <TextView
+            android:id="@+id/surname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/surname"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="6dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp" />
 
-<EditText
-    android:id="@+id/email_input"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="6dp"
-    android:layout_marginBottom="16dp"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp" />
+            <EditText
+                android:id="@+id/surname_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="6dp"
+                android:inputType="text" />
 
-<TextView
-    android:id="@+id/address"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="@string/address"
-    android:textStyle="bold"
-    android:layout_marginTop="16dp"
-    android:layout_marginBottom="6dp"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp" />
+        <TextView
+            android:id="@+id/email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/email"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="6dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp" />
 
-<EditText
-    android:id="@+id/address_input"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="6dp"
-    android:layout_marginBottom="16dp"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp" />
+        <EditText
+            android:id="@+id/email_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="6dp"
+            android:inputType="textEmailAddress" />
 
-<Button
-    android:id="@+id/save_profile"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:text="@string/ok"
-    android:layout_margin="16dp" />
+        <TextView
+            android:id="@+id/address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/bio"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="6dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp" />
+
+            <EditText
+                android:id="@+id/address_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="6dp"
+                android:inputType="text" />
+
+        <LinearLayout
+            android:id="@+id/linearLayout1"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="horizontal"
+            style="?android:attr/buttonBarStyle"
+            >
+
+            <Button
+                style="?android:attr/buttonBarButtonStyle"
+                android:id="@+id/save_profile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginBottom="16dp"
+                android:layout_marginLeft="16dp"
+                android:text="@string/save"
+                tools:ignore="RtlHardcoded"
+                android:background="@color/colorPrimaryDark"/>
+
+            <Button
+                style="?android:attr/buttonBarButtonStyle"
+                android:id="@+id/buttonCancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginRight="16dp"
+                android:text="@string/cancel"
+                android:layout_weight="1"
+                tools:ignore="RtlHardcoded"
+                android:background="@color/colorPrimaryDark"/>
+
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>
 

@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">gMads_lab1</string>
-    <string name="ok">Save</string>
     <string name="title_activity_show_profile">showProfile</string>
     <string name="name">Name</string>
     <string name="surname">Surname</string>
@@ -9,4 +8,6 @@
     <string name="description">Insert Description</string>
     <string name="profileImage">Profile Image</string>
     <string name="profileSettingButton"> Edit Profile</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
 </resources>
