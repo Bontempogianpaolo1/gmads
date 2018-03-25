@@ -24,10 +24,10 @@ public class showProfile extends AppCompatActivity {
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         //prefs.edit().putString("Name", findViewById(R.id.name));
-        String name = prefs.getString("name", "ExampleName");
-        String surname = prefs.getString("surname", "ExampleSurname");
+        String name = prefs.getString("name", getResources().getString(R.string.name));
+        String surname = prefs.getString("surname", getResources().getString(R.string.surname));
         String email = prefs.getString("email", "example@gmail.com");
-        String address = prefs.getString("address", "via Example 2");
+        String address = prefs.getString("address", getResources().getString(R.string.description));
 
         Context context = getApplicationContext();
 
@@ -44,13 +44,17 @@ public class showProfile extends AppCompatActivity {
             profileImage.setImageBitmap(bitProfileImage);*/
 
         TextView vName = findViewById(R.id.name);
-        vName.setText(name + " " + surname);
+        vName.setText(name);
+        vName.append(" " + surname);
 
         TextView vEmail = findViewById(R.id.email);
-        vEmail.setText(getResources().getString(R.string.email) + ": " + email);
+        vEmail.setText("Email: ");
+        vEmail.append(email);
 
         TextView vAddress = findViewById(R.id.address);
-        vAddress.setText(getResources().getString(R.string.address) + ": " + address);
+        //vAddress.setText(getResources().getString(R.string.address) + ": " + address);
+        vAddress.setText("Bio: ");
+        vAddress.append(address);
 
         ImageButton modProfileButton = findViewById(R.id.mod_profile_button);
 

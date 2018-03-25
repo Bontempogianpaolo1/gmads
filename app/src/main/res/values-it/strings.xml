@@ -3,5 +3,6 @@
     <string name="name">Nome</string>
     <string name="surname">Cognome</string>
     <string name="email">Email</string>
-    <string name="address">Indirizzo</string>
+    <string name="address">Bio</string>
+    <string name="description">Inserisci Descrizione</string>
 </resources>
