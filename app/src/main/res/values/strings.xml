@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">gMads_lab1</string>
+    <string name="ok">Greit</string>
+    <string name="title_activity_show_profile">showProfile</string>
+    <string name="name">Name</string>
+    <string name="surname">Surname</string>
+    <string name="email">Email</string>
+    <string name="address">Address</string>
 </resources>
