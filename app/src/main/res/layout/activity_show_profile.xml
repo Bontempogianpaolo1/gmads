@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:orientation="vertical"
+tools:context="gmads.it.gmads_lab1.showProfile">
+
+<ImageButton
+    android:id="@+id/mod_profile_button"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="12dp"
+    android:layout_gravity="end"
+    android:src="@drawable/pencil_mod"/>
+
+<ImageView
+    android:id="@+id/profile_image"
+    android:layout_width="match_parent"
+    android:layout_height="200dp"
+    android:src="@drawable/default_profile" />
+
+<TextView
+    android:id="@+id/name"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text=""
+    android:layout_gravity="center"
+    android:textStyle="bold"
+    android:textSize="20dp"
+    android:layout_margin="16dp" />
+
+<View
+    android:layout_width="match_parent"
+    android:layout_height="1dp"
+    android:background="@android:color/darker_gray"
+    android:layout_margin="16dp" />
+
+<TextView
+    android:id="@+id/email"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Email"
+    android:layout_gravity="center"
+    android:layout_margin="16dp" />
+
+<TextView
+    android:id="@+id/address"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="16dp"
+    android:layout_gravity="center"
+    android:text="Bio" />
+
+</LinearLayout>
+
