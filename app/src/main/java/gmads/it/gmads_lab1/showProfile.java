@@ -19,7 +19,7 @@ public class showProfile extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+    //ciao
         setContentView(R.layout.activity_show_profile);
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -57,6 +57,7 @@ public class showProfile extends AppCompatActivity {
         ImageButton modProfileButton = findViewById(R.id.mod_profile_button);
 
         modProfileButton.setOnClickListener(this::onModProfileClick);
+
 
     }
 
