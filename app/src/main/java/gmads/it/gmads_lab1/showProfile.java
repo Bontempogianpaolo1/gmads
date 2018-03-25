@@ -58,7 +58,6 @@ public class showProfile extends AppCompatActivity {
 
         modProfileButton.setOnClickListener(this::onModProfileClick);
 
-
     }
 
     private void onModProfileClick(View v) {
