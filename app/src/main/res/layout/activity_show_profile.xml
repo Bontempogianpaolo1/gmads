@@ -20,9 +20,9 @@
     <ImageView
         android:id="@+id/profile_image"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="150dp"
         android:contentDescription="@string/profileImage"
-        android:src="@drawable/default_profile" />
+        android:src="@drawable/default_profile"/>
 
     <TextView
         android:id="@+id/name"
@@ -64,13 +64,22 @@
         android:layout_marginLeft="20dp"
         tools:ignore="RtlHardcoded" />
 
-    <TextView
-        android:id="@+id/bio"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_margin="16dp"
-        android:text="" />
+    <ScrollView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/scrollView"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="1">
+
+        <TextView
+                android:id="@+id/bio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="20dp"
+                android:text=""/>
+
+    </ScrollView>
 
 </LinearLayout>
 
