@@ -37,10 +37,10 @@ public class editProfile extends AppCompatActivity {
 
         b.setOnClickListener(v -> onSaveClick(v, prefs));
 
-        Name = prefs.getString("name", "Giorgio");
-        Surname = prefs.getString("surname", "Crepaldi");
-        Email = prefs.getString("email", "example@gmail.com");
-        Address = prefs.getString("address", "c.so Francia 47");
+        Name = prefs.getString("name", "es: Giorgio");
+        Surname = prefs.getString("surname", "es: Crepaldi");
+        Email = prefs.getString("email", "es: example@gmail.com");
+        Address = prefs.getString("address", "es: c.so Francia 47");
 
         //ImageView profileImage = findViewById(R.id.profile_image);
 
@@ -67,7 +67,6 @@ public class editProfile extends AppCompatActivity {
 
         TextView vAddress = findViewById(R.id.address_input);
         vAddress.setText(Address);
-
     }
 
     private void onSaveClick(View v, SharedPreferences prefs) {
@@ -83,12 +82,9 @@ public class editProfile extends AppCompatActivity {
 
         Intent intentMod = new Intent(this, showProfile.class);
         startActivity(intentMod);
-
     }
 
     /*private void onClickImage(View v) {
-
-
 
         new ImageSaver(context).
                 setFileName("myImage.png").

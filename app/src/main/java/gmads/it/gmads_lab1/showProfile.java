@@ -8,6 +8,9 @@ import android.graphics.Bitmap;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -21,7 +24,6 @@ public class showProfile extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_show_profile);
-
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         //prefs.edit().putString("Name", findViewById(R.id.name));
@@ -55,15 +57,22 @@ public class showProfile extends AppCompatActivity {
         //vAddress.setText(getResources().getString(R.string.address) + ": " + address);
         vAddress.setText(bio);
 
-        ImageButton modProfileButton = findViewById(R.id.mod_profile_button);
-
-        modProfileButton.setOnClickListener(this::onModProfileClick);
-
     }
 
-    private void onModProfileClick(View v) {
+    //for EditButton in the action bar
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater mi = getMenuInflater();
+        mi.inflate(R.menu.actionbar1, menu);
+        //return super.onCreateOptionsMenu(menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
         Intent intentMod = new Intent(this, editProfile.class);
         startActivity(intentMod);
+        return true;
     }
 
 }
