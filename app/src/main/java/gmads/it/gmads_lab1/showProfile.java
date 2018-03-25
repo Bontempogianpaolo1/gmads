@@ -21,7 +21,7 @@ public class showProfile extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_show_profile);
-//ciao
+
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         //prefs.edit().putString("Name", findViewById(R.id.name));
