@@ -7,5 +7,6 @@
     <string name="email">Email</string>
     <string name="bio">Bio</string>
     <string name="description">Insert Description</string>
-
+    <string name="profileImage">Profile Image</string>
+    <string name="profileSettingButton"> Edit Profile</string>
 </resources>

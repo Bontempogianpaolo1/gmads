@@ -27,7 +27,7 @@ public class showProfile extends AppCompatActivity {
         String name = prefs.getString("name", getResources().getString(R.string.name));
         String surname = prefs.getString("surname", getResources().getString(R.string.surname));
         String email = prefs.getString("email", "example@gmail.com");
-        String address = prefs.getString("address", getResources().getString(R.string.description));
+        String bio = prefs.getString("address", getResources().getString(R.string.description));
 
         Context context = getApplicationContext();
 
@@ -48,17 +48,15 @@ public class showProfile extends AppCompatActivity {
         vName.append(" " + surname);
 
         TextView vEmail = findViewById(R.id.email);
-        vEmail.setText("Email: ");
-        vEmail.append(email);
+        vEmail.setText(email);
 
-        TextView vAddress = findViewById(R.id.address);
+        TextView vAddress = findViewById(R.id.bio);
         //vAddress.setText(getResources().getString(R.string.address) + ": " + address);
-        vAddress.setText("Bio: ");
-        vAddress.append(address);
+        vAddress.setText(bio);
 
         ImageButton modProfileButton = findViewById(R.id.mod_profile_button);
 
-        modProfileButton.setOnClickListener(v -> onModProfileClick(v));
+        modProfileButton.setOnClickListener(this::onModProfileClick);
 
     }
 
