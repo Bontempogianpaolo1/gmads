@@ -21,6 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.inputmethodservice.InputMethodService;
 import static android.content.Intent.FLAG_ACTIVITY_NO_ANIMATION;
+import android.view.WindowManager;
 
 public class editProfile extends AppCompatActivity {
 
@@ -54,7 +55,7 @@ public class editProfile extends AppCompatActivity {
         Surname = prefs.getString("surname", "es: Crepaldi");
         Email = prefs.getString("email", "es: example@gmail.com");
         Address = prefs.getString("address", "es: c.so Francia 47");
-
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         //ImageView profileImage = findViewById(R.id.profile_image);
 
         //profileImage.setOnClickListener(v -> onClickImage(v));
@@ -88,6 +89,8 @@ public class editProfile extends AppCompatActivity {
         EditText vEmail = findViewById(R.id.email_input);
         EditText vAddress = findViewById(R.id.address_input);
 
+        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
         prefs.edit().putString("name", vName.getText().toString()).apply();
         prefs.edit().putString("surname", vSurname.getText().toString()).apply();
         prefs.edit().putString("email", vEmail.getText().toString()).apply();
