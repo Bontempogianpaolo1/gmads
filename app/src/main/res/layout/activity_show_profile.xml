@@ -4,39 +4,39 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:isScrollContainer="true"
     android:orientation="vertical"
-    tools:context="gmads.it.gmads_lab1.showProfile"
-    android:isScrollContainer="true">
+    tools:context="gmads.it.gmads_lab1.showProfile">
 
     <ImageView
         android:id="@+id/profile_image"
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:contentDescription="@string/profileImage"
-        android:src="@drawable/default_profile"/>
+        android:src="@drawable/default_profile" />
 
     <TextView
         android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:textStyle="bold"
+        android:layout_margin="16dp"
         android:textSize="20sp"
-        android:layout_margin="16dp" />
+        android:textStyle="bold" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@android:color/darker_gray"
-        android:layout_margin="16dp" />
+        android:layout_margin="16dp"
+        android:background="@android:color/darker_gray" />
 
     <TextView
         android:id="@+id/labelEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
         android:text="@string/email"
         android:textStyle="bold|italic"
-        android:layout_marginLeft="20dp"
         tools:ignore="RtlHardcoded" />
 
     <TextView
@@ -51,25 +51,25 @@
         android:id="@+id/labelBio"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
         android:text="@string/bio"
         android:textStyle="bold|italic"
-        android:layout_marginLeft="20dp"
         tools:ignore="RtlHardcoded" />
 
     <ScrollView
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:id="@+id/scrollView"
-            android:layout_gravity="center_horizontal"
-            android:layout_weight="1">
+        android:id="@+id/scrollView"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="1">
 
         <TextView
-                android:id="@+id/bio"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="20dp"
-                android:text=""/>
+            android:id="@+id/bio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="20dp"
+            android:text="" />
 
     </ScrollView>
 

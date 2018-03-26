@@ -12,12 +12,14 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
-
+import android.inputmethodservice.InputMethodService;
 import static android.content.Intent.FLAG_ACTIVITY_NO_ANIMATION;
 
 public class editProfile extends AppCompatActivity {
@@ -44,7 +46,10 @@ public class editProfile extends AppCompatActivity {
 
         Button c = findViewById(R.id.reset_profile);
         c.setOnClickListener(v -> onResetClick(v, prefs));
-
+        LinearLayout ll= findViewById(R.id.linearLayout1);
+        LinearLayout l2= findViewById(R.id.linearlayout2);
+        ll.setOnClickListener(v->setFocusOnClick(v));
+        l2.setOnClickListener(v->setFocusOnClick(v));
         Name = prefs.getString("name", "es: Giorgio");
         Surname = prefs.getString("surname", "es: Crepaldi");
         Email = prefs.getString("email", "es: example@gmail.com");
@@ -152,7 +157,12 @@ public class editProfile extends AppCompatActivity {
 
         alertDlg.create().show();
     }
+    private void setFocusOnClick(View v){
+        InputMethodManager imm = (InputMethodManager) v.getContext()
+                .getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
 
+    }
     /*private void onClickImage(View v) {
 
         new ImageSaver(context).
