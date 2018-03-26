@@ -1,3 +1,18 @@
 <resources>
     <string name="app_name">gMads_lab1</string>
+    <string name="title_activity_show_profile">showProfile</string>
+    <string name="name">Name</string>
+    <string name="surname">Surname</string>
+    <string name="email">Email</string>
+    <string name="bio">Bio</string>
+    <string name="description">Insert Description</string>
+    <string name="profileImage">Profile Image</string>
+    <string name="profileSettingButton"> Edit Profile</string>
+    <string name="save">Save</string>
+    <string name="reset">Reset</string>
+    <string name="cancel">Cancel</string>
+    <string name="alert1">\nAre you sure you want to reset your profile data?</string>
+    <string name="yes">Yes</string>
+    <string name="alertResetDone">\nReset done!</string>
+    <string name="alertSave">\nProfile Updated!</string>
 </resources>
