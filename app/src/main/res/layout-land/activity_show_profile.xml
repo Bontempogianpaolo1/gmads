@@ -14,15 +14,6 @@
             android:orientation="horizontal"
             android:layout_weight="1.5">
 
-        <ImageButton
-                android:id="@+id/mod_profile_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:layout_margin="12dp"
-                android:contentDescription="@string/profileSettingButton"
-                android:src="@drawable/pencil_mod"/>
-
         <ImageView
                 android:id="@+id/profile_image"
                 android:layout_width="match_parent"
@@ -58,6 +49,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/email"
+                    android:textStyle="bold|italic"
                     android:layout_marginLeft="20dp"
                     tools:ignore="RtlHardcoded"/>
 
@@ -72,8 +64,7 @@
         </LinearLayout>
 
     </LinearLayout>
-
-
+    
     <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -84,6 +75,7 @@
                 android:id="@+id/labelBio"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textStyle="bold|italic"
                 android:text="@string/bio"
                 android:layout_marginLeft="20dp"
                 tools:ignore="RtlHardcoded"/>
