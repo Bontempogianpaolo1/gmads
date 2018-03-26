@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/gmads.iml" filepath="$PROJECT_DIR$/gmads.iml" />
+      <module fileurl="file://C:\Users\bitri\Documents\Documenti\mobile\repository\gmadsv2\ciao\gmads\gmads.iml" filepath="C:\Users\bitri\Documents\Documenti\mobile\repository\gmadsv2\ciao\gmads\gmads.iml" />
     </modules>
   </component>
 </project>
