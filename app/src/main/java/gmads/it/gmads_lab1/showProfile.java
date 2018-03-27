@@ -1,11 +1,13 @@
 package gmads.it.gmads_lab1;
 
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -20,7 +22,13 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+
 public class showProfile extends AppCompatActivity {
+
+    ImageView profileImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +47,7 @@ public class showProfile extends AppCompatActivity {
 
         Context context = getApplicationContext();
 
-        ImageView profileImage = findViewById(R.id.profile_image);
+        profileImage = findViewById(R.id.profile_image);
 
         /*Bitmap bitProfileImage = new ImageSaver(context).
                 setFileName("myProfile.png").
@@ -50,6 +58,13 @@ public class showProfile extends AppCompatActivity {
             profileImage.setImageDrawable(getResources().getDrawable(R.drawable.default_profile));
         /*else
             profileImage.setImageBitmap(bitProfileImage);*/
+
+        ContextWrapper cw = new ContextWrapper(getApplicationContext());
+
+        File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
+        String path = directory.getPath();
+
+        loadImage(path);
 
         TextView vName = findViewById(R.id.name);
         TextView vEmail = findViewById(R.id.email);
@@ -135,6 +150,22 @@ public class showProfile extends AppCompatActivity {
             }
         });
         alertDlg.show();
+    }
+
+    private void loadImage(String path)
+    {
+
+        try {
+            File f = new File(path, "profile.jpg");
+            Bitmap b = BitmapFactory.decodeStream(new FileInputStream(f));
+            profileImage = findViewById(R.id.profile_image);
+            profileImage.setImageBitmap(b);
+        }
+        catch (FileNotFoundException e)
+        {
+            e.printStackTrace();
+        }
+
     }
 }
 
