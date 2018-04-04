@@ -5,6 +5,7 @@ import android.content.ContextWrapper;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -32,6 +33,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -41,7 +43,7 @@ import android.view.WindowManager;
 public class editProfile extends AppCompatActivity {
 
     static final int REQUEST_IMAGE_CAPTURE = 1888;
-
+    static final int REQUEST_IMAGE_LIBRARY = 1889;
     private String Name;
     private String Surname;
     private String Email;
@@ -56,6 +58,7 @@ public class editProfile extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //creo attività
+        ImageManagement im= new ImageManagement();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
         context = getApplicationContext();
@@ -85,7 +88,12 @@ public class editProfile extends AppCompatActivity {
         //ImageView profileImage = findViewById(R.id.profile_image);
         //imposto immagine
         profileImage = findViewById(R.id.profile_image);
-        loadImage(path);
+        try {
+            profileImage.setImageBitmap(BitmapFactory.decodeStream(new FileInputStream(new File(path,"profile.jpg"))));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        //loadImage(path);
         profileImage.setOnClickListener(v -> onClickImage(v));
         /*Bitmap bitProfileImage = new ImageSaver(context).
                 setFileName("myProfile.png").
@@ -197,10 +205,21 @@ public class editProfile extends AppCompatActivity {
 
     }
     private void onClickImage(View v) {
+        Tools t= new Tools();
+        android.app.AlertDialog.Builder ad=t.showPopup(this,"take image","gallery","photo");
+        ad.setPositiveButton("gallery",(vi,w)->{    Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                                                        pickIntent.setType("image/*");
+                                                        startActivityForResult(pickIntent, REQUEST_IMAGE_LIBRARY);
+                                                    }
+                            );
+        ad.setNegativeButton("photo",(vi,w)->{Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                                                  startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
 
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                                                });
+        ad.show();
+       // Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
-        startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        //startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
 
         /*ImageGetter imgGet = new ImageGetter(this, context);
 
@@ -215,13 +234,27 @@ public class editProfile extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+        super.onActivityResult(requestCode,resultCode,data);
+        if (requestCode == REQUEST_IMAGE_CAPTURE  && resultCode == RESULT_OK) {
             Bitmap photo = (Bitmap) data.getExtras().get("data");
             profileImage.setImageBitmap(photo);
 
             saveImage(photo);
+        }else if ( requestCode==REQUEST_IMAGE_LIBRARY && resultCode == RESULT_OK) {
+            try{
+                final Uri imageUri = data.getData();
+                final InputStream imageStream = getContentResolver().openInputStream(imageUri);
+                final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+                profileImage.setImageBitmap(selectedImage);
+                saveImage(selectedImage);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
+
+
+
+
     }
 
     private File createImageFile() throws IOException {
@@ -252,6 +285,7 @@ public class editProfile extends AppCompatActivity {
             fos = new FileOutputStream(myPath);
             // Use the compress method on the BitMap object to write image to the OutputStream
             bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fos);
+           // MediaStore.Images.Media.insertImage(getContentResolver(), bitmapImage,"" , "");
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

@@ -21,7 +21,6 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -33,7 +32,8 @@ public class showProfile extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        Tools t= new Tools();
+        ImageManagement im= new ImageManagement();
         setContentView(R.layout.activity_show_profile);
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -63,9 +63,11 @@ public class showProfile extends AppCompatActivity {
 
         File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
         String path = directory.getPath();
-
-        loadImage(path);
-
+        try {
+            profileImage.setImageBitmap(BitmapFactory.decodeStream(new FileInputStream(new File(path,"profile.jpg"))));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
         TextView vName = findViewById(R.id.name);
         TextView vEmail = findViewById(R.id.email);
         TextView vAddress = findViewById(R.id.bio);
@@ -95,11 +97,16 @@ public class showProfile extends AppCompatActivity {
 
         if(reset){
         //if(name.compareTo("")==0){
-            showPopupReset();
+
+            android.app.AlertDialog.Builder ab= t.showPopup(this,getResources().getString(R.string.alertResetDone),"ok","");
+            //showPopupReset();
+            ab.show();
             prefs.edit().putBoolean("reset", false).apply();
         }
         if(save){
-            showPopupSave();
+            android.app.AlertDialog.Builder ab= t.showPopup(this,getResources().getString(R.string.alertSave),"ok","");
+            ab.show();
+            //showPopupSave();
             prefs.edit().putBoolean("save", false).apply();
         }
     }
@@ -119,39 +126,6 @@ public class showProfile extends AppCompatActivity {
         startActivity(intentMod);
         return true;
     }
-
-    private void showPopupReset() {
-        AlertDialog.Builder alertDlg = new AlertDialog.Builder(this);
-        TextView msg = new TextView(this);
-        msg.setText(getResources().getString(R.string.alertResetDone));
-        //msg.setGravity(Gravity.TEXT_ALIGNMENT_CENTER);
-        msg.setGravity(Gravity.CENTER);
-        alertDlg.setView(msg);
-        alertDlg.setCancelable(false);
-        alertDlg.setNeutralButton("Ok", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-            }
-        });
-        alertDlg.show();
-    }
-
-    private void showPopupSave() {
-        AlertDialog.Builder alertDlg = new AlertDialog.Builder(this);
-        TextView msg = new TextView(this);
-        msg.setText(getResources().getString(R.string.alertSave));
-        //msg.setGravity(Gravity.TEXT_ALIGNMENT_CENTER);
-        msg.setGravity(Gravity.CENTER);
-        alertDlg.setView(msg);
-        alertDlg.setCancelable(false);
-        alertDlg.setNeutralButton("Ok", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-            }
-        });
-        alertDlg.show();
-    }
-
     private void loadImage(String path)
     {
 
