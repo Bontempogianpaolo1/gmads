@@ -41,7 +41,7 @@ import android.view.WindowManager;
 
 public class editProfile extends AppCompatActivity {
 
-    static final int REQUEST_IMAGE_CAPTURE = 1889;
+    static final int REQUEST_IMAGE_CAPTURE = 1888;
     private String Name;
     private String Surname;
     private String Email;
