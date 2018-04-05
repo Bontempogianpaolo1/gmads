@@ -42,7 +42,7 @@ import android.view.WindowManager;
 public class editProfile extends AppCompatActivity {
 
     static final int REQUEST_IMAGE_CAPTURE = 1888;
-    static final int RESULT_LOAD_IMAGE = 1999;
+
 
     private String Name;
     private String Surname;
@@ -91,8 +91,6 @@ public class editProfile extends AppCompatActivity {
 
         profileImage.setOnClickListener(v -> onClickImage(v));
 
-        Button galleryButton = findViewById(R.id.gallery);
-        galleryButton.setOnClickListener(v -> onClickGallery(v));
 
         /*Bitmap bitProfileImage = new ImageSaver(context).
                 setFileName("myProfile.png").
@@ -115,11 +113,6 @@ public class editProfile extends AppCompatActivity {
 
         TextView vAddress = findViewById(R.id.address_input);
         vAddress.setText(Address);
-    }
-
-    private void onClickGallery(View v) {
-        Intent i = new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(i, RESULT_LOAD_IMAGE);
     }
 
     private void onSaveClick(View v, SharedPreferences prefs) {
@@ -231,20 +224,7 @@ public class editProfile extends AppCompatActivity {
 
             saveImage(photo);
         }
-
-        if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
-            Uri selectedImage = data.getData();
-
-            try {
-                Bitmap photo = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImage);
-                // Log.d(TAG, String.valueOf(bitmap));
-
-                profileImage.setImageBitmap(photo);
-                saveImage(photo);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+        
     }
 
     private File createImageFile() throws IOException {
