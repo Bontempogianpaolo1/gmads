@@ -1,11 +1,13 @@
 package gmads.it.gmads_lab1;
 
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -19,13 +21,21 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 
 public class showProfile extends AppCompatActivity {
 
+    ImageView profileImage;
+
+
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        Tools t= new Tools();
+        ImageManagement im= new ImageManagement();
         setContentView(R.layout.activity_show_profile);
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -39,7 +49,7 @@ public class showProfile extends AppCompatActivity {
 
         Context context = getApplicationContext();
 
-        ImageView profileImage = findViewById(R.id.profile_image);
+        profileImage = findViewById(R.id.profile_image);
 
         /*Bitmap bitProfileImage = new ImageSaver(context).
                 setFileName("myProfile.png").
@@ -51,6 +61,15 @@ public class showProfile extends AppCompatActivity {
         /*else
             profileImage.setImageBitmap(bitProfileImage);*/
 
+        ContextWrapper cw = new ContextWrapper(getApplicationContext());
+
+        File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
+        String path = directory.getPath();
+        try {
+            profileImage.setImageBitmap(BitmapFactory.decodeStream(new FileInputStream(new File(path,"profile.jpg"))));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
         TextView vName = findViewById(R.id.name);
         TextView vEmail = findViewById(R.id.email);
         TextView vAddress = findViewById(R.id.bio);
@@ -80,11 +99,16 @@ public class showProfile extends AppCompatActivity {
 
         if(reset){
         //if(name.compareTo("")==0){
-            showPopupReset();
+
+            android.app.AlertDialog.Builder ab= t.showPopup(this,getResources().getString(R.string.alertResetDone),"ok","");
+            //showPopupReset();
+            ab.show();
             prefs.edit().putBoolean("reset", false).apply();
         }
         if(save){
-            showPopupSave();
+            android.app.AlertDialog.Builder ab= t.showPopup(this,getResources().getString(R.string.alertSave),"ok","");
+            ab.show();
+            //showPopupSave();
             prefs.edit().putBoolean("save", false).apply();
         }
     }
@@ -104,37 +128,20 @@ public class showProfile extends AppCompatActivity {
         startActivity(intentMod);
         return true;
     }
+    private void loadImage(String path)
+    {
 
-    private void showPopupReset() {
-        AlertDialog.Builder alertDlg = new AlertDialog.Builder(this);
-        TextView msg = new TextView(this);
-        msg.setText(getResources().getString(R.string.alertResetDone));
-        //msg.setGravity(Gravity.TEXT_ALIGNMENT_CENTER);
-        msg.setGravity(Gravity.CENTER);
-        alertDlg.setView(msg);
-        alertDlg.setCancelable(false);
-        alertDlg.setNeutralButton("Ok", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-            }
-        });
-        alertDlg.show();
-    }
+        try {
+            File f = new File(path, "profile.jpg");
+            Bitmap b = BitmapFactory.decodeStream(new FileInputStream(f));
+            profileImage = findViewById(R.id.profile_image);
+            profileImage.setImageBitmap(b);
+        }
+        catch (FileNotFoundException e)
+        {
+            e.printStackTrace();
+        }
 
-    private void showPopupSave() {
-        AlertDialog.Builder alertDlg = new AlertDialog.Builder(this);
-        TextView msg = new TextView(this);
-        msg.setText(getResources().getString(R.string.alertSave));
-        //msg.setGravity(Gravity.TEXT_ALIGNMENT_CENTER);
-        msg.setGravity(Gravity.CENTER);
-        alertDlg.setView(msg);
-        alertDlg.setCancelable(false);
-        alertDlg.setNeutralButton("Ok", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-            }
-        });
-        alertDlg.show();
     }
 }
 
