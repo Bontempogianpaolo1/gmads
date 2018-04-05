@@ -41,7 +41,7 @@ import android.view.WindowManager;
 
 public class editProfile extends AppCompatActivity {
 
-    static final int REQUEST_IMAGE_CAPTURE = 1888;
+    static final int REQUEST_IMAGE_CAPTURE = 1889;
 
 
     private String Name;
@@ -224,7 +224,7 @@ public class editProfile extends AppCompatActivity {
 
             saveImage(photo);
         }
-        
+
     }
 
     private File createImageFile() throws IOException {
