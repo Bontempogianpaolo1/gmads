@@ -5,6 +5,7 @@ import android.content.ContextWrapper;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -41,6 +42,7 @@ import android.view.WindowManager;
 public class editProfile extends AppCompatActivity {
 
     static final int REQUEST_IMAGE_CAPTURE = 1888;
+
 
     private String Name;
     private String Surname;
@@ -88,6 +90,7 @@ public class editProfile extends AppCompatActivity {
         loadImage(path);
 
         profileImage.setOnClickListener(v -> onClickImage(v));
+
 
         /*Bitmap bitProfileImage = new ImageSaver(context).
                 setFileName("myProfile.png").
@@ -221,6 +224,7 @@ public class editProfile extends AppCompatActivity {
 
             saveImage(photo);
         }
+        
     }
 
     private File createImageFile() throws IOException {
