@@ -50,9 +50,7 @@ public class editProfile extends AppCompatActivity {
     private String Address;
     private Context context;
     private ImageView profileImage; //dati profilo
-
     private String mCurrentPhotoPath;   //indirizzo immagine
-
     private SharedPreferences prefs;
 
     @Override
@@ -68,7 +66,7 @@ public class editProfile extends AppCompatActivity {
         //ottengo il file immagine e il suo path
         File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
         String path = directory.getPath();
-        //iniziallizzo bottoni di save e reset
+        //inizializzo bottoni di save e reset
         Button s = findViewById(R.id.save_profile);
         s.setOnClickListener(v -> onSaveClick(v, prefs));
         Button c = findViewById(R.id.reset_profile);
@@ -83,7 +81,7 @@ public class editProfile extends AppCompatActivity {
         Surname = prefs.getString("surname", "es: Crepaldi");
         Email = prefs.getString("email", "es: example@gmail.com");
         Address = prefs.getString("address", "es: c.so Francia 47");
-        //
+        
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         //ImageView profileImage = findViewById(R.id.profile_image);
         //imposto immagine
