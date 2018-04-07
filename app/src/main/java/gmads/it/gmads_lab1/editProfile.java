@@ -8,6 +8,8 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Environment;
 import android.preference.PreferenceManager;
@@ -36,8 +38,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.regex.Pattern;
 
 import static android.content.Intent.FLAG_ACTIVITY_NO_ANIMATION;
+import static android.graphics.Color.RED;
+
 import android.view.WindowManager;
 
 public class editProfile extends AppCompatActivity {
@@ -122,6 +127,15 @@ public class editProfile extends AppCompatActivity {
         EditText vSurname = findViewById(R.id.surname_input);
         EditText vEmail = findViewById(R.id.email_input);
         EditText vAddress = findViewById(R.id.address_input);
+        Pattern pat= Pattern.compile("^([A-Za-z0-9_\\-\\.])+\\@([A-Za-z0-9_\\-\\.])+\\.([A-Za-z]{2,4})$");
+       if(!pat.matcher(vEmail.getText()).matches()){
+            vEmail.setLinkTextColor(RED);
+            Tools error= new Tools();
+            error.showPopup(this,"\nErrore formato email" ,"ok","").show();
+
+            return;
+       }
+
         //tattica per fare scomparire la tastiera quando si preme il tasto save
         InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
