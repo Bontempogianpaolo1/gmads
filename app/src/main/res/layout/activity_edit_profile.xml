@@ -32,12 +32,6 @@
                 android:clickable="true"
                 android:src="@drawable/default_profile" />
 
-            <Button
-                android:id="@+id/gallery"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Galleria"/>
-
             <TextView
                 android:id="@+id/name"
                 android:layout_width="wrap_content"
@@ -47,7 +41,10 @@
                 android:layout_marginRight="16dp"
                 android:layout_marginTop="16dp"
                 android:text="@string/name"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:descendantFocusability="beforeDescendants"
+                android:focusableInTouchMode="true"
+                />
 
             <EditText
                 android:id="@+id/name_input"
@@ -57,7 +54,8 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:layout_marginTop="6dp"
-                android:inputType="text" />
+                android:inputType="text"
+                />
 
             <TextView
                 android:id="@+id/surname"

@@ -97,7 +97,6 @@ public class showProfile extends AppCompatActivity {
 
         if(reset){
         //if(name.compareTo("")==0){
-
             android.app.AlertDialog.Builder ab= t.showPopup(this,getResources().getString(R.string.alertResetDone),"ok","");
             //showPopupReset();
             ab.show();
@@ -126,20 +125,24 @@ public class showProfile extends AppCompatActivity {
         startActivity(intentMod);
         return true;
     }
+    //
     private void loadImage(String path)
     {
-
         try {
             File f = new File(path, "profile.jpg");
             Bitmap b = BitmapFactory.decodeStream(new FileInputStream(f));
             profileImage = findViewById(R.id.profile_image);
             profileImage.setImageBitmap(b);
         }
-        catch (FileNotFoundException e)
-        {
+        catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+    }
 
+    //per uscire dall'app quando si preme back
+    @Override
+    public void onBackPressed() {
+        moveTaskToBack(true);
     }
 }
 
