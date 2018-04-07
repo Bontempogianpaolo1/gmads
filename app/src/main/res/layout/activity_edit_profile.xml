@@ -56,7 +56,10 @@
                 android:layout_marginRight="16dp"
                 android:layout_marginTop="16dp"
                 android:text="@string/name"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:descendantFocusability="beforeDescendants"
+                android:focusableInTouchMode="true"
+                />
 
             <EditText
                 android:id="@+id/name_input"
