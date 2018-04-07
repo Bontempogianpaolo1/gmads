@@ -15,4 +15,16 @@
     <string name="yes">Yes</string>
     <string name="alertResetDone">\nReset done!</string>
     <string name="alertSave">\nProfile Updated!</string>
+    //stringhe da non tradurre
+    <string name="imageDirectory">ImageDir</string>
+    <string name="nameexample">Name</string>
+    <string name="surnameexample">" Surname"</string>
+    <string name="Emailexample">gatto@pardo.it</string>
+    //
+    <string name="Bioexample">Something about you</string>
+    <string name="address">About you</string>
+    <string name="selectImage">Change Image</string>
+    <string name="takeimage">\nTake Image</string>
+    <string name="selectphoto">Photo</string>
+    <string name="selectgallery">Gallery</string>
 </resources>

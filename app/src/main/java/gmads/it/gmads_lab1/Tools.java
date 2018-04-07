@@ -16,7 +16,6 @@ public class Tools extends AppCompatActivity {
 
     public Tools(){
 
-
     }
     public AlertDialog.Builder showPopup(Activity element, String title, String msg1, String msg2) {
         AlertDialog.Builder alertDlg = new AlertDialog.Builder(element);
