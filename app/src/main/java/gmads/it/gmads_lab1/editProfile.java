@@ -81,11 +81,10 @@ public class editProfile extends AppCompatActivity {
         ll.setOnClickListener(v->setFocusOnClick(v));
         l2.setOnClickListener(v->setFocusOnClick(v));
         //inizializzo dati utente
-        Name = prefs.getString("name","");
-        Surname = prefs.getString("surname", "");
-        Email = prefs.getString("email", "");
-        Address = prefs.getString("address","");
-        Bio = prefs.getString("bio", "");
+        Name = prefs.getString("name", getString(R.string.nameexample));
+        Surname = prefs.getString("surname", getString(R.string.surnameexample));
+        Email = prefs.getString("email", getString(R.string.Emailexample));
+        Address = prefs.getString("address", getString(R.string.Bioexample));
         
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         //ImageView profileImage = findViewById(R.id.profile_image);
