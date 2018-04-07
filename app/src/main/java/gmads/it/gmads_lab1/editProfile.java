@@ -86,7 +86,6 @@ public class editProfile extends AppCompatActivity {
         Surname = prefs.getString("surname", getString(R.string.surnameexample));
         Email = prefs.getString("email", getString(R.string.Emailexample));
         Address = prefs.getString("address", getString(R.string.Bioexample));
-        
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         //ImageView profileImage = findViewById(R.id.profile_image);
         //imposto immagine
