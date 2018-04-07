@@ -214,16 +214,17 @@ public class editProfile extends AppCompatActivity {
     }
     private void onClickImage(View v) {
         Tools t= new Tools();
-        android.app.AlertDialog.Builder ad=t.showPopup(this,getString(R.string.takeimage),getString(R.string.selectgallery),getString(R.string.selectphoto));
-        ad.setPositiveButton(getString(R.string.selectgallery),(vi,w)->{    Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                                                        pickIntent.setType("image/*");
-                                                        startActivityForResult(pickIntent, REQUEST_IMAGE_LIBRARY);
-                                                    }
-                            );
-        ad.setNegativeButton(getString(R.string.selectphoto),(vi,w)->{Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                                                  startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        android.app.AlertDialog.Builder ad=t.showPopup(this,"take image","gallery","photo");
+        ad.setPositiveButton("gallery",(vi,w)->{
+            Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            pickIntent.setType("image/*");
+            startActivityForResult(pickIntent, REQUEST_IMAGE_LIBRARY);
+        });
+        ad.setNegativeButton("photo",(vi,w)->{
+            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        });
 
-                                                });
         ad.show();
     }
 
