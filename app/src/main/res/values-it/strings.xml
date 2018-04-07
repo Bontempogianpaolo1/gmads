@@ -17,4 +17,13 @@
     <string name="yes">Si</string>
     <string name="alertResetDone">\nReset riuscito!</string>
     <string name="alertSave">\nSalvataggio avvenuto!</string>
+    <string name="Bioexample">Qualcosa su di te</string>
+    <string name="Emailexample">cat@pard.com</string>
+    <string name="imageDirectory">ImageDir</string>
+    <string name="nameexample">Nome</string>
+    <string name="surnameexample">Cognome</string>
+    <string name="selectImage">Cambia foto profilo</string>
+    <string name="selectphoto">Foto</string>
+    <string name="selectgallery">Galleria</string>
+    <string name="takeimage">\\nScegli immagine da</string>
 </resources>

@@ -28,15 +28,24 @@
                 android:id="@+id/profile_image"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
-                android:contentDescription="@string/profileImage"
+                android:layout_margin="5dp"
                 android:clickable="true"
-                android:src="@drawable/default_profile" />
+                android:contentDescription="@string/profileImage"
 
-            <Button
-                android:id="@+id/gallery"
+                android:focusable="true"
+                android:src="@drawable/shape" />
+
+            <TextView
+                android:id="@+id/selectimage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Galleria"/>
+                android:layout_gravity="center"
+                android:clickable="true"
+                android:focusable="true"
+                android:focusableInTouchMode="false"
+                android:text="@string/selectImage"
+                android:textColor="@color/colorPrimary"
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/name"
@@ -80,6 +89,7 @@
                 android:layout_marginRight="16dp"
                 android:layout_marginTop="6dp"
                 android:inputType="text"
+                android:labelFor="@+id/surname"
                 android:textColorLink="@color/colorPrimary" />
 
             <TextView
@@ -153,11 +163,12 @@
                     android:layout_marginRight="16dp"
                     android:layout_weight="1"
                     android:background="@color/colorPrimaryDark"
-                    android:textColor="@color/colorPale"
                     android:text="@string/reset"
+                    android:textColor="@color/colorPale"
                     tools:ignore="RtlHardcoded" />
 
             </LinearLayout>
+
         </LinearLayout>
     </ScrollView>
 
