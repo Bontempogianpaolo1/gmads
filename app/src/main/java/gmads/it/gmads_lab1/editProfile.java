@@ -24,6 +24,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -57,9 +60,10 @@ public class editProfile extends AppCompatActivity {
     private String Surname;
     private String Email;
     private String Address;
+    private String Bio;
     private Context context;
-    private ImageView profileImage; //dati profilo
-    private String mCurrentPhotoPath;   //indirizzo immagine
+    private ImageView profileImage;//dati profilo
+    private String mCurrentPhotoPath;//indirizzo immagine
     private SharedPreferences prefs;
 
     @Override
@@ -172,7 +176,7 @@ public class editProfile extends AppCompatActivity {
         startActivity(intentMod);
     }
 
-    @Override
+    /*@Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK ) {
             Intent intentMod = new Intent(this, showProfile.class);
@@ -180,10 +184,10 @@ public class editProfile extends AppCompatActivity {
             return true;
         }
         return super.onKeyDown(keyCode, event);
-    }
+    }*/
 
+    //da cancellare
     private void createDialog(){
-
         AlertDialog.Builder alertDlg = new AlertDialog.Builder(this);
         TextView msg = new TextView(this);
         msg.setText(getResources().getString(R.string.alert1));
@@ -205,6 +209,8 @@ public class editProfile extends AppCompatActivity {
 
         alertDlg.create().show();
     }
+    //
+
     private void setFocusOnClick(View v){
         //tattica per fare
         InputMethodManager imm = (InputMethodManager) v.getContext()
@@ -214,16 +220,17 @@ public class editProfile extends AppCompatActivity {
     }
     private void onClickImage(View v) {
         Tools t= new Tools();
-        android.app.AlertDialog.Builder ad=t.showPopup(this,getString(R.string.takeimage),getString(R.string.selectgallery),getString(R.string.selectphoto));
-        ad.setPositiveButton(getString(R.string.selectgallery),(vi,w)->{    Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                                                        pickIntent.setType("image/*");
-                                                        startActivityForResult(pickIntent, REQUEST_IMAGE_LIBRARY);
-                                                    }
-                            );
-        ad.setNegativeButton(getString(R.string.selectphoto),(vi,w)->{Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                                                  startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        android.app.AlertDialog.Builder ad=t.showPopup(this,"take image","gallery","photo");
+        ad.setPositiveButton("gallery",(vi,w)->{
+            Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            pickIntent.setType("image/*");
+            startActivityForResult(pickIntent, REQUEST_IMAGE_LIBRARY);
+        });
+        ad.setNegativeButton("photo",(vi,w)->{
+            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        });
 
-                                                });
         ad.show();
     }
 
@@ -248,21 +255,21 @@ public class editProfile extends AppCompatActivity {
         }
     }
 
-    private File createImageFile() throws IOException {
+   /* private File createImageFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(
                 imageFileName,  /* prefix */
-                ".jpg",  /* suffix */
-                storageDir  /* directory */
-        );
+                //".jpg",  /* suffix */
+                //storageDir  /* directory */
+        //);
 
         // Save a file: path for use with ACTION_VIEW intents
-        mCurrentPhotoPath = image.getAbsolutePath();
+        /*mCurrentPhotoPath = image.getAbsolutePath();
         return image;
-    }
+    }*/
 
     private String saveImage(Bitmap bitmapImage) {
         ContextWrapper cw = new ContextWrapper(getApplicationContext());
@@ -290,10 +297,8 @@ public class editProfile extends AppCompatActivity {
         }
         return directory.getAbsolutePath();
     }
-
-    private void loadImage(String path)
-    {
-
+/*
+    private void loadImage(String path) {
         try {
             File f = new File(path, "profile.jpg");
             Bitmap b = BitmapFactory.decodeStream(new FileInputStream(f));
@@ -304,8 +309,33 @@ public class editProfile extends AppCompatActivity {
         {
             e.printStackTrace();
         }
+    }*/
 
+    //animazione freccia indietro
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        switch(id) {
+            case android.R.id.home:
+                finish();
+                overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
+
+    //animazione back button
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out);
+    }
+
+
 
 }
 
