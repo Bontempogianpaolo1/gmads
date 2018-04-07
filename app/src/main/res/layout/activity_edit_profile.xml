@@ -28,9 +28,12 @@
                 android:id="@+id/profile_image"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
-                android:contentDescription="@string/profileImage"
+                android:layout_margin="5dp"
                 android:clickable="true"
-                android:src="@drawable/default_profile" />
+                android:contentDescription="@string/profileImage"
+
+                android:focusable="true"
+                android:src="@drawable/shape" />
 
             <TextView
                 android:id="@+id/selectimage"
@@ -53,10 +56,7 @@
                 android:layout_marginRight="16dp"
                 android:layout_marginTop="16dp"
                 android:text="@string/name"
-                android:textStyle="bold"
-                android:descendantFocusability="beforeDescendants"
-                android:focusableInTouchMode="true"
-                />
+                android:textStyle="bold"/>
 
             <EditText
                 android:id="@+id/name_input"
@@ -66,7 +66,8 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:layout_marginTop="6dp"
-                android:inputType="text" />
+                android:inputType="text"
+                android:textColorLink="@color/colorPrimary" />
 
             <TextView
                 android:id="@+id/surname"
@@ -87,7 +88,9 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:layout_marginTop="6dp"
-                android:inputType="text" />
+                android:inputType="text"
+                android:labelFor="@+id/surname"
+                android:textColorLink="@color/colorPrimary" />
 
             <TextView
                 android:id="@+id/email"
@@ -160,11 +163,12 @@
                     android:layout_marginRight="16dp"
                     android:layout_weight="1"
                     android:background="@color/colorPrimaryDark"
-                    android:textColor="@color/colorPale"
                     android:text="@string/reset"
+                    android:textColor="@color/colorPale"
                     tools:ignore="RtlHardcoded" />
 
             </LinearLayout>
+
         </LinearLayout>
     </ScrollView>
 
