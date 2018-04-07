@@ -81,6 +81,7 @@ public class editProfile extends AppCompatActivity {
         ll.setOnClickListener(v->setFocusOnClick(v));
         l2.setOnClickListener(v->setFocusOnClick(v));
         //inizializzo dati utente
+
         Name = prefs.getString("name", getString(R.string.nameexample));
         Surname = prefs.getString("surname", getString(R.string.surnameexample));
         Email = prefs.getString("email", getString(R.string.Emailexample));
