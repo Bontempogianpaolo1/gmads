@@ -205,29 +205,17 @@ public class editProfile extends AppCompatActivity {
     private void onClickImage(View v) {
         Tools t= new Tools();
         android.app.AlertDialog.Builder ad=t.showPopup(this,"take image","gallery","photo");
-        ad.setPositiveButton("gallery",(vi,w)->{    Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                                                        pickIntent.setType("image/*");
-                                                        startActivityForResult(pickIntent, REQUEST_IMAGE_LIBRARY);
-                                                    }
-                            );
-        ad.setNegativeButton("photo",(vi,w)->{Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                                                  startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        ad.setPositiveButton("gallery",(vi,w)->{
+            Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            pickIntent.setType("image/*");
+            startActivityForResult(pickIntent, REQUEST_IMAGE_LIBRARY);
+        });
+        ad.setNegativeButton("photo",(vi,w)->{
+            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        });
 
-                                                });
         ad.show();
-       // Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
-        //startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-
-        /*ImageGetter imgGet = new ImageGetter(this, context);
-
-        imgGet.CapturePhoto("UserProfileImage");*/
-
-        /*new ImageSaver(context).
-                setFileName("myImage.png").
-                setDirectoryName("images").
-                save(newProfileImage);
-        */
     }
 
     @Override
@@ -249,10 +237,6 @@ public class editProfile extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
-
-
-
-
     }
 
     private File createImageFile() throws IOException {
@@ -311,7 +295,6 @@ public class editProfile extends AppCompatActivity {
         {
             e.printStackTrace();
         }
-
     }
 
 }
