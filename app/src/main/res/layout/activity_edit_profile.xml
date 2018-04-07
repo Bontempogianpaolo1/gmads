@@ -35,9 +35,12 @@
             <TextView
                 android:id="@+id/selectimage"
                 android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:clickable="true"
+                android:text="@string/selectImage"
                 android:textColor="@color/colorPrimary"
-                android:textSize="16sp"
-                android:layout_height="wrap_content" />
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/name"
