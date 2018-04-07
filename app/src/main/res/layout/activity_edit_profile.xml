@@ -38,6 +38,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:clickable="true"
+                android:focusable="true"
+                android:focusableInTouchMode="false"
                 android:text="@string/selectImage"
                 android:textColor="@color/colorPrimary"
                 android:textSize="16sp" />
