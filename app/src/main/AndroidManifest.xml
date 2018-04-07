@@ -14,11 +14,14 @@
         <activity android:name=".showProfile">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".editProfile"></activity>
+        <activity
+            android:name=".editProfile"
+            android:parentActivityName=".showProfile"
+            >
+        </activity>
         <activity android:name=".Tools"></activity>
         <activity android:name=".ImageManagement"></activity>
     </application>
