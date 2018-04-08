@@ -29,8 +29,6 @@ public class showProfile extends AppCompatActivity {
 
     ImageView profileImage;
 
-
-    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,19 +55,22 @@ public class showProfile extends AppCompatActivity {
                 load();
 
         if(bitProfileImage == null)*/
-            profileImage.setImageDrawable(getResources().getDrawable(R.drawable.default_profile));
+            //profileImage.setImageDrawable(getResources().getDrawable(R.drawable.default_profile));
         /*else
             profileImage.setImageBitmap(bitProfileImage);*/
 
         ContextWrapper cw = new ContextWrapper(getApplicationContext());
 
-        File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
+        File directory = cw.getDir(getString(R.string.imageDirectory), Context.MODE_PRIVATE);
         String path = directory.getPath();
-        try {
-            profileImage.setImageBitmap(BitmapFactory.decodeStream(new FileInputStream(new File(path,"profile.jpg"))));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+        File f=new File(path,"profile.jpg");
+       if(f.exists()) {
+           try {
+               profileImage.setImageBitmap(BitmapFactory.decodeStream(new FileInputStream(f)));
+           } catch (FileNotFoundException e) {
+               e.printStackTrace();
+           }
+       }
         TextView vName = findViewById(R.id.name);
         TextView vEmail = findViewById(R.id.email);
         TextView vAddress = findViewById(R.id.bio);
@@ -99,7 +100,6 @@ public class showProfile extends AppCompatActivity {
 
         if(reset){
         //if(name.compareTo("")==0){
-
             android.app.AlertDialog.Builder ab= t.showPopup(this,getResources().getString(R.string.alertResetDone),"ok","");
             //showPopupReset();
             ab.show();
@@ -128,20 +128,24 @@ public class showProfile extends AppCompatActivity {
         startActivity(intentMod);
         return true;
     }
+    //
     private void loadImage(String path)
     {
-
         try {
             File f = new File(path, "profile.jpg");
             Bitmap b = BitmapFactory.decodeStream(new FileInputStream(f));
             profileImage = findViewById(R.id.profile_image);
             profileImage.setImageBitmap(b);
         }
-        catch (FileNotFoundException e)
-        {
+        catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+    }
 
+    //per uscire dall'app quando si preme back
+    @Override
+    public void onBackPressed() {
+        moveTaskToBack(true);
     }
 }
 
