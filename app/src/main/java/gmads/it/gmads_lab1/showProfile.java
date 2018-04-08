@@ -55,19 +55,22 @@ public class showProfile extends AppCompatActivity {
                 load();
 
         if(bitProfileImage == null)*/
-            profileImage.setImageDrawable(getResources().getDrawable(R.drawable.default_profile));
+            //profileImage.setImageDrawable(getResources().getDrawable(R.drawable.default_profile));
         /*else
             profileImage.setImageBitmap(bitProfileImage);*/
 
         ContextWrapper cw = new ContextWrapper(getApplicationContext());
 
-        File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
+        File directory = cw.getDir(getString(R.string.imageDirectory), Context.MODE_PRIVATE);
         String path = directory.getPath();
-        try {
-            profileImage.setImageBitmap(BitmapFactory.decodeStream(new FileInputStream(new File(path,"profile.jpg"))));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+        File f=new File(path,"profile.jpg");
+       if(f.exists()) {
+           try {
+               profileImage.setImageBitmap(BitmapFactory.decodeStream(new FileInputStream(f)));
+           } catch (FileNotFoundException e) {
+               e.printStackTrace();
+           }
+       }
         TextView vName = findViewById(R.id.name);
         TextView vEmail = findViewById(R.id.email);
         TextView vAddress = findViewById(R.id.bio);

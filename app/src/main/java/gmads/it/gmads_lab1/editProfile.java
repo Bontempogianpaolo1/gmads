@@ -82,8 +82,8 @@ public class editProfile extends AppCompatActivity {
         //inizializzo bottoni di save e reset
         Button s = findViewById(R.id.save_profile);
         s.setOnClickListener(v -> onSaveClick(v, prefs));
-        Button c = findViewById(R.id.reset_profile);
-        c.setOnClickListener(v -> onResetClick(v, prefs));
+        /*Button c = findViewById(R.id.reset_profile);
+        c.setOnClickListener(v -> onResetClick(v, prefs));*/
         //inizializzo i layout
         LinearLayout ll= findViewById(R.id.linearLayout1);
         LinearLayout l2= findViewById(R.id.linearlayout2);
@@ -148,13 +148,15 @@ public class editProfile extends AppCompatActivity {
         prefs.edit().putBoolean("save", true).apply();
         Intent intentMod = new Intent(this, showProfile.class);
         startActivity(intentMod);
+        File image= new File(getString(R.string.imageDirectory),"newprofile.jpg");
+        image.renameTo(new File(getString(R.string.imageDirectory),"profile.jpg"));
     }
 
-    private void onResetClick(View v, SharedPreferences prefs) {
+    /*private void onResetClick(View v, SharedPreferences prefs) {
         createDialog();
-    }
+    }*/
 
-    private void resetProfileData(){
+    /*private void resetProfileData(){
         EditText vName = findViewById(R.id.name_input);
         EditText vSurname = findViewById(R.id.surname_input);
         EditText vEmail = findViewById(R.id.email_input);
@@ -175,7 +177,7 @@ public class editProfile extends AppCompatActivity {
         //startActivity(intentMod.setFlags(FLAG_ACTIVITY_NO_ANIMATION));
         startActivity(intentMod);
     }
-
+    /*
     /*@Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK ) {
@@ -187,6 +189,7 @@ public class editProfile extends AppCompatActivity {
     }*/
 
     //da cancellare
+    /*
     private void createDialog(){
         AlertDialog.Builder alertDlg = new AlertDialog.Builder(this);
         TextView msg = new TextView(this);
@@ -208,7 +211,7 @@ public class editProfile extends AppCompatActivity {
         });
 
         alertDlg.create().show();
-    }
+    }*/
     //
 
     private void setFocusOnClick(View v){
@@ -276,7 +279,7 @@ public class editProfile extends AppCompatActivity {
         // path to /data/data/yourapp/app_data/imageDir
         File directory = cw.getDir(getString(R.string.imageDirectory), Context.MODE_PRIVATE);
         // Create imageDir
-        File myPath = new File(directory,"profile.jpg");
+        File myPath = new File(directory,"newprofile.jpg");
 
         FileOutputStream fos = null;
         try {

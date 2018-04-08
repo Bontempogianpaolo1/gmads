@@ -8,10 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.widget.TextView;
 
-/**
- * Created by bitri on 03/04/2018.
- */
-
 public class Tools extends AppCompatActivity {
 
     public Tools(){

@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:contentDescription="@string/profileImage"
-        android:src="@drawable/default_profile" />
+        android:src="@drawable/shape" />
 
     <TextView
         android:id="@+id/name"
