@@ -5,6 +5,7 @@ import android.content.ContextWrapper;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -14,6 +15,7 @@ import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.Shape;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Environment;
 import android.preference.PreferenceManager;
@@ -60,7 +62,6 @@ public class editProfile extends AppCompatActivity {
     private String Surname;
     private String Email;
     private String Address;
-    private String Bio;
     private Context context;
     private ImageView profileImage;//dati profilo
     private String mCurrentPhotoPath;//indirizzo immagine
@@ -82,8 +83,8 @@ public class editProfile extends AppCompatActivity {
         //inizializzo bottoni di save e reset
         Button s = findViewById(R.id.save_profile);
         s.setOnClickListener(v -> onSaveClick(v, prefs));
-        Button c = findViewById(R.id.reset_profile);
-        c.setOnClickListener(v -> onResetClick(v, prefs));
+        /*Button c = findViewById(R.id.reset_profile);
+        c.setOnClickListener(v -> onResetClick(v, prefs));*/
         //inizializzo i layout
         LinearLayout ll= findViewById(R.id.linearLayout1);
         LinearLayout l2= findViewById(R.id.linearlayout2);
@@ -91,10 +92,10 @@ public class editProfile extends AppCompatActivity {
         l2.setOnClickListener(v->setFocusOnClick(v));
         //inizializzo dati utente
 
-        Name = prefs.getString("name", getString(R.string.nameexample));
-        Surname = prefs.getString("surname", getString(R.string.surnameexample));
-        Email = prefs.getString("email", getString(R.string.Emailexample));
-        Address = prefs.getString("address", getString(R.string.Bioexample));
+        Name = prefs.getString("name", getString(R.string.nameExample));
+        Surname = prefs.getString("surname", getString(R.string.surnameExample));
+        Email = prefs.getString("email", getString(R.string.emailExample));
+        Address = prefs.getString("address", getString(R.string.bioExample));
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         //ImageView profileImage = findViewById(R.id.profile_image);
         //imposto immagine
@@ -128,13 +129,12 @@ public class editProfile extends AppCompatActivity {
         EditText vAddress = findViewById(R.id.address_input);
         //controllo su email usando una regex
         Pattern pat= Pattern.compile("^([A-Za-z0-9_\\-\\.])+\\@([A-Za-z0-9_\\-\\.])+\\.([A-Za-z]{2,4})$");
-       if(!pat.matcher(vEmail.getText()).matches()){
+        if(!pat.matcher(vEmail.getText()).matches()){
            // vEmail.setLinkTextColor(RED);
             Tools error= new Tools();
             error.showPopup(this,"\nErrore formato email" ,"ok","").show();
-
             return;
-       }
+        }
 
         //tattica per fare scomparire la tastiera quando si preme il tasto save
         InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -144,17 +144,26 @@ public class editProfile extends AppCompatActivity {
         prefs.edit().putString("surname", vSurname.getText().toString()).apply();
         prefs.edit().putString("email", vEmail.getText().toString()).apply();
         prefs.edit().putString("address", vAddress.getText().toString()).apply();
-
         prefs.edit().putBoolean("save", true).apply();
-        Intent intentMod = new Intent(this, showProfile.class);
-        startActivity(intentMod);
+        File image= new File(getString(R.string.imageDirectory),"newprofile.jpg");
+        image.renameTo(new File(getString(R.string.imageDirectory),"profile.jpg"));
+        //save popup
+        Tools t = new Tools();
+        android.app.AlertDialog.Builder ad=t.showPopup(this,getString(R.string.alertSave),"","");
+        ad.setPositiveButton("Ok",(vi,w)->{
+            Intent pickIntent = new Intent(this, showProfile.class);
+            startActivity(pickIntent);
+        });
+        ad.show();
+        //showPopupSave();
+        prefs.edit().putBoolean("save", false).apply();
     }
 
-    private void onResetClick(View v, SharedPreferences prefs) {
+    /*private void onResetClick(View v, SharedPreferences prefs) {
         createDialog();
-    }
+    }*/
 
-    private void resetProfileData(){
+    /*private void resetProfileData(){
         EditText vName = findViewById(R.id.name_input);
         EditText vSurname = findViewById(R.id.surname_input);
         EditText vEmail = findViewById(R.id.email_input);
@@ -175,7 +184,7 @@ public class editProfile extends AppCompatActivity {
         //startActivity(intentMod.setFlags(FLAG_ACTIVITY_NO_ANIMATION));
         startActivity(intentMod);
     }
-
+    /*
     /*@Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK ) {
@@ -187,6 +196,7 @@ public class editProfile extends AppCompatActivity {
     }*/
 
     //da cancellare
+    /*
     private void createDialog(){
         AlertDialog.Builder alertDlg = new AlertDialog.Builder(this);
         TextView msg = new TextView(this);
@@ -208,7 +218,7 @@ public class editProfile extends AppCompatActivity {
         });
 
         alertDlg.create().show();
-    }
+    }*/
     //
 
     private void setFocusOnClick(View v){
@@ -220,7 +230,7 @@ public class editProfile extends AppCompatActivity {
     }
     private void onClickImage(View v) {
         Tools t= new Tools();
-        android.app.AlertDialog.Builder ad=t.showPopup(this,"take image","gallery","photo");
+        android.app.AlertDialog.Builder ad=t.showPopup(this,getString(R.string.takeImage),getString(R.string.selectGallery),getString(R.string.selectFromCamera));
         ad.setPositiveButton("gallery",(vi,w)->{
             Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             pickIntent.setType("image/*");
@@ -314,11 +324,8 @@ public class editProfile extends AppCompatActivity {
     //animazione freccia indietro
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+        // Handle action bar item clicks here.
         int id = item.getItemId();
-
         switch(id) {
             case android.R.id.home:
                 finish();
@@ -334,8 +341,5 @@ public class editProfile extends AppCompatActivity {
         super.onBackPressed();
         overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out);
     }
-
-
-
 }
 

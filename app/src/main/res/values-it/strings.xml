@@ -17,13 +17,15 @@
     <string name="yes">Si</string>
     <string name="alertResetDone">\nReset riuscito!</string>
     <string name="alertSave">\nSalvataggio avvenuto!</string>
-    <string name="Bioexample">Qualcosa su di te</string>
-    <string name="Emailexample">cat@pard.com</string>
+    <string name="nameExample"></string>
+    <string name="surnameExample"></string>
+    <string name="bioExample"></string>
+    <string name="emailExample"></string>
     <string name="imageDirectory">ImageDir</string>
-    <string name="nameexample">Nome</string>
-    <string name="surnameexample">Cognome</string>
     <string name="selectImage">Cambia foto profilo</string>
-    <string name="selectphoto">Foto</string>
-    <string name="selectgallery">Galleria</string>
-    <string name="takeimage">\\nScegli immagine da</string>
+    <string name="selectFromCamera">Foto</string>
+    <string name="selectGallery">Galleria</string>
+    <string name="takeImage">\nScegli immagine da</string>
+    <string name="showProfile">Profilo</string>
+    <string name="editProfile">Modifica Profilo</string>
 </resources>
