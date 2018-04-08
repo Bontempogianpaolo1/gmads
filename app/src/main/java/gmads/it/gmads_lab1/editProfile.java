@@ -5,6 +5,7 @@ import android.content.ContextWrapper;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -128,13 +129,12 @@ public class editProfile extends AppCompatActivity {
         EditText vAddress = findViewById(R.id.address_input);
         //controllo su email usando una regex
         Pattern pat= Pattern.compile("^([A-Za-z0-9_\\-\\.])+\\@([A-Za-z0-9_\\-\\.])+\\.([A-Za-z]{2,4})$");
-       if(!pat.matcher(vEmail.getText()).matches()){
+        if(!pat.matcher(vEmail.getText()).matches()){
            // vEmail.setLinkTextColor(RED);
             Tools error= new Tools();
             error.showPopup(this,"\nErrore formato email" ,"ok","").show();
-
             return;
-       }
+        }
 
         //tattica per fare scomparire la tastiera quando si preme il tasto save
         InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -144,12 +144,19 @@ public class editProfile extends AppCompatActivity {
         prefs.edit().putString("surname", vSurname.getText().toString()).apply();
         prefs.edit().putString("email", vEmail.getText().toString()).apply();
         prefs.edit().putString("address", vAddress.getText().toString()).apply();
-
         prefs.edit().putBoolean("save", true).apply();
-        Intent intentMod = new Intent(this, showProfile.class);
-        startActivity(intentMod);
         File image= new File(getString(R.string.imageDirectory),"newprofile.jpg");
         image.renameTo(new File(getString(R.string.imageDirectory),"profile.jpg"));
+        //save popup
+        Tools t = new Tools();
+        android.app.AlertDialog.Builder ad=t.showPopup(this,getString(R.string.alertSave),"","");
+        ad.setPositiveButton("Ok",(vi,w)->{
+            Intent pickIntent = new Intent(this, showProfile.class);
+            startActivity(pickIntent);
+        });
+        ad.show();
+        //showPopupSave();
+        prefs.edit().putBoolean("save", false).apply();
     }
 
     /*private void onResetClick(View v, SharedPreferences prefs) {
@@ -279,7 +286,7 @@ public class editProfile extends AppCompatActivity {
         // path to /data/data/yourapp/app_data/imageDir
         File directory = cw.getDir(getString(R.string.imageDirectory), Context.MODE_PRIVATE);
         // Create imageDir
-        File myPath = new File(directory,"newprofile.jpg");
+        File myPath = new File(directory,"profile.jpg");
 
         FileOutputStream fos = null;
         try {
@@ -334,8 +341,5 @@ public class editProfile extends AppCompatActivity {
         super.onBackPressed();
         overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out);
     }
-
-
-
 }
 

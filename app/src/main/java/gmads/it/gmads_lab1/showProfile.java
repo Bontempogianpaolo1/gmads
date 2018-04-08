@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.preference.PreferenceManager;
@@ -98,13 +99,9 @@ public class showProfile extends AppCompatActivity {
         else {
             vAddress.setText(bio);
         }
-        if(save){
-            android.app.AlertDialog.Builder ab= t.showPopup(this,getResources().getString(R.string.alertSave),"ok","");
-            ab.show();
-            //showPopupSave();
-            prefs.edit().putBoolean("save", false).apply();
-        }
     }
+
+    //per non far chiudere i popup quando si ruota
 
     //for EditButton in the action bar
     @Override

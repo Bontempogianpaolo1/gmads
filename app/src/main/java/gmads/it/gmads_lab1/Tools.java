@@ -20,7 +20,7 @@ public class Tools extends AppCompatActivity {
         //msg.setGravity(Gravity.TEXT_ALIGNMENT_CENTER);
         msg.setGravity(Gravity.CENTER);
         alertDlg.setView(msg);
-        alertDlg.setCancelable(false);
+        alertDlg.setCancelable(true);
         alertDlg.setPositiveButton(msg1, (dialog, which) -> {});
         alertDlg.setNegativeButton(msg2, (dialog, which) -> {});
        // alertDlg.show();
