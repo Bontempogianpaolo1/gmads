@@ -2,25 +2,23 @@ package gmads.it.gmads_lab1;
 
 import android.content.Context;
 import android.content.ContextWrapper;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.preference.PreferenceManager;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageButton;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toolbar;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -46,6 +44,9 @@ public class showProfile extends AppCompatActivity {
         Boolean save = prefs.getBoolean("save", false);
 
         Context context = getApplicationContext();
+
+        //settare titolo activity nella action bar
+        getSupportActionBar().setTitle(getString(R.string.showProfile));
 
         profileImage = findViewById(R.id.profile_image);
 
@@ -97,14 +98,6 @@ public class showProfile extends AppCompatActivity {
         else {
             vAddress.setText(bio);
         }
-
-        if(reset){
-        //if(name.compareTo("")==0){
-            android.app.AlertDialog.Builder ab= t.showPopup(this,getResources().getString(R.string.alertResetDone),"ok","");
-            //showPopupReset();
-            ab.show();
-            prefs.edit().putBoolean("reset", false).apply();
-        }
         if(save){
             android.app.AlertDialog.Builder ab= t.showPopup(this,getResources().getString(R.string.alertSave),"ok","");
             ab.show();
@@ -117,7 +110,7 @@ public class showProfile extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater mi = getMenuInflater();
-        mi.inflate(R.menu.actionbar1, menu);
+        mi.inflate(R.menu.actionbar_showp, menu);
         //return super.onCreateOptionsMenu(menu);
         return true;
     }
@@ -126,6 +119,7 @@ public class showProfile extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent intentMod = new Intent(this, editProfile.class);
         startActivity(intentMod);
+        overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
         return true;
     }
     //
@@ -147,5 +141,7 @@ public class showProfile extends AppCompatActivity {
     public void onBackPressed() {
         moveTaskToBack(true);
     }
+
+
 }
 

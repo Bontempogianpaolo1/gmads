@@ -60,7 +60,6 @@ public class editProfile extends AppCompatActivity {
     private String Surname;
     private String Email;
     private String Address;
-    private String Bio;
     private Context context;
     private ImageView profileImage;//dati profilo
     private String mCurrentPhotoPath;//indirizzo immagine
@@ -91,10 +90,10 @@ public class editProfile extends AppCompatActivity {
         l2.setOnClickListener(v->setFocusOnClick(v));
         //inizializzo dati utente
 
-        Name = prefs.getString("name", getString(R.string.nameexample));
-        Surname = prefs.getString("surname", getString(R.string.surnameexample));
-        Email = prefs.getString("email", getString(R.string.Emailexample));
-        Address = prefs.getString("address", getString(R.string.Bioexample));
+        Name = prefs.getString("name", getString(R.string.nameExample));
+        Surname = prefs.getString("surname", getString(R.string.surnameExample));
+        Email = prefs.getString("email", getString(R.string.emailExample));
+        Address = prefs.getString("address", getString(R.string.bioExample));
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         //ImageView profileImage = findViewById(R.id.profile_image);
         //imposto immagine
@@ -223,7 +222,7 @@ public class editProfile extends AppCompatActivity {
     }
     private void onClickImage(View v) {
         Tools t= new Tools();
-        android.app.AlertDialog.Builder ad=t.showPopup(this,"take image","gallery","photo");
+        android.app.AlertDialog.Builder ad=t.showPopup(this,getString(R.string.takeImage),getString(R.string.selectGallery),getString(R.string.selectFromCamera));
         ad.setPositiveButton("gallery",(vi,w)->{
             Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             pickIntent.setType("image/*");
@@ -317,11 +316,8 @@ public class editProfile extends AppCompatActivity {
     //animazione freccia indietro
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+        // Handle action bar item clicks here.
         int id = item.getItemId();
-
         switch(id) {
             case android.R.id.home:
                 finish();
