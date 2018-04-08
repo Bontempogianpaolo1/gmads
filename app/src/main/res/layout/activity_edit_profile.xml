@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -10,6 +9,7 @@
     android:clickable="true"
     android:focusable="true"
     android:orientation="vertical"
+    android:focusableInTouchMode="true"
     tools:context="gmads.it.gmads_lab1.editProfile">
 
     <ScrollView
@@ -28,10 +28,13 @@
                 android:id="@+id/profile_image"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
-                android:layout_margin="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="16dp"
+
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="10dp"
                 android:clickable="true"
                 android:contentDescription="@string/profileImage"
-
                 android:focusable="true"
                 android:src="@drawable/shape" />
 
@@ -148,27 +151,14 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
                     android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
                     android:layout_weight="1"
                     android:background="@color/colorPrimaryDark"
                     android:text="@string/save"
                     android:textColor="@color/colorPale"
                     tools:ignore="RtlHardcoded" />
 
-                <Button
-                    android:id="@+id/reset_profile"
-                    style="?android:attr/buttonBarButtonStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="end"
-                    android:layout_marginRight="16dp"
-                    android:layout_weight="1"
-                    android:background="@color/colorPrimaryDark"
-                    android:text="@string/reset"
-                    android:textColor="@color/colorPale"
-                    tools:ignore="RtlHardcoded" />
-
             </LinearLayout>
-
         </LinearLayout>
     </ScrollView>
 
