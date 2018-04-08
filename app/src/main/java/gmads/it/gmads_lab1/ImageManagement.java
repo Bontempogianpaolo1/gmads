@@ -10,10 +10,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
-/**
- * Created by bitri on 03/04/2018.
- */
-
 public class ImageManagement extends AppCompatActivity {
     public ImageManagement(){
 
