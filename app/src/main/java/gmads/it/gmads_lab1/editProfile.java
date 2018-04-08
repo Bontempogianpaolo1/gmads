@@ -148,6 +148,8 @@ public class editProfile extends AppCompatActivity {
         prefs.edit().putBoolean("save", true).apply();
         Intent intentMod = new Intent(this, showProfile.class);
         startActivity(intentMod);
+        File image= new File(getString(R.string.imageDirectory),"newprofile.jpg");
+        image.renameTo(new File(getString(R.string.imageDirectory),"profile.jpg"));
     }
 
     private void onResetClick(View v, SharedPreferences prefs) {
@@ -276,7 +278,7 @@ public class editProfile extends AppCompatActivity {
         // path to /data/data/yourapp/app_data/imageDir
         File directory = cw.getDir(getString(R.string.imageDirectory), Context.MODE_PRIVATE);
         // Create imageDir
-        File myPath = new File(directory,"profile.jpg");
+        File myPath = new File(directory,"newprofile.jpg");
 
         FileOutputStream fos = null;
         try {
