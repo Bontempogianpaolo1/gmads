@@ -10,10 +10,10 @@
     <string name="save">Save</string>
     <string name="reset">Reset</string>
     <string name="cancel">Cancel</string>
-    <string name="alert1">\nAre you sure you want to reset your profile data?</string>
+    <string name="saveQuestion">\nDo you want to save changes?</string>
     <string name="yes">Yes</string>
     <string name="alertResetDone">\nReset done!</string>
-    <string name="alertSave">\nProfile Updated!</string>
+    <string name="alertUpd">\nProfile Updated!</string>
     //stringhe da non tradurre
     <string name="imageDirectory">ImageDir</string>
     //

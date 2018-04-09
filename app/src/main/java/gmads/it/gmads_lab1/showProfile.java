@@ -99,9 +99,13 @@ public class showProfile extends AppCompatActivity {
         else {
             vAddress.setText(bio);
         }
-    }
 
-    //per non far chiudere i popup quando si ruota
+        if(save){
+            Tools tool = new Tools();
+            android.app.AlertDialog.Builder ad = tool.showPopup(this,getString(R.string.alertUpd),"Ok","");
+            ad.show();
+        }
+    }
 
     //for EditButton in the action bar
     @Override

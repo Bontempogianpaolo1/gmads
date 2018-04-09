@@ -140,17 +140,17 @@ public class editProfile extends AppCompatActivity {
         InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
         //
-        prefs.edit().putString("name", vName.getText().toString()).apply();
-        prefs.edit().putString("surname", vSurname.getText().toString()).apply();
-        prefs.edit().putString("email", vEmail.getText().toString()).apply();
-        prefs.edit().putString("address", vAddress.getText().toString()).apply();
-        prefs.edit().putBoolean("save", true).apply();
         File image= new File(getString(R.string.imageDirectory),"newprofile.jpg");
         image.renameTo(new File(getString(R.string.imageDirectory),"profile.jpg"));
         //save popup
         Tools t = new Tools();
-        android.app.AlertDialog.Builder ad=t.showPopup(this,getString(R.string.alertSave),"","");
+        android.app.AlertDialog.Builder ad=t.showPopup(this,getString(R.string.saveQuestion),"",getString(R.string.cancel));
         ad.setPositiveButton("Ok",(vi,w)->{
+            prefs.edit().putString("name", vName.getText().toString()).apply();
+            prefs.edit().putString("surname", vSurname.getText().toString()).apply();
+            prefs.edit().putString("email", vEmail.getText().toString()).apply();
+            prefs.edit().putString("address", vAddress.getText().toString()).apply();
+            prefs.edit().putBoolean("save", true).apply();
             Intent pickIntent = new Intent(this, showProfile.class);
             startActivity(pickIntent);
         });
