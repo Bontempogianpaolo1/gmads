@@ -4,7 +4,7 @@
     <string name="surname">Cognome</string>
     <string name="email">Email</string>
     <string name="address">Bio</string>
-    <string name="description">Inserisci Descrizione</string>
+    <string name="description">-- vuota --</string>
     <string name="app_name">gMads_lab1</string>
     <string name="title_activity_show_profile">showProfile</string>
     <string name="bio">Bio</string>

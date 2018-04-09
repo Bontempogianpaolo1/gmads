@@ -94,7 +94,7 @@ public class showProfile extends AppCompatActivity {
         }
 
         if(bio.compareTo("")==0){
-            vAddress.setText(getResources().getString(R.string.description));
+            vAddress.setText(getResources().getString(R.string.bioExample));
         }
         else {
             vAddress.setText(bio);
