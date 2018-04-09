@@ -102,6 +102,7 @@ public class showProfile extends AppCompatActivity {
 
         if(save){
             Tools tool = new Tools();
+            prefs.edit().putBoolean("save", false).apply();
             android.app.AlertDialog.Builder ad = tool.showPopup(this,getString(R.string.alertUpd),"Ok","");
             ad.show();
         }
