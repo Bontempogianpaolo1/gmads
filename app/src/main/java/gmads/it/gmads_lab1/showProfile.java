@@ -100,12 +100,12 @@ public class showProfile extends AppCompatActivity {
             vAddress.setText(bio);
         }
 
-        if(save){
+        /*if(save){
             Tools tool = new Tools();
             prefs.edit().putBoolean("save", false).apply();
             android.app.AlertDialog.Builder ad = tool.showPopup(this,getString(R.string.alertUpd),"Ok","");
             ad.show();
-        }
+        }*/
     }
 
     //for EditButton in the action bar

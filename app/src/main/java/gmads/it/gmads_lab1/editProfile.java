@@ -150,7 +150,8 @@ public class editProfile extends AppCompatActivity {
             prefs.edit().putString("surname", vSurname.getText().toString()).apply();
             prefs.edit().putString("email", vEmail.getText().toString()).apply();
             prefs.edit().putString("address", vAddress.getText().toString()).apply();
-            prefs.edit().putBoolean("save", true).apply();
+            //prefs.edit().putBoolean("save", true).apply();
+            prefs.edit().putBoolean("save", false).apply();
             Intent pickIntent = new Intent(this, showProfile.class);
             startActivity(pickIntent);
         });
