@@ -28,4 +28,5 @@
     <string name="selectGallery">Gallery</string>
     <string name="showProfile">Profile</string>
     <string name="editProfile">Edit Profile</string>
+    <string name="errorEmail">Error format email</string>
 </resources>
