@@ -64,6 +64,7 @@ public class editProfile extends AppCompatActivity {
     private String Address;
     private Context context;
     private ImageView profileImage;//dati profilo
+    private Bitmap newBitMapProfileImage; //temp per nuova immagine
     private String mCurrentPhotoPath;//indirizzo immagine
     private SharedPreferences prefs;
 
@@ -152,8 +153,10 @@ public class editProfile extends AppCompatActivity {
             prefs.edit().putString("address", vAddress.getText().toString()).apply();
             //prefs.edit().putBoolean("save", true).apply();
             prefs.edit().putBoolean("save", false).apply();
+            saveImage(newBitMapProfileImage);
             Intent pickIntent = new Intent(this, showProfile.class);
             startActivity(pickIntent);
+            finish();
         });
         ad.show();
         //showPopupSave();
@@ -248,17 +251,16 @@ public class editProfile extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode,resultCode,data);
         if (requestCode == REQUEST_IMAGE_CAPTURE  && resultCode == RESULT_OK) {
-            Bitmap photo = (Bitmap) data.getExtras().get("data");
-            profileImage.setImageBitmap(photo);
+            newBitMapProfileImage = (Bitmap) data.getExtras().get("data");
+            profileImage.setImageBitmap(newBitMapProfileImage);
 
-            saveImage(photo);
-        }else if ( requestCode==REQUEST_IMAGE_LIBRARY && resultCode == RESULT_OK) {
+        } else if ( requestCode==REQUEST_IMAGE_LIBRARY && resultCode == RESULT_OK) {
             try{
                 final Uri imageUri = data.getData();
                 final InputStream imageStream = getContentResolver().openInputStream(imageUri);
-                final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
-                profileImage.setImageBitmap(selectedImage);
-                saveImage(selectedImage);
+                newBitMapProfileImage = BitmapFactory.decodeStream(imageStream);
+                profileImage.setImageBitmap(newBitMapProfileImage);
+                //saveImage(selectedImage);
             } catch (IOException e) {
                 e.printStackTrace();
             }
