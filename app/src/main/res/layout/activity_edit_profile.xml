@@ -129,6 +129,7 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:layout_marginTop="6dp"
+                android:hint="email"
                 android:inputType="textEmailAddress" />
 
             <TextView
@@ -174,6 +175,7 @@
                     tools:ignore="RtlHardcoded" />
 
             </LinearLayout>
+
         </LinearLayout>
     </ScrollView>
 

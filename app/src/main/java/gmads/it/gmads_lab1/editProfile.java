@@ -102,7 +102,8 @@ public class editProfile extends AppCompatActivity {
         //imposto immagine
         profileImage = findViewById(R.id.profile_image);
         try {
-            profileImage.setImageBitmap(BitmapFactory.decodeStream(new FileInputStream(new File(path,"profile.jpg"))));
+            newBitMapProfileImage = BitmapFactory.decodeStream(new FileInputStream(new File(path,"profile.jpg")));
+            profileImage.setImageBitmap(newBitMapProfileImage);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -132,8 +133,10 @@ public class editProfile extends AppCompatActivity {
         Pattern pat = Pattern.compile("^([A-Za-z0-9_\\-\\.])+\\@([A-Za-z0-9_\\-\\.])+\\.([A-Za-z]{2,4})$");
         if (!pat.matcher(vEmail.getText()).matches()) {
             // vEmail.setLinkTextColor(RED);
-            Tools error = new Tools();
-            error.showPopup(this, "\nErrore formato email", "ok", "").show();
+           EditText et=findViewById(R.id.email_input);
+           et.setText("");
+           et.setHint(R.string.errorEmail);
+           et.setHintTextColor(RED);
             return;
         }
 
@@ -141,8 +144,8 @@ public class editProfile extends AppCompatActivity {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
         //
-        File image = new File(getString(R.string.imageDirectory), "newprofile.jpg");
-        image.renameTo(new File(getString(R.string.imageDirectory), "profile.jpg"));
+        //File image = new File(getString(R.string.imageDirectory), "newprofile.jpg");
+        //image.renameTo(new File(getString(R.string.imageDirectory), "profile.jpg"));
         //save popup
         Tools t = new Tools();
         android.app.AlertDialog.Builder ad = t.showPopup(this, getString(R.string.saveQuestion), "", getString(R.string.cancel));
@@ -156,7 +159,7 @@ public class editProfile extends AppCompatActivity {
             saveImage(newBitMapProfileImage);
             Intent pickIntent = new Intent(this, showProfile.class);
             startActivity(pickIntent);
-            finish();
+            //finish();
         });
         ad.show();
         //showPopupSave();
