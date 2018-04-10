@@ -133,8 +133,10 @@ public class editProfile extends AppCompatActivity {
         Pattern pat = Pattern.compile("^([A-Za-z0-9_\\-\\.])+\\@([A-Za-z0-9_\\-\\.])+\\.([A-Za-z]{2,4})$");
         if (!pat.matcher(vEmail.getText()).matches()) {
             // vEmail.setLinkTextColor(RED);
-            Tools error = new Tools();
-            error.showPopup(this, "\nErrore formato email", "ok", "").show();
+           EditText et=findViewById(R.id.email_input);
+           et.setText("");
+           et.setHint(R.string.errorEmail);
+           et.setHintTextColor(RED);
             return;
         }
 
