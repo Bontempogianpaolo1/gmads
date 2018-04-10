@@ -94,14 +94,19 @@ public class showProfile extends AppCompatActivity {
         }
 
         if(bio.compareTo("")==0){
-            vAddress.setText(getResources().getString(R.string.description));
+            vAddress.setText(getResources().getString(R.string.bioExample));
         }
         else {
             vAddress.setText(bio);
         }
-    }
 
-    //per non far chiudere i popup quando si ruota
+        /*if(save){
+            Tools tool = new Tools();
+            prefs.edit().putBoolean("save", false).apply();
+            android.app.AlertDialog.Builder ad = tool.showPopup(this,getString(R.string.alertUpd),"Ok","");
+            ad.show();
+        }*/
+    }
 
     //for EditButton in the action bar
     @Override
