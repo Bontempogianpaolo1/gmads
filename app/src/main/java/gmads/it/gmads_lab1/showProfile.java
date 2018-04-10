@@ -2,25 +2,23 @@ package gmads.it.gmads_lab1;
 
 import android.content.Context;
 import android.content.ContextWrapper;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.preference.PreferenceManager;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageButton;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toolbar;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -33,7 +31,8 @@ public class showProfile extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        Tools t= new Tools();
+        ImageManagement im= new ImageManagement();
         setContentView(R.layout.activity_show_profile);
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -47,6 +46,9 @@ public class showProfile extends AppCompatActivity {
 
         Context context = getApplicationContext();
 
+        //settare titolo activity nella action bar
+        getSupportActionBar().setTitle(getString(R.string.showProfile));
+
         profileImage = findViewById(R.id.profile_image);
 
         /*Bitmap bitProfileImage = new ImageSaver(context).
@@ -55,17 +57,22 @@ public class showProfile extends AppCompatActivity {
                 load();
 
         if(bitProfileImage == null)*/
-            profileImage.setImageDrawable(getResources().getDrawable(R.drawable.default_profile));
+            //profileImage.setImageDrawable(getResources().getDrawable(R.drawable.default_profile));
         /*else
             profileImage.setImageBitmap(bitProfileImage);*/
 
         ContextWrapper cw = new ContextWrapper(getApplicationContext());
 
-        File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
+        File directory = cw.getDir(getString(R.string.imageDirectory), Context.MODE_PRIVATE);
         String path = directory.getPath();
-
-        loadImage(path);
-
+        File f=new File(path,"profile.jpg");
+       if(f.exists()) {
+           try {
+               profileImage.setImageBitmap(BitmapFactory.decodeStream(new FileInputStream(f)));
+           } catch (FileNotFoundException e) {
+               e.printStackTrace();
+           }
+       }
         TextView vName = findViewById(R.id.name);
         TextView vEmail = findViewById(R.id.email);
         TextView vAddress = findViewById(R.id.bio);
@@ -87,28 +94,25 @@ public class showProfile extends AppCompatActivity {
         }
 
         if(bio.compareTo("")==0){
-            vAddress.setText(getResources().getString(R.string.description));
+            vAddress.setText(getResources().getString(R.string.bioExample));
         }
         else {
             vAddress.setText(bio);
         }
 
-        if(reset){
-        //if(name.compareTo("")==0){
-            showPopupReset();
-            prefs.edit().putBoolean("reset", false).apply();
-        }
-        if(save){
-            showPopupSave();
+        /*if(save){
+            Tools tool = new Tools();
             prefs.edit().putBoolean("save", false).apply();
-        }
+            android.app.AlertDialog.Builder ad = tool.showPopup(this,getString(R.string.alertUpd),"Ok","");
+            ad.show();
+        }*/
     }
 
     //for EditButton in the action bar
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater mi = getMenuInflater();
-        mi.inflate(R.menu.actionbar1, menu);
+        mi.inflate(R.menu.actionbar_showp, menu);
         //return super.onCreateOptionsMenu(menu);
         return true;
     }
@@ -117,55 +121,29 @@ public class showProfile extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent intentMod = new Intent(this, editProfile.class);
         startActivity(intentMod);
+        overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
         return true;
     }
-
-    private void showPopupReset() {
-        AlertDialog.Builder alertDlg = new AlertDialog.Builder(this);
-        TextView msg = new TextView(this);
-        msg.setText(getResources().getString(R.string.alertResetDone));
-        //msg.setGravity(Gravity.TEXT_ALIGNMENT_CENTER);
-        msg.setGravity(Gravity.CENTER);
-        alertDlg.setView(msg);
-        alertDlg.setCancelable(false);
-        alertDlg.setNeutralButton("Ok", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-            }
-        });
-        alertDlg.show();
-    }
-
-    private void showPopupSave() {
-        AlertDialog.Builder alertDlg = new AlertDialog.Builder(this);
-        TextView msg = new TextView(this);
-        msg.setText(getResources().getString(R.string.alertSave));
-        //msg.setGravity(Gravity.TEXT_ALIGNMENT_CENTER);
-        msg.setGravity(Gravity.CENTER);
-        alertDlg.setView(msg);
-        alertDlg.setCancelable(false);
-        alertDlg.setNeutralButton("Ok", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-            }
-        });
-        alertDlg.show();
-    }
-
+    //
     private void loadImage(String path)
     {
-
         try {
             File f = new File(path, "profile.jpg");
             Bitmap b = BitmapFactory.decodeStream(new FileInputStream(f));
             profileImage = findViewById(R.id.profile_image);
             profileImage.setImageBitmap(b);
         }
-        catch (FileNotFoundException e)
-        {
+        catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-
     }
+
+    //per uscire dall'app quando si preme back
+    @Override
+    public void onBackPressed() {
+        moveTaskToBack(true);
+    }
+
+
 }
 

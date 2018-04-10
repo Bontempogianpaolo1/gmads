@@ -1,18 +1,31 @@
 <resources>
-    <string name="app_name">gMads_lab1</string>
     <string name="title_activity_show_profile">showProfile</string>
     <string name="name">Name</string>
     <string name="surname">Surname</string>
     <string name="email">Email</string>
     <string name="bio">Bio</string>
-    <string name="description">Insert Description</string>
+    <string name="description">-- empty --</string>
     <string name="profileImage">Profile Image</string>
     <string name="profileSettingButton"> Edit Profile</string>
     <string name="save">Save</string>
     <string name="reset">Reset</string>
     <string name="cancel">Cancel</string>
-    <string name="alert1">\nAre you sure you want to reset your profile data?</string>
+    <string name="saveQuestion">\nDo you want to save changes?</string>
     <string name="yes">Yes</string>
     <string name="alertResetDone">\nReset done!</string>
-    <string name="alertSave">\nProfile Updated!</string>
+    <string name="alertUpd">\nProfile Updated!</string>
+    //stringhe da non tradurre
+    <string name="imageDirectory">ImageDir</string>
+    //
+    <string name="nameExample"></string>
+    <string name="surnameExample"></string>
+    <string name="emailExample"></string>
+    <string name="bioExample"></string>
+    <string name="address"></string>
+    <string name="selectImage">Change Image</string>
+    <string name="takeImage">\nTake Image</string>
+    <string name="selectFromCamera">Photo</string>
+    <string name="selectGallery">Gallery</string>
+    <string name="showProfile">Profile</string>
+    <string name="editProfile">Edit Profile</string>
 </resources>
