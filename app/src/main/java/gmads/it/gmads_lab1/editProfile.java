@@ -64,6 +64,7 @@ public class editProfile extends AppCompatActivity {
     private String Address;
     private Context context;
     private ImageView profileImage;//dati profilo
+    private Bitmap newBitMapProfileImage; //temp per nuova immagine
     private String mCurrentPhotoPath;//indirizzo immagine
     private SharedPreferences prefs;
 
@@ -128,35 +129,37 @@ public class editProfile extends AppCompatActivity {
         EditText vEmail = findViewById(R.id.email_input);
         EditText vAddress = findViewById(R.id.address_input);
         //controllo su email usando una regex
-        Pattern pat= Pattern.compile("^([A-Za-z0-9_\\-\\.])+\\@([A-Za-z0-9_\\-\\.])+\\.([A-Za-z]{2,4})$");
-        if(!pat.matcher(vEmail.getText()).matches()){
-           // vEmail.setLinkTextColor(RED);
-            Tools error= new Tools();
-            error.showPopup(this,"\nErrore formato email" ,"ok","").show();
+        Pattern pat = Pattern.compile("^([A-Za-z0-9_\\-\\.])+\\@([A-Za-z0-9_\\-\\.])+\\.([A-Za-z]{2,4})$");
+        if (!pat.matcher(vEmail.getText()).matches()) {
+            // vEmail.setLinkTextColor(RED);
+            Tools error = new Tools();
+            error.showPopup(this, "\nErrore formato email", "ok", "").show();
             return;
         }
 
         //tattica per fare scomparire la tastiera quando si preme il tasto save
-        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
         //
-        prefs.edit().putString("name", vName.getText().toString()).apply();
-        prefs.edit().putString("surname", vSurname.getText().toString()).apply();
-        prefs.edit().putString("email", vEmail.getText().toString()).apply();
-        prefs.edit().putString("address", vAddress.getText().toString()).apply();
-        prefs.edit().putBoolean("save", true).apply();
-        File image= new File(getString(R.string.imageDirectory),"newprofile.jpg");
-        image.renameTo(new File(getString(R.string.imageDirectory),"profile.jpg"));
+        File image = new File(getString(R.string.imageDirectory), "newprofile.jpg");
+        image.renameTo(new File(getString(R.string.imageDirectory), "profile.jpg"));
         //save popup
         Tools t = new Tools();
-        android.app.AlertDialog.Builder ad=t.showPopup(this,getString(R.string.alertSave),"","");
-        ad.setPositiveButton("Ok",(vi,w)->{
+        android.app.AlertDialog.Builder ad = t.showPopup(this, getString(R.string.saveQuestion), "", getString(R.string.cancel));
+        ad.setPositiveButton("Ok", (vi, w) -> {
+            prefs.edit().putString("name", vName.getText().toString()).apply();
+            prefs.edit().putString("surname", vSurname.getText().toString()).apply();
+            prefs.edit().putString("email", vEmail.getText().toString()).apply();
+            prefs.edit().putString("address", vAddress.getText().toString()).apply();
+            //prefs.edit().putBoolean("save", true).apply();
+            prefs.edit().putBoolean("save", false).apply();
+            saveImage(newBitMapProfileImage);
             Intent pickIntent = new Intent(this, showProfile.class);
             startActivity(pickIntent);
+            finish();
         });
         ad.show();
         //showPopupSave();
-        prefs.edit().putBoolean("save", false).apply();
     }
 
     /*private void onResetClick(View v, SharedPreferences prefs) {
@@ -248,17 +251,16 @@ public class editProfile extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode,resultCode,data);
         if (requestCode == REQUEST_IMAGE_CAPTURE  && resultCode == RESULT_OK) {
-            Bitmap photo = (Bitmap) data.getExtras().get("data");
-            profileImage.setImageBitmap(photo);
+            newBitMapProfileImage = (Bitmap) data.getExtras().get("data");
+            profileImage.setImageBitmap(newBitMapProfileImage);
 
-            saveImage(photo);
-        }else if ( requestCode==REQUEST_IMAGE_LIBRARY && resultCode == RESULT_OK) {
+        } else if ( requestCode==REQUEST_IMAGE_LIBRARY && resultCode == RESULT_OK) {
             try{
                 final Uri imageUri = data.getData();
                 final InputStream imageStream = getContentResolver().openInputStream(imageUri);
-                final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
-                profileImage.setImageBitmap(selectedImage);
-                saveImage(selectedImage);
+                newBitMapProfileImage = BitmapFactory.decodeStream(imageStream);
+                profileImage.setImageBitmap(newBitMapProfileImage);
+                //saveImage(selectedImage);
             } catch (IOException e) {
                 e.printStackTrace();
             }

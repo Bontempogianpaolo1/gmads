@@ -4,7 +4,7 @@
     <string name="surname">Cognome</string>
     <string name="email">Email</string>
     <string name="address">Bio</string>
-    <string name="description">Inserisci Descrizione</string>
+    <string name="description">-- vuota --</string>
     <string name="app_name">gMads_lab1</string>
     <string name="title_activity_show_profile">showProfile</string>
     <string name="bio">Bio</string>
@@ -13,10 +13,9 @@
     <string name="save">Salva</string>
     <string name="reset">Reset</string>
     <string name="cancel">Annulla</string>
-    <string name="alert1">\nSei sicuro di voler resettare i dati del tuo profilo?</string>
+    <string name="saveQuestion">\nVuoi salvare le modifiche?</string>
     <string name="yes">Si</string>
-    <string name="alertResetDone">\nReset riuscito!</string>
-    <string name="alertSave">\nSalvataggio avvenuto!</string>
+    <string name="alertUpd">\nSalvataggio avvenuto!</string>
     <string name="nameExample"></string>
     <string name="surnameExample"></string>
     <string name="bioExample"></string>
