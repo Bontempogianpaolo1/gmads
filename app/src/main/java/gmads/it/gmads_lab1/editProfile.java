@@ -54,9 +54,9 @@ public class editProfile extends AppCompatActivity {
         String path = directory.getPath();
         //inizialize  layout
         LinearLayout ll= findViewById(R.id.linearLayout1);
-        LinearLayout l2= findViewById(R.id.linearlayout2);
+        //LinearLayout l2= findViewById(R.id.linearlayout2);
         ll.setOnClickListener(this::setFocusOnClick);
-        l2.setOnClickListener(this::setFocusOnClick);
+        //l2.setOnClickListener(this::setFocusOnClick);
         //inizialize  user data
         Name = prefs.getString("name", getString(R.string.nameExample));
         Surname = prefs.getString("surname", getString(R.string.surnameExample));

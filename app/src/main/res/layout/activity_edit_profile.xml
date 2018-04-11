@@ -24,24 +24,12 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!--<ImageView
-                android:id="@+id/profile_image"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="16dp"
-
-                android:layout_marginRight="16dp"
-                android:layout_marginTop="10dp"
-                android:clickable="true"
-                android:contentDescription="@string/profileImage"
-                android:focusable="true"
-                android:src="@drawable/shape" />-->
 
             <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/profile_image"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
+                android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="5dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
@@ -85,6 +73,7 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:layout_marginTop="6dp"
+                android:hint="@string/nameExample"
                 android:inputType="text"
                 android:textColorLink="@color/colorPrimary" />
 
@@ -107,6 +96,7 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:layout_marginTop="6dp"
+                android:hint="@string/surnameExample"
                 android:inputType="text"
                 android:labelFor="@+id/surname"
                 android:textColorLink="@color/colorPrimary" />
@@ -130,7 +120,7 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:layout_marginTop="6dp"
-                android:hint="email"
+                android:hint="@string/emailExample"
                 android:inputType="textEmailAddress" />
 
             <TextView
@@ -152,8 +142,9 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:layout_marginTop="6dp"
-                android:maxLength="120"
-                android:inputType="textMultiLine" />
+                android:hint="@string/bioExample"
+                android:inputType="textMultiLine"
+                android:maxLength="120" />
 
             <LinearLayout
                 android:id="@+id/linearLayout1"
