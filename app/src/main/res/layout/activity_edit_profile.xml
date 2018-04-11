@@ -144,7 +144,7 @@
                 android:layout_marginTop="6dp"
                 android:hint="@string/bio"
                 android:inputType="textMultiLine"
-                android:maxLength="120" />
+                 />
 
             <LinearLayout
                 android:id="@+id/linearLayout1"

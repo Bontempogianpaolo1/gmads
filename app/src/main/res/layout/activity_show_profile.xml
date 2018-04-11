@@ -82,26 +82,24 @@
         android:textStyle="bold|italic"
         tools:ignore="RtlHardcoded" />
 
-    <ScrollView
-        android:id="@+id/scrollView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_margin="16dp"
-        android:layout_weight="0.5"
-        android:background="@drawable/rounded_corner">
+
 
         <TextView
             android:id="@+id/bio"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="20dp"
-            android:maxLength="120"
-            android:text=""
-            android:textAlignment="center" />
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="16dp"
+            android:layout_weight="0.5"
+            android:background="@drawable/rounded_corner"
 
-    </ScrollView>
+            android:text=""
+            android:textAlignment="center"
+            android:scrollbars="vertical"
+
+            />
+
+
 
 </LinearLayout>
 
