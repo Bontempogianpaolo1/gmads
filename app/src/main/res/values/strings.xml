@@ -4,7 +4,7 @@
     <string name="surname">Surname</string>
     <string name="email">Email</string>
     <string name="bio">Bio</string>
-    <string name="bioEditP">Bio [max 120 char]</string>
+    <string name="bioEditP">Bio [max 250 char]</string>
     <string name="description">-- empty --</string>
     <string name="profileImage">Profile Image</string>
     <string name="profileSettingButton"> Edit Profile</string>
@@ -18,16 +18,18 @@
     //stringhe da non tradurre
     <string name="imageDirectory">ImageDir</string>
     //
-    <string name="nameExample"></string>
-    <string name="surnameExample"></string>
-    <string name="emailExample"></string>
-    <string name="bioExample"></string>
-    <string name="address"></string>
+    <string name="nameExample">Paolo</string>
+    <string name="surnameExample">Rossi</string>
+    <string name="emailExample">example@p.com</string>
+    <string name="bioExample">--empty--</string>
+    <string name="address">Bio</string>
     <string name="selectImage">Change Image</string>
     <string name="takeImage">\nTake Image</string>
     <string name="selectFromCamera">Photo</string>
     <string name="selectGallery">Gallery</string>
     <string name="showProfile">Profile</string>
     <string name="editProfile">Edit Profile</string>
+    <string name="saveProfile">Save Profile</string>
     <string name="errorEmail">Error format email</string>
+    <string name="app_name">gMads</string>
 </resources>
