@@ -140,6 +140,12 @@ public class editProfile extends AppCompatActivity {
     private void onClickImage(View v) {
         Tools t= new Tools();
         //set popup
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            assert imm != null;
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
         v.getContext();
         android.app.AlertDialog.Builder ad=t.showPopup(this,getString(R.string.takeImage),getString(R.string.selectGallery),getString(R.string.selectFromCamera));
         ad.setPositiveButton("gallery",(vi,w)->{
