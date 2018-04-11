@@ -30,4 +30,5 @@
     <string name="editProfile">Modifica Profilo</string>
     <string name="errorEmail">Errore formato email</string>
     <string name="alertResetDone">reset fatto!</string>
+    <string name="saveProfile">Salva Profilo</string>
 </resources>
