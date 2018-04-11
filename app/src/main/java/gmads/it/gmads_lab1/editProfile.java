@@ -82,8 +82,8 @@ public class editProfile extends AppCompatActivity {
         File directory = cw.getDir(getString(R.string.imageDirectory), Context.MODE_PRIVATE);
         String path = directory.getPath();
         //inizializzo bottoni di save e reset
-        Button s = findViewById(R.id.save_profile);
-        s.setOnClickListener(v -> onSaveClick(v, prefs));
+        //Button s = findViewById(R.id.save_profile);
+        //s.setOnClickListener(v -> onSaveClick(v, prefs));
         /*Button c = findViewById(R.id.reset_profile);
         c.setOnClickListener(v -> onResetClick(v, prefs));*/
         //inizializzo i layout
@@ -124,7 +124,7 @@ public class editProfile extends AppCompatActivity {
     }
 
     //al click del tasto save prendo i dati salvati negli edittext e li imposto come predefiniti
-    private void onSaveClick(View v, SharedPreferences prefs) {
+    private void onSaveClick() {
         EditText vName = findViewById(R.id.name_input);
         EditText vSurname = findViewById(R.id.surname_input);
         EditText vEmail = findViewById(R.id.email_input);
@@ -133,14 +133,15 @@ public class editProfile extends AppCompatActivity {
         Pattern pat = Pattern.compile("^([A-Za-z0-9_\\-\\.])+\\@([A-Za-z0-9_\\-\\.])+\\.([A-Za-z]{2,4})$");
         if (!pat.matcher(vEmail.getText()).matches()) {
             // vEmail.setLinkTextColor(RED);
-            Tools error = new Tools();
-            error.showPopup(this, "\nErrore formato email", "ok", "").show();
+           EditText et=findViewById(R.id.email_input);
+           et.setText("");
+           et.setHint(R.string.errorEmail);
+           et.setHintTextColor(RED);
             return;
         }
-
         //tattica per fare scomparire la tastiera quando si preme il tasto save
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+        // rimettere imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
         //
         //File image = new File(getString(R.string.imageDirectory), "newprofile.jpg");
         //image.renameTo(new File(getString(R.string.imageDirectory), "profile.jpg"));
@@ -162,6 +163,16 @@ public class editProfile extends AppCompatActivity {
         ad.show();
         //showPopupSave();
     }
+
+    //for SaveButton in the action bar
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater mi = getMenuInflater();
+        mi.inflate(R.menu.actionbar_editp, menu);
+        //return super.onCreateOptionsMenu(menu);
+        return true;
+    }
+    //
 
     /*private void onResetClick(View v, SharedPreferences prefs) {
         createDialog();
@@ -324,7 +335,7 @@ public class editProfile extends AppCompatActivity {
         }
     }*/
 
-    //animazione freccia indietro
+    //animazione freccia indietro + tasto save
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here.
@@ -334,6 +345,8 @@ public class editProfile extends AppCompatActivity {
                 finish();
                 overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out);
                 return true;
+            default://caso Save
+                onSaveClick();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -344,5 +357,6 @@ public class editProfile extends AppCompatActivity {
         super.onBackPressed();
         overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out);
     }
+
 }
 
