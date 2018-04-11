@@ -55,10 +55,14 @@ public class editProfile extends AppCompatActivity {
         String path = directory.getPath();
         //inizialize  layout
         LinearLayout ll= findViewById(R.id.linearLayout1);
-        //LinearLayout l2= findViewById(R.id.linearlayout2);
+        LinearLayout l2= findViewById(R.id.linearlayout2);
         ll.setOnClickListener(this::setFocusOnClick);
-        //l2.setOnClickListener(this::setFocusOnClick);
+        l2.setOnClickListener(this::setFocusOnClick);
         //inizialize  user data
+        Name = prefs.getString("name", "");
+        Surname = prefs.getString("surname", "");
+        Email = prefs.getString("email", "");
+        Address = prefs.getString("address", "");
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         //set image
         profileImage = findViewById(R.id.profile_image);
@@ -71,6 +75,17 @@ public class editProfile extends AppCompatActivity {
         profileImage.setOnClickListener(this::onClickImage);
         findViewById(R.id.selectimage).setOnClickListener(this::onClickImage);
         //set text components
+        TextView vName = findViewById(R.id.name_input);
+        vName.setText(Name);
+
+        TextView vSurname = findViewById(R.id.surname_input);
+        vSurname.setText(Surname);
+
+        TextView vEmail = findViewById(R.id.email_input);
+        vEmail.setText(Email);
+
+        TextView vAddress = findViewById(R.id.address_input);
+        vAddress.setText(Address);
     }
     //save data on click save
     private void onSaveClick() {
@@ -79,6 +94,12 @@ public class editProfile extends AppCompatActivity {
         EditText vEmail = findViewById(R.id.email_input);
         EditText vAddress = findViewById(R.id.address_input);
         //check on email using a regex
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            assert imm != null;
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
         Pattern pat = Pattern.compile("^([A-Za-z0-9_\\-\\.])+\\@([A-Za-z0-9_\\-\\.])+\\.([A-Za-z]{2,4})$");
         if (!pat.matcher(vEmail.getText()).matches()) {
             // vEmail.setLinkTextColor(RED);
