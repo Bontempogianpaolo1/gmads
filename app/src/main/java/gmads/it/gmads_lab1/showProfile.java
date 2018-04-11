@@ -27,7 +27,7 @@ public class showProfile extends AppCompatActivity {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         String name = prefs.getString("name", getResources().getString(R.string.name));
         String surname = prefs.getString("surname", getResources().getString(R.string.surname));
-        String email = prefs.getString("email", getString(R.string.emailExample));
+        String email = prefs.getString("email", getString(R.string.description));
         String bio = prefs.getString("address", getResources().getString(R.string.description));
         //settare titolo activity nella action bar
         ActionBar gsab=getSupportActionBar();
