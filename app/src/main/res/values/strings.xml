@@ -4,7 +4,7 @@
     <string name="surname">Surname</string>
     <string name="email">Email</string>
     <string name="bio">Bio</string>
-    <string name="bioEditP">Bio [max 120 char]</string>
+    <string name="bioEditP">Bio [max 250 char]</string>
     <string name="description">-- empty --</string>
     <string name="profileImage">Profile Image</string>
     <string name="profileSettingButton"> Edit Profile</string>

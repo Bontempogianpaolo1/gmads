@@ -9,6 +9,7 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -48,6 +49,7 @@ public class showProfile extends AppCompatActivity {
         TextView vName = findViewById(R.id.name);
         TextView vEmail = findViewById(R.id.email);
         TextView vAddress = findViewById(R.id.bio);
+        vAddress.setMovementMethod(new ScrollingMovementMethod());
         if(name.compareTo("")==0){
             vName.setText(getResources().getString(R.string.name));
             vName.append(" " + getResources().getString(R.string.surname));
