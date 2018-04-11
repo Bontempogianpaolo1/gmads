@@ -73,7 +73,7 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:layout_marginTop="6dp"
-                android:hint="@string/nameExample"
+                android:hint="@string/name"
                 android:inputType="text"
                 android:textColorLink="@color/colorPrimary" />
 
@@ -96,7 +96,7 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:layout_marginTop="6dp"
-                android:hint="@string/surnameExample"
+                android:hint="@string/surname"
                 android:inputType="text"
                 android:labelFor="@+id/surname"
                 android:textColorLink="@color/colorPrimary" />
@@ -120,7 +120,7 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:layout_marginTop="6dp"
-                android:hint="@string/emailExample"
+                android:hint="@string/email"
                 android:inputType="textEmailAddress" />
 
             <TextView
@@ -142,7 +142,7 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:layout_marginTop="6dp"
-                android:hint="@string/bioExample"
+                android:hint="@string/bio"
                 android:inputType="textMultiLine"
                 android:maxLength="120" />
 

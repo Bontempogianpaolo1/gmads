@@ -58,10 +58,6 @@ public class editProfile extends AppCompatActivity {
         ll.setOnClickListener(this::setFocusOnClick);
         //l2.setOnClickListener(this::setFocusOnClick);
         //inizialize  user data
-        Name = prefs.getString("name", getString(R.string.nameExample));
-        Surname = prefs.getString("surname", getString(R.string.surnameExample));
-        Email = prefs.getString("email", getString(R.string.emailExample));
-        Address = prefs.getString("address", getString(R.string.bioExample));
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         //set image
         profileImage = findViewById(R.id.profile_image);
@@ -74,14 +70,6 @@ public class editProfile extends AppCompatActivity {
         profileImage.setOnClickListener(this::onClickImage);
         findViewById(R.id.selectimage).setOnClickListener(this::onClickImage);
         //set text components
-        TextView vName = findViewById(R.id.name_input);
-        vName.setText(Name);
-        TextView vSurname = findViewById(R.id.surname_input);
-        vSurname.setText(Surname);
-        TextView vEmail = findViewById(R.id.email_input);
-        vEmail.setText(Email);
-        TextView vAddress = findViewById(R.id.address_input);
-        vAddress.setText(Address);
     }
     //save data on click save
     private void onSaveClick() {
