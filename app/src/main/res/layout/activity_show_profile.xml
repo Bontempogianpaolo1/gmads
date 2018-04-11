@@ -96,7 +96,7 @@
             android:text=""
             android:textAlignment="center"
             android:scrollbars="vertical"
-
+            android:maxLength="250"
             />
 
 

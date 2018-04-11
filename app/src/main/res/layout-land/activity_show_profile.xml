@@ -122,7 +122,8 @@
                 android:background="@drawable/rounded_corner"
                 android:text=""
                 android:textAlignment="center"
-                android:scrollbars="vertical"/>
+                android:scrollbars="vertical"
+                android:maxLength="250"/>
 
 
 
