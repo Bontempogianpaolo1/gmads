@@ -97,6 +97,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="20dp"
+            android:maxLength="120"
             android:text=""
             android:textAlignment="center" />
 

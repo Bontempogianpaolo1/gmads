@@ -140,6 +140,7 @@
                 android:layout_gravity="center"
                 android:layout_margin="20dp"
                 android:text=""
+                android:maxLength="120"
                 android:textAlignment="center" />
 
         </ScrollView>
