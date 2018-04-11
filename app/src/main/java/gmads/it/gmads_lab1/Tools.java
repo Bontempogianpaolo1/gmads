@@ -8,10 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.widget.TextView;
 
-/**
- * Created by bitri on 03/04/2018.
- */
-
 public class Tools extends AppCompatActivity {
 
     public Tools(){
@@ -24,7 +20,7 @@ public class Tools extends AppCompatActivity {
         //msg.setGravity(Gravity.TEXT_ALIGNMENT_CENTER);
         msg.setGravity(Gravity.CENTER);
         alertDlg.setView(msg);
-        alertDlg.setCancelable(false);
+        alertDlg.setCancelable(true);
         alertDlg.setPositiveButton(msg1, (dialog, which) -> {});
         alertDlg.setNegativeButton(msg2, (dialog, which) -> {});
        // alertDlg.show();

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -10,6 +9,7 @@
     android:clickable="true"
     android:focusable="true"
     android:orientation="vertical"
+    android:focusableInTouchMode="true"
     tools:context="gmads.it.gmads_lab1.editProfile">
 
     <ScrollView
@@ -24,16 +24,23 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <ImageView
+
+            <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/profile_image"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
-                android:layout_margin="5dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="10dp"
+                android:layout_weight="0.6"
                 android:clickable="true"
                 android:contentDescription="@string/profileImage"
-
                 android:focusable="true"
-                android:src="@drawable/shape" />
+                android:src="@drawable/shape"
+                app:civ_border_color="#FF000000"
+                app:civ_border_width="2dp" />
 
             <TextView
                 android:id="@+id/selectimage"
@@ -66,6 +73,7 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:layout_marginTop="6dp"
+                android:hint="@string/name"
                 android:inputType="text"
                 android:textColorLink="@color/colorPrimary" />
 
@@ -88,6 +96,7 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:layout_marginTop="6dp"
+                android:hint="@string/surname"
                 android:inputType="text"
                 android:labelFor="@+id/surname"
                 android:textColorLink="@color/colorPrimary" />
@@ -111,6 +120,7 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:layout_marginTop="6dp"
+                android:hint="@string/email"
                 android:inputType="textEmailAddress" />
 
             <TextView
@@ -121,7 +131,7 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:layout_marginTop="16dp"
-                android:text="@string/bio"
+                android:text="@string/bioEditP"
                 android:textStyle="bold" />
 
             <EditText
@@ -132,7 +142,9 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:layout_marginTop="6dp"
-                android:inputType="text" />
+                android:hint="@string/bio"
+                android:inputType="textMultiLine"
+                android:maxLength="120" />
 
             <LinearLayout
                 android:id="@+id/linearLayout1"
@@ -140,32 +152,6 @@
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/save_profile"
-                    style="?android:attr/buttonBarButtonStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    android:layout_marginLeft="16dp"
-                    android:layout_weight="1"
-                    android:background="@color/colorPrimaryDark"
-                    android:text="@string/save"
-                    android:textColor="@color/colorPale"
-                    tools:ignore="RtlHardcoded" />
-
-                <Button
-                    android:id="@+id/reset_profile"
-                    style="?android:attr/buttonBarButtonStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="end"
-                    android:layout_marginRight="16dp"
-                    android:layout_weight="1"
-                    android:background="@color/colorPrimaryDark"
-                    android:text="@string/reset"
-                    android:textColor="@color/colorPale"
-                    tools:ignore="RtlHardcoded" />
 
             </LinearLayout>
 
