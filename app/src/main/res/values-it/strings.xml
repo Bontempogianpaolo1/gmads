@@ -4,7 +4,7 @@
     <string name="surname">Cognome</string>
     <string name="email">Email</string>
     <string name="address">Bio</string>
-    <string name="bioEditP">Bio [max 120 caratteri]</string>
+    <string name="bioEditP">Bio [max 250 caratteri]</string>
     <string name="description">-- vuota --</string>
     <string name="app_name">gMads_lab1</string>
     <string name="title_activity_show_profile">showProfile</string>
@@ -17,10 +17,10 @@
     <string name="saveQuestion">\nVuoi salvare le modifiche?</string>
     <string name="yes">Si</string>
     <string name="alertUpd">\nSalvataggio avvenuto!</string>
-    <string name="nameExample"></string>
-    <string name="surnameExample"></string>
-    <string name="bioExample"></string>
-    <string name="emailExample"></string>
+    <string name="nameExample">Paolo</string>
+    <string name="surnameExample">Rossi</string>
+    <string name="bioExample">--vuoto--</string>
+    <string name="emailExample">esempio@p.com</string>
     <string name="imageDirectory">ImageDir</string>
     <string name="selectImage">Cambia foto profilo</string>
     <string name="selectFromCamera">Foto</string>
@@ -28,4 +28,7 @@
     <string name="takeImage">\nScegli immagine da</string>
     <string name="showProfile">Profilo</string>
     <string name="editProfile">Modifica Profilo</string>
+    <string name="errorEmail">Errore formato email</string>
+    <string name="alertResetDone">reset fatto!</string>
+    <string name="saveProfile">Salva Profilo</string>
 </resources>
