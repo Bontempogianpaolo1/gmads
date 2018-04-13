@@ -6,7 +6,8 @@
     <item
         android:id="@+id/editSaveP"
         android:icon="@android:drawable/ic_menu_save"
-        android:title="Save Profile"
-        app:showAsAction="always" />
+        android:title="@string/saveProfile"
+        app:showAsAction="always"
+        />
 
 </menu>
