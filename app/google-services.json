@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "331172722247",
+    "firebase_url": "https://gmads-f7194.firebaseio.com",
+    "project_id": "gmads-f7194",
+    "storage_bucket": "gmads-f7194.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:331172722247:android:16f4e52c0d594c5e",
+        "android_client_info": {
+          "package_name": "gmads.it"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "331172722247-r52hlvhbfaibpsqelat7gdil5prrcekf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "gmads.it",
+            "certificate_hash": "3a1c13bc6d5c1bcc0c236e908a390daca31f7b6b"
+          }
+        },
+        {
+          "client_id": "331172722247-613ok5239ifg64ega2146ba2q7sn988d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCX6ajXLHDPaEmqwefKScXgp0FDRdP-Kg4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "331172722247-613ok5239ifg64ega2146ba2q7sn988d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
