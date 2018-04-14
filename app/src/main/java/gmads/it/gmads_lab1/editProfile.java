@@ -45,11 +45,7 @@ public class editProfile extends AppCompatActivity {
         String Surname;
         String Email;
         String Address;
-        //
-        FirebaseManagement fm= new FirebaseManagement();
-        fm.writeonFire();
 
-        //
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
