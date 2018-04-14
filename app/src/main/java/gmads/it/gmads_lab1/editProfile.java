@@ -45,7 +45,10 @@ public class editProfile extends AppCompatActivity {
         String Surname;
         String Email;
         String Address;
-
+        //
+        Tools t3= new Tools();
+        t3.getjson(getApplicationContext());
+        //
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
