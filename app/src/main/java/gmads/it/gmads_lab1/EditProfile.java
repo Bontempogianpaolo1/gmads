@@ -9,8 +9,11 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -30,7 +33,7 @@ import java.util.regex.Pattern;
 import static android.graphics.Color.RED;
 import android.view.WindowManager;
 
-public class editProfile extends AppCompatActivity {
+public class EditProfile extends AppCompatActivity {
 
     static final int REQUEST_IMAGE_CAPTURE = 1888;
     static final int REQUEST_IMAGE_LIBRARY = 1889;
@@ -51,6 +54,10 @@ public class editProfile extends AppCompatActivity {
         //
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarEditP);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         ContextWrapper cw = new ContextWrapper(getApplicationContext());
         // path to /data/data/yourapp/app_data/imageDir
@@ -124,7 +131,7 @@ public class editProfile extends AppCompatActivity {
             if(imagechanged) {
                 saveImage(newBitMapProfileImage);
             }
-            Intent pickIntent = new Intent(this, showProfile.class);
+            Intent pickIntent = new Intent(this, ShowProfile.class);
             startActivity(pickIntent);
         });
         ad.show();
