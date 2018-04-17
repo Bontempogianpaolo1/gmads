@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".showProfile"
+            android:name=".ShowProfile"
             android:label="gMADs_1">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,10 +23,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".editProfile"
+            android:name=".EditProfile"
             android:configChanges="orientation"
             android:label="@string/editProfile"
-            android:parentActivityName=".showProfile"></activity>
+            android:parentActivityName=".ShowProfile"></activity>
         <activity android:name=".Tools" />
         <activity android:name=".ImageManagement" />
         <activity
