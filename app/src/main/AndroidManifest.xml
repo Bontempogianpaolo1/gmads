@@ -7,8 +7,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:fullBackupContent="true"
         android:allowBackup="true"
+        android:fullBackupContent="true"
         android:icon="@mipmap/ic_launcher"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
@@ -26,17 +26,17 @@
             android:name=".editProfile"
             android:configChanges="orientation"
             android:label="@string/editProfile"
-            android:parentActivityName=".showProfile">
-
-        </activity>
+            android:parentActivityName=".showProfile"></activity>
         <activity android:name=".Tools" />
         <activity android:name=".ImageManagement" />
         <activity
             android:name=".AddBook"
             android:label="@string/title_activity_add_book"
-            android:theme="@style/AppTheme.NoActionBar">
-
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".SaveBook"
+            android:label="@string/title_activity_save_book"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
