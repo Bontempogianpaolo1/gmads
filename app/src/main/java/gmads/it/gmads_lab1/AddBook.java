@@ -1,7 +1,11 @@
 package gmads.it.gmads_lab1;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.view.View;
@@ -13,9 +17,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.TextView;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 public class AddBook extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    static final int REQUEST_IMAGE_CAPTURE = 1888;
+    private Bitmap barcodeBitmap;
+    private TextView isbnText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +54,10 @@ public class AddBook extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        Button barcodeButton = (Button) findViewById(R.id.buttonGet);
+        barcodeButton.setOnClickListener(this::onGetISBNClick);
+
     }
 
     @Override
@@ -95,5 +112,28 @@ public class AddBook extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void onGetISBNClick(View v) {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+    }
+
+    @Override
+    //-->function activated when a request is terminated
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode,resultCode,data);
+        //manage request image capture
+        if (requestCode == REQUEST_IMAGE_CAPTURE  && resultCode == RESULT_OK) {
+
+            isbnText = (TextView) findViewById(R.id.textViewISBN);
+            Bundle imageUri = data.getExtras();
+            assert imageUri != null;
+
+            barcodeBitmap = (Bitmap) imageUri.get("data");
+            ImageManagement m = new ImageManagement();
+            isbnText.setText(m.getIsbnFromBarcode(barcodeBitmap));
+            //manage request image from gallery
+        }
     }
 }
