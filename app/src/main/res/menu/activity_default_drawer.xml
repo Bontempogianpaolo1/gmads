@@ -10,7 +10,7 @@
             android:title="@string/showProfile" />
         <item
             android:id="@+id/nav_addBook"
-            android:icon="@drawable/ic_menu_gallery"
+            android:icon="@drawable/ic_add_book_24dp"
             android:title="@string/addBook" />
 
     </group>
