@@ -47,11 +47,10 @@ public class Tools extends AppCompatActivity {
         return alertDlg;
     }
 
-    public void getjson(Context c) {
-        String url = "https://www.googleapis.com/books/v1/volumes?q=ISBN:<9780545010221>";
-
+    public void getjson(Context c,  String isbn) {
+        String url = "https://www.googleapis.com/books/v1/volumes?q=ISBN:<";
+        url = url + isbn + ">";
         RequestQueue queue = Volley.newRequestQueue(c);
-
 
 // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,

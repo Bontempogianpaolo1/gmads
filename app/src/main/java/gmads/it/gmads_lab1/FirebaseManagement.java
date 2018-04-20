@@ -43,7 +43,6 @@ public class FirebaseManagement {
     public void readfromFire(){
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-
         DatabaseReference myRef = database.getReference("ciao");
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
