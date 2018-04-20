@@ -22,6 +22,7 @@ import android.widget.TextView;
 import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
+
 public class ImageManagement extends AppCompatActivity {
     public ImageManagement(){
 
@@ -62,7 +63,6 @@ public class ImageManagement extends AppCompatActivity {
     }
 
     public String getIsbnFromBarcode(Bitmap myBitmap){
-
 
         BarcodeDetector detector =
                 new BarcodeDetector.Builder(getApplicationContext())

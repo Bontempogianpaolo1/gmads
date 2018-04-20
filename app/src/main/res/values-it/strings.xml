@@ -31,4 +31,5 @@
     <string name="errorEmail">Errore formato email</string>
     <string name="alertResetDone">reset fatto!</string>
     <string name="saveProfile">Salva Profilo</string>
+    <string name="addBook">Aggiungi Libro</string>
 </resources>

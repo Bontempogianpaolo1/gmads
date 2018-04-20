@@ -14,17 +14,36 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 public class FirebaseManagement {
-   public void writeonFire(){
-       FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+
+    private static volatile FirebaseManagement firebaseManagementInstance = new FirebaseManagement();
+
+    //private constructor
+    private FirebaseManagement() {
+
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+    }
+
+    public static FirebaseManagement getInstance(){
+
+        return firebaseManagementInstance;
+    }
+
+    public void registerUser(){
+
+    }
+
+    public void writeonFire(){
 
        FirebaseDatabase database = FirebaseDatabase.getInstance();
        DatabaseReference myRef = database.getReference("message");
        myRef.setValue("Hello, World!");
 
-   }
+    }
+
     public void readfromFire(){
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
+
         DatabaseReference myRef = database.getReference("ciao");
         myRef.addValueEventListener(new ValueEventListener() {
             @Override

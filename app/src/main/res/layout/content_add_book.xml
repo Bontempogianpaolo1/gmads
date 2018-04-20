@@ -8,51 +8,67 @@
     tools:context=".AddBook"
     tools:showIn="@layout/app_bar_add_book">
 
+
     <EditText
-        android:id="@+id/isbn_insert"
+        android:id="@+id/textViewISBN"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:ems="10"
         android:inputType="textPersonName"
-        tools:layout_editor_absoluteX="85dp"
-        tools:layout_editor_absoluteY="146dp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/isbn_ask" />
 
     <TextView
         android:id="@+id/isbn_ask"
         android:layout_width="141dp"
         android:layout_height="23dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="104dp"
         android:text="Please insert isbn"
-        tools:layout_editor_absoluteX="122dp"
-        tools:layout_editor_absoluteY="102dp" />
-
-    <CheckBox
-        android:id="@+id/isbn_confirmer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:layout_editor_absoluteX="28dp"
-        tools:layout_editor_absoluteY="146dp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.502"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/isbn_ask_2"
         android:layout_width="wrap_content"
         android:layout_height="25dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:text="Or insert image of the barcode"
-        tools:layout_editor_absoluteX="97dp"
-        tools:layout_editor_absoluteY="225dp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewISBN" />
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/imageViewISBN"
         android:layout_width="69dp"
         android:layout_height="42dp"
-        app:srcCompat="@drawable/ic_menu_camera"
-        tools:layout_editor_absoluteX="158dp"
-        tools:layout_editor_absoluteY="285dp" />
+        android:layout_marginBottom="56dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/isbn_next_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/isbn_ask_2"
+        app:srcCompat="@drawable/ic_menu_camera" />
 
     <Button
         android:id="@+id/isbn_next_button"
         android:layout_width="118dp"
         android:layout_height="56dp"
+        android:layout_marginBottom="60dp"
         android:text="Next"
-        tools:layout_editor_absoluteX="133dp"
-        tools:layout_editor_absoluteY="387dp" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
 </android.support.constraint.ConstraintLayout>

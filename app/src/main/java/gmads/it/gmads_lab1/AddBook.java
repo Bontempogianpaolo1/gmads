@@ -1,8 +1,17 @@
 package gmads.it.gmads_lab1;
 
+import android.Manifest;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -12,15 +21,26 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.animation.ScaleAnimation;
+import android.widget.Button;
+import android.widget.TextView;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 public class AddBook extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private static final int REQUEST_IMAGE_CAPTURE = 1888;
+    private static final int ZBAR_CAMERA_PERMISSION = 1;
+    private Bitmap barcodeBitmap;
+    private TextView isbnText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_book);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarAddBook);
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -40,6 +60,7 @@ public class AddBook extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
     }
 
     @Override
@@ -80,22 +101,48 @@ public class AddBook extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
+        if (id == R.id.nav_showProfile) {
             // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+            Intent intentMod = new Intent(this, ShowProfile.class);
+            startActivity(intentMod);
+            return true;
+        } else if (id == R.id.nav_addBook) {
+            Intent intentMod = new Intent(this, AddBook.class);
+            startActivity(intentMod);
+            return true;
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void onGetISBNClick(View v) {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.CAMERA}, ZBAR_CAMERA_PERMISSION);
+        } else {
+            Intent intent = new Intent(this, Scanner.class);
+            startActivity(intent);
+        }
+    }
+
+    @Override
+    //-->function activated when a request is terminated
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode,resultCode,data);
+        //manage request image capture
+        if (requestCode == REQUEST_IMAGE_CAPTURE  && resultCode == RESULT_OK) {
+
+            isbnText = (TextView) findViewById(R.id.textViewISBN);
+            Bundle imageUri = data.getExtras();
+            assert imageUri != null;
+
+            barcodeBitmap = (Bitmap) imageUri.get("data");
+            ImageManagement m = new ImageManagement();
+            isbnText.setText(m.getIsbnFromBarcode(barcodeBitmap));
+            //manage request image from gallery
+        }
     }
 }
