@@ -38,11 +38,13 @@ public class ShowProfile extends AppCompatActivity  implements NavigationView.On
 
     private static final String EXTRA_PROFILE_KEY="post_key";
     private DatabaseReference mProfileReference;
+    FirebaseDatabase database;
     private ValueEventListener mProfileListener;
     private String mProfile;
     private TextView navName;
     private TextView navMail;
     private ImageView navImage;
+    SharedPreferences prefs;
     Toolbar toolbar;
     DrawerLayout drawer;
     NavigationView navigationView;
@@ -51,18 +53,22 @@ public class ShowProfile extends AppCompatActivity  implements NavigationView.On
     TextView vEmail;
     TextView vAddress;
 
-
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_profile);
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        mProfile= prefs.getString(EXTRA_PROFILE_KEY,null);
+        database= FirebaseManagement.getDatabase();
+        if(mProfile==null){
+            database.setPersistenceEnabled((true));
 
-        mProfile=getIntent().getStringExtra(EXTRA_PROFILE_KEY);
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-
+        }
         if(mProfile!=null) {
 
             mProfileReference = FirebaseDatabase.getInstance().getReference().child("users").child(mProfile);
+            mProfileReference.keepSynced(true);
         }
+
         //settare toolbar + titolo + navbar
         toolbar = (Toolbar) findViewById(R.id.toolbarShowP);
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -139,11 +145,10 @@ public class ShowProfile extends AppCompatActivity  implements NavigationView.On
             vEmail.setText("email");
             navMail.setText("email");
             vAddress.setText("description");
-
-
         }
     }
-
+    /*
+    @Override
     public void onStop(){
 
         super.onStop();
@@ -152,7 +157,7 @@ public class ShowProfile extends AppCompatActivity  implements NavigationView.On
             mProfileReference.removeEventListener(mProfileListener);
 
         }
-    }
+    }*/
     //for EditButton in the action bar
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -163,9 +168,10 @@ public class ShowProfile extends AppCompatActivity  implements NavigationView.On
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent intentMod = new Intent(this, EditProfile.class);
-        intentMod.putExtra(EXTRA_PROFILE_KEY,mProfile);
+        //intentMod.putExtra(EXTRA_PROFILE_KEY,mProfile);
         startActivity(intentMod);
         overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
+
         return true;
     }
     //
@@ -184,13 +190,15 @@ public class ShowProfile extends AppCompatActivity  implements NavigationView.On
         if (id == R.id.nav_showProfile) {
             // Handle the camera action
             Intent intentMod = new Intent(this, ShowProfile.class);
-            intentMod.putExtra(EXTRA_PROFILE_KEY,mProfile);
+            //intentMod.putExtra(EXTRA_PROFILE_KEY,mProfile);
             startActivity(intentMod);
+
             return true;
         } else if (id == R.id.nav_addBook) {
             Intent intentMod = new Intent(this, AddBook.class);
-            intentMod.putExtra(EXTRA_PROFILE_KEY,mProfile);
+            //intentMod.putExtra(EXTRA_PROFILE_KEY,mProfile);
             startActivity(intentMod);
+
             return true;
         }
         drawer.closeDrawer(GravityCompat.START);

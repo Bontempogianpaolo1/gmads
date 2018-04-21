@@ -53,6 +53,13 @@ public class Profile implements Serializable{
         takenBooks.add("cod3");
     }
 
+    public Profile() {
+        valutation=0;
+        npublishedBooks=0;
+        ntakenBooks=0;
+        nrates=0;
+    }
+
     public String getName() {
         return name;
     }

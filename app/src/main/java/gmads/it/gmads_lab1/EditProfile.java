@@ -70,11 +70,11 @@ public class EditProfile extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
+        prefs= PreferenceManager.getDefaultSharedPreferences(this);
+        mProfile=prefs.getString(EXTRA_PROFILE_KEY,null);
 
-        mProfile=getIntent().getStringExtra(EXTRA_PROFILE_KEY);
+        database=FirebaseManagement.getDatabase();
 
-        database=FirebaseDatabase.getInstance();
-        //database.setPersistenceEnabled(true);
 
         if(mProfile!=null) {
             mProfileReference = FirebaseDatabase.getInstance().getReference().child("users").child(mProfile);
@@ -123,7 +123,7 @@ public class EditProfile extends AppCompatActivity {
         vAddress = findViewById(R.id.address_input);
        // vAddress.setText(Address);
     }
-
+    @Override
     public void onStart(){
         super.onStart();
 
@@ -134,7 +134,7 @@ public class EditProfile extends AppCompatActivity {
                     Profile myuser = dataSnapshot.getValue(Profile.class);
                     assert myuser != null;
                     vName.setText(myuser.getName());
-                    vName.append(" " + myuser.getSurname());
+                    vSurname.setText(myuser.getSurname());
                     vEmail.setText(myuser.getEmail());
                     vAddress.setText(myuser.getDescription());
 
@@ -188,14 +188,15 @@ public class EditProfile extends AppCompatActivity {
             mProfileReference= database.getReference().child("users");
             mProfile=mProfileReference.push().getKey();
             mProfileReference= database.getReference().child("users").child(mProfile);
-            mProfileReference.setValue(new Profile(vName.getText().toString(),vSurname.getText().toString(),vEmail.getText().toString(),vEmail.getText().toString(),vAddress.getText().toString()));
+            mProfileReference.setValue(new Profile(vName.getText().toString(),vSurname.getText().toString(),vEmail.getText().toString(),vAddress.getText().toString(),vAddress.getText().toString()));
 
             if(imagechanged) {
                 saveImage(newBitMapProfileImage);
             }
             Intent pickIntent = new Intent(this, ShowProfile.class);
            // pickIntent.putExtra(EXTRA_PROFILE_KEY,mProfile).;
-
+            prefs.edit().putString(EXTRA_PROFILE_KEY,mProfile).apply();
+           // database.setPersistenceEnabled(false);
             startActivity(pickIntent);
 
         });
