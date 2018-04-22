@@ -9,8 +9,6 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -19,7 +17,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -53,10 +50,6 @@ public class EditProfile extends AppCompatActivity {
     private boolean imagechanged=false;
     Toolbar toolbar;
     ContextWrapper cw;
-    String Name;
-    String Surname;
-    String Email;
-    String Address;
     File directory;
     String path;
     LinearLayout ll;
@@ -64,7 +57,7 @@ public class EditProfile extends AppCompatActivity {
     TextView vName;
     TextView vSurname;
     TextView vEmail;
-    TextView vAddress;
+    TextView vBio;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -120,8 +113,8 @@ public class EditProfile extends AppCompatActivity {
         vEmail = findViewById(R.id.email_input);
        // vEmail.setText(Email);
 
-        vAddress = findViewById(R.id.address_input);
-       // vAddress.setText(Address);
+        vBio = findViewById(R.id.address_input);
+       // vBio.setText(Address);
     }
     @Override
     public void onStart(){
@@ -136,7 +129,7 @@ public class EditProfile extends AppCompatActivity {
                     vName.setText(myuser.getName());
                     vSurname.setText(myuser.getSurname());
                     vEmail.setText(myuser.getEmail());
-                    vAddress.setText(myuser.getDescription());
+                    vBio.setText(myuser.getDescription());
 
                 }
 
@@ -151,7 +144,7 @@ public class EditProfile extends AppCompatActivity {
             vName.setText("");
             vSurname.setText("");
             vEmail.setText("");
-            vAddress.setText("");
+            vBio.setText("");
         }
     }
 
@@ -183,12 +176,12 @@ public class EditProfile extends AppCompatActivity {
             //prefs.edit().putString("name", vName.getText().toString()).apply();
             //prefs.edit().putString("surname", vSurname.getText().toString()).apply();
            // prefs.edit().putString("email", vEmail.getText().toString()).apply();
-           // prefs.edit().putString("address", vAddress.getText().toString()).apply();
+           // prefs.edit().putString("address", vBio.getText().toString()).apply();
            // prefs.edit().putBoolean("save", false).apply();
             mProfileReference= database.getReference().child("users");
             mProfile=mProfileReference.push().getKey();
             mProfileReference= database.getReference().child("users").child(mProfile);
-            mProfileReference.setValue(new Profile(vName.getText().toString(),vSurname.getText().toString(),vEmail.getText().toString(),vAddress.getText().toString(),vAddress.getText().toString()));
+            mProfileReference.setValue(new Profile(vName.getText().toString(),vSurname.getText().toString(),vEmail.getText().toString(), vBio.getText().toString(), vBio.getText().toString()));
 
             if(imagechanged) {
                 saveImage(newBitMapProfileImage);
