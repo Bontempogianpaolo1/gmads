@@ -65,7 +65,8 @@ public class EditProfile extends AppCompatActivity {
         setContentView(R.layout.activity_edit_profile);
         prefs= PreferenceManager.getDefaultSharedPreferences(this);
         mProfile=prefs.getString(EXTRA_PROFILE_KEY,null);
-
+        Tools t= new Tools();
+        t.getjson(getApplicationContext(),"");
         database=FirebaseManagement.getDatabase();
 
 
