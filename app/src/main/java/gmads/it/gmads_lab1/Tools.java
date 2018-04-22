@@ -25,7 +25,9 @@ import com.google.gson.Gson;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class Tools extends AppCompatActivity {
 
@@ -48,7 +50,7 @@ public class Tools extends AppCompatActivity {
     }
 
     public void getjson(Context c) {
-        String url = "https://www.googleapis.com/books/v1/volumes?q=ISBN:<9780545010221>";
+        String url = "https://www.googleapis.com/books/v1/volumes?q=ISBN:<8842922013>";
 
         RequestQueue queue = Volley.newRequestQueue(c);
 
@@ -61,8 +63,18 @@ public class Tools extends AppCompatActivity {
                         // Display the first 500 characters of the response string.
                         Log.d("messaggio","Response is: " +response);
                         Gson g= new Gson();
-                        HashMap<String,String> map=g.fromJson(response, HashMap.class);
-
+                        //HashMap<String,HashMap<String, HashMap<String,String>>> map=g.fromJson(response, HashMap.class);
+                        HashMap<String, HashMap<String, HashMap< String, String>>> map= g.fromJson(response, HashMap.class);
+                        //Map<String,Object> map= new HashMap<String, Object>();
+                        //map = (Map<String, Object>) g.fromJson(response, map.getClass());
+                        //Book b = g.fromJson(response, Book.class)
+                        //map.get("items").get("volumeInfo").get("description");
+                        //map['items']['volumeInfo']
+                        //String text = map.get("items");
+                        //map.get("items").get(0);
+                        map.entrySet().toArray()[2].getValue().get(0).entrySet().toArray()[4].getValue().entrySet().toArray()[4].getValue();
+                                //.get("volumeInfo");
+                        //String s = t.get("description");
                     }
                 }, new Response.ErrorListener() {
             @Override
