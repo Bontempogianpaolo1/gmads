@@ -16,9 +16,19 @@ import com.google.firebase.database.ValueEventListener;
 public class FirebaseManagement {
 
     private static volatile FirebaseManagement firebaseManagementInstance = new FirebaseManagement();
+    private static FirebaseDatabase mDatabase;
+
+    public static FirebaseDatabase getDatabase() {
+        if (mDatabase == null) {
+            mDatabase = FirebaseDatabase.getInstance();
+            mDatabase.setPersistenceEnabled(true);
+        }
+        return mDatabase;
+    }
+
 
     //private constructor
-    private FirebaseManagement() {
+    public FirebaseManagement() {
 
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
     }
@@ -43,7 +53,6 @@ public class FirebaseManagement {
     public void readfromFire(){
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-
         DatabaseReference myRef = database.getReference("ciao");
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
