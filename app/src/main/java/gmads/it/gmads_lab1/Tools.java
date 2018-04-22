@@ -70,8 +70,8 @@ public class Tools extends AppCompatActivity {
                             JSONArray bookArray = resultObject.getJSONArray("items");
                             JSONObject bookObject = bookArray.getJSONObject(0);
                             JSONObject volumeObject = bookObject.getJSONObject("volumeInfo");
-                            //String title =volumeObject.getString("title");
-                            //Log.d("That didn't work!","Error: "+title);
+                           String title =volumeObject.getString("title");
+                            Log.d("That didn't work!","Error: "+title);
                         }catch (Exception e){
 
                             Log.d("That didn't work!","Error: ");
