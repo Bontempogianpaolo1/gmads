@@ -1,32 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="gmads.it.gmads_lab1">
+
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
     <application
         android:allowBackup="true"
+        android:fullBackupContent="true"
         android:icon="@mipmap/ic_launcher"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity
-            android:name=".showProfile"
+            android:name=".ShowProfile"
             android:label="gMADs_1">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".editProfile"
+            android:name=".EditProfile"
             android:configChanges="orientation"
             android:label="@string/editProfile"
-            android:parentActivityName=".showProfile"
-            >
-        </activity>
-        <activity android:name=".Tools"></activity>
-        <activity android:name=".ImageManagement"></activity>
+            android:parentActivityName=".ShowProfile" />
+        <activity android:name=".Tools" />
+        <activity android:name=".ImageManagement" />
+        <activity
+            android:name=".AddBook"
+            android:label="@string/title_activity_add_book"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".SaveBook"
+            android:label="@string/title_activity_save_book"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".Scanner" />
+        <activity android:name=".BaseScannerActivity"></activity>
     </application>
 
 </manifest>

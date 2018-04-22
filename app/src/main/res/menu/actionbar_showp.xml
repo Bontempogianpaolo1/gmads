@@ -5,7 +5,7 @@
 
     <item
         android:id="@+id/editProfileButton"
-        android:icon="@android:drawable/ic_menu_edit"
+        android:icon="@drawable/ic_mode_edit_white_24px"
         android:title="@string/editProfile"
         app:showAsAction="always" />
 
