@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "331172722247-ishsiqe32jljtstqcv533rrcn2rqd474.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "gmads.it.gmads_lab1",
+            "certificate_hash": "ecb9ddfb8293da9c66152bb22cf6548a2fb0280f"
+          }
+        },
+        {
           "client_id": "331172722247-qp7uude6rh9lfsi821kpkqe1jps8ur3n.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -16,12 +17,14 @@ import com.google.firebase.database.ValueEventListener;
 public class FirebaseManagement {
 
     private static volatile FirebaseManagement firebaseManagementInstance = new FirebaseManagement();
-    private static FirebaseDatabase mDatabase;
+    public static FirebaseAuth mAuth;
+    public static FirebaseDatabase mDatabase;
 
     public static FirebaseDatabase getDatabase() {
         if (mDatabase == null) {
             mDatabase = FirebaseDatabase.getInstance();
             mDatabase.setPersistenceEnabled(true);
+            mAuth = FirebaseAuth.getInstance();
         }
         return mDatabase;
     }
@@ -31,6 +34,9 @@ public class FirebaseManagement {
     public FirebaseManagement() {
 
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+        mDatabase = FirebaseDatabase.getInstance();
+        mDatabase.setPersistenceEnabled(true);
+        mAuth = FirebaseAuth.getInstance();
     }
 
     public static FirebaseManagement getInstance(){

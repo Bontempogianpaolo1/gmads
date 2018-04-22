@@ -58,7 +58,7 @@ public class ShowProfile extends AppCompatActivity  implements NavigationView.On
         setContentView(R.layout.activity_show_profile);
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         mProfile= prefs.getString(EXTRA_PROFILE_KEY,null);
-        database= FirebaseManagement.getDatabase();
+        database= FirebaseManagement.mDatabase;
         if(mProfile==null){
             database.setPersistenceEnabled((true));
 

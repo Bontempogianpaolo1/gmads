@@ -15,7 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".ShowProfile"
+            android:name=".Login"
             android:label="gMADs_1">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -39,7 +39,8 @@
             android:label="@string/title_activity_save_book"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".Scanner" />
-        <activity android:name=".BaseScannerActivity"></activity>
+        <activity android:name=".BaseScannerActivity" />
+        <activity android:name=".ShowProfile"></activity>
     </application>
 
 </manifest>

@@ -65,6 +65,7 @@ public class EditProfile extends AppCompatActivity {
     TextView vSurname;
     TextView vEmail;
     TextView vAddress;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
