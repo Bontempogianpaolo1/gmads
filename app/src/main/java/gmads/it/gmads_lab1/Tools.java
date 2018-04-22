@@ -22,10 +22,17 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.lang.reflect.Type;
+import java.security.cert.Extension;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Tools extends AppCompatActivity {
 
@@ -47,11 +54,10 @@ public class Tools extends AppCompatActivity {
         return alertDlg;
     }
 
-    public void getjson(Context c) {
-        String url = "https://www.googleapis.com/books/v1/volumes?q=ISBN:<9780545010221>";
+    public void getjson(Context c,  String isbn) {
+        String url = "https://www.googleapis.com/books/v1/volumes?q=ISBN:<8842922013>";
 
         RequestQueue queue = Volley.newRequestQueue(c);
-
 
 // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
@@ -59,10 +65,17 @@ public class Tools extends AppCompatActivity {
                     @Override
                     public void onResponse(String response) {
                         // Display the first 500 characters of the response string.
-                        Log.d("messaggio","Response is: " +response);
-                        Gson g= new Gson();
-                        HashMap<String,String> map=g.fromJson(response, HashMap.class);
+                        try {
+                            JSONObject resultObject = new JSONObject(response);
+                            JSONArray bookArray = resultObject.getJSONArray("items");
+                            JSONObject bookObject = bookArray.getJSONObject(0);
+                            JSONObject volumeObject = bookObject.getJSONObject("volumeInfo");
+                           String title =volumeObject.getString("title");
+                            Log.d("That didn't work!","Error: "+title);
+                        }catch (Exception e){
 
+                            Log.d("That didn't work!","Error: ");
+                        }
                     }
                 }, new Response.ErrorListener() {
             @Override
