@@ -8,22 +8,6 @@
     tools:context=".SaveBook"
     tools:showIn="@layout/app_bar_save_book">
 
-    <ImageView
-        android:id="@+id/bookImage"
-        android:layout_width="129dp"
-        android:layout_height="131dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/guideline2"
-        app:layout_constraintEnd_toStartOf="@+id/guideline"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline3"
-        app:layout_constraintVertical_bias="0.206"
-        app:srcCompat="@drawable/ic_add_book_24dp" />
-
     <TextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
@@ -137,6 +121,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_begin="78dp" />
+        app:layout_constraintGuide_begin="68dp" />
+
+    <WebView
+        android:id="@+id/bookimage"
+        android:layout_width="128dp"
+        android:layout_height="200dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="48dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline2"
+        app:layout_constraintEnd_toStartOf="@+id/guideline"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline3"
+        app:layout_constraintVertical_bias="0.56" />
 
 </android.support.constraint.ConstraintLayout>

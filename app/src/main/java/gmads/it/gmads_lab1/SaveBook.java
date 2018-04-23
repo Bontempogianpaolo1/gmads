@@ -6,22 +6,31 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -30,15 +39,14 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.regex.Pattern;
-
-import static android.graphics.Color.RED;
+import java.net.URL;
 
 public class SaveBook extends AppCompatActivity{
 
@@ -53,7 +61,7 @@ public class SaveBook extends AppCompatActivity{
     private String isbn;
     static final int REQUEST_IMAGE_CAPTURE = 1888;
     static final int REQUEST_IMAGE_LIBRARY = 1889;
-    private ImageView BookImage;//profile image
+    private WebView bookImage;//profile image
     private Bitmap newBitMapBookImage; //temp for new image
     private SharedPreferences prefs;
     private boolean imagechanged=false;
@@ -66,20 +74,19 @@ public class SaveBook extends AppCompatActivity{
     TextView vTitle;
     TextView vDate;
     TextView vAuthor;
-    TextView vCategory;
+    TextView vCategories;
     TextView vDescription;
-    TextView vEditor;
+    TextView vPublisher;
     Book book;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit_profile);
-        prefs= PreferenceManager.getDefaultSharedPreferences(this);
-        isbn =prefs.getString(EXTRA_ISBN,null);
-        user =prefs.getString(EXTRA_PROFILE_KEY,null);
-        Tools t= new Tools();
-        t.getjson(getApplicationContext(),"");
+        setContentView(R.layout.activity_save_book);
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        //isbn = prefs.getString(EXTRA_ISBN,null);
+        isbn = "9788886982405";
+        user = prefs.getString(EXTRA_PROFILE_KEY,null);
         database=FirebaseManagement.getDatabase();
         storage=FirebaseManagement.getStorage();
 
@@ -88,7 +95,7 @@ public class SaveBook extends AppCompatActivity{
             storageReference= storage.getReference().child("books").child(isbn).child("image.jpg");
         }
 
-        toolbar = (Toolbar) findViewById(R.id.toolbarEditP);
+        toolbar = (Toolbar) findViewById(R.id.toolbarSaveBook);
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         cw = new ContextWrapper(getApplicationContext());
 
@@ -108,60 +115,122 @@ public class SaveBook extends AppCompatActivity{
 
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         //set image
-        BookImage = findViewById(R.id.profile_image);
-        try {
-            newBitMapBookImage = BitmapFactory.decodeStream(new FileInputStream(new File(path,"book.jpg")));
-            BookImage.setImageBitmap(newBitMapBookImage);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        BookImage.setOnClickListener(this::onClickImage);
-        findViewById(R.id.selectimage).setOnClickListener(this::onClickImage);
-        //set text components
-
-        vTitle = findViewById(R.id.name_input);
-        //vTitle.setText(Name);
-
-        vDate = findViewById(R.id.surname_input);
-        // vDate.setText(Surname);
-
-        vAuthor = findViewById(R.id.email_input);
-        // vAuthor.setText(Email);
-
-        vCategory = findViewById(R.id.address_input);
-        // vCategory.setText(Address);
-
+        bookImage = findViewById(R.id.bookimage);
+        vTitle = findViewById(R.id.title);
+        vDate = findViewById(R.id.dataPubblicazione);
+        vAuthor = findViewById(R.id.autore);
+        vCategories = findViewById(R.id.categorie);
+        vPublisher= findViewById(R.id.editore);
+        vDescription=findViewById(R.id.descrizione);
     }
+
+    public void getjson(Context c,  String isbn) {
+        String url = "https://www.googleapis.com/books/v1/volumes?q=ISBN:<";
+        url = url + isbn + ">";
+        RequestQueue queue = Volley.newRequestQueue(c);
+        // Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        // Display the first 500 characters of the response string.
+                        //setto tutto con stringhe di default
+                        String title = getString(R.string.notFound);
+                        String author;
+                        String publisher;
+                        String publishdate;
+                        String categories;
+                        String urlimage;
+                        String description;
+                        JSONObject resultObject;
+                        JSONObject volumeObject;
+                        JSONArray bookArray;
+                        JSONObject bookObject;
+                        try {
+                            //piglio Json
+                            resultObject = new JSONObject(response);
+                            bookArray = resultObject.getJSONArray("items");
+                            bookObject = bookArray.getJSONObject(0);
+                            volumeObject = bookObject.getJSONObject("volumeInfo");
+                            //piglio stringhe
+                        }catch (Exception e){
+                            volumeObject= new JSONObject();
+                        }
+                            try{
+                                title = volumeObject.getString("title");
+                                vTitle.setText(title);
+                            }catch (Exception e){
+                                vTitle.setText(getString(R.string.notFound));
+                            }
+                            try{
+                                author = volumeObject.getString("authors");
+                                author = author.replaceAll("[\"\\[\\]]","");
+                                vAuthor.setText(author);
+                            }catch (Exception e){
+                                vAuthor.setText(getString(R.string.notFound));
+                            }
+                            try{
+
+                            if(!volumeObject.isNull("publisher")&& volumeObject.has("publisher")){
+                                publisher = volumeObject.getString("publisher");
+                                vPublisher.setText(publisher);
+                            }else{
+                                vPublisher.setText(getString(R.string.notFound));
+                            }
+                            }catch (Exception e){
+                                vPublisher.setText(getString(R.string.notFound));
+                            }
+                            try{
+                                publishdate= volumeObject.getString("publishedDate");
+                                vDate.setText(publishdate);
+                            }catch (Exception e){
+                                vDate.setText(getString(R.string.notFound));
+                            }
+                            try{
+                                categories = volumeObject.getString("categories");
+                                categories = categories.replaceAll("[\"\\[\\]]","");
+                                vCategories.setText(categories);
+                            }catch (Exception e){
+                                vCategories.setText(getString(R.string.notFound));
+                            }
+
+                            try{
+                                urlimage = "https://process.filestackapi.com/AhTgLagciQByzXpFGRI0Az/resize=width:128,height:200/"+volumeObject.getJSONObject("imageLinks").getString("thumbnail");
+                            }catch (Exception e){
+                                urlimage="";
+                            }
+                            try {
+                                if(!volumeObject.isNull("description")&& volumeObject.has("description")) {
+                                    description = volumeObject.getString("description");
+                                    vDescription.setText(description);
+                                }else{
+                                    vDescription.setText(R.string.notFound);
+                                }
+                            }catch(Exception e){
+                                vDescription.setText(R.string.notFound);
+                            }
+
+                            bookImage.loadUrl(urlimage);
+
+                            prefs = PreferenceManager.getDefaultSharedPreferences(c);
+                            String owner = prefs.getString("post_key",null);
+                            book = new Book(isbn, (String)vTitle.getText(), "", urlimage,(String) vDate.getText(),(String) vAuthor.getText(),(String)vCategories.getText(),(String)vPublisher.getText(),"");
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("That didn't work!","Error: "+error);
+            }
+        });
+        // Add the request to the RequestQueue.
+        queue.add(stringRequest);
+    }
+
     @Override
     public void onStart(){
         super.onStart();
-
-        if(isbn !=null) {
-            ValueEventListener postListener = new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    Profile myuser = dataSnapshot.getValue(Profile.class);
-                    assert myuser != null;
-                    vTitle.setText(myuser.getName());
-                    vDate.setText(myuser.getSurname());
-                    vAuthor.setText(myuser.getEmail());
-                    vCategory.setText(myuser.getDescription());
-
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            };
-            mProfileReference.addValueEventListener(postListener);
-            mProfileListener = postListener;
-        }else{
-            vTitle.setText("");
-            vDate.setText("");
-            vAuthor.setText("");
-            vCategory.setText("");
-        }
+        getjson(getApplicationContext(), isbn);
     }
 
 
@@ -254,7 +323,8 @@ public class SaveBook extends AppCompatActivity{
             Bundle imageUri = data.getExtras();
             assert imageUri != null;
             newBitMapBookImage = (Bitmap) imageUri.get("data");
-            BookImage.setImageBitmap(newBitMapBookImage);
+
+           // bookImage.setImageBitmap(newBitMapBookImage);
             //manage request image from gallery
         } else if ( requestCode==REQUEST_IMAGE_LIBRARY && resultCode == RESULT_OK) {
             imagechanged=true;
@@ -263,7 +333,7 @@ public class SaveBook extends AppCompatActivity{
                 assert imageUri != null;
                 final InputStream imageStream = getContentResolver().openInputStream(imageUri);
                 newBitMapBookImage = BitmapFactory.decodeStream(imageStream);
-                BookImage.setImageBitmap(newBitMapBookImage);
+                //bookImage.setImageBitmap(newBitMapBookImage);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -313,5 +383,15 @@ public class SaveBook extends AppCompatActivity{
     public void onBackPressed() {
         super.onBackPressed();
         overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out);
+    }
+
+    public static Drawable LoadImageFromWebOperations(String url) {
+        try {
+            InputStream is = (InputStream) new URL(url).getContent();
+            Drawable d = Drawable.createFromStream(is, "src name");
+            return d;
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

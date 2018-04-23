@@ -166,7 +166,8 @@ public class ShowProfile extends AppCompatActivity  implements NavigationView.On
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Intent intentMod = new Intent(this, EditProfile.class);
+        //Intent intentMod = new Intent(this, EditProfile.class);
+        Intent intentMod = new Intent(this, SaveBook.class);
         //intentMod.putExtra(EXTRA_PROFILE_KEY,mProfile);
         startActivity(intentMod);
         overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
