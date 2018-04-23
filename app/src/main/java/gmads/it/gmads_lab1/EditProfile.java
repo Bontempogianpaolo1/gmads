@@ -66,7 +66,8 @@ public class EditProfile extends AppCompatActivity {
         prefs= PreferenceManager.getDefaultSharedPreferences(this);
         mProfile=prefs.getString(EXTRA_PROFILE_KEY,null);
         Tools t= new Tools();
-        t.getjson(getApplicationContext(),"");
+        String isbn = "9788807032622";
+        t.getjson(getApplicationContext(),isbn);
         database=FirebaseManagement.getDatabase();
 
 
