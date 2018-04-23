@@ -9,7 +9,6 @@ public class Book {
     private String isbn;
     private String title;
     private String description;
-    private String value;
     private String urlimage;
     private String publishDate;
     private String author;
@@ -20,15 +19,14 @@ public class Book {
     private String publisher;
     private List<String> comments;
     private String condition;
-    private Profile owner;
-    private Profile holder;
+    private String owner;
+    private String holder;
     private List<Bitmap> images;
 
-    public Book(String isbn, String title, String description, String value, String urlimage, String publishDate, String author, String categories, String publisher, Profile owner) {
+    public Book(String isbn, String title, String description, String urlimage, String publishDate, String author, String categories, String publisher, String owner) {
         this.isbn = isbn;
         this.title = title;
         this.description = description;
-        this.value = value;
         this.urlimage = urlimage;
         this.publishDate = publishDate;
         this.author = author;
@@ -53,8 +51,6 @@ public class Book {
         return isbn;
     }
 
-
-
     public void setIsbn(String isbn) {
         this.isbn = isbn;
     }
@@ -73,14 +69,6 @@ public class Book {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public String getValue() {
-        return value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
     }
 
     public String getUrlimage() {
@@ -163,19 +151,17 @@ public class Book {
         this.condition = condition;
     }
 
-    public Profile getOwner() {
+    public String getOwner() {
         return owner;
     }
 
-    public void setOwner(Profile owner) {
-        this.owner = owner;
-    }
+    public void setOwner(String owner) { this.owner = owner; }
 
-    public Profile getHolder() {
+    public String getHolder() {
         return holder;
     }
 
-    public void setHolder(Profile holder) {
+    public void setHolder(String holder) {
         this.holder = holder;
     }
 }
