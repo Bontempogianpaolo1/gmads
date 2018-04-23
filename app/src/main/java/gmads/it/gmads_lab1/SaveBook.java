@@ -249,9 +249,10 @@ public class SaveBook extends AppCompatActivity{
         android.app.AlertDialog.Builder ad = t.showPopup(this, getString(R.string.saveQuestion), "", getString(R.string.cancel));
         ad.setPositiveButton("Ok", (vi, w) -> {
 
-            mProfileReference= database.getReference().child("books").child(isbn);
+            String bookkey= database.getReference().child("books").push().getKey();
+            mProfileReference= database.getReference().child("books").child(bookkey);
             mProfileReference.setValue(book);
-
+            database.getReference().child("users").child(user).child("takenbooks").child(bookkey).setValue(isbn);
             if(imagechanged) {
 
                 saveImage(newBitMapBookImage);
