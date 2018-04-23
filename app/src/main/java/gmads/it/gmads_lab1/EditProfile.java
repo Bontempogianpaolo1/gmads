@@ -35,12 +35,16 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 public class EditProfile extends AppCompatActivity {
     private static final String EXTRA_PROFILE_KEY="post_key";
     private DatabaseReference mProfileReference;
+    private StorageReference storageReference;
     private ValueEventListener mProfileListener;
     FirebaseDatabase database;
+    FirebaseStorage storage;
     private String mProfile;
     static final int REQUEST_IMAGE_CAPTURE = 1888;
     static final int REQUEST_IMAGE_LIBRARY = 1889;
@@ -69,10 +73,11 @@ public class EditProfile extends AppCompatActivity {
         String isbn = "9788807032622";
         t.getjson(getApplicationContext(),isbn);
         database=FirebaseManagement.getDatabase();
-
+        storage=FirebaseManagement.getStorage();
 
         if(mProfile!=null) {
             mProfileReference = FirebaseDatabase.getInstance().getReference().child("users").child(mProfile);
+            storageReference= storage.getReference().child("users").child(mProfile).child("profileimage.jpg");
         }
 
         toolbar = (Toolbar) findViewById(R.id.toolbarEditP);
@@ -181,12 +186,16 @@ public class EditProfile extends AppCompatActivity {
            // prefs.edit().putString("address", vBio.getText().toString()).apply();
            // prefs.edit().putBoolean("save", false).apply();
             mProfileReference= database.getReference().child("users");
-            mProfile=mProfileReference.push().getKey();
+            if(mProfile==null) {
+                mProfile = mProfileReference.push().getKey();
+            }
             mProfileReference= database.getReference().child("users").child(mProfile);
             mProfileReference.setValue(new Profile(vName.getText().toString(),vSurname.getText().toString(),vEmail.getText().toString(), vBio.getText().toString(), vBio.getText().toString()));
 
             if(imagechanged) {
+
                 saveImage(newBitMapProfileImage);
+                storageReference.putFile(Uri.fromFile(new File(path,"profile.jpg")));
             }
             Intent pickIntent = new Intent(this, ShowProfile.class);
            // pickIntent.putExtra(EXTRA_PROFILE_KEY,mProfile).;
