@@ -14,12 +14,15 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+
 public class FirebaseManagement {
 
     private static volatile FirebaseManagement firebaseManagementInstance = new FirebaseManagement();
     public static FirebaseAuth mAuth;
     public static FirebaseDatabase mDatabase;
 
+    private static FirebaseStorage storage ;
     public static FirebaseDatabase getDatabase() {
         if (mDatabase == null) {
             mDatabase = FirebaseDatabase.getInstance();
@@ -28,7 +31,15 @@ public class FirebaseManagement {
         }
         return mDatabase;
     }
+    public static FirebaseStorage getStorage(){
 
+        if(storage==null){
+
+            storage= FirebaseStorage.getInstance();
+
+        }
+        return storage;
+    }
 
     //private constructor
     public FirebaseManagement() {

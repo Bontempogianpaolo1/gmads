@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -51,7 +50,7 @@ public class ShowProfile extends AppCompatActivity  implements NavigationView.On
     View headerView;
     TextView vName;
     TextView vEmail;
-    TextView vAddress;
+    TextView vBio;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,7 +79,7 @@ public class ShowProfile extends AppCompatActivity  implements NavigationView.On
         navImage = (ImageView) headerView.findViewById(R.id.navImage);
         vName = findViewById(R.id.name);
         vEmail = findViewById(R.id.email);
-        vAddress = findViewById(R.id.bio);
+        vBio = findViewById(R.id.bio);
         toolbar.setTitle(getString(R.string.showProfile));
         setSupportActionBar(toolbar);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -107,7 +106,7 @@ public class ShowProfile extends AppCompatActivity  implements NavigationView.On
             }
         }
 
-        vAddress.setMovementMethod(new ScrollingMovementMethod());
+        vBio.setMovementMethod(new ScrollingMovementMethod());
     }
 
     @Override
@@ -126,7 +125,7 @@ public class ShowProfile extends AppCompatActivity  implements NavigationView.On
                     navName.append(" " + myuser.getSurname());
                     vEmail.setText(myuser.getEmail());
                     navMail.setText(myuser.getEmail());
-                    vAddress.setText(myuser.getDescription());
+                    vBio.setText(myuser.getDescription());
 
                 }
 
@@ -138,13 +137,13 @@ public class ShowProfile extends AppCompatActivity  implements NavigationView.On
             mProfileReference.addValueEventListener(postListener);
             mProfileListener = postListener;
         }else{
-            vName.setText("name");
-            vName.append(" " + "surname");
-            navName.setText("name");
-            navName.append(" " + "surname");
-            vEmail.setText("email");
-            navMail.setText("email");
-            vAddress.setText("description");
+            vName.setText(getString(R.string.name));
+            vName.append(" " + getString(R.string.surname));
+            navName.setText(getString(R.string.name));
+            navName.append(" " + getString(R.string.surname));
+            vEmail.setText(getString(R.string.email));
+            navMail.setText(getString(R.string.email));
+            vBio.setText(getString(R.string.description));
         }
     }
     /*

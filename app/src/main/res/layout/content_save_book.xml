@@ -8,18 +8,32 @@
     tools:context=".SaveBook"
     tools:showIn="@layout/app_bar_save_book">
 
-    <WebView
-        android:layout_width="271dp"
-        android:layout_height="172dp"
-        tools:layout_editor_absoluteX="57dp"
-        tools:layout_editor_absoluteY="28dp" />
+    <ImageView
+        android:id="@+id/bookimage"
+        android:layout_width="129dp"
+        android:layout_height="131dp"
+        android:layout_marginStart="112dp"
+        android:layout_marginTop="36dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_add_book_24dp" />
 
-    <CheckedTextView
-        android:id="@+id/checkedTextView"
+    <TextView
+        android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="CheckedTextView"
-        tools:layout_editor_absoluteX="66dp"
-        tools:layout_editor_absoluteY="290dp" />
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="8dp"
+        android:text="TextView"
+        app:layout_constraintBottom_toTopOf="@+id/bookdescription"
+        app:layout_constraintStart_toStartOf="parent" />
 
+    <TextView
+        android:id="@+id/bookdescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="TextView"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="270dp" />
 </android.support.constraint.ConstraintLayout>
