@@ -371,6 +371,8 @@ public class EditProfile extends AppCompatActivity {
         StorageReference profileImageRef = FirebaseManagement.mStorage.getReference().child("profilepics/"
         );
 
+        profileImageRef = FirebaseManagement.getStorage().getReference().child("users").child(mProfile).child("profileimage.jpg");
+
         /*if(uriProfileImage != null){
             profileImageRef.putFile(uriProfileImage)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
