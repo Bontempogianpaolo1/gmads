@@ -9,9 +9,11 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -19,6 +21,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import java.io.File;
 import java.io.FileInputStream;
@@ -26,10 +29,21 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.regex.Pattern;
 import static android.graphics.Color.RED;
-import android.view.WindowManager;
+import static gmads.it.gmads_lab1.FirebaseManagement.mAuth;
 
+import android.view.WindowManager;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -37,19 +51,22 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 public class EditProfile extends AppCompatActivity {
     private static final String EXTRA_PROFILE_KEY="post_key";
     private DatabaseReference mProfileReference;
     private StorageReference storageReference;
     private ValueEventListener mProfileListener;
-    FirebaseDatabase database;
-    FirebaseStorage storage;
     private String mProfile;
+    private Profile profile;
     static final int REQUEST_IMAGE_CAPTURE = 1888;
     static final int REQUEST_IMAGE_LIBRARY = 1889;
     private ImageView profileImage;//profile image
+    private ProgressBar progressbar;
     private Bitmap newBitMapProfileImage; //temp for new image
+    private Uri uriProfileImage;
+    private String profileImageUrl;
     private SharedPreferences prefs;
     private boolean imagechanged=false;
     Toolbar toolbar;
@@ -62,26 +79,21 @@ public class EditProfile extends AppCompatActivity {
     TextView vSurname;
     TextView vEmail;
     TextView vBio;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
         prefs= PreferenceManager.getDefaultSharedPreferences(this);
-        mProfile=prefs.getString(EXTRA_PROFILE_KEY,null);
         Tools t= new Tools();
         t.getjson(getApplicationContext(),"");
-        database=FirebaseManagement.getDatabase();
-        storage=FirebaseManagement.getStorage();
-
-        if(mProfile!=null) {
-            mProfileReference = FirebaseDatabase.getInstance().getReference().child("users").child(mProfile);
-            storageReference= storage.getReference().child("users").child(mProfile).child("profileimage.jpg");
-        }
 
         toolbar = (Toolbar) findViewById(R.id.toolbarEditP);
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         cw = new ContextWrapper(getApplicationContext());
+        progressbar = findViewById(R.id.progressBar);
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -100,12 +112,7 @@ public class EditProfile extends AppCompatActivity {
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         //set image
         profileImage = findViewById(R.id.profile_image);
-        try {
-            newBitMapProfileImage = BitmapFactory.decodeStream(new FileInputStream(new File(path,"profile.jpg")));
-            profileImage.setImageBitmap(newBitMapProfileImage);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+        profileImage.setImageDrawable(getDrawable(R.drawable.default_profile));
         profileImage.setOnClickListener(this::onClickImage);
         findViewById(R.id.selectimage).setOnClickListener(this::onClickImage);
         //set text components
@@ -126,31 +133,52 @@ public class EditProfile extends AppCompatActivity {
     public void onStart(){
         super.onStart();
 
-        if(mProfile!=null) {
-            ValueEventListener postListener = new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    Profile myuser = dataSnapshot.getValue(Profile.class);
-                    assert myuser != null;
-                    vName.setText(myuser.getName());
-                    vSurname.setText(myuser.getSurname());
-                    vEmail.setText(myuser.getEmail());
-                    vBio.setText(myuser.getDescription());
+        FirebaseManagement.mDatabase.getReference().child("users").child(FirebaseManagement.mUser.getUid())
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        profile = dataSnapshot.getValue(Profile.class);
 
-                }
+                        vName.setText(profile.name);
+                        vSurname.setText(profile.surname);
+                        vEmail.setText(profile.email);
+                        vBio.setText(profile.description);
+                        URL url = null;
 
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
+                        if(profile.getImage()!=null) {
+                            try {
+                                url = new URL(profile.getImage());
+                            } catch (MalformedURLException e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                Bitmap image = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                                profileImage.setImageBitmap(image);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        } else {
 
-                }
-            };
-            mProfileReference.addValueEventListener(postListener);
-            mProfileListener = postListener;
-        }else{
-            vName.setText("");
-            vSurname.setText("");
-            vEmail.setText("");
-            vBio.setText("");
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        // Getting Post failed, log a message
+                        Log.w("loadPost:onCancelled", databaseError.toException());
+                        // [START_EXCLUDE]
+                        Toast.makeText(EditProfile.this, "Failed to load profile.",
+                                Toast.LENGTH_SHORT).show();
+                        // [END_EXCLUDE]
+
+                    }
+                });
+
+        if(profile==null){
+            vName.setText(getString(R.string.name));
+            vName.append(" " + getString(R.string.surname));
+            vEmail.setText(getString(R.string.email));
+            vBio.setText(getString(R.string.description));
         }
     }
 
@@ -184,18 +212,9 @@ public class EditProfile extends AppCompatActivity {
            // prefs.edit().putString("email", vEmail.getText().toString()).apply();
            // prefs.edit().putString("address", vBio.getText().toString()).apply();
            // prefs.edit().putBoolean("save", false).apply();
-            mProfileReference= database.getReference().child("users");
-            if(mProfile==null) {
-                mProfile = mProfileReference.push().getKey();
-            }
-            mProfileReference= database.getReference().child("users").child(mProfile);
-            mProfileReference.setValue(new Profile(vName.getText().toString(),vSurname.getText().toString(),vEmail.getText().toString(), vBio.getText().toString(), vBio.getText().toString()));
 
-            if(imagechanged) {
+            updateUserInfo();
 
-                saveImage(newBitMapProfileImage);
-                storageReference.putFile(Uri.fromFile(new File(path,"profile.jpg")));
-            }
             Intent pickIntent = new Intent(this, ShowProfile.class);
            // pickIntent.putExtra(EXTRA_PROFILE_KEY,mProfile).;
             prefs.edit().putString(EXTRA_PROFILE_KEY,mProfile).apply();
@@ -210,10 +229,10 @@ public class EditProfile extends AppCompatActivity {
 
         super.onStop();
 
-        if(mProfileListener!=null){
+        /*if(mProfileListener!=null){
             mProfileReference.removeEventListener(mProfileListener);
 
-        }
+        }*/
     }
 
     //for SaveButton in the action bar
@@ -262,6 +281,7 @@ public class EditProfile extends AppCompatActivity {
             Bundle imageUri = data.getExtras();
             assert imageUri != null;
             newBitMapProfileImage = (Bitmap) imageUri.get("data");
+            uriProfileImage = Uri.fromFile(new File(path,"profile.jpg"));
             profileImage.setImageBitmap(newBitMapProfileImage);
             //manage request image from gallery
         } else if ( requestCode==REQUEST_IMAGE_LIBRARY && resultCode == RESULT_OK) {
@@ -271,6 +291,7 @@ public class EditProfile extends AppCompatActivity {
                 assert imageUri != null;
                 final InputStream imageStream = getContentResolver().openInputStream(imageUri);
                 newBitMapProfileImage = BitmapFactory.decodeStream(imageStream);
+                uriProfileImage = Uri.fromFile(new File(path,"profile.jpg"));
                 profileImage.setImageBitmap(newBitMapProfileImage);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -321,5 +342,59 @@ public class EditProfile extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out);
+    }
+
+    public void updateUserInfo(){
+        String name = vName.getText().toString();
+        String surname = vSurname.getText().toString();
+        String email = vEmail.getText().toString();
+        String bio = vBio.getText().toString();
+
+        progressbar.setVisibility(View.VISIBLE);
+
+        if(name.isEmpty()){
+            vName.setError("Name required");
+            vName.requestFocus();
+            return;
+        }
+        if(surname.isEmpty()){
+            vSurname.setError("Surname required");
+            vSurname.requestFocus();
+            return;
+        }
+        if(email.isEmpty()){
+            vEmail.setError("Email required");
+            vEmail.requestFocus();
+            return;
+        }
+
+        StorageReference profileImageRef = FirebaseManagement.mStorage.getReference().child("profilepics/"
+        );
+
+        /*if(uriProfileImage != null){
+            profileImageRef.putFile(uriProfileImage)
+                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            profileImageUrl = taskSnapshot.getDownloadUrl().toString();
+                            profile.setName(name);
+                            profile.setSurname(surname);
+                            profile.setEmail(email);
+                            profile.setDescription(bio);
+                            profile.setImage(profileImageUrl);
+
+                            FirebaseManagement.updateUserData(profile);
+                            progressbar.setVisibility(View.GONE);
+
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            progressbar.setVisibility(View.GONE);
+                        }
+                    });
+        }*/
+
     }
 }

@@ -17,6 +17,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 
+import static gmads.it.gmads_lab1.FirebaseManagement.mAuth;
+
 public class Login extends AppCompatActivity {
 
     EditText emailView;
@@ -76,6 +78,7 @@ public class Login extends AppCompatActivity {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 progressbar.setVisibility(View.GONE);
                 if(task.isSuccessful()){
+                    FirebaseManagement.loginUser();
                     Intent intent = new Intent(Login.this, ShowProfile.class);
                     intent.addFlags(intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
@@ -119,6 +122,7 @@ public class Login extends AppCompatActivity {
         FirebaseManagement.mAuth.createUserWithEmailAndPassword(email, pwd).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
+                FirebaseManagement.createUser(getApplicationContext(), email);
                 progressbar.setVisibility(View.GONE);
                 if(task.isSuccessful()){
                     Toast.makeText(Login.this, "User Registered Successfully", Toast.LENGTH_SHORT).show();
