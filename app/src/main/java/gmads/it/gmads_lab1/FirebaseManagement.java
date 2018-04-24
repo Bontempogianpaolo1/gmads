@@ -33,17 +33,8 @@ public class FirebaseManagement {
     public static FirebaseDatabase mDatabase;
     public static FirebaseStorage mStorage;
     public static FirebaseUser mUser;
-
     private static FirebaseStorage storage ;
-    public static FirebaseDatabase getDatabase() {
-        if (mDatabase == null) {
-            mDatabase = FirebaseDatabase.getInstance();
-            mDatabase.setPersistenceEnabled(true);
-            mStorage = FirebaseStorage.getInstance();
-            mAuth = FirebaseAuth.getInstance();
-        }
-        return mDatabase;
-    }
+
     public static FirebaseStorage getStorage(){
 
         if(storage==null){
@@ -61,6 +52,7 @@ public class FirebaseManagement {
         mDatabase = FirebaseDatabase.getInstance();
         mDatabase.setPersistenceEnabled(true);
         mAuth = FirebaseAuth.getInstance();
+        mStorage = FirebaseStorage.getInstance();
     }
 
     public static FirebaseManagement getInstance(){
@@ -117,6 +109,7 @@ public class FirebaseManagement {
 
     public static void loginUser(){
         FirebaseManagement.mUser = mAuth.getCurrentUser();
+        ProfileInfoSync.pISInstance.loadProfileInfo();
     }
 
 }

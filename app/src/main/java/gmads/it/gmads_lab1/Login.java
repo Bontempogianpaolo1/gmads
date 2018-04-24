@@ -73,20 +73,21 @@ public class Login extends AppCompatActivity {
 
         progressbar.setVisibility(View.VISIBLE);
 
-        FirebaseManagement.mAuth.signInWithEmailAndPassword(email, pwd).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                progressbar.setVisibility(View.GONE);
-                if(task.isSuccessful()){
-                    FirebaseManagement.loginUser();
-                    Intent intent = new Intent(Login.this, ShowProfile.class);
-                    intent.addFlags(intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
-                } else {
-                    Toast.makeText(Login.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+        FirebaseManagement.mAuth.signInWithEmailAndPassword(email, pwd)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        progressbar.setVisibility(View.GONE);
+                        if(task.isSuccessful()){
+                            FirebaseManagement.loginUser();
+                            Intent intent = new Intent(Login.this, ShowProfile.class);
+                            intent.addFlags(intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            startActivity(intent);
+                        } else {
+                            Toast.makeText(Login.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
     }
 
     private void registerUser() {

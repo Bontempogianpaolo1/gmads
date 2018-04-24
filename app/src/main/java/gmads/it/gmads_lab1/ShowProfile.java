@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -21,14 +22,19 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -40,6 +46,7 @@ import java.net.URL;
 public class ShowProfile extends AppCompatActivity  implements NavigationView.OnNavigationItemSelectedListener{
     ImageView profileImage;
     ImageView drawerImage;
+    ProgressBar progressbar;
 
     private static final String EXTRA_PROFILE_KEY="post_key";
     private DatabaseReference mProfileReference;
@@ -88,6 +95,7 @@ public class ShowProfile extends AppCompatActivity  implements NavigationView.On
         vEmail = findViewById(R.id.email);
         vBio = findViewById(R.id.bio);
         toolbar.setTitle(getString(R.string.showProfile));
+        progressbar = findViewById(R.id.progressBar);
         setSupportActionBar(toolbar);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -101,64 +109,14 @@ public class ShowProfile extends AppCompatActivity  implements NavigationView.On
         navImage.setImageDrawable(getDrawable(R.drawable.default_profile));
 
         vBio.setMovementMethod(new ScrollingMovementMethod());
+
     }
 
     @Override
     public void onStart(){
         super.onStart();
 
-        FirebaseManagement.mDatabase.getReference().child("users").child(FirebaseManagement.mUser.getUid())
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        profile = dataSnapshot.getValue(Profile.class);
-
-                        vName.setText(profile.name + " " + profile.surname);
-                        vEmail.setText(profile.email);
-                        vBio.setText(profile.description);
-                        URL url = null;
-
-                        if(profile.getImage()!=null) {
-                            try {
-                                url = new URL(profile.getImage());
-                            } catch (MalformedURLException e) {
-                                e.printStackTrace();
-                            }
-                            try {
-                                Bitmap image = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                                profileImage.setImageBitmap(image);
-                                navImage.setImageBitmap(image);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        } else {
-
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        // Getting Post failed, log a message
-                        Log.w("loadPost:onCancelled", databaseError.toException());
-                        // [START_EXCLUDE]
-                        Toast.makeText(ShowProfile.this, "Failed to load profile.",
-                                Toast.LENGTH_SHORT).show();
-                        // [END_EXCLUDE]
-
-                    }
-        });
-
-
-
-        if(profile==null){
-            vName.setText(getString(R.string.name));
-            vName.append(" " + getString(R.string.surname));
-            navName.setText(getString(R.string.name));
-            navName.append(" " + getString(R.string.surname));
-            vEmail.setText(getString(R.string.email));
-            navMail.setText(getString(R.string.email));
-            vBio.setText(getString(R.string.description));
-        }
+        getUserInfo();
     }
 
     @Override
@@ -168,7 +126,6 @@ public class ShowProfile extends AppCompatActivity  implements NavigationView.On
 
         /*if(mProfileListener!=null){
             mProfileReference.removeEventListener(mProfileListener);
-
         }*/
     }
 
@@ -217,5 +174,76 @@ public class ShowProfile extends AppCompatActivity  implements NavigationView.On
         }
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void getUserInfo(){
+        FirebaseManagement.mDatabase.getReference().child("users").child(FirebaseManagement.mUser.getUid().toString())
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        profileImage.setVisibility(View.GONE);
+                        progressbar.setVisibility(View.VISIBLE);
+                        profile = dataSnapshot.getValue(Profile.class);
+
+                        vName.setText(profile.name + " " + profile.surname);
+                        vEmail.setText(profile.email);
+                        vBio.setText(profile.description);
+                        URL url = null;
+
+                        if(profile.getImage()!=null) {
+                            try {
+                                File localFile = File.createTempFile("images", "jpg");
+
+                                StorageReference profileImageRef = FirebaseManagement.mStorage.getReference()
+                                        .child("users")
+                                        .child(FirebaseManagement.mUser.getUid().toString())
+                                        .child("profileimage.jpg");
+
+                                profileImageRef.getFile(localFile)
+                                        .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                                            @Override
+                                            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                                                progressbar.setVisibility(View.GONE);
+                                                profileImage.setVisibility(View.VISIBLE);
+                                                profileImage.setImageBitmap(BitmapFactory.decodeFile(localFile.getPath()));
+                                            }
+                                        }).addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+
+                                    }
+                                });
+
+
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        // Getting Post failed, log a message
+                        Log.w("loadPost:onCancelled", databaseError.toException());
+                        // [START_EXCLUDE]
+                        Toast.makeText(ShowProfile.this, "Failed to load profile.",
+                                Toast.LENGTH_SHORT).show();
+                        // [END_EXCLUDE]
+
+                    }
+                });
+
+
+        if(profile==null){
+            vName.setText(getString(R.string.name));
+            vName.append(" " + getString(R.string.surname));
+            navName.setText(getString(R.string.name));
+            navName.append(" " + getString(R.string.surname));
+            vEmail.setText(getString(R.string.email));
+            navMail.setText(getString(R.string.email));
+            vBio.setText(getString(R.string.description));
+        }
     }
 }

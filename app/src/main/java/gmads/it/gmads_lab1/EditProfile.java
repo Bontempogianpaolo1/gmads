@@ -49,6 +49,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -128,58 +129,13 @@ public class EditProfile extends AppCompatActivity {
 
         vBio = findViewById(R.id.address_input);
        // vBio.setText(Address);
+
+        getUserInfo();
+
     }
     @Override
     public void onStart(){
         super.onStart();
-
-        FirebaseManagement.mDatabase.getReference().child("users").child(FirebaseManagement.mUser.getUid())
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        profile = dataSnapshot.getValue(Profile.class);
-
-                        vName.setText(profile.name);
-                        vSurname.setText(profile.surname);
-                        vEmail.setText(profile.email);
-                        vBio.setText(profile.description);
-                        URL url = null;
-
-                        if(profile.getImage()!=null) {
-                            try {
-                                url = new URL(profile.getImage());
-                            } catch (MalformedURLException e) {
-                                e.printStackTrace();
-                            }
-                            try {
-                                Bitmap image = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                                profileImage.setImageBitmap(image);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        } else {
-
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        // Getting Post failed, log a message
-                        Log.w("loadPost:onCancelled", databaseError.toException());
-                        // [START_EXCLUDE]
-                        Toast.makeText(EditProfile.this, "Failed to load profile.",
-                                Toast.LENGTH_SHORT).show();
-                        // [END_EXCLUDE]
-
-                    }
-                });
-
-        if(profile==null){
-            vName.setText(getString(R.string.name));
-            vName.append(" " + getString(R.string.surname));
-            vEmail.setText(getString(R.string.email));
-            vBio.setText(getString(R.string.description));
-        }
     }
 
 
@@ -214,12 +170,6 @@ public class EditProfile extends AppCompatActivity {
            // prefs.edit().putBoolean("save", false).apply();
 
             updateUserInfo();
-
-            Intent pickIntent = new Intent(this, ShowProfile.class);
-           // pickIntent.putExtra(EXTRA_PROFILE_KEY,mProfile).;
-            prefs.edit().putString(EXTRA_PROFILE_KEY,mProfile).apply();
-           // database.setPersistenceEnabled(false);
-            startActivity(pickIntent);
 
         });
         ad.show();
@@ -281,7 +231,7 @@ public class EditProfile extends AppCompatActivity {
             Bundle imageUri = data.getExtras();
             assert imageUri != null;
             newBitMapProfileImage = (Bitmap) imageUri.get("data");
-            uriProfileImage = Uri.fromFile(new File(path,"profile.jpg"));
+            uriProfileImage = data.getData();
             profileImage.setImageBitmap(newBitMapProfileImage);
             //manage request image from gallery
         } else if ( requestCode==REQUEST_IMAGE_LIBRARY && resultCode == RESULT_OK) {
@@ -291,7 +241,7 @@ public class EditProfile extends AppCompatActivity {
                 assert imageUri != null;
                 final InputStream imageStream = getContentResolver().openInputStream(imageUri);
                 newBitMapProfileImage = BitmapFactory.decodeStream(imageStream);
-                uriProfileImage = Uri.fromFile(new File(path,"profile.jpg"));
+                uriProfileImage = imageUri;
                 profileImage.setImageBitmap(newBitMapProfileImage);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -368,12 +318,14 @@ public class EditProfile extends AppCompatActivity {
             return;
         }
 
-        StorageReference profileImageRef = FirebaseManagement.mStorage.getReference().child("profilepics/"
-        );
+        StorageReference profileImageRef = FirebaseManagement.mStorage.getReference()
+                .child("users")
+                .child(FirebaseManagement.mUser.getUid().toString())
+                .child("profileimage.jpg");
 
-        profileImageRef = FirebaseManagement.getStorage().getReference().child("users").child(mProfile).child("profileimage.jpg");
+        if(uriProfileImage != null){
+            Intent pickIntent = new Intent(this, ShowProfile.class);
 
-        /*if(uriProfileImage != null){
             profileImageRef.putFile(uriProfileImage)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
@@ -386,6 +338,11 @@ public class EditProfile extends AppCompatActivity {
                             profile.setImage(profileImageUrl);
 
                             FirebaseManagement.updateUserData(profile);
+
+                            // pickIntent.putExtra(EXTRA_PROFILE_KEY,mProfile).;
+                            //prefs.edit().putString(EXTRA_PROFILE_KEY,mProfile).apply();
+                            // database.setPersistenceEnabled(false);
+                            startActivity(pickIntent);
                             progressbar.setVisibility(View.GONE);
 
                         }
@@ -396,7 +353,77 @@ public class EditProfile extends AppCompatActivity {
                             progressbar.setVisibility(View.GONE);
                         }
                     });
-        }*/
+        }
 
     }
+
+    private void getUserInfo(){
+        progressbar.setVisibility(View.VISIBLE);
+        profileImage.setVisibility(View.GONE);
+        FirebaseManagement.mDatabase.getReference().child("users").child(FirebaseManagement.mUser.getUid().toString())
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        profile = dataSnapshot.getValue(Profile.class);
+
+                        vName.setText(profile.name);
+                        vSurname.setText(profile.surname);
+                        vEmail.setText(profile.email);
+                        vBio.setText(profile.description);
+                        URL url = null;
+
+                        if(profile.getImage()!=null) {
+                            try {
+                                File localFile = File.createTempFile("images", "jpg");
+
+                                StorageReference profileImageRef = FirebaseManagement.mStorage.getReference()
+                                        .child("users")
+                                        .child(FirebaseManagement.mUser.getUid().toString())
+                                        .child("profileimage.jpg");
+
+                                profileImageRef.getFile(localFile)
+                                        .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                                            @Override
+                                            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                                                progressbar.setVisibility(View.GONE);
+                                                profileImage.setVisibility(View.VISIBLE);
+                                                profileImage.setImageBitmap(BitmapFactory.decodeFile(localFile.getPath()));
+
+                                            }
+                                        }).addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+
+                                        }
+                                });
+
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        // Getting Post failed, log a message
+                        Log.w("loadPost:onCancelled", databaseError.toException());
+                        // [START_EXCLUDE]
+                        Toast.makeText(EditProfile.this, "Failed to load profile.",
+                                Toast.LENGTH_SHORT).show();
+                        // [END_EXCLUDE]
+
+                    }
+                });
+
+
+        if(profile==null){
+            vName.setText(getString(R.string.name));
+            vName.append(" " + getString(R.string.surname));
+            vEmail.setText(getString(R.string.email));
+            vBio.setText(getString(R.string.description));
+        }
+    }
+
 }
