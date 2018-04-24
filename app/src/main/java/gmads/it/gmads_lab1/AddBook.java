@@ -3,11 +3,13 @@ package gmads.it.gmads_lab1;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -45,6 +47,9 @@ public class AddBook extends AppCompatActivity
     private String ISBNcode;
     private TextView textViewISBN;
     private ImageView ISBNimage;
+    Toolbar toolbar;
+    SharedPreferences prefs;
+    DrawerLayout drawer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +57,14 @@ public class AddBook extends AppCompatActivity
         setContentView(R.layout.activity_add_book);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarAddBook);
         setSupportActionBar(toolbar);
+
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        toolbar = (Toolbar) findViewById(R.id.toolbarAddBook);
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -72,6 +85,8 @@ public class AddBook extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         EditText editText = (EditText) findViewById(R.id.textViewISBN);
+        this.ISBNimage = findViewById(R.id.imageViewISBN);
+
         editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -84,9 +99,14 @@ public class AddBook extends AppCompatActivity
             }
         });
 
-        this.ISBNimage = findViewById(R.id.imageViewISBN);
+
         ISBNimage.setOnClickListener(this::onClickImageView);
         //findViewById(R.id.selectimage).setOnClickListener(this::onClickImage);
+
+    }
+
+    public void onStart() {
+        super.onStart();
 
     }
 
