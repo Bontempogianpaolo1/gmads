@@ -9,8 +9,6 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -19,7 +17,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -33,46 +30,74 @@ import java.util.regex.Pattern;
 import static android.graphics.Color.RED;
 import android.view.WindowManager;
 
-public class EditProfile extends AppCompatActivity {
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
+public class EditProfile extends AppCompatActivity {
+    private static final String EXTRA_PROFILE_KEY="post_key";
+    private DatabaseReference mProfileReference;
+    private StorageReference storageReference;
+    private ValueEventListener mProfileListener;
+    FirebaseDatabase database;
+    FirebaseStorage storage;
+    private String mProfile;
     static final int REQUEST_IMAGE_CAPTURE = 1888;
     static final int REQUEST_IMAGE_LIBRARY = 1889;
     private ImageView profileImage;//profile image
     private Bitmap newBitMapProfileImage; //temp for new image
     private SharedPreferences prefs;
     private boolean imagechanged=false;
+    Toolbar toolbar;
+    ContextWrapper cw;
+    File directory;
+    String path;
+    LinearLayout ll;
+    LinearLayout l2;
+    TextView vName;
+    TextView vSurname;
+    TextView vEmail;
+    TextView vBio;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        //create attivity
-        String Name;
-        String Surname;
-        String Email;
-        String Address;
-        //
-        Tools t3= new Tools();
-        t3.getjson(getApplicationContext());
-        //
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarEditP);
+        prefs= PreferenceManager.getDefaultSharedPreferences(this);
+        mProfile=prefs.getString(EXTRA_PROFILE_KEY,null);
+        Tools t= new Tools();
+        String isbn = "9788807032622";
+        t.getjson(getApplicationContext(),isbn);
+        database=FirebaseManagement.getDatabase();
+        storage=FirebaseManagement.getStorage();
+
+        if(mProfile!=null) {
+            mProfileReference = FirebaseDatabase.getInstance().getReference().child("users").child(mProfile);
+            storageReference= storage.getReference().child("users").child(mProfile).child("profileimage.jpg");
+        }
+
+        toolbar = (Toolbar) findViewById(R.id.toolbarEditP);
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        cw = new ContextWrapper(getApplicationContext());
+
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        ContextWrapper cw = new ContextWrapper(getApplicationContext());
+
         // path to /data/data/yourapp/app_data/imageDir
-        File directory = cw.getDir(getString(R.string.imageDirectory), Context.MODE_PRIVATE);
-        String path = directory.getPath();
+        directory = cw.getDir(getString(R.string.imageDirectory), Context.MODE_PRIVATE);
+        path = directory.getPath();
         //inizialize  layout
-        LinearLayout ll= findViewById(R.id.linearLayout1);
-        LinearLayout l2= findViewById(R.id.linearlayout2);
+        ll= findViewById(R.id.linearLayout1);
+        l2= findViewById(R.id.linearlayout2);
         ll.setOnClickListener(this::setFocusOnClick);
         l2.setOnClickListener(this::setFocusOnClick);
         //inizialize  user data
-        Name = prefs.getString("name", "");
-        Surname = prefs.getString("surname", "");
-        Email = prefs.getString("email", "");
-        Address = prefs.getString("address", "");
+
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         //set image
         profileImage = findViewById(R.id.profile_image);
@@ -85,24 +110,55 @@ public class EditProfile extends AppCompatActivity {
         profileImage.setOnClickListener(this::onClickImage);
         findViewById(R.id.selectimage).setOnClickListener(this::onClickImage);
         //set text components
-        TextView vName = findViewById(R.id.name_input);
-        vName.setText(Name);
 
-        TextView vSurname = findViewById(R.id.surname_input);
-        vSurname.setText(Surname);
+        vName = findViewById(R.id.name_input);
+        //vName.setText(Name);
 
-        TextView vEmail = findViewById(R.id.email_input);
-        vEmail.setText(Email);
+        vSurname = findViewById(R.id.surname_input);
+       // vSurname.setText(Surname);
 
-        TextView vAddress = findViewById(R.id.address_input);
-        vAddress.setText(Address);
+        vEmail = findViewById(R.id.email_input);
+       // vEmail.setText(Email);
+
+        vBio = findViewById(R.id.address_input);
+       // vBio.setText(Address);
     }
+    @Override
+    public void onStart(){
+        super.onStart();
+
+        if(mProfile!=null) {
+            ValueEventListener postListener = new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    Profile myuser = dataSnapshot.getValue(Profile.class);
+                    assert myuser != null;
+                    vName.setText(myuser.getName());
+                    vSurname.setText(myuser.getSurname());
+                    vEmail.setText(myuser.getEmail());
+                    vBio.setText(myuser.getDescription());
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            };
+            mProfileReference.addValueEventListener(postListener);
+            mProfileListener = postListener;
+        }else{
+            vName.setText("");
+            vSurname.setText("");
+            vEmail.setText("");
+            vBio.setText("");
+        }
+    }
+
+
     //save data on click save
     private void onSaveClick() {
-        EditText vName = findViewById(R.id.name_input);
-        EditText vSurname = findViewById(R.id.surname_input);
-        EditText vEmail = findViewById(R.id.email_input);
-        EditText vAddress = findViewById(R.id.address_input);
+
         //check on email using a regex
         View view = this.getCurrentFocus();
         if (view != null) {
@@ -117,25 +173,50 @@ public class EditProfile extends AppCompatActivity {
             vEmail.setText("");
             vEmail.setHint(R.string.errorEmail);
             vEmail.setHintTextColor(RED);
+            vEmail.requestFocus();
             return;
         }
         Tools t = new Tools();
         //set popup
         android.app.AlertDialog.Builder ad = t.showPopup(this, getString(R.string.saveQuestion), "", getString(R.string.cancel));
         ad.setPositiveButton("Ok", (vi, w) -> {
-            prefs.edit().putString("name", vName.getText().toString()).apply();
-            prefs.edit().putString("surname", vSurname.getText().toString()).apply();
-            prefs.edit().putString("email", vEmail.getText().toString()).apply();
-            prefs.edit().putString("address", vAddress.getText().toString()).apply();
-            prefs.edit().putBoolean("save", false).apply();
+            //prefs.edit().putString("name", vName.getText().toString()).apply();
+            //prefs.edit().putString("surname", vSurname.getText().toString()).apply();
+           // prefs.edit().putString("email", vEmail.getText().toString()).apply();
+           // prefs.edit().putString("address", vBio.getText().toString()).apply();
+           // prefs.edit().putBoolean("save", false).apply();
+            mProfileReference= database.getReference().child("users");
+            if(mProfile==null) {
+                mProfile = mProfileReference.push().getKey();
+            }
+            mProfileReference= database.getReference().child("users").child(mProfile);
+            mProfileReference.setValue(new Profile(vName.getText().toString(),vSurname.getText().toString(),vEmail.getText().toString(), vBio.getText().toString(), vBio.getText().toString()));
+
             if(imagechanged) {
+
                 saveImage(newBitMapProfileImage);
+                storageReference.putFile(Uri.fromFile(new File(path,"profile.jpg")));
             }
             Intent pickIntent = new Intent(this, ShowProfile.class);
+           // pickIntent.putExtra(EXTRA_PROFILE_KEY,mProfile).;
+            prefs.edit().putString(EXTRA_PROFILE_KEY,mProfile).apply();
+           // database.setPersistenceEnabled(false);
             startActivity(pickIntent);
+
         });
         ad.show();
     }
+
+    public void onStop(){
+
+        super.onStop();
+
+        if(mProfileListener!=null){
+            mProfileReference.removeEventListener(mProfileListener);
+
+        }
+    }
+
     //for SaveButton in the action bar
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

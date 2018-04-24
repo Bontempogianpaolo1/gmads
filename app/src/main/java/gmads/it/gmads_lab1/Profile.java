@@ -1,51 +1,63 @@
 package gmads.it.gmads_lab1;
 
 import android.graphics.Bitmap;
+import android.util.Log;
 
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
+import java.io.ByteArrayOutputStream;
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class Profile {
+public class Profile implements Serializable{
+    private String id;
     private String name;
     private String surname;
     private String email;
-    private Bitmap image;
+    private String description;
+    private String image;
     private long valutation;
     private int npublishedBooks;
     private int ntakenBooks;
-    private List<Book> publishedBooks;
-    private List<Book> takenBooks;
+    private List<String> publishedBooks= new ArrayList<>();
+    private List<String> takenBooks= new ArrayList<>();
     private int nrates;
-    final FirebaseDatabase database = FirebaseDatabase.getInstance();
-    DatabaseReference ref = database.getReference("users/");
 
-    public Profile(String name, String surname, String email, Bitmap image) {
+
+
+    public Profile(String name, String surname, String email,String Description,String image) {
         this.name = name;
         this.surname = surname;
         this.email = email;
         this.image = image;
+        this.description=Description;
         valutation=0;
         npublishedBooks=0;
         ntakenBooks=0;
         nrates=0;
-        publishedBooks= Collections.emptyList();
-        takenBooks= Collections.emptyList();
+
+
+        takenBooks.add("cod1");
+        takenBooks.add("cod2");
+        takenBooks.add("cod3");
     }
 
-    public void addValutation(long val){
-        valutation+= val;
-        nrates++;
-    }
-    public List<Book> getPublishedBooks() {
-        return publishedBooks;
-    }
-
-    public void setPublishedBooks(List<Book> publishedBooks) {
-        this.publishedBooks = publishedBooks;
+    public Profile() {
+        valutation=0;
+        npublishedBooks=0;
+        ntakenBooks=0;
+        nrates=0;
     }
 
     public String getName() {
@@ -72,23 +84,28 @@ public class Profile {
         this.email = email;
     }
 
-    public Bitmap getImage() {
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getImage() {
         return image;
     }
 
-    public void setImage(Bitmap image) {
+    public void setImage(String image) {
         this.image = image;
     }
 
     public long getValutation() {
-        if(nrates==0)return 0;
-
-        return valutation/nrates;
+        return valutation;
     }
 
     public void setValutation(long valutation) {
         this.valutation = valutation;
-        nrates=1;
     }
 
     public int getNpublishedBooks() {
@@ -107,15 +124,28 @@ public class Profile {
         this.ntakenBooks = ntakenBooks;
     }
 
-    public List<Book> getTakenBooks() {
+
+    public List<String> getPublishedBooks() {
+        return publishedBooks;
+    }
+
+    public void setPublishedBooks(List<String> publishedBooks) {
+        this.publishedBooks = publishedBooks;
+    }
+
+    public List<String> getTakenBooks() {
         return takenBooks;
     }
 
-    public void setTakenBooks(List<Book> takenBooks) {
+    public void setTakenBooks(List<String> takenBooks) {
         this.takenBooks = takenBooks;
     }
-    
-    public void addProfiletoFire(){
 
+    public int getNrates() {
+        return nrates;
+    }
+
+    public void setNrates(int nrates) {
+        this.nrates = nrates;
     }
 }
