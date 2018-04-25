@@ -3,6 +3,7 @@ package gmads.it.gmads_lab1;
 import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -35,8 +36,18 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -47,6 +58,9 @@ public class AddBook extends AppCompatActivity
 
     private static final int REQUEST_ISBN_IMAGE = 1888;
     private static final int ZBAR_CAMERA_PERMISSION = 1;
+    private Bitmap barcodeBitmap;
+    private TextView isbnText;
+    ImageView drawerImage;
 
     private String ISBNcode = null;
     //private TextView textViewISBN;
@@ -58,11 +72,38 @@ public class AddBook extends AppCompatActivity
     SharedPreferences prefs;
     DrawerLayout drawer;
 
+    private static final String EXTRA_PROFILE_KEY="post_key";
+    private DatabaseReference mProfileReference;
+    FirebaseDatabase database;
+    private ValueEventListener mProfileListener;
+    private String mProfile;
+    private TextView navName;
+    private TextView navMail;
+    private ImageView navImage;
+    SharedPreferences prefs;
+    Toolbar toolbar;
+    DrawerLayout drawer;
+    NavigationView navigationView;
+    View headerView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_book);
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        mProfile= prefs.getString(EXTRA_PROFILE_KEY,null);
+        database= FirebaseManagement.getDatabase();
+        if(mProfile==null){
+            database.setPersistenceEnabled((true));
+        }
+        if(mProfile!=null) {
+            mProfileReference = FirebaseDatabase.getInstance().getReference().child("users").child(mProfile);
+            mProfileReference.keepSynced(true);
+        }
+
+        //toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarAddBook);
+        toolbar.setTitle(getString(R.string.addBook));
         setSupportActionBar(toolbar);
 
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -74,13 +115,22 @@ public class AddBook extends AppCompatActivity
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        //settare navbar
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+        headerView = navigationView.getHeaderView(0);
+        navName = (TextView) headerView.findViewById(R.id.navName);
+        navMail = (TextView) headerView.findViewById(R.id.navMail);
+        navImage = (ImageView) headerView.findViewById(R.id.navImage);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-
+        headerView.setBackgroundResource(R.color.colorPrimaryDark);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        //--fine navbar
 
         this.editISBN = (EditText) findViewById(R.id.textViewISBN);
         this.ISBNbutton = findViewById(R.id.isbn_image_button);
@@ -89,6 +139,33 @@ public class AddBook extends AppCompatActivity
         next.setOnClickListener(this::onNextClick);
         ISBNbutton.setOnClickListener(this::onGetISBNClick);
 
+    @Override
+    public void onStart(){
+        super.onStart();
+
+        if(mProfile!=null) {
+            ValueEventListener postListener = new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    Profile myuser = dataSnapshot.getValue(Profile.class);
+                    assert myuser != null;
+                    //dati navbar
+                    navName.setText(myuser.getName());
+                    navName.append(" " + myuser.getSurname());
+                    navMail.setText(myuser.getEmail());
+                }
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                }
+            };
+            mProfileReference.addValueEventListener(postListener);
+            mProfileListener = postListener;
+        }else{
+            //dati navbar
+            navName.setText(getString(R.string.nameExample));
+            navName.append(" " + getString(R.string.surnameExample));
+            navMail.setText(getString(R.string.emailExample));
+        }
     }
 
     public void onStart() {
@@ -198,7 +275,12 @@ public class AddBook extends AppCompatActivity
             startActivity(intentMod);
             return true;
         } else if (id == R.id.nav_addBook) {
-            Intent intentMod = new Intent(this, AddBook.class);
+            //deve solo chiudersi la navbar
+            DrawerLayout mDrawerLayout;
+            mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+            mDrawerLayout.closeDrawers();
+        } else if(id == R.id.nav_home){
+            Intent intentMod = new Intent(this, Home.class);
             startActivity(intentMod);
             return true;
         }

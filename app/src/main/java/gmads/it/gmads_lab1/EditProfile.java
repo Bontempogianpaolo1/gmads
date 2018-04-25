@@ -152,7 +152,6 @@ public class EditProfile extends AppCompatActivity {
         }
     }
 
-
     //save data on click save
     private void onSaveClick() {
 

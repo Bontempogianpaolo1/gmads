@@ -5,11 +5,14 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Cache;
 import com.android.volley.Network;
@@ -41,6 +44,18 @@ public class Tools extends AppCompatActivity {
     public Tools(){
 
     }
+
+
+    public boolean isOnline(Context c) {
+        ConnectivityManager conMgr = (ConnectivityManager) c.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = conMgr.getActiveNetworkInfo();
+
+        if(netInfo == null || !netInfo.isConnected() || !netInfo.isAvailable()){
+            return false;
+        }
+        return true;
+    }
+
     public AlertDialog.Builder showPopup(Activity element, String title, String msg1, String msg2) {
         AlertDialog.Builder alertDlg = new AlertDialog.Builder(element);
         TextView msg = new TextView(element);
