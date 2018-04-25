@@ -110,7 +110,12 @@ public class AddBook extends AppCompatActivity
             startActivity(intentMod);
             return true;
         } else if (id == R.id.nav_addBook) {
-            Intent intentMod = new Intent(this, AddBook.class);
+            //deve solo chiudersi la navbar
+            DrawerLayout mDrawerLayout;
+            mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+            mDrawerLayout.closeDrawers();
+        } else if(id == R.id.nav_home){
+            Intent intentMod = new Intent(this, Home.class);
             startActivity(intentMod);
             return true;
         }

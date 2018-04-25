@@ -83,45 +83,65 @@ public class SaveBook extends AppCompatActivity{
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_save_book);
-        prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        //isbn = prefs.getString(EXTRA_ISBN,null);
-        isbn = "9788886982405";
-        user = prefs.getString(EXTRA_PROFILE_KEY,null);
-        database=FirebaseManagement.getDatabase();
-        storage=FirebaseManagement.getStorage();
-
-        if(isbn !=null) {
-            mProfileReference = FirebaseDatabase.getInstance().getReference().child("books").child(isbn);
-            storageReference= storage.getReference().child("books").child(isbn).child("image.jpg");
+        //mostra la progress bar finchè non ha tutti i dati
+        //connessione internet assente
+        Tools t1 = new Tools();
+        if (!(t1.isOnline(getApplicationContext()))){
+            //rendo invisibile l'xml
+            findViewById(R.id.ll).setVisibility(View.GONE);
+            findViewById(R.id.progressBar).setVisibility(View.GONE);
+            Tools t = new Tools();
+            android.app.AlertDialog.Builder ad = t.showPopup(this, getString(R.string.noInternet), "", "");
+            //tasto retry rimanda ad addbook
+            ad.setPositiveButton(getString(R.string.retry), (vi, w) -> {
+                onBackPressed();
+            });
+            ad.setCancelable(false);
+            ad.show();
         }
+        else {
+            findViewById(R.id.ll).setVisibility(View.GONE);
+            findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
+        }
+            prefs = PreferenceManager.getDefaultSharedPreferences(this);
+            //isbn = prefs.getString(EXTRA_ISBN,null);
+            isbn = "9788886982405";
+            user = prefs.getString(EXTRA_PROFILE_KEY, null);
+            database = FirebaseManagement.getDatabase();
+            storage = FirebaseManagement.getStorage();
 
-        toolbar = (Toolbar) findViewById(R.id.toolbarSaveBook);
-        prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        cw = new ContextWrapper(getApplicationContext());
+            if (isbn != null) {
+                mProfileReference = FirebaseDatabase.getInstance().getReference().child("books").child(isbn);
+                storageReference = storage.getReference().child("books").child(isbn).child("image.jpg");
+            }
 
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+            toolbar = (Toolbar) findViewById(R.id.toolbarSaveBook);
+            prefs = PreferenceManager.getDefaultSharedPreferences(this);
+            cw = new ContextWrapper(getApplicationContext());
 
-        // path to /data/data/yourapp/app_data/imageDir
-        directory = cw.getDir(getString(R.string.imageDirectory), Context.MODE_PRIVATE);
-        path = directory.getPath();
-        //inizialize  layout
-        /* ll= findViewById(R.id.linearLayout1);
-        l2= findViewById(R.id.linearlayout2);
-        ll.setOnClickListener(this::setFocusOnClick);
-        l2.setOnClickListener(this::setFocusOnClick);*/
-        //inizialize  user data
-        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-        //set image
-        //bookImage = findViewById(R.id.bookimage);
-        vTitle = findViewById(R.id.title);
-        vDate = findViewById(R.id.data);
-        vAuthor = findViewById(R.id.autore);
-        vCategories = findViewById(R.id.categorie);
-        vPublisher= findViewById(R.id.editore);
-        vDescription=findViewById(R.id.descrizione);
-        bookImage = findViewById(R.id.bookimage);
+            setSupportActionBar(toolbar);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+            // path to /data/data/yourapp/app_data/imageDir
+            directory = cw.getDir(getString(R.string.imageDirectory), Context.MODE_PRIVATE);
+            path = directory.getPath();
+            //inizialize  layout
+            /* ll= findViewById(R.id.linearLayout1);
+            l2= findViewById(R.id.linearlayout2);
+            ll.setOnClickListener(this::setFocusOnClick);
+            l2.setOnClickListener(this::setFocusOnClick);*/
+            //inizialize  user data
+            this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+            //set image
+            //bookImage = findViewById(R.id.bookimage);
+            vTitle = findViewById(R.id.title);
+            vDate = findViewById(R.id.data);
+            vAuthor = findViewById(R.id.autore);
+            vCategories = findViewById(R.id.categorie);
+            vPublisher = findViewById(R.id.editore);
+            vDescription = findViewById(R.id.descrizione);
+            bookImage = findViewById(R.id.bookimage);
     }
 
     public void getjson(Context c,  String isbn) {
@@ -206,6 +226,8 @@ public class SaveBook extends AppCompatActivity{
                                 vDescription.setText(R.string.descriptionNotFound);
                             }
                             bookImage.loadUrl("https://process.filestackapi.com/AhTgLagciQByzXpFGRI0Az/resize=width:128,height:200/"+  urlimage);
+                            findViewById(R.id.progressBar).setVisibility(View.GONE);
+                            findViewById(R.id.ll).setVisibility(View.VISIBLE);
                             prefs = PreferenceManager.getDefaultSharedPreferences(c);
                             String owner = prefs.getString("post_key",null);
                             book = new Book(isbn, (String)vTitle.getText(), "", urlimage,(String) vDate.getText(),(String) vAuthor.getText(),(String)vCategories.getText(),(String)vPublisher.getText(),"");
@@ -246,7 +268,6 @@ public class SaveBook extends AppCompatActivity{
             mProfileReference.setValue(book);
 
             if(imagechanged) {
-
                 saveImage(newBitMapBookImage);
                 storageReference.putFile(Uri.fromFile(new File(path,"image.jpg")));
             }
@@ -374,6 +395,7 @@ public class SaveBook extends AppCompatActivity{
     //animation back button
     @Override
     public void onBackPressed() {
+        finish();
         super.onBackPressed();
         overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out);
     }
@@ -387,4 +409,5 @@ public class SaveBook extends AppCompatActivity{
             return null;
         }
     }
+
 }

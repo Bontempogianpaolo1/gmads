@@ -53,6 +53,16 @@ public class Home extends AppCompatActivity  implements NavigationView.OnNavigat
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        //profilo
+        mProfile= prefs.getString(EXTRA_PROFILE_KEY,null);
+        database= FirebaseManagement.getDatabase();
+        if(mProfile==null){
+            database.setPersistenceEnabled((true));
+        }
+        if(mProfile!=null) {
+            mProfileReference = FirebaseDatabase.getInstance().getReference().child("users").child(mProfile);
+            mProfileReference.keepSynced(true);
+        }
         //settare toolbar + titolo
         toolbar = (Toolbar) findViewById(R.id.toolbarHome);
         toolbar.setTitle("Home");
@@ -120,7 +130,7 @@ public class Home extends AppCompatActivity  implements NavigationView.OnNavigat
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater mi = getMenuInflater();
-        mi.inflate(R.menu.actionbar_showp, menu);
+        mi.inflate(R.menu.actionbar_empty, menu);
         return true;
     }
     @Override

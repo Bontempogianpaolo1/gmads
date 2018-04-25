@@ -16,6 +16,8 @@
     <string name="cancel">Annulla</string>
     <string name="saveQuestion">\nVuoi salvare le modifiche?</string>
     <string name="yes">Si</string>
+    <string name="noInternet">\nInternet assente. Connettiti e riprova.</string>
+    <string name="retry">Riprova</string>
     <string name="alertUpd">\nSalvataggio avvenuto!</string>
     <string name="nameExample">Nome</string>
     <string name="surnameExample">Cognome</string>

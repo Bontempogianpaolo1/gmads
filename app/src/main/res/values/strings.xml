@@ -13,6 +13,8 @@
     <string name="cancel">Cancel</string>
     <string name="saveQuestion">\nDo you want to save changes?</string>
     <string name="yes">Yes</string>
+    <string name="noInternet">\nNo internet connection. Check your internet connectivity and try again.</string>
+    <string name="retry">Retry</string>
     <string name="alertResetDone">\nReset done!</string>
     <string name="alertUpd">\nProfile Updated!</string>
     //stringhe da non tradurre
