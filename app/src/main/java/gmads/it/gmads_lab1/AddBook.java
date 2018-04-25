@@ -2,6 +2,7 @@ package gmads.it.gmads_lab1;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -15,6 +16,9 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -41,12 +45,15 @@ import static gmads.it.gmads_lab1.EditProfile.REQUEST_IMAGE_LIBRARY;
 public class AddBook extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private static final int REQUEST_IMAGE_CAPTURE = 1888;
+    private static final int REQUEST_ISBN_IMAGE = 1888;
     private static final int ZBAR_CAMERA_PERMISSION = 1;
-    private Bitmap barcodeBitmap;
-    private String ISBNcode;
-    private TextView textViewISBN;
-    private ImageView ISBNimage;
+
+    private String ISBNcode = null;
+    //private TextView textViewISBN;
+    private Button ISBNbutton;
+    private Button next;
+    private EditText editISBN;
+    //private Bitmap barcodeBitmap;
     Toolbar toolbar;
     SharedPreferences prefs;
     DrawerLayout drawer;
@@ -66,15 +73,6 @@ public class AddBook extends AppCompatActivity
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -84,29 +82,49 @@ public class AddBook extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        EditText editText = (EditText) findViewById(R.id.textViewISBN);
-        this.ISBNimage = findViewById(R.id.imageViewISBN);
+        this.editISBN = (EditText) findViewById(R.id.textViewISBN);
+        this.ISBNbutton = findViewById(R.id.isbn_image_button);
+        this.next = findViewById(R.id.isbn_next_button);
 
-        editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                boolean handled = false;
-                if (actionId == EditorInfo.IME_ACTION_SEND) {
-                    setISBNcode(editText.getText().toString());
-                    handled = true;
-                }
-                return handled;
-            }
-        });
-
-
-        ISBNimage.setOnClickListener(this::onClickImageView);
-        //findViewById(R.id.selectimage).setOnClickListener(this::onClickImage);
+        next.setOnClickListener(this::onNextClick);
+        ISBNbutton.setOnClickListener(this::onGetISBNClick);
 
     }
 
     public void onStart() {
         super.onStart();
+
+        TextWatcher textWatcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                setISBNcode(String.valueOf(charSequence));
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        };
+
+        editISBN.addTextChangedListener(textWatcher);
+        /*
+        editISBN.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                boolean handled = false;
+                if (actionId == EditorInfo.IME_ACTION_SEND) {
+                    setISBNcode(editISBN.getText().toString());
+                    handled = true;
+                }
+                return handled;
+            }
+        });
+        */
 
     }
 
@@ -114,6 +132,27 @@ public class AddBook extends AppCompatActivity
         this.ISBNcode = isbn;
     }
 
+    public void onNextClick(View v){
+        if(this.ISBNcode == null){
+            new AlertDialog.Builder(this)
+                    .setTitle("Error")
+                    .setMessage("Insert ISBN first")
+                    .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    // continue with delete
+                }
+            })
+            .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
+        }
+        else{
+            Intent pickIntent = new Intent(this, AddBook.class);
+            // pickIntent.putExtra(EXTRA_PROFILE_KEY,mProfile).;
+            prefs.edit().putString("ISBN",ISBNcode).apply();
+            // database.setPersistenceEnabled(false);
+            startActivity(pickIntent);
+        }
+    }
 
     @Override
     public void onBackPressed() {
@@ -176,54 +215,16 @@ public class AddBook extends AppCompatActivity
                     new String[]{Manifest.permission.CAMERA}, ZBAR_CAMERA_PERMISSION);
         } else {
             Intent intent = new Intent(this, Scanner.class);
-            startActivity(intent);
+            startActivityForResult(intent, REQUEST_ISBN_IMAGE);
         }
-    }
-
-
-    private void onClickImageView(View v){
-        Tools t= new Tools();
-        //set popup
-        View view = this.getCurrentFocus();
-        if (view != null) {
-            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-            assert imm != null;
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        }
-        v.getContext();
-        android.app.AlertDialog.Builder ad=t.showPopup(this,getString(R.string.takeImage),getString(R.string.selectGallery),getString(R.string.selectFromCamera));
-        ad.setPositiveButton("gallery",(vi,w)->{
-            Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-            pickIntent.setType("image/*");
-            startActivityForResult(pickIntent, REQUEST_IMAGE_LIBRARY);
-        });
-        ad.setNegativeButton("photo",(vi,w)->{
-            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-        });
-        ad.show();
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode,resultCode,data);
-        //manage request image capture
-        if (requestCode == REQUEST_IMAGE_CAPTURE  && resultCode == RESULT_OK) {
-
-            Bundle imageUri = data.getExtras();
-            assert imageUri != null;
-
-            barcodeBitmap = (Bitmap) imageUri.get("data");
-            //manage request image from gallery
-        } else if ( requestCode==REQUEST_IMAGE_LIBRARY && resultCode == RESULT_OK) {
-            try{
-                final Uri imageUri = data.getData();
-                assert imageUri != null;
-                final InputStream imageStream = getContentResolver().openInputStream(imageUri);
-                barcodeBitmap = BitmapFactory.decodeStream(imageStream);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+       if(requestCode == REQUEST_ISBN_IMAGE) {
+           if(requestCode == RESULT_OK) {
+               this.ISBNcode = data.getStringExtra("ISBN");
+           }
+       }
     }
     /*
 

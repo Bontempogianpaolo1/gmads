@@ -50,7 +50,7 @@ import java.net.URL;
 
 public class SaveBook extends AppCompatActivity{
 
-    private static final String EXTRA_ISBN ="isbn";
+    private static final String EXTRA_ISBN ="ISBN";
     private static final String EXTRA_PROFILE_KEY="post_key";
     private DatabaseReference mProfileReference;
     private StorageReference storageReference;
@@ -85,7 +85,7 @@ public class SaveBook extends AppCompatActivity{
         setContentView(R.layout.activity_save_book);
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         //isbn = prefs.getString(EXTRA_ISBN,null);
-        isbn = "9788886982405";
+        isbn = prefs.getString(EXTRA_ISBN, null);
         user = prefs.getString(EXTRA_PROFILE_KEY,null);
         database=FirebaseManagement.getDatabase();
         storage=FirebaseManagement.getStorage();
