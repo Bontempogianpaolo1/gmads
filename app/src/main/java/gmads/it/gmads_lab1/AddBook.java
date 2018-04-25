@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -50,6 +51,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Objects;
 
 import static gmads.it.gmads_lab1.EditProfile.REQUEST_IMAGE_LIBRARY;
 
@@ -58,9 +60,6 @@ public class AddBook extends AppCompatActivity
 
     private static final int REQUEST_ISBN_IMAGE = 1888;
     private static final int ZBAR_CAMERA_PERMISSION = 1;
-    private Bitmap barcodeBitmap;
-    private TextView isbnText;
-    ImageView drawerImage;
 
     private String ISBNcode = null;
     //private TextView textViewISBN;
@@ -80,9 +79,6 @@ public class AddBook extends AppCompatActivity
     private TextView navName;
     private TextView navMail;
     private ImageView navImage;
-    SharedPreferences prefs;
-    Toolbar toolbar;
-    DrawerLayout drawer;
     NavigationView navigationView;
     View headerView;
 
@@ -91,12 +87,12 @@ public class AddBook extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_book);
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        mProfile= prefs.getString(EXTRA_PROFILE_KEY,null);
-        database= FirebaseManagement.getDatabase();
-        if(mProfile==null){
+        mProfile = prefs.getString(EXTRA_PROFILE_KEY, null);
+        database = FirebaseManagement.getDatabase();
+        if (mProfile == null) {
             database.setPersistenceEnabled((true));
         }
-        if(mProfile!=null) {
+        if (mProfile != null) {
             mProfileReference = FirebaseDatabase.getInstance().getReference().child("users").child(mProfile);
             mProfileReference.keepSynced(true);
         }
@@ -111,7 +107,7 @@ public class AddBook extends AppCompatActivity
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -138,11 +134,10 @@ public class AddBook extends AppCompatActivity
 
         next.setOnClickListener(this::onNextClick);
         ISBNbutton.setOnClickListener(this::onGetISBNClick);
-
+    }
     @Override
-    public void onStart(){
+    public void onStart() {
         super.onStart();
-
         if(mProfile!=null) {
             ValueEventListener postListener = new ValueEventListener() {
                 @Override
@@ -166,11 +161,6 @@ public class AddBook extends AppCompatActivity
             navName.append(" " + getString(R.string.surnameExample));
             navMail.setText(getString(R.string.emailExample));
         }
-    }
-
-    public void onStart() {
-        super.onStart();
-
         TextWatcher textWatcher = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -265,10 +255,11 @@ public class AddBook extends AppCompatActivity
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
+        DrawerLayout mDrawerLayout;
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (id == R.id.nav_showProfile) {
             // Handle the camera action
             Intent intentMod = new Intent(this, ShowProfile.class);
@@ -276,8 +267,8 @@ public class AddBook extends AppCompatActivity
             return true;
         } else if (id == R.id.nav_addBook) {
             //deve solo chiudersi la navbar
-            DrawerLayout mDrawerLayout;
-            mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+
             mDrawerLayout.closeDrawers();
         } else if(id == R.id.nav_home){
             Intent intentMod = new Intent(this, Home.class);
@@ -285,8 +276,8 @@ public class AddBook extends AppCompatActivity
             return true;
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+
+        mDrawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
 
@@ -303,7 +294,7 @@ public class AddBook extends AppCompatActivity
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
        if(requestCode == REQUEST_ISBN_IMAGE) {
-           if(requestCode == RESULT_OK) {
+           if(resultCode == RESULT_OK) {
                this.ISBNcode = data.getStringExtra("ISBN");
            }
        }

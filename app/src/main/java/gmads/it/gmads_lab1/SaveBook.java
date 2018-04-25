@@ -50,6 +50,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Objects;
 
 public class SaveBook extends AppCompatActivity{
 
@@ -84,7 +85,7 @@ public class SaveBook extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getjson(getApplicationContext(), isbn);
+
         setContentView(R.layout.activity_save_book);
         //mostra la progress bar finchè non ha tutti i dati
         //connessione internet assente
@@ -125,7 +126,7 @@ public class SaveBook extends AppCompatActivity{
         cw = new ContextWrapper(getApplicationContext());
 
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         // path to /data/data/yourapp/app_data/imageDir
@@ -149,6 +150,7 @@ public class SaveBook extends AppCompatActivity{
         bookImage = findViewById(R.id.bookimage);
         Button add = findViewById(R.id.addphoto);
         add.setOnClickListener(this::onAddPhotoClick);
+        getjson(getApplicationContext(), isbn);
     }
 
     private void onClickImage(View v) {
