@@ -18,8 +18,8 @@
     //stringhe da non tradurre
     <string name="imageDirectory">ImageDir</string>
     //
-    <string name="nameExample">Paolo</string>
-    <string name="surnameExample">Rossi</string>
+    <string name="nameExample">Name</string>
+    <string name="surnameExample">Surname</string>
     <string name="emailExample">example@p.com</string>
     <string name="bioExample">--empty--</string>
     <string name="address">Bio</string>
@@ -41,5 +41,13 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_save_book">SaveBook</string>
     <string name="addBook">Add Book</string>
+    <!--string for data not found-->
     <string name="notFound">Not Found</string>
+    <string name="titleNotFound">Title: not Found</string>
+    <string name="authorNotFound">Author: not Found</string>
+    <string name="descriptionNotFound">\nDescription: not Found</string>
+    <string name="publisherNotFound">Publisher: not Found</string>
+    <string name="pDateNotFound">Published Date: not Found</string>
+    <string name="categoryNotFound">Category/: not Found</string>
+    <!--end-->
 </resources>

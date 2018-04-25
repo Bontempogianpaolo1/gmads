@@ -15,14 +15,16 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".ShowProfile"
-            android:label="gMADs_1">
+            android:name=".Home"
+            android:label="gMADs">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ShowProfile"
+            android:label="@string/showProfile"/>
         <activity
             android:name=".EditProfile"
             android:configChanges="orientation"

@@ -107,21 +107,21 @@ public class SaveBook extends AppCompatActivity{
         directory = cw.getDir(getString(R.string.imageDirectory), Context.MODE_PRIVATE);
         path = directory.getPath();
         //inizialize  layout
-       /* ll= findViewById(R.id.linearLayout1);
+        /* ll= findViewById(R.id.linearLayout1);
         l2= findViewById(R.id.linearlayout2);
         ll.setOnClickListener(this::setFocusOnClick);
         l2.setOnClickListener(this::setFocusOnClick);*/
         //inizialize  user data
-
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         //set image
-        bookImage = findViewById(R.id.bookimage);
+        //bookImage = findViewById(R.id.bookimage);
         vTitle = findViewById(R.id.title);
-        vDate = findViewById(R.id.dataPubblicazione);
+        vDate = findViewById(R.id.data);
         vAuthor = findViewById(R.id.autore);
         vCategories = findViewById(R.id.categorie);
         vPublisher= findViewById(R.id.editore);
         vDescription=findViewById(R.id.descrizione);
+        bookImage = findViewById(R.id.bookimage);
     }
 
     public void getjson(Context c,  String isbn) {
@@ -132,10 +132,8 @@ public class SaveBook extends AppCompatActivity{
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
-                    public void onResponse(String response) {
-                        // Display the first 500 characters of the response string.
-                        //setto tutto con stringhe di default
-                        String title = getString(R.string.notFound);
+                    public void onResponse(String response) {//Display the first 500 characters of the response string.
+                        String title;
                         String author;
                         String publisher;
                         String publishdate;
@@ -160,42 +158,40 @@ public class SaveBook extends AppCompatActivity{
                                 title = volumeObject.getString("title");
                                 vTitle.setText(title);
                             }catch (Exception e){
-                                vTitle.setText(getString(R.string.notFound));
+                                vTitle.setText(getString(R.string.titleNotFound));
                             }
                             try{
                                 author = volumeObject.getString("authors");
                                 author = author.replaceAll("[\"\\[\\]]","");
                                 vAuthor.setText(author);
                             }catch (Exception e){
-                                vAuthor.setText(getString(R.string.notFound));
+                                vAuthor.setText(getString(R.string.authorNotFound));
                             }
                             try{
-
-                            if(!volumeObject.isNull("publisher")&& volumeObject.has("publisher")){
-                                publisher = volumeObject.getString("publisher");
-                                vPublisher.setText(publisher);
+                                if(!volumeObject.isNull("publisher")&& volumeObject.has("publisher")){
+                                    publisher = volumeObject.getString("publisher");
+                                    vPublisher.setText(publisher);
                             }else{
-                                vPublisher.setText(getString(R.string.notFound));
+                                vPublisher.setText(getString(R.string.publisherNotFound));
                             }
                             }catch (Exception e){
-                                vPublisher.setText(getString(R.string.notFound));
+                                vPublisher.setText(getString(R.string.publisherNotFound));
                             }
                             try{
                                 publishdate= volumeObject.getString("publishedDate");
                                 vDate.setText(publishdate);
                             }catch (Exception e){
-                                vDate.setText(getString(R.string.notFound));
+                                vDate.setText(getString(R.string.pDateNotFound));
                             }
                             try{
                                 categories = volumeObject.getString("categories");
                                 categories = categories.replaceAll("[\"\\[\\]]","");
                                 vCategories.setText(categories);
                             }catch (Exception e){
-                                vCategories.setText(getString(R.string.notFound));
+                                vCategories.setText(getString(R.string.categoryNotFound));
                             }
-
                             try{
-                                urlimage = "https://process.filestackapi.com/AhTgLagciQByzXpFGRI0Az/resize=width:128,height:200/"+volumeObject.getJSONObject("imageLinks").getString("thumbnail");
+                                urlimage = volumeObject.getJSONObject("imageLinks").getString("thumbnail");
                             }catch (Exception e){
                                 urlimage="";
                             }
@@ -204,18 +200,15 @@ public class SaveBook extends AppCompatActivity{
                                     description = volumeObject.getString("description");
                                     vDescription.setText(description);
                                 }else{
-                                    vDescription.setText(R.string.notFound);
+                                    vDescription.setText(R.string.descriptionNotFound);
                                 }
                             }catch(Exception e){
-                                vDescription.setText(R.string.notFound);
+                                vDescription.setText(R.string.descriptionNotFound);
                             }
-
-                            bookImage.loadUrl(urlimage);
-
+                            bookImage.loadUrl("https://process.filestackapi.com/AhTgLagciQByzXpFGRI0Az/resize=width:128,height:200/"+  urlimage);
                             prefs = PreferenceManager.getDefaultSharedPreferences(c);
                             String owner = prefs.getString("post_key",null);
                             book = new Book(isbn, (String)vTitle.getText(), "", urlimage,(String) vDate.getText(),(String) vAuthor.getText(),(String)vCategories.getText(),(String)vPublisher.getText(),"");
-
                     }
                 }, new Response.ErrorListener() {
             @Override

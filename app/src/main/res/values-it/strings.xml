@@ -17,8 +17,8 @@
     <string name="saveQuestion">\nVuoi salvare le modifiche?</string>
     <string name="yes">Si</string>
     <string name="alertUpd">\nSalvataggio avvenuto!</string>
-    <string name="nameExample">Paolo</string>
-    <string name="surnameExample">Rossi</string>
+    <string name="nameExample">Nome</string>
+    <string name="surnameExample">Cognome</string>
     <string name="bioExample">--vuoto--</string>
     <string name="emailExample">esempio@p.com</string>
     <string name="imageDirectory">ImageDir</string>
@@ -32,5 +32,13 @@
     <string name="alertResetDone">reset fatto!</string>
     <string name="saveProfile">Salva Profilo</string>
     <string name="addBook">Aggiungi Libro</string>
-    <string name="notFound">Non trovato/a</string>
+    <!--stringhe per dati non trovati-->
+    <string name="notFound">Non trovato</string>
+    <string name="titleNotFound">Titolo: assente</string>
+    <string name="authorNotFound">Autore: assente</string>
+    <string name="descriptionNotFound">\nDescrizione: assente</string>
+    <string name="publisherNotFound">Editore: assente</string>
+    <string name="pDateNotFound">Data pubblicazione: assente</string>
+    <string name="categoryNotFound">Categoria: assente</string>
+    <!--end-->
 </resources>
