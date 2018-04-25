@@ -34,6 +34,7 @@
     <string name="saveProfile">Save Profile</string>
     <string name="errorEmail">Error format email</string>
     <string name="app_name">gMads</string>
+    <string name="addBookImage">\nAdd a book photo from</string>
     <string name="title_activity_add_book">AddBook</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>

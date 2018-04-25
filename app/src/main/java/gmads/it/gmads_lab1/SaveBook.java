@@ -11,6 +11,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -21,6 +23,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebView;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -80,8 +83,8 @@ public class SaveBook extends AppCompatActivity{
     Book book;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
+        getjson(getApplicationContext(), isbn);
         setContentView(R.layout.activity_save_book);
         //mostra la progress bar finchè non ha tutti i dati
         //connessione internet assente
@@ -103,45 +106,73 @@ public class SaveBook extends AppCompatActivity{
             findViewById(R.id.ll).setVisibility(View.GONE);
             findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
         }
-            prefs = PreferenceManager.getDefaultSharedPreferences(this);
-            //isbn = prefs.getString(EXTRA_ISBN,null);
-            isbn = "9788886982405";
-            user = prefs.getString(EXTRA_PROFILE_KEY, null);
-            database = FirebaseManagement.getDatabase();
-            storage = FirebaseManagement.getStorage();
 
-            if (isbn != null) {
-                mProfileReference = FirebaseDatabase.getInstance().getReference().child("books").child(isbn);
-                storageReference = storage.getReference().child("books").child(isbn).child("image.jpg");
-            }
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        //isbn = prefs.getString(EXTRA_ISBN,null);
+        isbn = "9788886982405";
+        user = prefs.getString(EXTRA_PROFILE_KEY, null);
+        database = FirebaseManagement.getDatabase();
+        storage = FirebaseManagement.getStorage();
 
-            toolbar = (Toolbar) findViewById(R.id.toolbarSaveBook);
-            prefs = PreferenceManager.getDefaultSharedPreferences(this);
-            cw = new ContextWrapper(getApplicationContext());
+        if (isbn != null) {
+            mProfileReference = FirebaseDatabase.getInstance().getReference().child("books").child(isbn);
+            storageReference = storage.getReference().child("books").child(isbn).child("image.jpg");
+        }
 
-            setSupportActionBar(toolbar);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        //end bottone
+        toolbar = (Toolbar) findViewById(R.id.toolbarSaveBook);
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        cw = new ContextWrapper(getApplicationContext());
 
-            // path to /data/data/yourapp/app_data/imageDir
-            directory = cw.getDir(getString(R.string.imageDirectory), Context.MODE_PRIVATE);
-            path = directory.getPath();
-            //inizialize  layout
-            /* ll= findViewById(R.id.linearLayout1);
-            l2= findViewById(R.id.linearlayout2);
-            ll.setOnClickListener(this::setFocusOnClick);
-            l2.setOnClickListener(this::setFocusOnClick);*/
-            //inizialize  user data
-            this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-            //set image
-            //bookImage = findViewById(R.id.bookimage);
-            vTitle = findViewById(R.id.title);
-            vDate = findViewById(R.id.data);
-            vAuthor = findViewById(R.id.autore);
-            vCategories = findViewById(R.id.categorie);
-            vPublisher = findViewById(R.id.editore);
-            vDescription = findViewById(R.id.descrizione);
-            bookImage = findViewById(R.id.bookimage);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        // path to /data/data/yourapp/app_data/imageDir
+        directory = cw.getDir(getString(R.string.imageDirectory), Context.MODE_PRIVATE);
+        path = directory.getPath();
+        //inizialize  layout
+        /* ll= findViewById(R.id.linearLayout1);
+        l2= findViewById(R.id.linearlayout2);
+        ll.setOnClickListener(this::setFocusOnClick);
+        l2.setOnClickListener(this::setFocusOnClick);*/
+        //inizialize  user data
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        //set image
+        //bookImage = findViewById(R.id.bookimage);
+        vTitle = findViewById(R.id.title);
+        vDate = findViewById(R.id.data);
+        vAuthor = findViewById(R.id.autore);
+        vCategories = findViewById(R.id.categorie);
+        vPublisher = findViewById(R.id.editore);
+        vDescription = findViewById(R.id.descrizione);
+        bookImage = findViewById(R.id.bookimage);
+        Button add = findViewById(R.id.addphoto);
+        add.setOnClickListener(this::onAddPhotoClick);
+    }
+
+    private void onClickImage(View v) {
+        Tools t= new Tools();
+        //set popup
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            assert imm != null;
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+        v.getContext();
+        android.app.AlertDialog.Builder ad=t.showPopup(this,getString(R.string.takeImage),getString(R.string.selectGallery),getString(R.string.selectFromCamera));
+        ad.setPositiveButton("gallery",(vi,w)->{
+            Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            pickIntent.setType("image/*");
+            startActivityForResult(pickIntent, REQUEST_IMAGE_LIBRARY);
+        });
+        ad.setNegativeButton("photo",(vi,w)->{
+            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        });
+        ad.show();
+        //-->
     }
 
     public void getjson(Context c,  String isbn) {
@@ -245,7 +276,7 @@ public class SaveBook extends AppCompatActivity{
     @Override
     public void onStart(){
         super.onStart();
-        getjson(getApplicationContext(), isbn);
+
     }
 
 
@@ -303,7 +334,8 @@ public class SaveBook extends AppCompatActivity{
         assert imm != null;
         imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
     }
-    private void onClickImage(View v) {
+
+    private void onAddPhotoClick(View v) {
         Tools t= new Tools();
         //set popup
         View view = this.getCurrentFocus();
@@ -313,13 +345,13 @@ public class SaveBook extends AppCompatActivity{
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
         v.getContext();
-        android.app.AlertDialog.Builder ad=t.showPopup(this,getString(R.string.takeImage),getString(R.string.selectGallery),getString(R.string.selectFromCamera));
-        ad.setPositiveButton("gallery",(vi,w)->{
+        android.app.AlertDialog.Builder ad=t.showPopup(this,getString(R.string.addBookImage),getString(R.string.selectGallery),getString(R.string.selectFromCamera));
+        ad.setPositiveButton(getString(R.string.selectGallery),(vi,w)->{
             Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             pickIntent.setType("image/*");
             startActivityForResult(pickIntent, REQUEST_IMAGE_LIBRARY);
         });
-        ad.setNegativeButton("photo",(vi,w)->{
+        ad.setNegativeButton(getString(R.string.selectFromCamera),(vi,w)->{
             Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
         });

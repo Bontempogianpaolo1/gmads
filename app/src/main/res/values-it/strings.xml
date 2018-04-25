@@ -14,6 +14,8 @@
     <string name="save">Salva</string>
     <string name="reset">Reset</string>
     <string name="cancel">Annulla</string>
+    <string name="selectFromCamera">Fotocamera</string>
+    <string name="selectGallery">Galleria</string>
     <string name="saveQuestion">\nVuoi salvare le modifiche?</string>
     <string name="yes">Si</string>
     <string name="noInternet">\nInternet assente. Connettiti e riprova.</string>
@@ -25,9 +27,8 @@
     <string name="emailExample">esempio@p.com</string>
     <string name="imageDirectory">ImageDir</string>
     <string name="selectImage">Cambia foto profilo</string>
-    <string name="selectFromCamera">Foto</string>
-    <string name="selectGallery">Galleria</string>
     <string name="takeImage">\nScegli immagine da</string>
+    <string name="addBookImage">\nAggiungi foto libro da</string>
     <string name="showProfile">Profilo</string>
     <string name="editProfile">Modifica Profilo</string>
     <string name="errorEmail">Errore formato email</string>

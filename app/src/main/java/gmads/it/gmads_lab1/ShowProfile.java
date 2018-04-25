@@ -31,6 +31,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
+import static gmads.it.gmads_lab1.Home.aHome;
+
 public class ShowProfile extends AppCompatActivity  implements NavigationView.OnNavigationItemSelectedListener{
     ImageView profileImage;
     ImageView drawerImage;
@@ -58,6 +60,7 @@ public class ShowProfile extends AppCompatActivity  implements NavigationView.On
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         mProfile= prefs.getString(EXTRA_PROFILE_KEY,null);
         database= FirebaseManagement.getDatabase();
+        profileImage = findViewById(R.id.profile_image);
         if(mProfile==null){
             database.setPersistenceEnabled((true));
         }
@@ -67,22 +70,8 @@ public class ShowProfile extends AppCompatActivity  implements NavigationView.On
         }
         //settare toolbar + titolo
         toolbar = (Toolbar) findViewById(R.id.toolbarShowP);
-        //drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        //navigationView = (NavigationView) findViewById(R.id.nav_view);
-        profileImage = findViewById(R.id.profile_image);
-        //headerView = navigationView.getHeaderView(0);
-        //navName = (TextView) headerView.findViewById(R.id.navName);
-        //navMail = (TextView) headerView.findViewById(R.id.navMail);
-        //navImage = (ImageView) headerView.findViewById(R.id.navImage);
-        vName = findViewById(R.id.name);
-        vEmail = findViewById(R.id.email);
-        vBio = findViewById(R.id.bio);
         toolbar.setTitle(getString(R.string.showProfile));
         setSupportActionBar(toolbar);
-        /*ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);*/
-        //drawer.addDrawerListener(toggle);
-        //toggle.syncState();
         //settare navbar
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -97,10 +86,10 @@ public class ShowProfile extends AppCompatActivity  implements NavigationView.On
         toggle.syncState();
         headerView.setBackgroundResource(R.color.colorPrimaryDark);
         //--fine navbar
-
-        //navigationView.setNavigationItemSelectedListener(this);
-        //headerView.setBackgroundResource(R.color.colorPrimaryDark);
-
+        //settare dati
+        vName = findViewById(R.id.name);
+        vEmail = findViewById(R.id.email);
+        vBio = findViewById(R.id.bio);
         //gestire file online
         File directory = getApplicationContext().getDir(getString(R.string.imageDirectory), Context.MODE_PRIVATE);
         String path = directory.getPath();
@@ -114,7 +103,6 @@ public class ShowProfile extends AppCompatActivity  implements NavigationView.On
                 e.printStackTrace();
             }
         }
-
         vBio.setMovementMethod(new ScrollingMovementMethod());
     }
 
@@ -137,7 +125,6 @@ public class ShowProfile extends AppCompatActivity  implements NavigationView.On
                     navName.append(" " + myuser.getSurname());
                     navMail.setText(myuser.getEmail());
                 }
-
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
 
@@ -207,11 +194,14 @@ public class ShowProfile extends AppCompatActivity  implements NavigationView.On
             Intent intentMod = new Intent(this, AddBook.class);
             //intentMod.putExtra(EXTRA_PROFILE_KEY,mProfile);
             startActivity(intentMod);
+            finish();
             return true;
         } else if (id == R.id.nav_home) {
+            aHome.finish();
             Intent intentMod = new Intent(this, Home.class);
             //intentMod.putExtra(EXTRA_PROFILE_KEY,mProfile);
             startActivity(intentMod);
+            finish();
             return true;
         }
 

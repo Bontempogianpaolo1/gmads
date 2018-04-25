@@ -1,5 +1,6 @@
 package gmads.it.gmads_lab1;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -48,10 +49,12 @@ public class Home extends AppCompatActivity  implements NavigationView.OnNavigat
     DrawerLayout drawer;
     NavigationView navigationView;
     View headerView;
+    public static Activity aHome;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        aHome = this;
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         //profilo
         mProfile= prefs.getString(EXTRA_PROFILE_KEY,null);
@@ -67,20 +70,6 @@ public class Home extends AppCompatActivity  implements NavigationView.OnNavigat
         toolbar = (Toolbar) findViewById(R.id.toolbarHome);
         toolbar.setTitle("Home");
         setSupportActionBar(toolbar);
-        //settare navbar
-        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-        headerView = navigationView.getHeaderView(0);
-        navName = (TextView) headerView.findViewById(R.id.navName);
-        navMail = (TextView) headerView.findViewById(R.id.navMail);
-        navImage = (ImageView) headerView.findViewById(R.id.navImage);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-        headerView.setBackgroundResource(R.color.colorPrimaryDark);
-        //--fine navbar
         //gestire file online
         File directory = getApplicationContext().getDir(getString(R.string.imageDirectory), Context.MODE_PRIVATE);
         String path = directory.getPath();
@@ -98,7 +87,45 @@ public class Home extends AppCompatActivity  implements NavigationView.OnNavigat
     @Override
     public void onStart(){
         super.onStart();
-
+        //setContentView(R.layout.activity_home);
+        //settare navbar
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+        headerView = navigationView.getHeaderView(0);
+        navName = (TextView) headerView.findViewById(R.id.navName);
+        navMail = (TextView) headerView.findViewById(R.id.navMail);
+        navImage = (ImageView) headerView.findViewById(R.id.navImage);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+        headerView.setBackgroundResource(R.color.colorPrimaryDark);
+        //--fine navbar
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        //profilo
+        mProfile= prefs.getString(EXTRA_PROFILE_KEY,null);
+        database= FirebaseManagement.getDatabase();
+        if(mProfile==null){
+            database.setPersistenceEnabled((true));
+        }
+        if(mProfile!=null) {
+            mProfileReference = FirebaseDatabase.getInstance().getReference().child("users").child(mProfile);
+            mProfileReference.keepSynced(true);
+        }
+        //gestire file online
+        File directory = getApplicationContext().getDir(getString(R.string.imageDirectory), Context.MODE_PRIVATE);
+        String path = directory.getPath();
+        File f=new File(path,"profile.jpg");
+        if(f.exists()) {
+            try {
+                Bitmap image=BitmapFactory.decodeStream(new FileInputStream(f));
+                navImage.setImageBitmap(image);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        //---------------
         if(mProfile!=null) {
             ValueEventListener postListener = new ValueEventListener() {
                 @Override
@@ -155,19 +182,18 @@ public class Home extends AppCompatActivity  implements NavigationView.OnNavigat
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
         if (id == R.id.nav_showProfile) {
             // Handle the camera action
             Intent intentMod = new Intent(this, ShowProfile.class);
             //intentMod.putExtra(EXTRA_PROFILE_KEY,mProfile);
             startActivity(intentMod);
-
+            finish();
             return true;
         } else if (id == R.id.nav_addBook) {
             Intent intentMod = new Intent(this, AddBook.class);
             //intentMod.putExtra(EXTRA_PROFILE_KEY,mProfile);
             startActivity(intentMod);
-
+            finish();
             return true;
         } else if (id == R.id.nav_home) {
             //deve solo chiudersi la navbar
@@ -176,7 +202,6 @@ public class Home extends AppCompatActivity  implements NavigationView.OnNavigat
             mDrawerLayout.closeDrawers();
             return true;
         }
-
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
