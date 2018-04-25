@@ -1,5 +1,6 @@
 package gmads.it.gmads_lab1;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -50,5 +51,11 @@ public class Scanner extends BaseScannerActivity implements ZBarScannerView.Resu
                 mScannerView.resumeCameraPreview(Scanner.this);
             }
         }, 2000);
+
+        Intent i = new Intent();
+        i.putExtra("ISBN", rawResult.getBarcodeFormat().getName());
+        setResult(RESULT_OK, i);
     }
+
+
 }
