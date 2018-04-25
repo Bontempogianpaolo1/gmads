@@ -146,7 +146,7 @@ public class AddBook extends AppCompatActivity
                     .show();
         }
         else{
-            Intent pickIntent = new Intent(this, AddBook.class);
+            Intent pickIntent = new Intent(this, SaveBook.class);
             // pickIntent.putExtra(EXTRA_PROFILE_KEY,mProfile).;
             prefs.edit().putString("ISBN",ISBNcode).apply();
             // database.setPersistenceEnabled(false);
