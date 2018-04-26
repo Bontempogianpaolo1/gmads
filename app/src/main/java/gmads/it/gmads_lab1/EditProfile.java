@@ -81,6 +81,7 @@ public class EditProfile extends AppCompatActivity {
     TextView vSurname;
     TextView vEmail;
     TextView vBio;
+    //TextView changeIm;
 
 
     @Override
@@ -114,7 +115,7 @@ public class EditProfile extends AppCompatActivity {
         profileImage = findViewById(R.id.profile_image);
         profileImage.setImageDrawable(getDrawable(R.drawable.default_profile));
         profileImage.setOnClickListener(this::onClickImage);
-        findViewById(R.id.selectimage).setOnClickListener(this::onClickImage);
+        //findViewById(R.id.selectimage).setOnClickListener(this::onClickImage);
         //set text components
 
         vName = findViewById(R.id.name_input);
@@ -128,6 +129,8 @@ public class EditProfile extends AppCompatActivity {
 
         vBio = findViewById(R.id.address_input);
        // vBio.setText(Address);
+
+        //changeIm = findViewById(R.id.selectimage);
 
         getUserInfo();
 
@@ -166,7 +169,6 @@ public class EditProfile extends AppCompatActivity {
            // prefs.edit().putString("email", vEmail.getText().toString()).apply();
            // prefs.edit().putString("address", vBio.getText().toString()).apply();
            // prefs.edit().putBoolean("save", false).apply();
-
             updateUserInfo();
 
         });
@@ -298,7 +300,8 @@ public class EditProfile extends AppCompatActivity {
         String email = vEmail.getText().toString();
         String bio = vBio.getText().toString();
 
-        progressbar.setVisibility(View.VISIBLE);
+        /*progressbar.setVisibility(View.VISIBLE);
+        changeIm.setVisibility(View.GONE);*/
 
         if(name.isEmpty()){
             vName.setError("Name required");
@@ -323,7 +326,6 @@ public class EditProfile extends AppCompatActivity {
         Intent pickIntent = new Intent(this, ShowProfile.class);
         if(uriProfileImage != null){
 
-
             profileImageRef.putFile(uriProfileImage)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
@@ -342,6 +344,7 @@ public class EditProfile extends AppCompatActivity {
                             // database.setPersistenceEnabled(false);
                             startActivity(pickIntent);
                             progressbar.setVisibility(View.GONE);
+                            //changeIm.setVisibility(View.GONE);
 
                         }
                     })
@@ -367,6 +370,7 @@ public class EditProfile extends AppCompatActivity {
 
     private void getUserInfo(){
         progressbar.setVisibility(View.VISIBLE);
+        //changeIm.setVisibility(View.GONE);
         profileImage.setVisibility(View.GONE);
         FirebaseManagement.getDatabase().getReference().child("users").child(FirebaseManagement.getUser().getUid())
                 .addListenerForSingleValueEvent(new ValueEventListener() {
