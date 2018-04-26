@@ -45,5 +45,6 @@
     <string name="categoryNotFound">Categoria: assente</string>
     <string name="scan1">Inserisci ISBN</string>
     <string name="scan2">Oppure scansionalo</string>
+    <string name = "book">Dettagli Libro</string>
     <!--end-->
 </resources>
