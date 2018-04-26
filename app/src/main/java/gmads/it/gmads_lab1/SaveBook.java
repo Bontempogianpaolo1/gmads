@@ -1,6 +1,7 @@
 package gmads.it.gmads_lab1;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
@@ -37,15 +38,19 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -277,12 +282,52 @@ public class SaveBook extends AppCompatActivity{
         android.app.AlertDialog.Builder ad = t.showPopup(this, getString(R.string.saveQuestion), "", getString(R.string.cancel));
         ad.setPositiveButton("Ok", (vi, w) -> {
 
+
             String bookKey = mBooksReference.push().getKey();
             mBooksReference.child(bookKey).setValue(book);
-            storageReference = storage.getReference().child("books").child(bookKey).child("image.jpg");
+            /*
+             TODO cambiare nome foto quando ne aggiungeremo di più
+             */
+            final ProgressDialog progressDialog = new ProgressDialog(this);
+            progressDialog.setTitle("Uploading...");
+            progressDialog.show();
+
+            storageReference = storage.getReference().child("books").child(this.book.getBId()).child("personal_images").child("1.jpg");
+
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            newBitMapBookImage.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            byte[] data = baos.toByteArray();
+
+
+            UploadTask uploadTask = storageReference.putBytes(data);
+            uploadTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    toastMessage("Upload failed");
+                }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+                    Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                    toastMessage("Image upload successful");
+                    progressDialog.dismiss();
+                }
+            });
 
             //saveImage(newBitMapBookImage);
-            //storageReference.putFile(Uri.fromFile(new File(path,"image.jpg")));
+
+            storageReference.putFile(Uri.fromFile(new File(path))).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+
+                }
+            });
 
             Intent pickIntent = new Intent(this, ShowProfile.class);
             // pickIntent.putExtra(EXTRA_ISBN,isbn).;
@@ -293,6 +338,11 @@ public class SaveBook extends AppCompatActivity{
         });
         ad.show();
     }
+
+    private void toastMessage(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
 
     public void onStop(){
 
