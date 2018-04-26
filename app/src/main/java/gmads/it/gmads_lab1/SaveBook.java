@@ -1,9 +1,11 @@
 package gmads.it.gmads_lab1;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
@@ -11,8 +13,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -24,9 +27,9 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebView;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -34,8 +37,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
@@ -56,13 +57,14 @@ public class SaveBook extends AppCompatActivity{
 
     private static final String EXTRA_ISBN ="ISBN";
     private static final String EXTRA_PROFILE_KEY="my_token";
-    private DatabaseReference mProfileReference;
+    private DatabaseReference mBooksReference;
     private StorageReference storageReference;
     private ValueEventListener mProfileListener;
     FirebaseDatabase database;
     FirebaseStorage storage;
     private String user;
     private String isbn;
+    static final int MY_CAMERA_REQUEST_CODE = 100;
     static final int REQUEST_IMAGE_CAPTURE = 1888;
     static final int REQUEST_IMAGE_LIBRARY = 1889;
     private WebView bookImage;//profile image
@@ -111,13 +113,15 @@ public class SaveBook extends AppCompatActivity{
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         //isbn = prefs.getString(EXTRA_ISBN,null);
         isbn = prefs.getString(EXTRA_ISBN, null);
-        user = prefs.getString(EXTRA_PROFILE_KEY,null);
+        //user = prefs.getString(EXTRA_PROFILE_KEY,null);
         database=FirebaseManagement.getDatabase();
         storage=FirebaseManagement.getStorage();
 
         if (isbn != null) {
-            mProfileReference = FirebaseDatabase.getInstance().getReference().child("books").child(isbn);
-            storageReference = storage.getReference().child("books").child(isbn).child("image.jpg");
+            mBooksReference = FirebaseDatabase.getInstance().getReference()
+                    .child("users")
+                    .child(FirebaseManagement.getUser().getUid())
+                    .child("myBooks");
         }
 
         //end bottone
@@ -151,30 +155,6 @@ public class SaveBook extends AppCompatActivity{
         Button add = findViewById(R.id.addphoto);
         add.setOnClickListener(this::onAddPhotoClick);
         getjson(getApplicationContext(), isbn);
-    }
-
-    private void onClickImage(View v) {
-        Tools t= new Tools();
-        //set popup
-        View view = this.getCurrentFocus();
-        if (view != null) {
-            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-            assert imm != null;
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        }
-        v.getContext();
-        android.app.AlertDialog.Builder ad=t.showPopup(this,getString(R.string.takeImage),getString(R.string.selectGallery),getString(R.string.selectFromCamera));
-        ad.setPositiveButton("gallery",(vi,w)->{
-            Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-            pickIntent.setType("image/*");
-            startActivityForResult(pickIntent, REQUEST_IMAGE_LIBRARY);
-        });
-        ad.setNegativeButton("photo",(vi,w)->{
-            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-        });
-        ad.show();
-        //-->
     }
 
     public void getjson(Context c,  String isbn) {
@@ -297,13 +277,13 @@ public class SaveBook extends AppCompatActivity{
         android.app.AlertDialog.Builder ad = t.showPopup(this, getString(R.string.saveQuestion), "", getString(R.string.cancel));
         ad.setPositiveButton("Ok", (vi, w) -> {
 
-            mProfileReference= database.getReference().child("books").child(isbn);
-            mProfileReference.setValue(book);
-            database.getReference().child("users").child(user).child("takenbooks").child(isbn).setValue(1);
-            if(imagechanged) {
-                saveImage(newBitMapBookImage);
-                storageReference.putFile(Uri.fromFile(new File(path,"image.jpg")));
-            }
+            String bookKey = mBooksReference.push().getKey();
+            mBooksReference.child(bookKey).setValue(book);
+            storageReference = storage.getReference().child("books").child(bookKey).child("image.jpg");
+
+            //saveImage(newBitMapBookImage);
+            //storageReference.putFile(Uri.fromFile(new File(path,"image.jpg")));
+
             Intent pickIntent = new Intent(this, ShowProfile.class);
             // pickIntent.putExtra(EXTRA_ISBN,isbn).;
             prefs.edit().putString(EXTRA_ISBN, isbn).apply();
@@ -319,7 +299,7 @@ public class SaveBook extends AppCompatActivity{
         super.onStop();
 
         if(mProfileListener!=null){
-            mProfileReference.removeEventListener(mProfileListener);
+            mBooksReference.removeEventListener(mProfileListener);
 
         }
     }
@@ -354,11 +334,38 @@ public class SaveBook extends AppCompatActivity{
             startActivityForResult(pickIntent, REQUEST_IMAGE_LIBRARY);
         });
         ad.setNegativeButton(getString(R.string.selectFromCamera),(vi,w)->{
-            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                    != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.CAMERA}, MY_CAMERA_REQUEST_CODE);
+            } else {
+                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+            }
         });
         ad.show();
         //-->
+    }
+
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == MY_CAMERA_REQUEST_CODE) {
+
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+
+            } else {
+
+                Toast.makeText(this, "camera permission denied", Toast.LENGTH_LONG).show();
+
+            }
+
+        }
     }
 
     @Override

@@ -295,7 +295,8 @@ public class AddBook extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
        if(requestCode == REQUEST_ISBN_IMAGE) {
            if(resultCode == RESULT_OK) {
-               this.ISBNcode = data.getStringExtra("ISBN");
+               this.ISBNcode = data.getData().toString();
+               editISBN.setText(this.ISBNcode);
            }
        }
     }
