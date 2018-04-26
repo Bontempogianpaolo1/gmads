@@ -1,27 +1,18 @@
 package gmads.it.gmads_lab1;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -31,12 +22,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.animation.ScaleAnimation;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -46,14 +33,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Objects;
-
-import static gmads.it.gmads_lab1.EditProfile.REQUEST_IMAGE_LIBRARY;
 
 public class AddBook extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -64,7 +44,7 @@ public class AddBook extends AppCompatActivity
     private String ISBNcode = null;
     //private TextView textViewISBN;
     private Button ISBNbutton;
-    private Button next;
+    private ImageView next;
     private EditText editISBN;
     //private Bitmap barcodeBitmap;
     Toolbar toolbar;
@@ -99,7 +79,7 @@ public class AddBook extends AppCompatActivity
 
         //toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarAddBook);
-        toolbar.setTitle(getString(R.string.addBook));
+        toolbar.setTitle("Scanner");
         setSupportActionBar(toolbar);
 
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -128,9 +108,9 @@ public class AddBook extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         //--fine navbar
 
-        this.editISBN = (EditText) findViewById(R.id.textViewISBN);
-        this.ISBNbutton = findViewById(R.id.isbn_image_button);
-        this.next = findViewById(R.id.isbn_next_button);
+        this.editISBN = (EditText) findViewById(R.id.tvIsbn);
+        this.ISBNbutton = findViewById(R.id.scan);
+        this.next = findViewById(R.id.next);
 
         next.setOnClickListener(this::onNextClick);
         ISBNbutton.setOnClickListener(this::onGetISBNClick);
