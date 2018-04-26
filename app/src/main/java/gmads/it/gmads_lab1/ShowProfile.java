@@ -43,7 +43,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import static gmads.it.gmads_lab1.Home.aHome;
+
 
 public class ShowProfile extends AppCompatActivity  implements NavigationView.OnNavigationItemSelectedListener{
     ImageView profileImage;
@@ -231,7 +231,6 @@ public class ShowProfile extends AppCompatActivity  implements NavigationView.On
             finish();
             return true;
         } else if (id == R.id.nav_home) {
-            aHome.finish();
             Intent intentMod = new Intent(this, Home.class);
             //intentMod.putExtra(EXTRA_PROFILE_KEY,mProfile);
             startActivity(intentMod);
