@@ -43,5 +43,7 @@
     <string name="publisherNotFound">Editore: assente</string>
     <string name="pDateNotFound">Data pubblicazione: assente</string>
     <string name="categoryNotFound">Categoria: assente</string>
+    <string name="scan1">Inserisci ISBN</string>
+    <string name="scan2">Oppure scansionalo</string>
     <!--end-->
 </resources>
