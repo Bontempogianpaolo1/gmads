@@ -12,7 +12,7 @@
 
     <ScrollView
         android:id="@+id/scrollView"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal">
 
@@ -38,16 +38,17 @@
                 <TextView
                     android:id="@+id/descrizione"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="100dp"
                     android:layout_below="@id/bookimage"
                     android:layout_centerInParent="true"
                     android:layout_centerVertical="true"
                     android:layout_marginBottom="8dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginStart="8dp"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="30dp"
                     android:background="@drawable/rounded_corner"
-                    android:minHeight="120dp"
+                    android:minHeight="100dp"
+                    android:scrollbars="vertical"
                     android:text="descrizione"
                     android:textAlignment="center" />
 
@@ -123,6 +124,21 @@
                     android:layout_marginEnd="8dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp" />
+
+                <Button
+                    android:id="@+id/addphoto"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentEnd="true"
+                    android:background="@drawable/roundedbutton"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:text="+"
+                    android:layout_below="@id/descrizione"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20dp" />
+
             </RelativeLayout>
         </LinearLayout>
     </ScrollView>
@@ -135,17 +151,5 @@
         android:layout_centerVertical="true"
         android:visibility="invisible"/>
 
-    <Button
-        android:id="@+id/addphoto"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_margin="16dp"
-        android:background="@drawable/roundedbutton"
-        android:clickable="true"
-        android:focusable="true"
-        android:text="+"
-        android:textColor="#FFFFFF"
-        android:textSize="20dp" />
+
 </RelativeLayout>
