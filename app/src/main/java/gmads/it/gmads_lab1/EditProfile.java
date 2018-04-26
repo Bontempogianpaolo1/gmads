@@ -27,6 +27,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -76,6 +78,7 @@ public class EditProfile extends AppCompatActivity {
     private String profileImageUrl;
     private SharedPreferences prefs;
     private boolean imagechanged=false;
+    File tempFile;
     Toolbar toolbar;
     ContextWrapper cw;
     File directory;
@@ -263,7 +266,8 @@ public class EditProfile extends AppCompatActivity {
             Bundle imageUri = data.getExtras();
             assert imageUri != null;
             newBitMapProfileImage = (Bitmap) imageUri.get("data");
-            uriProfileImage = data.getData();
+            tempFile = saveImage(newBitMapProfileImage);
+            uriProfileImage = Uri.fromFile(tempFile);
             profileImage.setImageBitmap(newBitMapProfileImage);
             //manage request image from gallery
         } else if ( requestCode==REQUEST_IMAGE_LIBRARY && resultCode == RESULT_OK) {
@@ -281,15 +285,15 @@ public class EditProfile extends AppCompatActivity {
         }
     }
     //function used to save the image in the correct path
-    private void saveImage(Bitmap bitmapImage) {
+    private File saveImage(Bitmap bitmapImage) {
         ContextWrapper cw = new ContextWrapper(getApplicationContext());
         // path to /data/data/yourapp/app_data/imageDir
         File directory = cw.getDir(getString(R.string.imageDirectory), Context.MODE_PRIVATE);
         // Create imageDir
-        File myPath = new File(directory,"profile.jpg");
+        tempFile = new File(directory,"profile.jpg");
         FileOutputStream fos = null;
         try {
-            fos = new FileOutputStream(myPath);
+            fos = new FileOutputStream(tempFile);
             // Use the compress method on the BitMap object to write image to the OutputStream
             bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fos);
         } catch (Exception e) {
@@ -303,6 +307,7 @@ public class EditProfile extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
+        return tempFile;
     }
     //animation back arrow
     @Override

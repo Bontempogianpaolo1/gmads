@@ -37,6 +37,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
@@ -57,6 +60,7 @@ public class SaveBook extends AppCompatActivity{
 
     private static final String EXTRA_ISBN ="ISBN";
     private static final String EXTRA_PROFILE_KEY="my_token";
+    private DatabaseReference mProfileReference;
     private DatabaseReference mBooksReference;
     private StorageReference storageReference;
     private ValueEventListener mProfileListener;
@@ -118,10 +122,11 @@ public class SaveBook extends AppCompatActivity{
         storage=FirebaseManagement.getStorage();
 
         if (isbn != null) {
-            mBooksReference = FirebaseDatabase.getInstance().getReference()
+            mProfileReference = FirebaseDatabase.getInstance().getReference()
                     .child("users")
-                    .child(FirebaseManagement.getUser().getUid())
-                    .child("myBooks");
+                    .child(FirebaseManagement.getUser().getUid());
+            mBooksReference = FirebaseDatabase.getInstance().getReference()
+                    .child("books");
         }
 
         //end bottone
@@ -243,7 +248,16 @@ public class SaveBook extends AppCompatActivity{
                             findViewById(R.id.ll).setVisibility(View.VISIBLE);
                             prefs = PreferenceManager.getDefaultSharedPreferences(c);
                             String owner = prefs.getString("post_key",null);
-                            book = new Book(isbn, (String)vTitle.getText(), "", urlimage,(String) vDate.getText(),(String) vAuthor.getText(),(String)vCategories.getText(),(String)vPublisher.getText(),"");
+                            book = new Book(null,
+                                    isbn,
+                                    (String)vTitle.getText(),
+                                    "",
+                                    urlimage,
+                                    (String) vDate.getText(),
+                                    (String) vAuthor.getText(),
+                                    (String)vCategories.getText(),
+                                    (String)vPublisher.getText(),
+                                    FirebaseManagement.getUser().getUid());
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -279,7 +293,23 @@ public class SaveBook extends AppCompatActivity{
 
             String bookKey = mBooksReference.push().getKey();
             mBooksReference.child(bookKey).setValue(book);
-            storageReference = storage.getReference().child("books").child(bookKey).child("image.jpg");
+
+            book.setBId(bookKey);
+            mProfileReference.child("myBooks").child(bookKey).setValue(book.getIsbn())
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Log.v("OK", "BOMBAZZA");
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.v("ERR", e.getMessage());
+                        }
+                    });
+
+            //storageReference = storage.getReference().child("books").child(bookKey).child("image.jpg");
 
             //saveImage(newBitMapBookImage);
             //storageReference.putFile(Uri.fromFile(new File(path,"image.jpg")));
