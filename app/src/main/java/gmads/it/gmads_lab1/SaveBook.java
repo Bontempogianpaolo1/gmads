@@ -11,6 +11,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -21,6 +23,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebView;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -47,11 +50,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Objects;
 
 public class SaveBook extends AppCompatActivity{
 
     private static final String EXTRA_ISBN ="ISBN";
-    private static final String EXTRA_PROFILE_KEY="post_key";
+    private static final String EXTRA_PROFILE_KEY="my_token";
     private DatabaseReference mProfileReference;
     private StorageReference storageReference;
     private ValueEventListener mProfileListener;
@@ -80,9 +84,30 @@ public class SaveBook extends AppCompatActivity{
     Book book;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_save_book);
+        //mostra la progress bar finchè non ha tutti i dati
+        //connessione internet assente
+        Tools t1 = new Tools();
+        if (!(t1.isOnline(getApplicationContext()))){
+            //rendo invisibile l'xml
+            findViewById(R.id.ll).setVisibility(View.GONE);
+            findViewById(R.id.progressBar).setVisibility(View.GONE);
+            Tools t = new Tools();
+            android.app.AlertDialog.Builder ad = t.showPopup(this, getString(R.string.noInternet), "", "");
+            //tasto retry rimanda ad addbook
+            ad.setPositiveButton(getString(R.string.retry), (vi, w) -> {
+                onBackPressed();
+            });
+            ad.setCancelable(false);
+            ad.show();
+        }
+        else {
+            findViewById(R.id.ll).setVisibility(View.GONE);
+            findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
+        }
+
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         //isbn = prefs.getString(EXTRA_ISBN,null);
         isbn = prefs.getString(EXTRA_ISBN, null);
@@ -90,38 +115,66 @@ public class SaveBook extends AppCompatActivity{
         database=FirebaseManagement.getDatabase();
         storage=FirebaseManagement.getStorage();
 
-        if(isbn !=null) {
+        if (isbn != null) {
             mProfileReference = FirebaseDatabase.getInstance().getReference().child("books").child(isbn);
-            storageReference= storage.getReference().child("books").child(isbn).child("image.jpg");
+            storageReference = storage.getReference().child("books").child(isbn).child("image.jpg");
         }
 
+        //end bottone
         toolbar = (Toolbar) findViewById(R.id.toolbarSaveBook);
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         cw = new ContextWrapper(getApplicationContext());
 
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         // path to /data/data/yourapp/app_data/imageDir
         directory = cw.getDir(getString(R.string.imageDirectory), Context.MODE_PRIVATE);
         path = directory.getPath();
         //inizialize  layout
-       /* ll= findViewById(R.id.linearLayout1);
+        /* ll= findViewById(R.id.linearLayout1);
         l2= findViewById(R.id.linearlayout2);
         ll.setOnClickListener(this::setFocusOnClick);
         l2.setOnClickListener(this::setFocusOnClick);*/
         //inizialize  user data
-
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         //set image
-        bookImage = findViewById(R.id.bookimage);
+        //bookImage = findViewById(R.id.bookimage);
         vTitle = findViewById(R.id.title);
-        vDate = findViewById(R.id.dataPubblicazione);
+        vDate = findViewById(R.id.data);
         vAuthor = findViewById(R.id.autore);
         vCategories = findViewById(R.id.categorie);
-        vPublisher= findViewById(R.id.editore);
-        vDescription=findViewById(R.id.descrizione);
+        vPublisher = findViewById(R.id.editore);
+        vDescription = findViewById(R.id.descrizione);
+        bookImage = findViewById(R.id.bookimage);
+        Button add = findViewById(R.id.addphoto);
+        add.setOnClickListener(this::onAddPhotoClick);
+        getjson(getApplicationContext(), isbn);
+    }
+
+    private void onClickImage(View v) {
+        Tools t= new Tools();
+        //set popup
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            assert imm != null;
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+        v.getContext();
+        android.app.AlertDialog.Builder ad=t.showPopup(this,getString(R.string.takeImage),getString(R.string.selectGallery),getString(R.string.selectFromCamera));
+        ad.setPositiveButton("gallery",(vi,w)->{
+            Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            pickIntent.setType("image/*");
+            startActivityForResult(pickIntent, REQUEST_IMAGE_LIBRARY);
+        });
+        ad.setNegativeButton("photo",(vi,w)->{
+            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        });
+        ad.show();
+        //-->
     }
 
     public void getjson(Context c,  String isbn) {
@@ -132,10 +185,8 @@ public class SaveBook extends AppCompatActivity{
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
-                    public void onResponse(String response) {
-                        // Display the first 500 characters of the response string.
-                        //setto tutto con stringhe di default
-                        String title = getString(R.string.notFound);
+                    public void onResponse(String response) {//Display the first 500 characters of the response string.
+                        String title;
                         String author;
                         String publisher;
                         String publishdate;
@@ -160,42 +211,40 @@ public class SaveBook extends AppCompatActivity{
                                 title = volumeObject.getString("title");
                                 vTitle.setText(title);
                             }catch (Exception e){
-                                vTitle.setText(getString(R.string.notFound));
+                                vTitle.setText(getString(R.string.titleNotFound));
                             }
                             try{
                                 author = volumeObject.getString("authors");
                                 author = author.replaceAll("[\"\\[\\]]","");
                                 vAuthor.setText(author);
                             }catch (Exception e){
-                                vAuthor.setText(getString(R.string.notFound));
+                                vAuthor.setText(getString(R.string.authorNotFound));
                             }
                             try{
-
-                            if(!volumeObject.isNull("publisher")&& volumeObject.has("publisher")){
-                                publisher = volumeObject.getString("publisher");
-                                vPublisher.setText(publisher);
+                                if(!volumeObject.isNull("publisher")&& volumeObject.has("publisher")){
+                                    publisher = volumeObject.getString("publisher");
+                                    vPublisher.setText(publisher);
                             }else{
-                                vPublisher.setText(getString(R.string.notFound));
+                                vPublisher.setText(getString(R.string.publisherNotFound));
                             }
                             }catch (Exception e){
-                                vPublisher.setText(getString(R.string.notFound));
+                                vPublisher.setText(getString(R.string.publisherNotFound));
                             }
                             try{
                                 publishdate= volumeObject.getString("publishedDate");
                                 vDate.setText(publishdate);
                             }catch (Exception e){
-                                vDate.setText(getString(R.string.notFound));
+                                vDate.setText(getString(R.string.pDateNotFound));
                             }
                             try{
                                 categories = volumeObject.getString("categories");
                                 categories = categories.replaceAll("[\"\\[\\]]","");
                                 vCategories.setText(categories);
                             }catch (Exception e){
-                                vCategories.setText(getString(R.string.notFound));
+                                vCategories.setText(getString(R.string.categoryNotFound));
                             }
-
                             try{
-                                urlimage = "https://process.filestackapi.com/AhTgLagciQByzXpFGRI0Az/resize=width:128,height:200/"+volumeObject.getJSONObject("imageLinks").getString("thumbnail");
+                                urlimage = volumeObject.getJSONObject("imageLinks").getString("thumbnail");
                             }catch (Exception e){
                                 urlimage="";
                             }
@@ -204,18 +253,17 @@ public class SaveBook extends AppCompatActivity{
                                     description = volumeObject.getString("description");
                                     vDescription.setText(description);
                                 }else{
-                                    vDescription.setText(R.string.notFound);
+                                    vDescription.setText(R.string.descriptionNotFound);
                                 }
                             }catch(Exception e){
-                                vDescription.setText(R.string.notFound);
+                                vDescription.setText(R.string.descriptionNotFound);
                             }
-
-                            bookImage.loadUrl(urlimage);
-
+                            bookImage.loadUrl("https://process.filestackapi.com/AhTgLagciQByzXpFGRI0Az/resize=width:128,height:200/"+  urlimage);
+                            findViewById(R.id.progressBar).setVisibility(View.GONE);
+                            findViewById(R.id.ll).setVisibility(View.VISIBLE);
                             prefs = PreferenceManager.getDefaultSharedPreferences(c);
                             String owner = prefs.getString("post_key",null);
                             book = new Book(isbn, (String)vTitle.getText(), "", urlimage,(String) vDate.getText(),(String) vAuthor.getText(),(String)vCategories.getText(),(String)vPublisher.getText(),"");
-
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -230,7 +278,7 @@ public class SaveBook extends AppCompatActivity{
     @Override
     public void onStart(){
         super.onStart();
-        getjson(getApplicationContext(), isbn);
+
     }
 
 
@@ -249,12 +297,10 @@ public class SaveBook extends AppCompatActivity{
         android.app.AlertDialog.Builder ad = t.showPopup(this, getString(R.string.saveQuestion), "", getString(R.string.cancel));
         ad.setPositiveButton("Ok", (vi, w) -> {
 
-            String bookkey= database.getReference().child("books").push().getKey();
-            mProfileReference= database.getReference().child("books").child(bookkey);
+            mProfileReference= database.getReference().child("books").child(isbn);
             mProfileReference.setValue(book);
-            database.getReference().child("users").child(user).child("takenbooks").child(bookkey).setValue(isbn);
+            database.getReference().child("users").child(user).child("takenbooks").child(isbn).setValue(1);
             if(imagechanged) {
-
                 saveImage(newBitMapBookImage);
                 storageReference.putFile(Uri.fromFile(new File(path,"image.jpg")));
             }
@@ -290,7 +336,8 @@ public class SaveBook extends AppCompatActivity{
         assert imm != null;
         imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
     }
-    private void onClickImage(View v) {
+
+    private void onAddPhotoClick(View v) {
         Tools t= new Tools();
         //set popup
         View view = this.getCurrentFocus();
@@ -300,13 +347,13 @@ public class SaveBook extends AppCompatActivity{
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
         v.getContext();
-        android.app.AlertDialog.Builder ad=t.showPopup(this,getString(R.string.takeImage),getString(R.string.selectGallery),getString(R.string.selectFromCamera));
-        ad.setPositiveButton("gallery",(vi,w)->{
+        android.app.AlertDialog.Builder ad=t.showPopup(this,getString(R.string.addBookImage),getString(R.string.selectGallery),getString(R.string.selectFromCamera));
+        ad.setPositiveButton(getString(R.string.selectGallery),(vi,w)->{
             Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             pickIntent.setType("image/*");
             startActivityForResult(pickIntent, REQUEST_IMAGE_LIBRARY);
         });
-        ad.setNegativeButton("photo",(vi,w)->{
+        ad.setNegativeButton(getString(R.string.selectFromCamera),(vi,w)->{
             Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
         });
@@ -382,6 +429,7 @@ public class SaveBook extends AppCompatActivity{
     //animation back button
     @Override
     public void onBackPressed() {
+        finish();
         super.onBackPressed();
         overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out);
     }
@@ -395,4 +443,5 @@ public class SaveBook extends AppCompatActivity{
             return null;
         }
     }
+
 }
