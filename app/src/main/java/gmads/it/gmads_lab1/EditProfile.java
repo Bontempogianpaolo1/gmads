@@ -81,7 +81,7 @@ public class EditProfile extends AppCompatActivity {
     TextView vSurname;
     TextView vEmail;
     TextView vBio;
-    TextView changeIm;
+    //TextView changeIm;
 
 
     @Override
@@ -115,7 +115,7 @@ public class EditProfile extends AppCompatActivity {
         profileImage = findViewById(R.id.profile_image);
         profileImage.setImageDrawable(getDrawable(R.drawable.default_profile));
         profileImage.setOnClickListener(this::onClickImage);
-        findViewById(R.id.selectimage).setOnClickListener(this::onClickImage);
+        //findViewById(R.id.selectimage).setOnClickListener(this::onClickImage);
         //set text components
 
         vName = findViewById(R.id.name_input);
@@ -130,7 +130,7 @@ public class EditProfile extends AppCompatActivity {
         vBio = findViewById(R.id.address_input);
        // vBio.setText(Address);
 
-        changeIm = findViewById(R.id.selectimage);
+        //changeIm = findViewById(R.id.selectimage);
 
         getUserInfo();
 
@@ -370,6 +370,7 @@ public class EditProfile extends AppCompatActivity {
 
     private void getUserInfo(){
         progressbar.setVisibility(View.VISIBLE);
+        //changeIm.setVisibility(View.GONE);
         profileImage.setVisibility(View.GONE);
         FirebaseManagement.getDatabase().getReference().child("users").child(FirebaseManagement.getUser().getUid())
                 .addListenerForSingleValueEvent(new ValueEventListener() {

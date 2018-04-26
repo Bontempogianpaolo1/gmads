@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -15,24 +16,32 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.URL;
 import java.util.Arrays;
 
 public class Home extends AppCompatActivity  implements NavigationView.OnNavigationItemSelectedListener{
@@ -45,6 +54,7 @@ public class Home extends AppCompatActivity  implements NavigationView.OnNavigat
     private TextView navName;
     private TextView navMail;
     private ImageView navImage;
+    private Profile profile;
     SharedPreferences prefs;
     Toolbar toolbar;
     DrawerLayout drawer;
@@ -55,7 +65,7 @@ public class Home extends AppCompatActivity  implements NavigationView.OnNavigat
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        aHome = this;
+        //aHome = this;
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         //profilo
         mProfile= prefs.getString(EXTRA_PROFILE_KEY,null);
@@ -72,7 +82,7 @@ public class Home extends AppCompatActivity  implements NavigationView.OnNavigat
         toolbar.setTitle("Home");
         setSupportActionBar(toolbar);
         //gestire file online
-        File directory = getApplicationContext().getDir(getString(R.string.imageDirectory), Context.MODE_PRIVATE);
+        /*File directory = getApplicationContext().getDir(getString(R.string.imageDirectory), Context.MODE_PRIVATE);
         String path = directory.getPath();
         File f=new File(path,"profile.jpg");
         if(f.exists()) {
@@ -82,7 +92,7 @@ public class Home extends AppCompatActivity  implements NavigationView.OnNavigat
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
-        }
+        }*/
     }
 
     @Override
@@ -105,7 +115,6 @@ public class Home extends AppCompatActivity  implements NavigationView.OnNavigat
         //--fine navbar
 
         //profilo
-
         database= FirebaseManagement.getDatabase();
         if(mProfile==null){
             database.setPersistenceEnabled((true));
@@ -115,7 +124,7 @@ public class Home extends AppCompatActivity  implements NavigationView.OnNavigat
             mProfileReference.keepSynced(true);
         }
         //gestire file online
-        File directory = getApplicationContext().getDir(getString(R.string.imageDirectory), Context.MODE_PRIVATE);
+        /*File directory = getApplicationContext().getDir(getString(R.string.imageDirectory), Context.MODE_PRIVATE);
         String path = directory.getPath();
         File f=new File(path,"profile.jpg");
         if(f.exists()) {
@@ -125,7 +134,7 @@ public class Home extends AppCompatActivity  implements NavigationView.OnNavigat
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
-        }
+        }*/
         //---------------
         if(mProfile!=null) {
             ValueEventListener postListener = new ValueEventListener() {
@@ -137,6 +146,46 @@ public class Home extends AppCompatActivity  implements NavigationView.OnNavigat
                     navName.setText(myuser.getName());
                     navName.append(" " + myuser.getSurname());
                     navMail.setText(myuser.getEmail());
+                    //setto foto
+                    profile = dataSnapshot.getValue(Profile.class);
+                    URL url = null;
+
+                    if(profile.getImage()!=null) {
+                        try {
+                            File localFile = File.createTempFile("image", "jpg");
+                            StorageReference profileImageRef = FirebaseManagement.getStorage().getReference()
+                                    .child("users")
+                                    .child(FirebaseManagement.getUser().getUid())
+                                    .child("profileimage.jpg");
+
+                            profileImageRef.getFile(localFile)
+                                    .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                                        @Override
+                                        public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                                            navImage.setImageBitmap(BitmapFactory.decodeFile(localFile.getPath()));
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+
+                                }
+                            });
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    } else {//default image
+                            File directory = getApplicationContext().getDir(getString(R.string.imageDirectory), Context.MODE_PRIVATE);
+                            String path = directory.getPath();
+                            File f = new File(path, "profileimage.jpg");
+                            if (f.exists()) {
+                                try {
+                                    Bitmap image = BitmapFactory.decodeStream(new FileInputStream(f));
+                                    navImage.setImageBitmap(image);
+                                } catch (FileNotFoundException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
                 }
 
                 @Override
@@ -206,5 +255,4 @@ public class Home extends AppCompatActivity  implements NavigationView.OnNavigat
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
 }
