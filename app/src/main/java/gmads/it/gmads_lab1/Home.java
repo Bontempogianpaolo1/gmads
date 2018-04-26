@@ -22,6 +22,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.firebase.ui.auth.AuthUI;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -31,12 +33,11 @@ import com.google.firebase.database.ValueEventListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.Arrays;
 
 public class Home extends AppCompatActivity  implements NavigationView.OnNavigationItemSelectedListener{
     ImageView profileImage;
-    ImageView drawerImage;
-
-    private static final String EXTRA_PROFILE_KEY="post_key";
+    private static final String EXTRA_PROFILE_KEY="my_token";
     private DatabaseReference mProfileReference;
     FirebaseDatabase database;
     private ValueEventListener mProfileListener;
@@ -102,9 +103,9 @@ public class Home extends AppCompatActivity  implements NavigationView.OnNavigat
         toggle.syncState();
         headerView.setBackgroundResource(R.color.colorPrimaryDark);
         //--fine navbar
-        prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
         //profilo
-        mProfile= prefs.getString(EXTRA_PROFILE_KEY,null);
+
         database= FirebaseManagement.getDatabase();
         if(mProfile==null){
             database.setPersistenceEnabled((true));
@@ -205,4 +206,5 @@ public class Home extends AppCompatActivity  implements NavigationView.OnNavigat
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
 }

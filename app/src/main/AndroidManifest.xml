@@ -16,12 +16,16 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".Home"
-            android:label="gMADs">
+            android:name=".Login"
+            android:label="gMADs_1">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+        android:name=".Home"
+        android:label="gMADs">
         </activity>
         <activity
             android:name=".ShowProfile"
@@ -43,7 +47,7 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:parentActivityName=".AddBook"/>
         <activity android:name=".Scanner" />
-        <activity android:name=".BaseScannerActivity"></activity>
+
     </application>
 
 </manifest>

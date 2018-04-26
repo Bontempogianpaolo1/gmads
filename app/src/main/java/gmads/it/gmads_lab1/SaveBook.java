@@ -50,11 +50,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Objects;
 
 public class SaveBook extends AppCompatActivity{
 
-    private static final String EXTRA_ISBN ="isbn";
-    private static final String EXTRA_PROFILE_KEY="post_key";
+    private static final String EXTRA_ISBN ="ISBN";
+    private static final String EXTRA_PROFILE_KEY="my_token";
     private DatabaseReference mProfileReference;
     private StorageReference storageReference;
     private ValueEventListener mProfileListener;
@@ -84,7 +85,7 @@ public class SaveBook extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getjson(getApplicationContext(), isbn);
+
         setContentView(R.layout.activity_save_book);
         //mostra la progress bar finchè non ha tutti i dati
         //connessione internet assente
@@ -109,10 +110,10 @@ public class SaveBook extends AppCompatActivity{
 
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         //isbn = prefs.getString(EXTRA_ISBN,null);
-        isbn = "9788886982405";
-        user = prefs.getString(EXTRA_PROFILE_KEY, null);
-        database = FirebaseManagement.getDatabase();
-        storage = FirebaseManagement.getStorage();
+        isbn = prefs.getString(EXTRA_ISBN, null);
+        user = prefs.getString(EXTRA_PROFILE_KEY,null);
+        database=FirebaseManagement.getDatabase();
+        storage=FirebaseManagement.getStorage();
 
         if (isbn != null) {
             mProfileReference = FirebaseDatabase.getInstance().getReference().child("books").child(isbn);
@@ -125,7 +126,7 @@ public class SaveBook extends AppCompatActivity{
         cw = new ContextWrapper(getApplicationContext());
 
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         // path to /data/data/yourapp/app_data/imageDir
@@ -149,6 +150,7 @@ public class SaveBook extends AppCompatActivity{
         bookImage = findViewById(R.id.bookimage);
         Button add = findViewById(R.id.addphoto);
         add.setOnClickListener(this::onAddPhotoClick);
+        getjson(getApplicationContext(), isbn);
     }
 
     private void onClickImage(View v) {
@@ -297,7 +299,7 @@ public class SaveBook extends AppCompatActivity{
 
             mProfileReference= database.getReference().child("books").child(isbn);
             mProfileReference.setValue(book);
-
+            database.getReference().child("users").child(user).child("takenbooks").child(isbn).setValue(1);
             if(imagechanged) {
                 saveImage(newBitMapBookImage);
                 storageReference.putFile(Uri.fromFile(new File(path,"image.jpg")));

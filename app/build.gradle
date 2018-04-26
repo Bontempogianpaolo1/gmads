@@ -4,6 +4,7 @@ android {
     useLibrary 'org.apache.http.legacy'
     compileSdkVersion 26
     defaultConfig {
+        resConfigs "en" // And any other languages you support
         applicationId 'gmads.it.gmads_lab1'
         minSdkVersion 21
         targetSdkVersion 26
@@ -47,8 +48,10 @@ dependencies {
     implementation 'com.google.android.gms:play-services-vision:15.0.0'
     implementation 'com.android.support:cardview-v7:26.1.0'
     //implementation 'com.google.android.gms:play-services:7.8+'
-    implementation 'com.journeyapps:zxing-android-embedded:3.0.2@aar'
-    implementation 'com.google.zxing:core:3.2.0'
     implementation group: 'org.apache.httpcomponents' , name: 'httpclient-android' , version: '4.3.5.1'
+    implementation 'com.budiyev.android:code-scanner:1.8.4'
+    implementation 'com.firebaseui:firebase-ui-auth:3.3.1'
+    implementation 'com.facebook.android:facebook-login:4.32.0'
+
 }
 apply plugin: 'com.google.gms.google-services'
