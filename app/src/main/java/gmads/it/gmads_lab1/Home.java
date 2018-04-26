@@ -76,7 +76,7 @@ public class Home extends AppCompatActivity  implements NavigationView.OnNavigat
         if(mProfile!=null) {
             mProfileReference = FirebaseDatabase.getInstance().getReference().child("users").child(mProfile);
             mProfileReference.keepSynced(true);
-        }*/
+        }
         //settare toolbar + titolo
         toolbar = (Toolbar) findViewById(R.id.toolbarHome);
         toolbar.setTitle("Home");
