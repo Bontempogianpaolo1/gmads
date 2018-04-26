@@ -1,6 +1,8 @@
 package gmads.it.gmads_lab1;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,15 +14,21 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.ui.auth.AuthUI;
+import com.firebase.ui.auth.IdpResponse;
+import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.database.FirebaseDatabase;
 
-import static gmads.it.gmads_lab1.FirebaseManagement.mAuth;
+import java.util.Arrays;
+import java.util.Objects;
 
 public class Login extends AppCompatActivity {
-
+    private static final int RC_SIGN_IN = 123;
     EditText emailView;
     EditText pwdView;
     Button loginButton;
@@ -31,17 +39,49 @@ public class Login extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        login();
 
-        emailView = findViewById(R.id.email_input);
-        pwdView = findViewById(R.id.pwd_input);
-        loginButton = findViewById(R.id.login_b);
-        registerButton = findViewById(R.id.register_b);
-        progressbar = findViewById(R.id.progressBar);
+    }
+    public void login(){
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        if (auth.getCurrentUser() != null) {
+            // already signed in
+            FirebaseManagement.loginUser();
+            Intent intent = new Intent(Login.this, Home.class);
+            intent.addFlags(intent.FLAG_ACTIVITY_CLEAR_TOP);
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+            prefs.edit().putString("my_token", FirebaseManagement.getUser().getUid());
+            startActivity(intent);
+            finish();
+        } else {
+            startActivityForResult(
+                    AuthUI.getInstance()
+                            .createSignInIntentBuilder()
+                            .setAvailableProviders(Arrays.asList(
+                                    new AuthUI.IdpConfig.EmailBuilder().build(),
+                                    new AuthUI.IdpConfig.PhoneBuilder().build(),
+                                    new AuthUI.IdpConfig.GoogleBuilder().build(),
+                                    new AuthUI.IdpConfig.FacebookBuilder().build()
+                            ))
+                            .build(),
+                    RC_SIGN_IN);
+            // not signed in
+        }
 
-        loginButton.setOnClickListener(view -> loginUser());
-        registerButton.setOnClickListener(view -> registerUser());
     }
 
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            FirebaseManagement.createUser(getApplicationContext(), Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getEmail());
+            IdpResponse idpResponse = IdpResponse.fromResultIntent(data);
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+            assert idpResponse != null;
+            prefs.edit().putString("my_token",FirebaseManagement.getUser().getUid()).apply();
+            startActivity(new Intent(this, Home.class));
+
+        }
+    }
     private void loginUser(){
 
         String email = emailView.getText().toString().trim();
@@ -73,7 +113,7 @@ public class Login extends AppCompatActivity {
 
         progressbar.setVisibility(View.VISIBLE);
 
-        FirebaseManagement.mAuth.signInWithEmailAndPassword(email, pwd)
+        FirebaseManagement.getAuth().signInWithEmailAndPassword(email, pwd)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -120,7 +160,7 @@ public class Login extends AppCompatActivity {
 
         progressbar.setVisibility(View.VISIBLE);
 
-        FirebaseManagement.mAuth.createUserWithEmailAndPassword(email, pwd).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+        FirebaseManagement.getAuth().createUserWithEmailAndPassword(email, pwd).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 FirebaseManagement.createUser(getApplicationContext(), email);

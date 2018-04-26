@@ -33,7 +33,7 @@ public class ProfileInfoSync {
     }
 
     public void loadProfileInfo(){
-        FirebaseManagement.mDatabase.getReference().child("users").child(FirebaseManagement.mUser.getUid().toString())
+        FirebaseManagement.getDatabase().getReference().child("users").child(FirebaseManagement.getUser().getUid())
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -43,9 +43,9 @@ public class ProfileInfoSync {
                             try {
                                 File localFile = File.createTempFile("images", "jpg");
 
-                                StorageReference profileImageRef = FirebaseManagement.mStorage.getReference()
+                                StorageReference profileImageRef = FirebaseManagement.getStorage().getReference()
                                         .child("users")
-                                        .child(FirebaseManagement.mUser.getUid().toString())
+                                        .child(FirebaseManagement.getUser().getUid())
                                         .child("profileimage.jpg");
 
                                 profileImageRef.getFile(localFile)

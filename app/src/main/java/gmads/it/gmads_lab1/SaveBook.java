@@ -55,7 +55,7 @@ import java.util.Objects;
 public class SaveBook extends AppCompatActivity{
 
     private static final String EXTRA_ISBN ="ISBN";
-    private static final String EXTRA_PROFILE_KEY="post_key";
+    private static final String EXTRA_PROFILE_KEY="my_token";
     private DatabaseReference mProfileReference;
     private StorageReference storageReference;
     private ValueEventListener mProfileListener;
@@ -297,10 +297,9 @@ public class SaveBook extends AppCompatActivity{
         android.app.AlertDialog.Builder ad = t.showPopup(this, getString(R.string.saveQuestion), "", getString(R.string.cancel));
         ad.setPositiveButton("Ok", (vi, w) -> {
 
-            String bookkey= database.getReference().child("books").push().getKey();
-            mProfileReference= database.getReference().child("books").child(bookkey);
+            mProfileReference= database.getReference().child("books").child(isbn);
             mProfileReference.setValue(book);
-            database.getReference().child("users").child(user).child("takenbooks").child(bookkey).setValue(isbn);
+            database.getReference().child("users").child(user).child("takenbooks").child(isbn).setValue(1);
             if(imagechanged) {
                 saveImage(newBitMapBookImage);
                 storageReference.putFile(Uri.fromFile(new File(path,"image.jpg")));

@@ -31,9 +31,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Objects;
 import java.util.regex.Pattern;
 import static android.graphics.Color.RED;
-import static gmads.it.gmads_lab1.FirebaseManagement.mAuth;
+
 
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -55,7 +56,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 public class EditProfile extends AppCompatActivity {
-    private static final String EXTRA_PROFILE_KEY="post_key";
+    private static final String EXTRA_PROFILE_KEY="my_token";
     private DatabaseReference mProfileReference;
     private StorageReference storageReference;
     private ValueEventListener mProfileListener;
@@ -89,16 +90,13 @@ public class EditProfile extends AppCompatActivity {
         setContentView(R.layout.activity_edit_profile);
         prefs= PreferenceManager.getDefaultSharedPreferences(this);
         mProfile=prefs.getString(EXTRA_PROFILE_KEY,null);
-        database=FirebaseManagement.getDatabase();
-        storage=FirebaseManagement.getStorage();
-
         toolbar = (Toolbar) findViewById(R.id.toolbarEditP);
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         cw = new ContextWrapper(getApplicationContext());
         progressbar = findViewById(R.id.progressBar);
 
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         // path to /data/data/yourapp/app_data/imageDir
@@ -318,13 +316,13 @@ public class EditProfile extends AppCompatActivity {
             return;
         }
 
-        StorageReference profileImageRef = FirebaseManagement.mStorage.getReference()
+        StorageReference profileImageRef = FirebaseManagement.getStorage().getReference()
                 .child("users")
-                .child(FirebaseManagement.mUser.getUid().toString())
+                .child(FirebaseManagement.getUser().getUid())
                 .child("profileimage.jpg");
-
+        Intent pickIntent = new Intent(this, ShowProfile.class);
         if(uriProfileImage != null){
-            Intent pickIntent = new Intent(this, ShowProfile.class);
+
 
             profileImageRef.putFile(uriProfileImage)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -353,14 +351,24 @@ public class EditProfile extends AppCompatActivity {
                             progressbar.setVisibility(View.GONE);
                         }
                     });
-        }
+        }else{
+            profileImageUrl = "";
+            profile.setName(name);
+            profile.setSurname(surname);
+            profile.setEmail(email);
+            profile.setDescription(bio);
+            profile.setImage(profileImageUrl);
 
+            FirebaseManagement.updateUserData(profile);
+            startActivity(pickIntent);
+            progressbar.setVisibility(View.GONE);
+        }
     }
 
     private void getUserInfo(){
         progressbar.setVisibility(View.VISIBLE);
         profileImage.setVisibility(View.GONE);
-        FirebaseManagement.mDatabase.getReference().child("users").child(FirebaseManagement.mUser.getUid().toString())
+        FirebaseManagement.getDatabase().getReference().child("users").child(FirebaseManagement.getUser().getUid())
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -376,9 +384,9 @@ public class EditProfile extends AppCompatActivity {
                             try {
                                 File localFile = File.createTempFile("images", "jpg");
 
-                                StorageReference profileImageRef = FirebaseManagement.mStorage.getReference()
+                                StorageReference profileImageRef = FirebaseManagement.getStorage().getReference()
                                         .child("users")
-                                        .child(FirebaseManagement.mUser.getUid().toString())
+                                        .child(FirebaseManagement.getUser().getUid())
                                         .child("profileimage.jpg");
 
                                 profileImageRef.getFile(localFile)
@@ -393,7 +401,8 @@ public class EditProfile extends AppCompatActivity {
                                         }).addOnFailureListener(new OnFailureListener() {
                                             @Override
                                             public void onFailure(@NonNull Exception e) {
-
+                                                progressbar.setVisibility(View.GONE);
+                                                profileImage.setVisibility(View.VISIBLE);
                                         }
                                 });
 
@@ -401,7 +410,8 @@ public class EditProfile extends AppCompatActivity {
                                 e.printStackTrace();
                             }
                         } else {
-
+                            progressbar.setVisibility(View.GONE);
+                            profileImage.setVisibility(View.VISIBLE);
                         }
                     }
 

@@ -50,7 +50,7 @@ public class ShowProfile extends AppCompatActivity  implements NavigationView.On
     ImageView drawerImage;
     ProgressBar progressbar;
 
-    private static final String EXTRA_PROFILE_KEY="post_key";
+    private static final String EXTRA_PROFILE_KEY="my_token";
     private DatabaseReference mProfileReference;
     FirebaseDatabase database;
     private ValueEventListener mProfileListener;
@@ -67,28 +67,29 @@ public class ShowProfile extends AppCompatActivity  implements NavigationView.On
     TextView vSurname;
     TextView vEmail;
     TextView vBio;
-
+    String mProfile;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_profile);
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        mProfile= prefs.getString(EXTRA_PROFILE_KEY,null);
-        database= FirebaseManagement.getDatabase();
+        mProfile = prefs.getString(EXTRA_PROFILE_KEY, null);
+        database = FirebaseManagement.getDatabase();
         profileImage = findViewById(R.id.profile_image);
-        if(mProfile==null){
-        //mProfile= prefs.getString(EXTRA_PROFILE_KEY,null);
-        database= FirebaseManagement.mDatabase;
+       // if (mProfile == null) {
+            //mProfile= prefs.getString(EXTRA_PROFILE_KEY,null);
+           // database = FirebaseManagement.getDatabase();
         /*if(mProfile==null){
             database.setPersistenceEnabled((true));
         }
         if(mProfile!=null) {
-            mProfileReference = FirebaseDatabase.getInstance().getReference().child("users").child(mProfile);
+
             mProfileReference.keepSynced(true);
         }
         //settare toolbar + titolo
         }*/
 
         //settare toolbar + titolo + navbar
+        mProfileReference = FirebaseManagement.getUserReference();
         toolbar = (Toolbar) findViewById(R.id.toolbarShowP);
         toolbar.setTitle(getString(R.string.showProfile));
         setSupportActionBar(toolbar);
@@ -119,10 +120,10 @@ public class ShowProfile extends AppCompatActivity  implements NavigationView.On
         //gestire file online
         File directory = getApplicationContext().getDir(getString(R.string.imageDirectory), Context.MODE_PRIVATE);
         String path = directory.getPath();
-        File f=new File(path,"profile.jpg");
-        if(f.exists()) {
+        File f = new File(path, "profile.jpg");
+        if (f.exists()) {
             try {
-                Bitmap image=BitmapFactory.decodeStream(new FileInputStream(f));
+                Bitmap image = BitmapFactory.decodeStream(new FileInputStream(f));
                 profileImage.setImageBitmap(image);
                 navImage.setImageBitmap(image);
             } catch (FileNotFoundException e) {
@@ -135,7 +136,6 @@ public class ShowProfile extends AppCompatActivity  implements NavigationView.On
         navImage.setImageDrawable(getDrawable(R.drawable.default_profile));
 
         vBio.setMovementMethod(new ScrollingMovementMethod());
-
     }
 
     @Override
@@ -186,8 +186,8 @@ public class ShowProfile extends AppCompatActivity  implements NavigationView.On
 
         /*if(mProfileListener!=null){
             mProfileReference.removeEventListener(mProfileListener);
-        }*/
-    }
+        }
+    }*/
 
     //for EditButton in the action bar
     @Override
@@ -245,7 +245,7 @@ public class ShowProfile extends AppCompatActivity  implements NavigationView.On
     }
 
     private void getUserInfo(){
-        FirebaseManagement.mDatabase.getReference().child("users").child(FirebaseManagement.mUser.getUid().toString())
+        FirebaseManagement.getDatabase().getReference().child("users").child(FirebaseManagement.getUser().getUid())
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -262,9 +262,9 @@ public class ShowProfile extends AppCompatActivity  implements NavigationView.On
                             try {
                                 File localFile = File.createTempFile("images", "jpg");
 
-                                StorageReference profileImageRef = FirebaseManagement.mStorage.getReference()
+                                StorageReference profileImageRef = FirebaseManagement.getStorage().getReference()
                                         .child("users")
-                                        .child(FirebaseManagement.mUser.getUid().toString())
+                                        .child(FirebaseManagement.getUser().getUid())
                                         .child("profileimage.jpg");
 
                                 profileImageRef.getFile(localFile)
