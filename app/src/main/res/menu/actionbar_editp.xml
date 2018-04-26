@@ -4,9 +4,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/editProfileButton"
-        android:icon="@drawable/ic_mode_edit_white_24px"
-        android:title="@string/editProfile"
+        android:id="@+id/editSaveP"
+        android:icon="@drawable/ic_done_white_24px"
+        android:title="@string/saveProfile"
         app:showAsAction="always" />
 
 </menu>
