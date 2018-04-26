@@ -64,9 +64,9 @@ public static DatabaseReference getUserReference(){
         String name[] = getUser().getDisplayName().split(" ");
         Profile newProfile;
         if(name[0]!=null && name[1]!=null) {
-            newProfile = new Profile(name[0], name[1], email, context.getString(R.string.description), null);
+            newProfile = new Profile(name[0], name[1], email, context.getString(R.string.description));
         } else {
-            newProfile = new Profile(context.getString(R.string.name), context.getString(R.string.surname), email, context.getString(R.string.description), null);
+            newProfile = new Profile(context.getString(R.string.name), context.getString(R.string.surname), email, context.getString(R.string.description));
         }
         Database.getReference().child("users").child(User.getUid()).setValue(newProfile);
     }

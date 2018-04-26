@@ -25,7 +25,7 @@ public class Book {
     private List<Bitmap> images;
 
 
-    public Book(String BId, String title, String description, String urlimage, String publishDate, String author, String categories, String publisher, String owner) {
+    public Book(String BId, String isbn, String title, String description, String urlimage, String publishDate, String author, String categories, String publisher, String owner) {
         this.BId = BId;
         this.isbn = isbn;
         this.title = title;
