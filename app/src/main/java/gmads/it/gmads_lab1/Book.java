@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class Book {
+    private String BId;
     private String isbn;
     private String title;
     private String description;
@@ -23,7 +24,9 @@ public class Book {
     private String holder;
     private List<Bitmap> images;
 
-    public Book(String isbn, String title, String description, String urlimage, String publishDate, String author, String categories, String publisher, String owner) {
+
+    public Book(String BId, String title, String description, String urlimage, String publishDate, String author, String categories, String publisher, String owner) {
+        this.BId = BId;
         this.isbn = isbn;
         this.title = title;
         this.description = description;
@@ -39,12 +42,24 @@ public class Book {
         nRates=0;
         sumRates=0;
     }
+
+    public Book() {
+    }
+
     public List<Bitmap> getImages() {
         return images;
     }
 
     public void setImages(List<Bitmap> images) {
         this.images = images;
+    }
+
+    public String getBId() {
+        return BId;
+    }
+
+    public void setBId(String BId) {
+        this.BId = BId;
     }
 
     public String getIsbn() {
