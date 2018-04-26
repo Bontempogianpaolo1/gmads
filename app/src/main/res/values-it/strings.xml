@@ -14,21 +14,36 @@
     <string name="save">Salva</string>
     <string name="reset">Reset</string>
     <string name="cancel">Annulla</string>
+    <string name="selectFromCamera">Fotocamera</string>
+    <string name="selectGallery">Galleria</string>
     <string name="saveQuestion">\nVuoi salvare le modifiche?</string>
     <string name="yes">Si</string>
+    <string name="noInternet">\nInternet assente. Connettiti e riprova.</string>
+    <string name="retry">Riprova</string>
     <string name="alertUpd">\nSalvataggio avvenuto!</string>
-    <string name="nameExample">Paolo</string>
-    <string name="surnameExample">Rossi</string>
+    <string name="nameExample">Nome</string>
+    <string name="surnameExample">Cognome</string>
     <string name="bioExample">--vuoto--</string>
     <string name="emailExample">esempio@p.com</string>
     <string name="imageDirectory">ImageDir</string>
     <string name="selectImage">Cambia foto profilo</string>
-    <string name="selectFromCamera">Foto</string>
-    <string name="selectGallery">Galleria</string>
     <string name="takeImage">\nScegli immagine da</string>
+    <string name="addBookImage">\nAggiungi foto libro da</string>
     <string name="showProfile">Profilo</string>
     <string name="editProfile">Modifica Profilo</string>
     <string name="errorEmail">Errore formato email</string>
     <string name="alertResetDone">reset fatto!</string>
     <string name="saveProfile">Salva Profilo</string>
+    <string name="addBook">Aggiungi Libro</string>
+    <!--stringhe per dati non trovati-->
+    <string name="notFound">Non trovato</string>
+    <string name="titleNotFound">Titolo: assente</string>
+    <string name="authorNotFound">Autore: assente</string>
+    <string name="descriptionNotFound">\nDescrizione: assente</string>
+    <string name="publisherNotFound">Editore: assente</string>
+    <string name="pDateNotFound">Data pubblicazione: assente</string>
+    <string name="categoryNotFound">Categoria: assente</string>
+    <string name="scan1">Inserisci ISBN</string>
+    <string name="scan2">Oppure scansionalo</string>
+    <!--end-->
 </resources>

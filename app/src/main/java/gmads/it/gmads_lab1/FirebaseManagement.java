@@ -1,0 +1,79 @@
+package gmads.it.gmads_lab1;
+
+import android.content.Context;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+
+public class FirebaseManagement {
+
+    private static volatile FirebaseManagement firebaseManagementInstance = new FirebaseManagement();
+    private static FirebaseAuth Auth;
+    private static FirebaseDatabase Database;
+    private static FirebaseStorage Storage;
+    private static FirebaseUser User;
+    private static FirebaseStorage storage ;
+
+    public static FirebaseAuth getAuth() {
+        return Auth;
+    }
+
+    public static FirebaseUser getUser() {
+        return User;
+    }
+
+    public static FirebaseStorage getStorage(){
+        if(storage==null){
+            storage= FirebaseStorage.getInstance();
+        }
+        return storage;
+    }
+public static FirebaseDatabase getDatabase(){
+        if(Database ==null){
+            Database =FirebaseDatabase.getInstance();
+            Database.setPersistenceEnabled(true);
+            return Database;
+        }
+        else return Database;
+}
+public static DatabaseReference getUserReference(){
+        return getDatabase().getReference().child("users").child(getUser().getUid());
+}
+    //private constructor
+    public FirebaseManagement() {
+
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+        Database = FirebaseDatabase.getInstance();
+        Database.setPersistenceEnabled(true);
+        Auth = FirebaseAuth.getInstance();
+        Storage = FirebaseStorage.getInstance();
+    }
+
+    public static void updateUserData(Profile profile){
+        if(User != null) {
+            Database.getReference().child("users").child(User.getUid()).setValue(profile);
+        }
+
+    }
+
+    public static void createUser(Context context, String email){
+        User = Auth.getCurrentUser();
+        String name[] = getUser().getDisplayName().split(" ");
+        Profile newProfile;
+        if(name[0]!=null && name[1]!=null) {
+            newProfile = new Profile(name[0], name[1], email, context.getString(R.string.description), null);
+        } else {
+            newProfile = new Profile(context.getString(R.string.name), context.getString(R.string.surname), email, context.getString(R.string.description), null);
+        }
+        Database.getReference().child("users").child(User.getUid()).setValue(newProfile);
+    }
+
+    public static void loginUser(){
+        User = Auth.getCurrentUser();
+        ProfileInfoSync.pISInstance.loadProfileInfo();
+    }
+
+}
