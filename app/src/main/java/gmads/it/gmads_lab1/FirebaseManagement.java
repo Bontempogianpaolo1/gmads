@@ -59,8 +59,6 @@ public static DatabaseReference getUserReference(){
 
     }
 
-
-
     public static void createUser(Context context, String email){
         User = Auth.getCurrentUser();
         String name[] = getUser().getDisplayName().split(" ");

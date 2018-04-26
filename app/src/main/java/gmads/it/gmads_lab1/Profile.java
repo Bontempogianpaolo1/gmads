@@ -30,6 +30,8 @@ public class Profile implements Serializable{
     private long valutation;
     private int npublishedBooks;
     private int ntakenBooks;
+
+    private HashMap<String, Book> myBooks = new HashMap<>();
     private List<String> publishedBooks= new ArrayList<>();
     private List<String> takenBooks= new ArrayList<>();
     private int nrates;
@@ -47,10 +49,6 @@ public class Profile implements Serializable{
         ntakenBooks=0;
         nrates=0;
 
-
-        takenBooks.add("cod1");
-        takenBooks.add("cod2");
-        takenBooks.add("cod3");
     }
 
     public Profile() {
@@ -58,6 +56,15 @@ public class Profile implements Serializable{
         npublishedBooks=0;
         ntakenBooks=0;
         nrates=0;
+    }
+
+
+    public HashMap<String, Book> getMyBooks() {
+        return myBooks;
+    }
+
+    public void setMyBooks(HashMap<String, Book> myBooks) {
+        this.myBooks = myBooks;
     }
 
     public String getName() {
