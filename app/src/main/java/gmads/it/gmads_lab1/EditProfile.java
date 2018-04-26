@@ -1,15 +1,19 @@
 package gmads.it.gmads_lab1;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -62,6 +66,7 @@ public class EditProfile extends AppCompatActivity {
     private ValueEventListener mProfileListener;
     private String mProfile;
     private Profile profile;
+    static final int MY_CAMERA_REQUEST_CODE = 100;
     static final int REQUEST_IMAGE_CAPTURE = 1888;
     static final int REQUEST_IMAGE_LIBRARY = 1889;
     private ImageView profileImage;//profile image
@@ -81,6 +86,7 @@ public class EditProfile extends AppCompatActivity {
     TextView vSurname;
     TextView vEmail;
     TextView vBio;
+    //TextView changeIm;
 
 
     @Override
@@ -114,7 +120,7 @@ public class EditProfile extends AppCompatActivity {
         profileImage = findViewById(R.id.profile_image);
         profileImage.setImageDrawable(getDrawable(R.drawable.default_profile));
         profileImage.setOnClickListener(this::onClickImage);
-        findViewById(R.id.selectimage).setOnClickListener(this::onClickImage);
+        //findViewById(R.id.selectimage).setOnClickListener(this::onClickImage);
         //set text components
 
         vName = findViewById(R.id.name_input);
@@ -128,6 +134,8 @@ public class EditProfile extends AppCompatActivity {
 
         vBio = findViewById(R.id.address_input);
        // vBio.setText(Address);
+
+        //changeIm = findViewById(R.id.selectimage);
 
         getUserInfo();
 
@@ -166,7 +174,6 @@ public class EditProfile extends AppCompatActivity {
            // prefs.edit().putString("email", vEmail.getText().toString()).apply();
            // prefs.edit().putString("address", vBio.getText().toString()).apply();
            // prefs.edit().putBoolean("save", false).apply();
-
             updateUserInfo();
 
         });
@@ -212,11 +219,38 @@ public class EditProfile extends AppCompatActivity {
             startActivityForResult(pickIntent, REQUEST_IMAGE_LIBRARY);
         });
         ad.setNegativeButton("photo",(vi,w)->{
-            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                    != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.CAMERA}, MY_CAMERA_REQUEST_CODE);
+            } else {
+                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+            }
+
         });
         ad.show();
         //-->
+    }
+
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == MY_CAMERA_REQUEST_CODE) {
+
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+
+            } else {
+
+                Toast.makeText(this, "camera permission denied", Toast.LENGTH_LONG).show();
+
+            }
+
+        }
     }
 
     @Override
@@ -298,7 +332,8 @@ public class EditProfile extends AppCompatActivity {
         String email = vEmail.getText().toString();
         String bio = vBio.getText().toString();
 
-        progressbar.setVisibility(View.VISIBLE);
+        /*progressbar.setVisibility(View.VISIBLE);
+        changeIm.setVisibility(View.GONE);*/
 
         if(name.isEmpty()){
             vName.setError("Name required");
@@ -323,7 +358,6 @@ public class EditProfile extends AppCompatActivity {
         Intent pickIntent = new Intent(this, ShowProfile.class);
         if(uriProfileImage != null){
 
-
             profileImageRef.putFile(uriProfileImage)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
@@ -342,6 +376,7 @@ public class EditProfile extends AppCompatActivity {
                             // database.setPersistenceEnabled(false);
                             startActivity(pickIntent);
                             progressbar.setVisibility(View.GONE);
+                            //changeIm.setVisibility(View.GONE);
 
                         }
                     })
@@ -367,6 +402,7 @@ public class EditProfile extends AppCompatActivity {
 
     private void getUserInfo(){
         progressbar.setVisibility(View.VISIBLE);
+        //changeIm.setVisibility(View.GONE);
         profileImage.setVisibility(View.GONE);
         FirebaseManagement.getDatabase().getReference().child("users").child(FirebaseManagement.getUser().getUid())
                 .addListenerForSingleValueEvent(new ValueEventListener() {
