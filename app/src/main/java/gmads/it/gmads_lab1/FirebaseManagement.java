@@ -63,7 +63,13 @@ public static DatabaseReference getUserReference(){
 
     public static void createUser(Context context, String email){
         User = Auth.getCurrentUser();
-        Profile newProfile = new Profile(context.getString(R.string.name), context.getString(R.string.surname), email, context.getString(R.string.description), null);
+        String name[] = getUser().getDisplayName().split(" ");
+        Profile newProfile;
+        if(name[0]!=null && name[1]!=null) {
+            newProfile = new Profile(name[0], name[1], email, context.getString(R.string.description), null);
+        } else {
+            newProfile = new Profile(context.getString(R.string.name), context.getString(R.string.surname), email, context.getString(R.string.description), null);
+        }
         Database.getReference().child("users").child(User.getUid()).setValue(newProfile);
     }
 
