@@ -180,25 +180,17 @@ public class AddBook extends AppCompatActivity
     }
 
     public void onNextClick(View v){
-        if(this.ISBNcode == null){
-            new AlertDialog.Builder(this)
-                    .setTitle("Error")
-                    .setMessage("Insert ISBN first")
-                    .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    // continue with delete
-                }
-            })
-            .setIcon(android.R.drawable.ic_dialog_alert)
-                    .show();
-        }
-        else{
-            Intent pickIntent = new Intent(this, SaveBook.class);
-            // pickIntent.putExtra(EXTRA_PROFILE_KEY,mProfile).;
-            prefs.edit().putString("ISBN",ISBNcode).apply();
-            // database.setPersistenceEnabled(false);
-            startActivity(pickIntent);
-        }
+
+            if(this.ISBNcode.length()!=13){
+                Tools t= new Tools();
+                t.showPopup(this,getString(R.string.isbnerror),"", "Ok").show();
+            }else {
+                Intent pickIntent = new Intent(this, SaveBook.class);
+                // pickIntent.putExtra(EXTRA_PROFILE_KEY,mProfile).;
+                prefs.edit().putString("ISBN",ISBNcode).apply();
+                // database.setPersistenceEnabled(false);
+                startActivity(pickIntent);
+            }
     }
 
     @Override

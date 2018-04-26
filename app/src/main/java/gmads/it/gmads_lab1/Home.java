@@ -1,6 +1,5 @@
 package gmads.it.gmads_lab1;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -15,7 +14,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -23,34 +21,25 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.firebase.ui.auth.AuthUI;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.StorageReference;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.URL;
-import java.util.Arrays;
+import java.util.Objects;
 
 public class Home extends AppCompatActivity  implements NavigationView.OnNavigationItemSelectedListener{
     ImageView profileImage;
     private static final String EXTRA_PROFILE_KEY="my_token";
     private DatabaseReference mProfileReference;
     FirebaseDatabase database;
-    private ValueEventListener mProfileListener;
-    private String mProfile;
+    public ValueEventListener mProfileListener;
+    public String mProfile;
     private TextView navName;
     private TextView navMail;
     private ImageView navImage;
@@ -60,12 +49,10 @@ public class Home extends AppCompatActivity  implements NavigationView.OnNavigat
     DrawerLayout drawer;
     NavigationView navigationView;
     View headerView;
-    public static Activity aHome;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        aHome = this;
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         //profilo
         mProfile= prefs.getString(EXTRA_PROFILE_KEY,null);
@@ -78,128 +65,81 @@ public class Home extends AppCompatActivity  implements NavigationView.OnNavigat
             mProfileReference.keepSynced(true);
         }
         //settare toolbar + titolo
-        toolbar = (Toolbar) findViewById(R.id.toolbarHome);
+        toolbar =  findViewById(R.id.toolbarHome);
         toolbar.setTitle("Home");
         setSupportActionBar(toolbar);
-        //gestire file online
-        /*File directory = getApplicationContext().getDir(getString(R.string.imageDirectory), Context.MODE_PRIVATE);
-        String path = directory.getPath();
-        File f=new File(path,"profile.jpg");
-        if(f.exists()) {
-            try {
-                Bitmap image=BitmapFactory.decodeStream(new FileInputStream(f));
-                navImage.setImageBitmap(image);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-        }*/
+        drawer =  findViewById(R.id.drawer_layout);
+        navigationView =  findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+        headerView = navigationView.getHeaderView(0);
+        navName =  headerView.findViewById(R.id.navName);
+        navMail =  headerView.findViewById(R.id.navMail);
+        navImage =  headerView.findViewById(R.id.navImage);
     }
 
     @Override
     public void onStart(){
         super.onStart();
-        //setContentView(R.layout.activity_home);
         //settare navbar
-        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-        headerView = navigationView.getHeaderView(0);
-        navName = (TextView) headerView.findViewById(R.id.navName);
-        navMail = (TextView) headerView.findViewById(R.id.navMail);
-        navImage = (ImageView) headerView.findViewById(R.id.navImage);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         headerView.setBackgroundResource(R.color.colorPrimaryDark);
-        //--fine navbar
-
-        //profilo
-        database= FirebaseManagement.getDatabase();
-
-        mProfileReference = FirebaseDatabase.getInstance().getReference()
+        mProfileReference = database.getReference()
                 .child("users")
                 .child(FirebaseManagement.getUser().getUid());
         mProfileReference.keepSynced(true);
 
-        //gestire file online
-        /*File directory = getApplicationContext().getDir(getString(R.string.imageDirectory), Context.MODE_PRIVATE);
-        String path = directory.getPath();
-        File f=new File(path,"profile.jpg");
-        if(f.exists()) {
-            try {
-                Bitmap image=BitmapFactory.decodeStream(new FileInputStream(f));
-                navImage.setImageBitmap(image);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-        }*/
-        //---------------
-        //if(mProfile!=null) {
-            ValueEventListener postListener = new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    Profile myuser = dataSnapshot.getValue(Profile.class);
-                    assert myuser != null;
-                    //dati navbar
-                    navName.setText(myuser.getName());
-                    navName.append(" " + myuser.getSurname());
-                    navMail.setText(myuser.getEmail());
-                    //setto foto
-                    profile = dataSnapshot.getValue(Profile.class);
-                    URL url = null;
+        ValueEventListener postListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Profile myuser = dataSnapshot.getValue(Profile.class);
+                assert myuser != null;
+                //dati navbar
+                navName.setText(myuser.getName());
+                navName.append(" " + myuser.getSurname());
+                navMail.setText(myuser.getEmail());
+                //setto foto
+                profile = dataSnapshot.getValue(Profile.class);
 
-                    if(profile.getImage()!=null) {
+
+                if(Objects.requireNonNull(profile).getImage()!=null) {
+                    try {
+                        File localFile = File.createTempFile("image", "jpg");
+                        StorageReference profileImageRef = FirebaseManagement.getStorage().getReference()
+                                .child("users")
+                                .child(FirebaseManagement.getUser().getUid())
+                                .child("profileimage.jpg");
+
+                        profileImageRef.getFile(localFile)
+                                .addOnSuccessListener(taskSnapshot -> navImage.setImageBitmap(BitmapFactory.decodeFile(localFile.getPath())))
+                                .addOnFailureListener(e -> Log.d("errore",e.toString()));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else {//default image
+                    File directory = getApplicationContext().getDir(getString(R.string.imageDirectory), Context.MODE_PRIVATE);
+                    String path = directory.getPath();
+                    File f = new File(path, "profileimage.jpg");
+                    if (f.exists()) {
                         try {
-                            File localFile = File.createTempFile("image", "jpg");
-                            StorageReference profileImageRef = FirebaseManagement.getStorage().getReference()
-                                    .child("users")
-                                    .child(FirebaseManagement.getUser().getUid())
-                                    .child("profileimage.jpg");
-
-                            profileImageRef.getFile(localFile)
-                                    .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                                        @Override
-                                        public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                                            navImage.setImageBitmap(BitmapFactory.decodeFile(localFile.getPath()));
-                                        }
-                                    }).addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-
-                                }
-                            });
-                        } catch (IOException e) {
+                            Bitmap image = BitmapFactory.decodeStream(new FileInputStream(f));
+                            navImage.setImageBitmap(image);
+                        } catch (FileNotFoundException e) {
                             e.printStackTrace();
                         }
-                    } else {//default image
-                            File directory = getApplicationContext().getDir(getString(R.string.imageDirectory), Context.MODE_PRIVATE);
-                            String path = directory.getPath();
-                            File f = new File(path, "profileimage.jpg");
-                            if (f.exists()) {
-                                try {
-                                    Bitmap image = BitmapFactory.decodeStream(new FileInputStream(f));
-                                    navImage.setImageBitmap(image);
-                                } catch (FileNotFoundException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }
+                    }
                 }
+            }
 
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
 
-                }
-            };
-            mProfileReference.addValueEventListener(postListener);
-            mProfileListener = postListener;
-        /*}else{
-            //dati navbar
-            navName.setText(getString(R.string.nameExample));
-            navName.append(" " + getString(R.string.surnameExample));
-            navMail.setText(getString(R.string.emailExample));
-        }*/
+            }
+        };
+        mProfileReference.addValueEventListener(postListener);
+        mProfileListener = postListener;
     }
 
     //for EditButton in the action bar
@@ -216,7 +156,6 @@ public class Home extends AppCompatActivity  implements NavigationView.OnNavigat
         //intentMod.putExtra(EXTRA_PROFILE_KEY,mProfile);
         startActivity(intentMod);
         overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
-
         return true;
     }
     //
@@ -228,26 +167,24 @@ public class Home extends AppCompatActivity  implements NavigationView.OnNavigat
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
         if (id == R.id.nav_showProfile) {
             // Handle the camera action
             Intent intentMod = new Intent(this, ShowProfile.class);
-            //intentMod.putExtra(EXTRA_PROFILE_KEY,mProfile);
             startActivity(intentMod);
             finish();
             return true;
         } else if (id == R.id.nav_addBook) {
             Intent intentMod = new Intent(this, AddBook.class);
-            //intentMod.putExtra(EXTRA_PROFILE_KEY,mProfile);
             startActivity(intentMod);
             finish();
             return true;
         } else if (id == R.id.nav_home) {
             //deve solo chiudersi la navbar
             DrawerLayout mDrawerLayout;
-            mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+            mDrawerLayout = findViewById(R.id.drawer_layout);
             mDrawerLayout.closeDrawers();
             return true;
         }

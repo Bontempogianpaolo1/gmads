@@ -31,18 +31,17 @@ public class Profile implements Serializable{
     private int npublishedBooks;
     private int ntakenBooks;
 
-    private HashMap<String, Book> myBooks = new HashMap<>();
+    private HashMap<String, String> myBooks = new HashMap<>();
     private List<String> publishedBooks= new ArrayList<>();
     private List<String> takenBooks= new ArrayList<>();
     private int nrates;
 
 
 
-    public Profile(String name, String surname, String email,String Description,String image) {
+    public Profile(String name, String surname, String email,String Description) {
         this.name = name;
         this.surname = surname;
         this.email = email;
-        this.image = image;
         this.description=Description;
         valutation=0;
         npublishedBooks=0;
@@ -59,11 +58,11 @@ public class Profile implements Serializable{
     }
 
 
-    public HashMap<String, Book> getMyBooks() {
+    public HashMap<String, String> getMyBooks() {
         return myBooks;
     }
 
-    public void setMyBooks(HashMap<String, Book> myBooks) {
+    public void setMyBooks(HashMap<String, String> myBooks) {
         this.myBooks = myBooks;
     }
 
