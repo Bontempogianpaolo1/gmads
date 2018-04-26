@@ -118,9 +118,9 @@ public class ShowProfile extends AppCompatActivity  implements NavigationView.On
         vEmail = findViewById(R.id.email);
         vBio = findViewById(R.id.bio);
         //gestire file online
-        File directory = getApplicationContext().getDir(getString(R.string.imageDirectory), Context.MODE_PRIVATE);
+        /*File directory = getApplicationContext().getDir(getString(R.string.imageDirectory), Context.MODE_PRIVATE);
         String path = directory.getPath();
-        File f = new File(path, "profile.jpg");
+        File f = new File(path, "profileimage.jpg");
         if (f.exists()) {
             try {
                 Bitmap image = BitmapFactory.decodeStream(new FileInputStream(f));
@@ -129,20 +129,20 @@ public class ShowProfile extends AppCompatActivity  implements NavigationView.On
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
-        }
+        }*/
         vBio.setMovementMethod(new ScrollingMovementMethod());
 
-        profileImage.setImageDrawable(getDrawable(R.drawable.default_profile));
+        //profileImage.setImageDrawable(getDrawable(R.drawable.default_profile));
         navImage.setImageDrawable(getDrawable(R.drawable.default_profile));
 
         vBio.setMovementMethod(new ScrollingMovementMethod());
     }
 
     @Override
-    public void onStart(){
+    public void onStart() {
         super.onStart();
 
-        if(mProfile!=null) {
+        if (mProfile != null) {
             ValueEventListener postListener = new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -156,7 +156,9 @@ public class ShowProfile extends AppCompatActivity  implements NavigationView.On
                     navName.setText(myuser.getName());
                     navName.append(" " + myuser.getSurname());
                     navMail.setText(myuser.getEmail());
+                    getUserInfo();
                 }
+
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
 
@@ -164,7 +166,7 @@ public class ShowProfile extends AppCompatActivity  implements NavigationView.On
             };
             mProfileReference.addValueEventListener(postListener);
             mProfileListener = postListener;
-        }else{
+        } else {
             vName.setText(getString(R.string.nameExample));
             vName.append(" " + getString(R.string.surnameExample));
             vEmail.setText(getString(R.string.emailExample));
@@ -175,12 +177,9 @@ public class ShowProfile extends AppCompatActivity  implements NavigationView.On
             navMail.setText(getString(R.string.emailExample));
         }
     }
-    /*
-        getUserInfo();
-    }
 
     @Override
-    public void onStop(){
+    public void onStop() {
 
         super.onStop();
 
@@ -188,7 +187,7 @@ public class ShowProfile extends AppCompatActivity  implements NavigationView.On
             mProfileReference.removeEventListener(mProfileListener);
         }
     }*/
-
+    }
     //for EditButton in the action bar
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -260,8 +259,7 @@ public class ShowProfile extends AppCompatActivity  implements NavigationView.On
 
                         if(profile.getImage()!=null) {
                             try {
-                                File localFile = File.createTempFile("images", "jpg");
-
+                                File localFile = File.createTempFile("image", "jpg");
                                 StorageReference profileImageRef = FirebaseManagement.getStorage().getReference()
                                         .child("users")
                                         .child(FirebaseManagement.getUser().getUid())
