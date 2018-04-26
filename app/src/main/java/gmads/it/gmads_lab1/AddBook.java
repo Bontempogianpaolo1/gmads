@@ -201,7 +201,7 @@ public class AddBook extends AppCompatActivity
 
     public void onNextClick(View v){
 
-            if(this.ISBNcode.length()<13){
+            if(this.ISBNcode.length()!=13){
                 Tools t= new Tools();
                 t.showPopup(this,getString(R.string.isbnerror),"", "Ok").show();
             }else {
