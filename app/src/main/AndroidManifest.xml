@@ -18,6 +18,8 @@
         <activity
             android:name=".Home"
             android:label="gMADs">
+            android:name=".Login"
+            android:label="gMADs_1">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -43,7 +45,8 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:parentActivityName=".AddBook"/>
         <activity android:name=".Scanner" />
-        <activity android:name=".BaseScannerActivity"></activity>
+        <activity android:name=".BaseScannerActivity" />
+        <activity android:name=".ShowProfile"></activity>
     </application>
 
 </manifest>

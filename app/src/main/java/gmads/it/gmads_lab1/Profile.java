@@ -22,11 +22,11 @@ import java.util.Map;
 
 public class Profile implements Serializable{
     private String id;
-    private String name;
-    private String surname;
-    private String email;
-    private String description;
-    private String image;
+    public String name;
+    public String surname;
+    public String email;
+    public String description;
+    public String image;
     private long valutation;
     private int npublishedBooks;
     private int ntakenBooks;

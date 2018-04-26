@@ -6,6 +6,8 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.preference.PreferenceManager;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -14,34 +16,45 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import static gmads.it.gmads_lab1.Home.aHome;
 
 public class ShowProfile extends AppCompatActivity  implements NavigationView.OnNavigationItemSelectedListener{
     ImageView profileImage;
     ImageView drawerImage;
+    ProgressBar progressbar;
 
     private static final String EXTRA_PROFILE_KEY="post_key";
     private DatabaseReference mProfileReference;
     FirebaseDatabase database;
     private ValueEventListener mProfileListener;
-    private String mProfile;
+    private Profile profile;
     private TextView navName;
     private TextView navMail;
     private ImageView navImage;
@@ -51,6 +64,7 @@ public class ShowProfile extends AppCompatActivity  implements NavigationView.On
     NavigationView navigationView;
     View headerView;
     TextView vName;
+    TextView vSurname;
     TextView vEmail;
     TextView vBio;
 
@@ -62,6 +76,9 @@ public class ShowProfile extends AppCompatActivity  implements NavigationView.On
         database= FirebaseManagement.getDatabase();
         profileImage = findViewById(R.id.profile_image);
         if(mProfile==null){
+        //mProfile= prefs.getString(EXTRA_PROFILE_KEY,null);
+        database= FirebaseManagement.mDatabase;
+        /*if(mProfile==null){
             database.setPersistenceEnabled((true));
         }
         if(mProfile!=null) {
@@ -69,6 +86,9 @@ public class ShowProfile extends AppCompatActivity  implements NavigationView.On
             mProfileReference.keepSynced(true);
         }
         //settare toolbar + titolo
+        }*/
+
+        //settare toolbar + titolo + navbar
         toolbar = (Toolbar) findViewById(R.id.toolbarShowP);
         toolbar.setTitle(getString(R.string.showProfile));
         setSupportActionBar(toolbar);
@@ -80,6 +100,12 @@ public class ShowProfile extends AppCompatActivity  implements NavigationView.On
         navName = (TextView) headerView.findViewById(R.id.navName);
         navMail = (TextView) headerView.findViewById(R.id.navMail);
         navImage = (ImageView) headerView.findViewById(R.id.navImage);
+        vName = findViewById(R.id.name);
+        vEmail = findViewById(R.id.email);
+        vBio = findViewById(R.id.bio);
+        toolbar.setTitle(getString(R.string.showProfile));
+        progressbar = findViewById(R.id.progressBar);
+        setSupportActionBar(toolbar);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -104,6 +130,12 @@ public class ShowProfile extends AppCompatActivity  implements NavigationView.On
             }
         }
         vBio.setMovementMethod(new ScrollingMovementMethod());
+
+        profileImage.setImageDrawable(getDrawable(R.drawable.default_profile));
+        navImage.setImageDrawable(getDrawable(R.drawable.default_profile));
+
+        vBio.setMovementMethod(new ScrollingMovementMethod());
+
     }
 
     @Override
@@ -144,16 +176,19 @@ public class ShowProfile extends AppCompatActivity  implements NavigationView.On
         }
     }
     /*
+        getUserInfo();
+    }
+
     @Override
     public void onStop(){
 
         super.onStop();
 
-        if(mProfileListener!=null){
+        /*if(mProfileListener!=null){
             mProfileReference.removeEventListener(mProfileListener);
+        }*/
+    }
 
-        }
-    }*/
     //for EditButton in the action bar
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -207,5 +242,76 @@ public class ShowProfile extends AppCompatActivity  implements NavigationView.On
 
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void getUserInfo(){
+        FirebaseManagement.mDatabase.getReference().child("users").child(FirebaseManagement.mUser.getUid().toString())
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        profileImage.setVisibility(View.GONE);
+                        progressbar.setVisibility(View.VISIBLE);
+                        profile = dataSnapshot.getValue(Profile.class);
+
+                        vName.setText(profile.name + " " + profile.surname);
+                        vEmail.setText(profile.email);
+                        vBio.setText(profile.description);
+                        URL url = null;
+
+                        if(profile.getImage()!=null) {
+                            try {
+                                File localFile = File.createTempFile("images", "jpg");
+
+                                StorageReference profileImageRef = FirebaseManagement.mStorage.getReference()
+                                        .child("users")
+                                        .child(FirebaseManagement.mUser.getUid().toString())
+                                        .child("profileimage.jpg");
+
+                                profileImageRef.getFile(localFile)
+                                        .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                                            @Override
+                                            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                                                progressbar.setVisibility(View.GONE);
+                                                profileImage.setVisibility(View.VISIBLE);
+                                                profileImage.setImageBitmap(BitmapFactory.decodeFile(localFile.getPath()));
+                                            }
+                                        }).addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+
+                                    }
+                                });
+
+
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        // Getting Post failed, log a message
+                        Log.w("loadPost:onCancelled", databaseError.toException());
+                        // [START_EXCLUDE]
+                        Toast.makeText(ShowProfile.this, "Failed to load profile.",
+                                Toast.LENGTH_SHORT).show();
+                        // [END_EXCLUDE]
+
+                    }
+                });
+
+
+        if(profile==null){
+            vName.setText(getString(R.string.name));
+            vName.append(" " + getString(R.string.surname));
+            navName.setText(getString(R.string.name));
+            navName.append(" " + getString(R.string.surname));
+            vEmail.setText(getString(R.string.email));
+            navMail.setText(getString(R.string.email));
+            vBio.setText(getString(R.string.description));
+        }
     }
 }
