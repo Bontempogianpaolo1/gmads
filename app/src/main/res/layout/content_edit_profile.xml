@@ -51,6 +51,7 @@
                 app:civ_border_width="2dp"
                 android:visibility="visible"/>
 
+            <!--da sostituire con icona (forse)
             <TextView
                 android:id="@+id/selectimage"
                 android:layout_width="wrap_content"
@@ -61,7 +62,7 @@
                 android:focusableInTouchMode="false"
                 android:text="@string/selectImage"
                 android:textColor="@color/colorPrimary"
-                android:textSize="16sp" />
+                android:textSize="16sp" />-->
 
             <ProgressBar
                 android:id="@+id/progressBar"

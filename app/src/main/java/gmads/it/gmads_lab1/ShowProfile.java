@@ -113,6 +113,8 @@ public class ShowProfile extends AppCompatActivity  implements NavigationView.On
         toggle.syncState();
         headerView.setBackgroundResource(R.color.colorPrimaryDark);
         //--fine navbar
+        progressbar.setVisibility(View.VISIBLE);
+        profileImage.setVisibility(View.GONE);
         //settare dati
         vName = findViewById(R.id.name);
         vEmail = findViewById(R.id.email);
@@ -131,10 +133,8 @@ public class ShowProfile extends AppCompatActivity  implements NavigationView.On
             }
         }*/
         vBio.setMovementMethod(new ScrollingMovementMethod());
-
         //profileImage.setImageDrawable(getDrawable(R.drawable.default_profile));
-        navImage.setImageDrawable(getDrawable(R.drawable.default_profile));
-
+        //navImage.setImageDrawable(getDrawable(R.drawable.default_profile));
         vBio.setMovementMethod(new ScrollingMovementMethod());
     }
 
@@ -248,14 +248,11 @@ public class ShowProfile extends AppCompatActivity  implements NavigationView.On
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        profileImage.setVisibility(View.GONE);
-                        progressbar.setVisibility(View.VISIBLE);
                         profile = dataSnapshot.getValue(Profile.class);
-
-                        vName.setText(profile.name + " " + profile.surname);
+                        /*vName.setText(profile.name + " " + profile.surname);
                         vEmail.setText(profile.email);
                         vBio.setText(profile.description);
-                        URL url = null;
+                        URL url = null;*/
 
                         if(profile.getImage()!=null) {
                             try {
@@ -272,11 +269,11 @@ public class ShowProfile extends AppCompatActivity  implements NavigationView.On
                                                 progressbar.setVisibility(View.GONE);
                                                 profileImage.setVisibility(View.VISIBLE);
                                                 profileImage.setImageBitmap(BitmapFactory.decodeFile(localFile.getPath()));
+                                                navImage.setImageBitmap(BitmapFactory.decodeFile(localFile.getPath()));
                                             }
                                         }).addOnFailureListener(new OnFailureListener() {
                                             @Override
                                             public void onFailure(@NonNull Exception e) {
-
                                     }
                                 });
 
@@ -284,8 +281,11 @@ public class ShowProfile extends AppCompatActivity  implements NavigationView.On
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
-                        } else {
-
+                        } else {//default image
+                            progressbar.setVisibility(View.GONE);
+                            profileImage.setVisibility(View.VISIBLE);
+                            profileImage.setImageDrawable(getDrawable(R.drawable.default_profile));
+                            navImage.setImageDrawable(getDrawable(R.drawable.default_profile));
                         }
                     }
 
@@ -300,16 +300,5 @@ public class ShowProfile extends AppCompatActivity  implements NavigationView.On
 
                     }
                 });
-
-
-        if(profile==null){
-            vName.setText(getString(R.string.name));
-            vName.append(" " + getString(R.string.surname));
-            navName.setText(getString(R.string.name));
-            navName.append(" " + getString(R.string.surname));
-            vEmail.setText(getString(R.string.email));
-            navMail.setText(getString(R.string.email));
-            vBio.setText(getString(R.string.description));
-        }
     }
 }
