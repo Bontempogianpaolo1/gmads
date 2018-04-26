@@ -1,6 +1,7 @@
 package gmads.it.gmads_lab1;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -44,6 +45,10 @@ public class Scanner extends AppCompatActivity {
                     public void run() {
                         Toast.makeText(Scanner.this, result.getText(),
                                 Toast.LENGTH_LONG).show();
+                        Intent data = new Intent();
+                        data.setData(Uri.parse(result.getText()));
+                        setResult(RESULT_OK, data);
+                        finish();
                     }
                 }))
                 /*error callback*/

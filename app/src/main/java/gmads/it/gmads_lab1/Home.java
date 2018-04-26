@@ -65,7 +65,7 @@ public class Home extends AppCompatActivity  implements NavigationView.OnNavigat
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        //aHome = this;
+        aHome = this;
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         //profilo
         mProfile= prefs.getString(EXTRA_PROFILE_KEY,null);
@@ -116,13 +116,12 @@ public class Home extends AppCompatActivity  implements NavigationView.OnNavigat
 
         //profilo
         database= FirebaseManagement.getDatabase();
-        if(mProfile==null){
-            database.setPersistenceEnabled((true));
-        }
-        if(mProfile!=null) {
-            mProfileReference = FirebaseDatabase.getInstance().getReference().child("users").child(mProfile);
-            mProfileReference.keepSynced(true);
-        }
+
+        mProfileReference = FirebaseDatabase.getInstance().getReference()
+                .child("users")
+                .child(FirebaseManagement.getUser().getUid());
+        mProfileReference.keepSynced(true);
+
         //gestire file online
         /*File directory = getApplicationContext().getDir(getString(R.string.imageDirectory), Context.MODE_PRIVATE);
         String path = directory.getPath();
@@ -136,7 +135,7 @@ public class Home extends AppCompatActivity  implements NavigationView.OnNavigat
             }
         }*/
         //---------------
-        if(mProfile!=null) {
+        //if(mProfile!=null) {
             ValueEventListener postListener = new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -195,12 +194,12 @@ public class Home extends AppCompatActivity  implements NavigationView.OnNavigat
             };
             mProfileReference.addValueEventListener(postListener);
             mProfileListener = postListener;
-        }else{
+        /*}else{
             //dati navbar
             navName.setText(getString(R.string.nameExample));
             navName.append(" " + getString(R.string.surnameExample));
             navMail.setText(getString(R.string.emailExample));
-        }
+        }*/
     }
 
     //for EditButton in the action bar
