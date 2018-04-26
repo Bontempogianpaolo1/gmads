@@ -44,6 +44,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -82,6 +83,7 @@ public class SaveBook extends AppCompatActivity{
     ContextWrapper cw;
     File directory;
     String path;
+    Uri uriConditionImage;
     LinearLayout ll;
     LinearLayout l2;
     TextView vTitle;
@@ -90,7 +92,11 @@ public class SaveBook extends AppCompatActivity{
     TextView vCategories;
     TextView vDescription;
     TextView vPublisher;
-    Book book;
+    private Book book;
+    private File tempFile;
+    private String urlImage;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -276,6 +282,9 @@ public class SaveBook extends AppCompatActivity{
     public void onStart(){
         super.onStart();
 
+        tempFile = saveImage(newBitMapBookImage);
+        uriConditionImage = Uri.fromFile(tempFile);
+
     }
 
 
@@ -297,9 +306,34 @@ public class SaveBook extends AppCompatActivity{
 
             String bookKey = mBooksReference.push().getKey();
             mBooksReference.child(bookKey).setValue(book);
+
+            StorageReference profileImageRef = FirebaseManagement.getStorage().getReference()
+                    .child("books")
+                    .child(this.book.getBId())
+                    .child("description_img.jpg");
+
+            if(uriConditionImage != null){
+
+                profileImageRef.putFile(uriConditionImage)
+                        .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                urlImage = taskSnapshot.getDownloadUrl().toString();
+                                toastMessage("Image upload successful");
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                toastMessage("Upload failed");
+                            }
+                        });
+            }
+
             /*
              TODO cambiare nome foto quando ne aggiungeremo di più
              */
+            /*
             final ProgressDialog progressDialog = new ProgressDialog(this);
             progressDialog.setTitle("Uploading...");
             progressDialog.show();
@@ -346,17 +380,7 @@ public class SaveBook extends AppCompatActivity{
 
             //saveImage(newBitMapBookImage);
 
-            storageReference.putFile(Uri.fromFile(new File(path))).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-
-                }
-            });
+            */
 
             Intent pickIntent = new Intent(this, ShowProfile.class);
             // pickIntent.putExtra(EXTRA_ISBN,isbn).;
@@ -367,6 +391,31 @@ public class SaveBook extends AppCompatActivity{
         });
         ad.show();
     }
+
+    private void saveImage(Bitmap bitmapImage) {
+        ContextWrapper cw = new ContextWrapper(getApplicationContext());
+        // path to /data/data/yourapp/app_data/imageDir
+        File directory = cw.getDir(getString(R.string.imageDirectory), Context.MODE_PRIVATE);
+        // Create imageDir
+        tempFile = new File(directory,"profile.jpg");
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(tempFile);
+            // Use the compress method on the BitMap object to write image to the OutputStream
+            bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fos);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                assert fos != null;
+                fos.close();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 
     private void toastMessage(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
@@ -474,29 +523,7 @@ public class SaveBook extends AppCompatActivity{
         }
     }
     //function used to save the image in the correct path
-    private void saveImage(Bitmap bitmapImage) {
-        ContextWrapper cw = new ContextWrapper(getApplicationContext());
-        // path to /data/data/yourapp/app_data/imageDir
-        File directory = cw.getDir(getString(R.string.imageDirectory), Context.MODE_PRIVATE);
-        // Create imageDir
-        File myPath = new File(directory,"profile.jpg");
-        FileOutputStream fos = null;
-        try {
-            fos = new FileOutputStream(myPath);
-            // Use the compress method on the BitMap object to write image to the OutputStream
-            bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fos);
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                assert fos != null;
-                fos.close();
 
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
     //animation back arrow
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
