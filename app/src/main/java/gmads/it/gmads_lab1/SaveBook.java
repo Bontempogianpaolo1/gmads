@@ -138,9 +138,8 @@ public class SaveBook extends AppCompatActivity{
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         cw = new ContextWrapper(getApplicationContext());
 
-        vDescription.setMovementMethod(new ScrollingMovementMethod());
+        toolbar.setTitle(getString(R.string.bookTitle));
         setSupportActionBar(toolbar);
-        toolbar.setTitle(getString(R.string.book));
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
@@ -166,6 +165,7 @@ public class SaveBook extends AppCompatActivity{
         Button add = findViewById(R.id.addphoto);
         add.setOnClickListener(this::onAddPhotoClick);
         getjson(getApplicationContext(), isbn);
+        vDescription.setMovementMethod(new ScrollingMovementMethod());
     }
 
     public void getjson(Context c,  String isbn) {
@@ -390,7 +390,7 @@ public class SaveBook extends AppCompatActivity{
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater mi = getMenuInflater();
-        mi.inflate(R.menu.actionbar_editp, menu);
+        mi.inflate(R.menu.save_book, menu);
         return true;
     }
     private void setFocusOnClick(View v){
