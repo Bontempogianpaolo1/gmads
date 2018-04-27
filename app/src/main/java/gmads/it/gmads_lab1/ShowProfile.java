@@ -22,14 +22,19 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.StorageReference;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.Objects;
 
 public class ShowProfile extends AppCompatActivity  implements NavigationView.OnNavigationItemSelectedListener{
@@ -212,40 +217,52 @@ public class ShowProfile extends AppCompatActivity  implements NavigationView.On
     }
 
     private void getUserInfo(){
+        progressbar.setVisibility(View.VISIBLE);
+        //changeIm.setVisibility(View.GONE);
+        profileImage.setVisibility(View.GONE);
         FirebaseManagement.getDatabase().getReference().child("users").child(FirebaseManagement.getUser().getUid())
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         profile = dataSnapshot.getValue(Profile.class);
-                        /*vName.setText(profile.name + " " + profile.surname);
-                        vEmail.setText(profile.email);
-                        vBio.setText(profile.description);
-                        URL url = null;*/
 
-                        if(Objects.requireNonNull(profile).getImage()!=null) {
+                        vName.setText(profile.getName() + " " +profile.getSurname());
+                        vEmail.setText(profile.getEmail());
+                        vBio.setText(profile.getDescription());
+                        URL url = null;
+
+                        if(profile.getImage()!=null) {
                             try {
-                                File localFile = File.createTempFile("image", "jpg");
+                                File localFile = File.createTempFile("images", "jpg");
+
                                 StorageReference profileImageRef = FirebaseManagement.getStorage().getReference()
                                         .child("users")
                                         .child(FirebaseManagement.getUser().getUid())
                                         .child("profileimage.jpg");
 
                                 profileImageRef.getFile(localFile)
-                                        .addOnSuccessListener(taskSnapshot -> {
-                                            progressbar.setVisibility(View.GONE);
-                                            profileImage.setVisibility(View.VISIBLE);
-                                            profileImage.setImageBitmap(BitmapFactory.decodeFile(localFile.getPath()));
-                                            navImage.setImageBitmap(BitmapFactory.decodeFile(localFile.getPath()));
-                                        }).addOnFailureListener(e -> Log.d("error",e.toString()));
+                                        .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                                            @Override
+                                            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                                                progressbar.setVisibility(View.GONE);
+                                                profileImage.setVisibility(View.VISIBLE);
+                                                profileImage.setImageBitmap(BitmapFactory.decodeFile(localFile.getPath()));
+
+                                            }
+                                        }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        progressbar.setVisibility(View.GONE);
+                                        profileImage.setVisibility(View.VISIBLE);
+                                    }
+                                });
 
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
-                        } else {//default image
+                        } else {
                             progressbar.setVisibility(View.GONE);
                             profileImage.setVisibility(View.VISIBLE);
-                            profileImage.setImageDrawable(getDrawable(R.drawable.default_profile));
-                            navImage.setImageDrawable(getDrawable(R.drawable.default_profile));
                         }
                     }
 
@@ -257,7 +274,16 @@ public class ShowProfile extends AppCompatActivity  implements NavigationView.On
                         Toast.makeText(ShowProfile.this, "Failed to load profile.",
                                 Toast.LENGTH_SHORT).show();
                         // [END_EXCLUDE]
+
                     }
                 });
+
+
+        if(profile==null){
+            vName.setText(getString(R.string.name));
+            vName.append(" " + getString(R.string.surname));
+            vEmail.setText(getString(R.string.email));
+            vBio.setText(getString(R.string.description));
+        }
     }
 }
