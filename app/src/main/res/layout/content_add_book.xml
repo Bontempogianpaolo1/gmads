@@ -50,9 +50,9 @@
         android:id="@+id/scan"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
+        android:layout_below="@+id/t2"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="200dp"
+        android:layout_marginTop="51dp"
         android:background="@drawable/roundedbutton"
         android:text="SCAN"
         android:textColor="#FFFFFF"
@@ -67,5 +67,25 @@
         android:layout_toEndOf="@+id/tvIsbn"
         android:background="@color/colorPrimaryDark"
         app:srcCompat="@android:drawable/ic_menu_search" />
+
+    <TextView
+        android:id="@+id/inserInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/insertInfoButton"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="14dp"
+        android:text="Click to insert book" />
+
+    <Button
+        android:id="@+id/insertInfoButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/t1"
+        android:layout_alignStart="@+id/scan"
+        android:layout_marginBottom="13dp"
+        android:background="@drawable/roundedbutton"
+        android:textColor="#FFFFFF"
+        android:text="Insert" />
 
 </RelativeLayout>

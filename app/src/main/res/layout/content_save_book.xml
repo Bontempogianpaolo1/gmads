@@ -38,7 +38,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <TextView
+                <EditText
                     android:id="@+id/title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -48,7 +48,7 @@
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
-                <TextView
+                <EditText
                     android:id="@+id/descrizione"
                     android:layout_width="match_parent"
                     android:layout_height="100dp"
@@ -75,7 +75,7 @@
                     android:layout_toEndOf="@id/bookimage"
                     android:orientation="vertical">
 
-                    <TextView
+                    <EditText
                         android:id="@+id/autore"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -85,7 +85,7 @@
                         android:layout_marginTop="15dp"
                         android:text="autore" />
 
-                    <TextView
+                    <EditText
                         android:id="@+id/editore"
                         android:layout_width="116dp"
                         android:layout_height="wrap_content"
@@ -98,7 +98,7 @@
                         android:layout_marginTop="5dp"
                         android:text="editore" />
 
-                    <TextView
+                    <EditText
                         android:id="@+id/data"
                         android:layout_width="116dp"
                         android:layout_height="wrap_content"
@@ -111,7 +111,7 @@
                         android:layout_marginTop="5dp"
                         android:text="data" />
 
-                    <TextView
+                    <EditText
                         android:id="@+id/categorie"
                         android:layout_width="116dp"
                         android:layout_height="wrap_content"
