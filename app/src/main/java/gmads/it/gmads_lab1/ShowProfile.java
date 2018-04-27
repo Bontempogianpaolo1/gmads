@@ -1,9 +1,7 @@
 package gmads.it.gmads_lab1;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -13,7 +11,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.method.ScrollingMovementMethod;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -21,147 +18,64 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.StorageReference;
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
-import java.util.Objects;
 
 public class ShowProfile extends AppCompatActivity  implements NavigationView.OnNavigationItemSelectedListener{
+    //nav
+    TextView navName;
+    TextView navMail;
+    ImageView navImage;
+    NavigationView navigationView;
+    DrawerLayout drawer;
+    //view della attività
     ImageView profileImage;
     ProgressBar progressbar;
-    private static final String EXTRA_PROFILE_KEY="my_token";
-    private DatabaseReference mProfileReference;
-    FirebaseDatabase database;
-     ValueEventListener mProfileListener;
-    private Profile profile;
-    private TextView navName;
-    private TextView navMail;
-    private ImageView navImage;
-    SharedPreferences prefs;
     Toolbar toolbar;
-    DrawerLayout drawer;
-    NavigationView navigationView;
     View headerView;
     TextView vName;
     TextView vEmail;
     TextView vBio;
-    String mProfile;
+    private Profile profile;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_profile);
-        prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        mProfile = prefs.getString(EXTRA_PROFILE_KEY, null);
-        database = FirebaseManagement.getDatabase();
+        setNavViews();
+        setActViews();
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+        getUserInfo();
+    }
+    public void setActViews(){
         profileImage = findViewById(R.id.profile_image);
-        //settare toolbar + titolo + navbar
-        mProfileReference = FirebaseManagement.getUserReference();
-        toolbar =  findViewById(R.id.toolbarShowP);
+        toolbar =  findViewById(R.id.toolbar);
+        vName = findViewById(R.id.name);
+        vEmail = findViewById(R.id.email);
+        vBio = findViewById(R.id.bio);
+        progressbar = findViewById(R.id.progressBar);
         toolbar.setTitle(getString(R.string.showProfile));
         setSupportActionBar(toolbar);
-        //settare navbar
+        vBio.setMovementMethod(new ScrollingMovementMethod());
+        progressbar.setVisibility(View.VISIBLE);
+        profileImage.setVisibility(View.GONE);
+    }
+    public void setNavViews(){
         drawer =  findViewById(R.id.drawer_layout);
-        navigationView = findViewById(R.id.nav_view);
+        navigationView =  findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         headerView = navigationView.getHeaderView(0);
         navName =  headerView.findViewById(R.id.navName);
         navMail =  headerView.findViewById(R.id.navMail);
-        navImage = headerView.findViewById(R.id.navImage);
-        vName = findViewById(R.id.name);
-        vEmail = findViewById(R.id.email);
-        vBio = findViewById(R.id.bio);
-        toolbar.setTitle(getString(R.string.showProfile));
-        progressbar = findViewById(R.id.progressBar);
-        setSupportActionBar(toolbar);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
+        navImage =  headerView.findViewById(R.id.navImage);
         headerView.setBackgroundResource(R.color.colorPrimaryDark);
-        //--fine navbar
-        progressbar.setVisibility(View.VISIBLE);
-        profileImage.setVisibility(View.GONE);
-        //settare dati
-        vName = findViewById(R.id.name);
-        vEmail = findViewById(R.id.email);
-        vBio = findViewById(R.id.bio);
-        //gestire file online
-        /*File directory = getApplicationContext().getDir(getString(R.string.imageDirectory), Context.MODE_PRIVATE);
-        String path = directory.getPath();
-        File f = new File(path, "profileimage.jpg");
-        if (f.exists()) {
-            try {
-                Bitmap image = BitmapFactory.decodeStream(new FileInputStream(f));
-                profileImage.setImageBitmap(image);
-                navImage.setImageBitmap(image);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-        }*/
-        vBio.setMovementMethod(new ScrollingMovementMethod());
-        //profileImage.setImageDrawable(getDrawable(R.drawable.default_profile));
-        //navImage.setImageDrawable(getDrawable(R.drawable.default_profile));
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        if (mProfile != null) {
-            ValueEventListener postListener = new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    Profile myuser = dataSnapshot.getValue(Profile.class);
-                    assert myuser != null;
-                    vName.setText(myuser.getName());
-                    vName.append(" " + myuser.getSurname());
-                    vEmail.setText(myuser.getEmail());
-                    vBio.setText(myuser.getDescription());
-                    //dati navbar
-                    navName.setText(myuser.getName());
-                    navName.append(" " + myuser.getSurname());
-                    navMail.setText(myuser.getEmail());
-                    getUserInfo();
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            };
-            mProfileReference.addValueEventListener(postListener);
-            mProfileListener = postListener;
-        } else {
-            vName.setText(getString(R.string.nameExample));
-            vName.append(" " + getString(R.string.surnameExample));
-            vEmail.setText(getString(R.string.emailExample));
-            vBio.setText(getString(R.string.description));
-            //dati navbar
-            navName.setText(getString(R.string.nameExample));
-            navName.append(" " + getString(R.string.surnameExample));
-            navMail.setText(getString(R.string.emailExample));
-        }
-    }
-
-    @Override
-    public void onStop() {
-
-        super.onStop();
-
-        /*if(mProfileListener!=null){
-            mProfileReference.removeEventListener(mProfileListener);
-        }
-    }*/
-    }
     //for EditButton in the action bar
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -171,15 +85,12 @@ public class ShowProfile extends AppCompatActivity  implements NavigationView.On
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        //Intent intentMod = new Intent(this, EditProfile.class);
         Intent intentMod = new Intent(this, EditProfile.class);
-        //intentMod.putExtra(EXTRA_PROFILE_KEY,mProfile);
         startActivity(intentMod);
         overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
-
         return true;
     }
-    //
+
     //to close the application on back button
     @Override
     public void onBackPressed() {
@@ -194,96 +105,88 @@ public class ShowProfile extends AppCompatActivity  implements NavigationView.On
 
         if (id == R.id.nav_showProfile) {
             //deve solo chiudersi la navbar
-            DrawerLayout mDrawerLayout;
-            mDrawerLayout = findViewById(R.id.drawer_layout);
-            mDrawerLayout.closeDrawers();
+            drawer.closeDrawers();
             return true;
         } else if (id == R.id.nav_addBook) {
             Intent intentMod = new Intent(this, AddBook.class);
-            //intentMod.putExtra(EXTRA_PROFILE_KEY,mProfile);
             startActivity(intentMod);
             finish();
             return true;
         } else if (id == R.id.nav_home) {
             Intent intentMod = new Intent(this, Home.class);
-            //intentMod.putExtra(EXTRA_PROFILE_KEY,mProfile);
             startActivity(intentMod);
             finish();
             return true;
         }
-
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
     private void getUserInfo(){
         progressbar.setVisibility(View.VISIBLE);
-        //changeIm.setVisibility(View.GONE);
         profileImage.setVisibility(View.GONE);
         FirebaseManagement.getDatabase().getReference().child("users").child(FirebaseManagement.getUser().getUid())
                 .addListenerForSingleValueEvent(new ValueEventListener() {
+
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         profile = dataSnapshot.getValue(Profile.class);
+                        if (profile != null) {
+                            vName.setText(profile.getName());
+                            vName.append(" " + profile.getSurname());
+                            navName.setText(profile.getName());
+                            navName.append(" " + profile.getSurname());
+                            vEmail.setText(profile.getEmail());
+                            navMail.setText(profile.getEmail());
+                            vBio.setText(profile.getDescription());
+                            if (profile.getImage() != null) {
+                                try {
+                                    File localFile = File.createTempFile("images", "jpg");
+                                    StorageReference profileImageRef =
+                                            FirebaseManagement
+                                                    .getStorage()
+                                                    .getReference()
+                                                    .child("users")
+                                                    .child(FirebaseManagement.getUser().getUid())
+                                                    .child("profileimage.jpg");
 
-                        vName.setText(profile.getName() + " " +profile.getSurname());
-                        vEmail.setText(profile.getEmail());
-                        vBio.setText(profile.getDescription());
-                        URL url = null;
-
-                        if(profile.getImage()!=null) {
-                            try {
-                                File localFile = File.createTempFile("images", "jpg");
-
-                                StorageReference profileImageRef = FirebaseManagement.getStorage().getReference()
-                                        .child("users")
-                                        .child(FirebaseManagement.getUser().getUid())
-                                        .child("profileimage.jpg");
-
-                                profileImageRef.getFile(localFile)
-                                        .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                                            @Override
-                                            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                                    profileImageRef.getFile(localFile)
+                                            .addOnSuccessListener(taskSnapshot -> {
                                                 progressbar.setVisibility(View.GONE);
                                                 profileImage.setVisibility(View.VISIBLE);
                                                 profileImage.setImageBitmap(BitmapFactory.decodeFile(localFile.getPath()));
-
-                                            }
-                                        }).addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
+                                                navImage.setImageBitmap(BitmapFactory.decodeFile(localFile.getPath()));
+                                            }).addOnFailureListener(e -> {
                                         progressbar.setVisibility(View.GONE);
                                         profileImage.setVisibility(View.VISIBLE);
-                                    }
-                                });
+                                    });
 
-                            } catch (IOException e) {
-                                e.printStackTrace();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            } else {
+                                progressbar.setVisibility(View.GONE);
+                                profileImage.setVisibility(View.VISIBLE);
+                                navImage.setImageDrawable(getDrawable(R.drawable.default_profile));
                             }
-                        } else {
+                        }else{
+                            vName.setText(getString(R.string.name));
+                            vName.append(" " + getString(R.string.surname));
+                            navName.setText(getString(R.string.name));
+                            navName.append(" " + getString(R.string.surname));
+                            vEmail.setText(getString(R.string.email));
+                            navMail.setText(getString(R.string.email));
+                            vBio.setText(getString(R.string.description));
                             progressbar.setVisibility(View.GONE);
                             profileImage.setVisibility(View.VISIBLE);
+                            navImage.setImageDrawable(getDrawable(R.drawable.default_profile));
                         }
                     }
-
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
                         // Getting Post failed, log a message
-                        Log.w("loadPost:onCancelled", databaseError.toException());
-                        // [START_EXCLUDE]
-                        Toast.makeText(ShowProfile.this, "Failed to load profile.",
-                                Toast.LENGTH_SHORT).show();
-                        // [END_EXCLUDE]
-
                     }
                 });
 
-
-        if(profile==null){
-            vName.setText(getString(R.string.name));
-            vName.append(" " + getString(R.string.surname));
-            vEmail.setText(getString(R.string.email));
-            vBio.setText(getString(R.string.description));
-        }
     }
 }

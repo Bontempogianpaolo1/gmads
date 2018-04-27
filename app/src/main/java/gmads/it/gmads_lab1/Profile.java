@@ -1,27 +1,11 @@
 package gmads.it.gmads_lab1;
 
-import android.graphics.Bitmap;
-import android.util.Log;
-
-
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-
-import java.io.ByteArrayOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class Profile implements Serializable{
-    private String id;
     public String name;
     public String surname;
     public String email;
@@ -30,7 +14,6 @@ public class Profile implements Serializable{
     private long valutation;
     private int npublishedBooks;
     private int ntakenBooks;
-
     private HashMap<String, String> myBooks = new HashMap<>();
     private List<String> publishedBooks= new ArrayList<>();
     private List<String> takenBooks= new ArrayList<>();
@@ -47,7 +30,6 @@ public class Profile implements Serializable{
         npublishedBooks=0;
         ntakenBooks=0;
         nrates=0;
-
     }
 
     public Profile() {
@@ -67,7 +49,10 @@ public class Profile implements Serializable{
     }
 
     public String getName() {
-        return name;
+        if(name!=null)
+            return name;
+        else
+            return "";
     }
 
     public void setName(String name) {

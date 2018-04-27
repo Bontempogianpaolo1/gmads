@@ -59,5 +59,15 @@
     <!-- Facebook Application ID, prefixed by 'fb'. Enables Chrome Custom tabs. -->
     <string name="facebook_login_protocol_scheme" translatable="false">fbAPP_ID</string>
     <string name="bookTitle">Book Details</string>
+    <string name="home">Home</string>
+    <string name="scan3">SCAN</string>
+    <string name="click_to_insert_book">Click to insert book</string>
+    <string name="insert">Insert</string>
+    <string name="categorie">categorie</string>
+    <string name="data">data</string>
+    <string name="editore">editore</string>
+    <string name="autore">autore</string>
+    <string name="descrizione">descrizione</string>
+    <string name="title">Title</string>
     <!--end-->
 </resources>

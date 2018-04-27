@@ -27,57 +27,33 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Objects;
 import java.util.regex.Pattern;
 import static android.graphics.Color.RED;
-
-
 import android.view.WindowManager;
 import android.widget.Toast;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FileDownloadTask;
-import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
 public class EditProfile extends AppCompatActivity {
-    private static final String EXTRA_PROFILE_KEY="my_token";
-    private DatabaseReference mProfileReference;
-    private StorageReference storageReference;
-    private ValueEventListener mProfileListener;
-    private String mProfile;
+
     private Profile profile;
     static final int MY_CAMERA_REQUEST_CODE = 100;
     static final int REQUEST_IMAGE_CAPTURE = 1888;
     static final int REQUEST_IMAGE_LIBRARY = 1889;
     private ImageView profileImage;//profile image
     private ProgressBar progressbar;
-    private Bitmap newBitMapProfileImage; //temp for new image
+    Bitmap newBitMapProfileImage; //temp for new image
     private Uri uriProfileImage;
     private String profileImageUrl;
-    private SharedPreferences prefs;
-    private boolean imagechanged=false;
+    SharedPreferences prefs;
+    boolean imagechanged=false;
     File tempFile;
     Toolbar toolbar;
     ContextWrapper cw;
@@ -98,9 +74,7 @@ public class EditProfile extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
         prefs= PreferenceManager.getDefaultSharedPreferences(this);
-        mProfile=prefs.getString(EXTRA_PROFILE_KEY,null);
-        toolbar = (Toolbar) findViewById(R.id.toolbarEditP);
-        prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        toolbar = findViewById(R.id.toolbar);
         cw = new ContextWrapper(getApplicationContext());
         progressbar = findViewById(R.id.progressBar);
 
@@ -123,31 +97,15 @@ public class EditProfile extends AppCompatActivity {
         profileImage = findViewById(R.id.profile_image);
         profileImage.setImageDrawable(getDrawable(R.drawable.default_profile));
         profileImage.setOnClickListener(this::onClickImage);
-        //findViewById(R.id.selectimage).setOnClickListener(this::onClickImage);
-        //set text components
+
 
         vName = findViewById(R.id.name_input);
-        //vName.setText(Name);
-
         vSurname = findViewById(R.id.surname_input);
-       // vSurname.setText(Surname);
-
         vEmail = findViewById(R.id.email_input);
-       // vEmail.setText(Email);
-
         vBio = findViewById(R.id.address_input);
-       // vBio.setText(Address);
-
-        //changeIm = findViewById(R.id.selectimage);
-
         getUserInfo();
 
     }
-    @Override
-    public void onStart(){
-        super.onStart();
-    }
-
     //save data on click save
     private void onSaveClick() {
 
@@ -160,8 +118,6 @@ public class EditProfile extends AppCompatActivity {
         }
         Pattern pat = Pattern.compile("^([A-Za-z0-9_\\-\\.])+\\@([A-Za-z0-9_\\-\\.])+\\.([A-Za-z]{2,4})$");
         if (!pat.matcher(vEmail.getText()).matches()) {
-            // vEmail.setLinkTextColor(RED);
-
             vEmail.setText("");
             vEmail.setHint(R.string.errorEmail);
             vEmail.setHintTextColor(RED);
@@ -171,26 +127,8 @@ public class EditProfile extends AppCompatActivity {
         Tools t = new Tools();
         //set popup
         android.app.AlertDialog.Builder ad = t.showPopup(this, getString(R.string.saveQuestion), "", getString(R.string.cancel));
-        ad.setPositiveButton("Ok", (vi, w) -> {
-            //prefs.edit().putString("name", vName.getText().toString()).apply();
-            //prefs.edit().putString("surname", vSurname.getText().toString()).apply();
-           // prefs.edit().putString("email", vEmail.getText().toString()).apply();
-           // prefs.edit().putString("address", vBio.getText().toString()).apply();
-           // prefs.edit().putBoolean("save", false).apply();
-            updateUserInfo();
-
-        });
+        ad.setPositiveButton("Ok", (vi, w) -> updateUserInfo());
         ad.show();
-    }
-
-    public void onStop(){
-
-        super.onStop();
-
-        /*if(mProfileListener!=null){
-            mProfileReference.removeEventListener(mProfileListener);
-
-        }*/
     }
 
     //for SaveButton in the action bar
@@ -200,11 +138,13 @@ public class EditProfile extends AppCompatActivity {
         mi.inflate(R.menu.actionbar_editp, menu);
         return true;
     }
+
     private void setFocusOnClick(View v){
         InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         assert imm != null;
         imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
     }
+
     private void onClickImage(View v) {
         Tools t= new Tools();
         //set popup
@@ -239,7 +179,6 @@ public class EditProfile extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
         if (requestCode == MY_CAMERA_REQUEST_CODE) {
 
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -248,9 +187,7 @@ public class EditProfile extends AppCompatActivity {
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
 
             } else {
-
                 Toast.makeText(this, "camera permission denied", Toast.LENGTH_LONG).show();
-
             }
 
         }
@@ -337,9 +274,6 @@ public class EditProfile extends AppCompatActivity {
         String email = vEmail.getText().toString();
         String bio = vBio.getText().toString();
 
-        /*progressbar.setVisibility(View.VISIBLE);
-        changeIm.setVisibility(View.GONE);*/
-
         if(name.isEmpty()){
             vName.setError("Name required");
             vName.requestFocus();
@@ -364,33 +298,22 @@ public class EditProfile extends AppCompatActivity {
         if(uriProfileImage != null){
 
             profileImageRef.putFile(uriProfileImage)
-                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            profileImageUrl = taskSnapshot.getDownloadUrl().toString();
-                            profile.setName(name);
-                            profile.setSurname(surname);
-                            profile.setEmail(email);
-                            profile.setDescription(bio);
-                            profile.setImage(profileImageUrl);
+                    .addOnSuccessListener(taskSnapshot -> {
+                        profileImageUrl = Objects.requireNonNull(taskSnapshot.getDownloadUrl()).toString();
+                        profile.setName(name);
+                        profile.setSurname(surname);
+                        profile.setEmail(email);
+                        profile.setDescription(bio);
+                        profile.setImage(profileImageUrl);
 
-                            FirebaseManagement.updateUserData(profile);
+                        FirebaseManagement.updateUserData(profile);
 
-                            // pickIntent.putExtra(EXTRA_PROFILE_KEY,mProfile).;
-                            //prefs.edit().putString(EXTRA_PROFILE_KEY,mProfile).apply();
-                            // database.setPersistenceEnabled(false);
-                            startActivity(pickIntent);
-                            progressbar.setVisibility(View.GONE);
-                            //changeIm.setVisibility(View.GONE);
+                        startActivity(pickIntent);
+                        progressbar.setVisibility(View.GONE);
+                        //changeIm.setVisibility(View.GONE);
 
-                        }
                     })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            progressbar.setVisibility(View.GONE);
-                        }
-                    });
+                    .addOnFailureListener(e -> progressbar.setVisibility(View.GONE));
         }else{
             profileImageUrl = "";
             profile.setName(name);
@@ -407,55 +330,53 @@ public class EditProfile extends AppCompatActivity {
 
     private void getUserInfo(){
         progressbar.setVisibility(View.VISIBLE);
-        //changeIm.setVisibility(View.GONE);
         profileImage.setVisibility(View.GONE);
         FirebaseManagement.getDatabase().getReference().child("users").child(FirebaseManagement.getUser().getUid())
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         profile = dataSnapshot.getValue(Profile.class);
+                        if(profile != null) {
+                            vName.setText(profile.getName());
+                            vSurname.setText(profile.getSurname());
+                            vEmail.setText(profile.getEmail());
+                            vBio.setText(profile.getDescription());
+                            if (profile.getImage() != null) {
+                                try {
+                                    File localFile = File.createTempFile("images", "jpg");
 
-                        vName.setText(profile.name);
-                        vSurname.setText(profile.surname);
-                        vEmail.setText(profile.email);
-                        vBio.setText(profile.description);
-                        URL url = null;
+                                    StorageReference profileImageRef = FirebaseManagement.getStorage().getReference()
+                                            .child("users")
+                                            .child(FirebaseManagement.getUser().getUid())
+                                            .child("profileimage.jpg");
 
-                        if(profile.getImage()!=null) {
-                            try {
-                                File localFile = File.createTempFile("images", "jpg");
-
-                                StorageReference profileImageRef = FirebaseManagement.getStorage().getReference()
-                                        .child("users")
-                                        .child(FirebaseManagement.getUser().getUid())
-                                        .child("profileimage.jpg");
-
-                                profileImageRef.getFile(localFile)
-                                        .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                                            @Override
-                                            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                                    profileImageRef.getFile(localFile)
+                                            .addOnSuccessListener(taskSnapshot -> {
                                                 progressbar.setVisibility(View.GONE);
                                                 profileImage.setVisibility(View.VISIBLE);
                                                 profileImage.setImageBitmap(BitmapFactory.decodeFile(localFile.getPath()));
 
-                                            }
-                                        }).addOnFailureListener(new OnFailureListener() {
-                                            @Override
-                                            public void onFailure(@NonNull Exception e) {
-                                                progressbar.setVisibility(View.GONE);
-                                                profileImage.setVisibility(View.VISIBLE);
-                                        }
-                                });
-
-                            } catch (IOException e) {
-                                e.printStackTrace();
+                                            }).addOnFailureListener(e -> {
+                                        progressbar.setVisibility(View.GONE);
+                                        profileImage.setVisibility(View.VISIBLE);
+                                    });
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            } else {
+                                progressbar.setVisibility(View.GONE);
+                                profileImage.setVisibility(View.VISIBLE);
                             }
-                        } else {
+                        }
+                        else{
+                            vName.setText(getString(R.string.name));
+                            vSurname.setText(getString(R.string.surname));
+                            vEmail.setText(getString(R.string.email));
+                            vBio.setText(getString(R.string.description));
                             progressbar.setVisibility(View.GONE);
                             profileImage.setVisibility(View.VISIBLE);
                         }
                     }
-
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
                         // Getting Post failed, log a message
@@ -464,17 +385,8 @@ public class EditProfile extends AppCompatActivity {
                         Toast.makeText(EditProfile.this, "Failed to load profile.",
                                 Toast.LENGTH_SHORT).show();
                         // [END_EXCLUDE]
-
                     }
                 });
 
-
-        if(profile==null){
-            vName.setText(getString(R.string.name));
-            vName.append(" " + getString(R.string.surname));
-            vEmail.setText(getString(R.string.email));
-            vBio.setText(getString(R.string.description));
-        }
     }
-
 }
