@@ -58,5 +58,6 @@
     <string name="isbnerror">\nISBN length must be 13</string>
     <!-- Facebook Application ID, prefixed by 'fb'. Enables Chrome Custom tabs. -->
     <string name="facebook_login_protocol_scheme" translatable="false">fbAPP_ID</string>
+    <string name="bookTitle">Book Details</string>
     <!--end-->
 </resources>

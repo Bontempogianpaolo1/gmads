@@ -10,9 +10,22 @@
     tools:context=".SaveBook"
     tools:showIn="@layout/app_bar_save_book">
 
+    <Button
+        android:id="@+id/addphoto"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:background="@drawable/roundedbutton"
+        android:clickable="true"
+        android:focusable="true"
+        android:text="+"
+        android:textColor="#FFFFFF"
+        android:textSize="20dp" />
+
     <ScrollView
         android:id="@+id/scrollView"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal">
 
@@ -25,7 +38,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <TextView
+                <EditText
                     android:id="@+id/title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -35,19 +48,19 @@
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
-                <TextView
+                <EditText
                     android:id="@+id/descrizione"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="100dp"
                     android:layout_below="@id/bookimage"
                     android:layout_centerInParent="true"
                     android:layout_centerVertical="true"
                     android:layout_marginBottom="8dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginStart="8dp"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="30dp"
                     android:background="@drawable/rounded_corner"
-                    android:minHeight="120dp"
+                    android:scrollbars="vertical"
                     android:text="descrizione"
                     android:textAlignment="center" />
 
@@ -62,7 +75,7 @@
                     android:layout_toEndOf="@id/bookimage"
                     android:orientation="vertical">
 
-                    <TextView
+                    <EditText
                         android:id="@+id/autore"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -72,7 +85,7 @@
                         android:layout_marginTop="15dp"
                         android:text="autore" />
 
-                    <TextView
+                    <EditText
                         android:id="@+id/editore"
                         android:layout_width="116dp"
                         android:layout_height="wrap_content"
@@ -85,7 +98,7 @@
                         android:layout_marginTop="5dp"
                         android:text="editore" />
 
-                    <TextView
+                    <EditText
                         android:id="@+id/data"
                         android:layout_width="116dp"
                         android:layout_height="wrap_content"
@@ -98,7 +111,7 @@
                         android:layout_marginTop="5dp"
                         android:text="data" />
 
-                    <TextView
+                    <EditText
                         android:id="@+id/categorie"
                         android:layout_width="116dp"
                         android:layout_height="wrap_content"
@@ -123,6 +136,7 @@
                     android:layout_marginEnd="8dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp" />
+
             </RelativeLayout>
         </LinearLayout>
     </ScrollView>
@@ -135,17 +149,5 @@
         android:layout_centerVertical="true"
         android:visibility="invisible"/>
 
-    <Button
-        android:id="@+id/addphoto"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_margin="16dp"
-        android:background="@drawable/roundedbutton"
-        android:clickable="true"
-        android:focusable="true"
-        android:text="+"
-        android:textColor="#FFFFFF"
-        android:textSize="20dp" />
+
 </RelativeLayout>

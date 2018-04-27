@@ -19,6 +19,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.method.ScrollingMovementMethod;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,6 +30,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -71,6 +74,7 @@ public class SaveBook extends AppCompatActivity{
     FirebaseStorage storage;
     private String user;
     private String isbn;
+    private String urlimage=null;
     static final int MY_CAMERA_REQUEST_CODE = 100;
     static final int REQUEST_IMAGE_CAPTURE = 1888;
     static final int REQUEST_IMAGE_LIBRARY = 1889;
@@ -112,10 +116,6 @@ public class SaveBook extends AppCompatActivity{
             ad.setCancelable(false);
             ad.show();
         }
-        else {
-            findViewById(R.id.ll).setVisibility(View.GONE);
-            findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
-        }
 
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         //isbn = prefs.getString(EXTRA_ISBN,null);
@@ -137,6 +137,7 @@ public class SaveBook extends AppCompatActivity{
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         cw = new ContextWrapper(getApplicationContext());
 
+        toolbar.setTitle(getString(R.string.bookTitle));
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -162,13 +163,21 @@ public class SaveBook extends AppCompatActivity{
         bookImage = findViewById(R.id.bookimage);
         Button add = findViewById(R.id.addphoto);
         add.setOnClickListener(this::onAddPhotoClick);
-        getjson(getApplicationContext(), isbn);
+        boolean isRawData = getIntent().getBooleanExtra("rawData", false);
+        if(!isRawData) {
+            getjson(getApplicationContext(), isbn);
+        } else {
+            isbn = null;
+        }
+        vDescription.setMovementMethod(new ScrollingMovementMethod());
     }
 
     public void getjson(Context c,  String isbn) {
         String url = "https://www.googleapis.com/books/v1/volumes?q=ISBN:<";
         url = url + isbn + ">";
         RequestQueue queue = Volley.newRequestQueue(c);
+        findViewById(R.id.ll).setVisibility(View.GONE);
+        findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
         // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
@@ -179,7 +188,6 @@ public class SaveBook extends AppCompatActivity{
                         String publisher;
                         String publishdate;
                         String categories;
-                        String urlimage;
                         String description;
                         JSONObject resultObject;
                         JSONObject volumeObject;
@@ -253,13 +261,13 @@ public class SaveBook extends AppCompatActivity{
                             String owner = prefs.getString("post_key",null);
                             book = new Book(null,
                                     isbn,
-                                    (String)vTitle.getText(),
+                                    vTitle.getText().toString(),
                                     "",
                                     urlimage,
-                                    (String) vDate.getText(),
-                                    (String) vAuthor.getText(),
-                                    (String)vCategories.getText(),
-                                    (String)vPublisher.getText(),
+                                    vDate.getText().toString(),
+                                    vAuthor.getText().toString(),
+                                    vCategories.getText().toString(),
+                                    vPublisher.getText().toString(),
                                     FirebaseManagement.getUser().getUid());
                     }
                 }, new Response.ErrorListener() {
@@ -290,6 +298,18 @@ public class SaveBook extends AppCompatActivity{
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
         Tools t = new Tools();
+
+        book = new Book(null,
+                isbn,
+                vTitle.getText().toString(),
+                "",
+                urlimage,
+                vDate.getText().toString(),
+                vAuthor.getText().toString(),
+                vCategories.getText().toString(),
+                vPublisher.getText().toString(),
+                FirebaseManagement.getUser().getUid());
+
         //set popup
         android.app.AlertDialog.Builder ad = t.showPopup(this, getString(R.string.saveQuestion), "", getString(R.string.cancel));
         ad.setPositiveButton("Ok", (vi, w) -> {
@@ -320,43 +340,45 @@ public class SaveBook extends AppCompatActivity{
                     });
 
             //storageReference = storage.getReference().child("books").child(bookKey).child("image.jpg");
+            if(newBitMapBookImage!=null) {
+                storageReference = storage.getReference().child("books").child(this.book.getBId()).child("personal_images").child("1.jpg");
 
-            storageReference = storage.getReference().child("books").child(this.book.getBId()).child("personal_images").child("1.jpg");
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            newBitMapBookImage.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-            byte[] data = baos.toByteArray();
+                newBitMapBookImage.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                byte[] data = baos.toByteArray();
 
 
-            UploadTask uploadTask = storageReference.putBytes(data);
-            uploadTask.addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception exception) {
-                    toastMessage("Upload failed");
-                }
-            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
-                    Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                    toastMessage("Image upload successful");
-                    progressDialog.dismiss();
-                }
-            });
+                UploadTask uploadTask = storageReference.putBytes(data);
+                uploadTask.addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        toastMessage("Upload failed");
+                    }
+                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+                        Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                        toastMessage("Image upload successful");
+                        progressDialog.dismiss();
+                    }
+                });
 
-            //saveImage(newBitMapBookImage);
+                //saveImage(newBitMapBookImage);
 
-            storageReference.putFile(Uri.fromFile(new File(path))).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                storageReference.putFile(Uri.fromFile(new File(path))).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
 
-                }
-            });
+                    }
+                });
+            }
 
             Intent pickIntent = new Intent(this, ShowProfile.class);
             // pickIntent.putExtra(EXTRA_ISBN,isbn).;
@@ -387,7 +409,7 @@ public class SaveBook extends AppCompatActivity{
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater mi = getMenuInflater();
-        mi.inflate(R.menu.actionbar_editp, menu);
+        mi.inflate(R.menu.save_book, menu);
         return true;
     }
     private void setFocusOnClick(View v){
@@ -457,6 +479,7 @@ public class SaveBook extends AppCompatActivity{
             Bundle imageUri = data.getExtras();
             assert imageUri != null;
             newBitMapBookImage = (Bitmap) imageUri.get("data");
+            bookImage.loadUrl(bitmapToUrl(newBitMapBookImage));
 
            // bookImage.setImageBitmap(newBitMapBookImage);
             //manage request image from gallery
@@ -467,6 +490,7 @@ public class SaveBook extends AppCompatActivity{
                 assert imageUri != null;
                 final InputStream imageStream = getContentResolver().openInputStream(imageUri);
                 newBitMapBookImage = BitmapFactory.decodeStream(imageStream);
+                bookImage.loadUrl(bitmapToUrl(newBitMapBookImage));
                 //bookImage.setImageBitmap(newBitMapBookImage);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -528,6 +552,16 @@ public class SaveBook extends AppCompatActivity{
         } catch (Exception e) {
             return null;
         }
+    }
+
+    public String bitmapToUrl(Bitmap imageBitmap){
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+        byte[] byteArray = byteArrayOutputStream.toByteArray();
+        String imgageBase64 = Base64.encodeToString(byteArray, Base64.DEFAULT);
+        String dataURL= "data:image/png;base64," + imgageBase64;
+
+        return dataURL;
     }
 
 }

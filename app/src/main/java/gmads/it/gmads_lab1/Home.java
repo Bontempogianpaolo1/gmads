@@ -58,7 +58,7 @@ public class Home extends AppCompatActivity  implements NavigationView.OnNavigat
         mProfile= prefs.getString(EXTRA_PROFILE_KEY,null);
         database= FirebaseManagement.getDatabase();
         if(mProfile==null){
-            database.setPersistenceEnabled((true));
+            //database.setPersistenceEnabled((true));
         }
         if(mProfile!=null) {
             mProfileReference = FirebaseDatabase.getInstance().getReference().child("users").child(mProfile);
@@ -119,17 +119,7 @@ public class Home extends AppCompatActivity  implements NavigationView.OnNavigat
                         e.printStackTrace();
                     }
                 } else {//default image
-                    File directory = getApplicationContext().getDir(getString(R.string.imageDirectory), Context.MODE_PRIVATE);
-                    String path = directory.getPath();
-                    File f = new File(path, "profileimage.jpg");
-                    if (f.exists()) {
-                        try {
-                            Bitmap image = BitmapFactory.decodeStream(new FileInputStream(f));
-                            navImage.setImageBitmap(image);
-                        } catch (FileNotFoundException e) {
-                            e.printStackTrace();
-                        }
-                    }
+                            navImage.setImageDrawable(getDrawable(R.drawable.default_profile));
                 }
             }
 

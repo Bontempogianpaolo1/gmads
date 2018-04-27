@@ -1,27 +1,21 @@
 package gmads.it.gmads_lab1;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.KeyEvent;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -31,29 +25,22 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.animation.ScaleAnimation;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Objects;
-
-import static gmads.it.gmads_lab1.EditProfile.REQUEST_IMAGE_LIBRARY;
 
 public class AddBook extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -64,12 +51,14 @@ public class AddBook extends AppCompatActivity
     private String ISBNcode = null;
     //private TextView textViewISBN;
     private Button ISBNbutton;
-    private Button next;
+    private Button insertButton;
+    private ImageView next;
     private EditText editISBN;
     //private Bitmap barcodeBitmap;
     Toolbar toolbar;
     SharedPreferences prefs;
     DrawerLayout drawer;
+    private Profile profile;
 
     private static final String EXTRA_PROFILE_KEY="my_token";
     private DatabaseReference mProfileReference;
@@ -99,7 +88,7 @@ public class AddBook extends AppCompatActivity
 
         //toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarAddBook);
-        toolbar.setTitle(getString(R.string.addBook));
+        toolbar.setTitle("Scanner");
         setSupportActionBar(toolbar);
 
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -128,12 +117,14 @@ public class AddBook extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         //--fine navbar
 
-        this.editISBN = (EditText) findViewById(R.id.textViewISBN);
-        this.ISBNbutton = findViewById(R.id.isbn_image_button);
-        this.next = findViewById(R.id.isbn_next_button);
+        this.editISBN = (EditText) findViewById(R.id.tvIsbn);
+        this.ISBNbutton = findViewById(R.id.scan);
+        this.next = findViewById(R.id.next);
+        this.insertButton = findViewById(R.id.insertInfoButton);
 
         next.setOnClickListener(this::onNextClick);
         ISBNbutton.setOnClickListener(this::onGetISBNClick);
+        insertButton.setOnClickListener(this::onInsertClick);
     }
     @Override
     public void onStart() {
@@ -148,6 +139,28 @@ public class AddBook extends AppCompatActivity
                     navName.setText(myuser.getName());
                     navName.append(" " + myuser.getSurname());
                     navMail.setText(myuser.getEmail());
+
+                    //setto foto
+                    profile = dataSnapshot.getValue(Profile.class);
+
+
+                    if(Objects.requireNonNull(profile).getImage()!=null) {
+                        try {
+                            File localFile = File.createTempFile("image", "jpg");
+                            StorageReference profileImageRef = FirebaseManagement.getStorage().getReference()
+                                    .child("users")
+                                    .child(FirebaseManagement.getUser().getUid())
+                                    .child("profileimage.jpg");
+
+                            profileImageRef.getFile(localFile)
+                                    .addOnSuccessListener(taskSnapshot -> navImage.setImageBitmap(BitmapFactory.decodeFile(localFile.getPath())))
+                                    .addOnFailureListener(e -> Log.d("errore",e.toString()));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    } else {//default image
+                        navImage.setImageDrawable(getDrawable(R.drawable.default_profile));
+                    }
                 }
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
@@ -201,7 +214,7 @@ public class AddBook extends AppCompatActivity
 
     public void onNextClick(View v){
 
-            if(this.ISBNcode.length()!=13){
+            if(this.ISBNcode== null || this.ISBNcode.length()!=13){
                 Tools t= new Tools();
                 t.showPopup(this,getString(R.string.isbnerror),"", "Ok").show();
             }else {
@@ -235,13 +248,6 @@ public class AddBook extends AppCompatActivity
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -284,6 +290,26 @@ public class AddBook extends AppCompatActivity
         }
     }
 
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == ZBAR_CAMERA_PERMISSION) {
+
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(takePictureIntent, REQUEST_ISBN_IMAGE);
+
+            } else {
+
+                Toast.makeText(this, "camera permission denied", Toast.LENGTH_LONG).show();
+
+            }
+
+        }
+    }
+
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
        if(requestCode == REQUEST_ISBN_IMAGE) {
            if(resultCode == RESULT_OK) {
@@ -291,6 +317,12 @@ public class AddBook extends AppCompatActivity
                editISBN.setText(this.ISBNcode);
            }
        }
+    }
+
+    private void onInsertClick(View v){
+        Intent intent = new Intent(this, SaveBook.class);
+        intent.putExtra("rawData", true);
+        startActivity(intent);
     }
     /*
 

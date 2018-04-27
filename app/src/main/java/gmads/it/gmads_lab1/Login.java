@@ -28,12 +28,12 @@ public class Login extends AppCompatActivity {
             // already signed in
             //se è gia loggato invio alla classe home uid e chiudo l'attività
             FirebaseManagement.loginUser();
-            Intent intent = new Intent(Login.this, Home.class);
-            intent.addFlags(intent.FLAG_ACTIVITY_CLEAR_TOP);
+            Intent intent = new Intent(this, Home.class);
+            //intent.addFlags(intent.FLAG_ACTIVITY_CLEAR_TOP);
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
             prefs.edit().putString("my_token", FirebaseManagement.getUser().getUid()).apply();
             startActivity(intent);
-            finish();
+            //finish();
         } else {
             //se non è loggato mi loggo attraverso l'attività di firebase
             /*
