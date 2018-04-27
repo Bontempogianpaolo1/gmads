@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
@@ -14,6 +15,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -34,7 +36,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.StorageReference;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Objects;
 
 public class AddBook extends AppCompatActivity
@@ -46,12 +51,14 @@ public class AddBook extends AppCompatActivity
     private String ISBNcode = null;
     //private TextView textViewISBN;
     private Button ISBNbutton;
+    private Button insertButton;
     private ImageView next;
     private EditText editISBN;
     //private Bitmap barcodeBitmap;
     Toolbar toolbar;
     SharedPreferences prefs;
     DrawerLayout drawer;
+    private Profile profile;
 
     private static final String EXTRA_PROFILE_KEY="my_token";
     private DatabaseReference mProfileReference;
@@ -113,9 +120,11 @@ public class AddBook extends AppCompatActivity
         this.editISBN = (EditText) findViewById(R.id.tvIsbn);
         this.ISBNbutton = findViewById(R.id.scan);
         this.next = findViewById(R.id.next);
+        this.insertButton = findViewById(R.id.insertInfoButton);
 
         next.setOnClickListener(this::onNextClick);
         ISBNbutton.setOnClickListener(this::onGetISBNClick);
+        insertButton.setOnClickListener(this::onInsertClick);
     }
     @Override
     public void onStart() {
@@ -130,6 +139,28 @@ public class AddBook extends AppCompatActivity
                     navName.setText(myuser.getName());
                     navName.append(" " + myuser.getSurname());
                     navMail.setText(myuser.getEmail());
+
+                    //setto foto
+                    profile = dataSnapshot.getValue(Profile.class);
+
+
+                    if(Objects.requireNonNull(profile).getImage()!=null) {
+                        try {
+                            File localFile = File.createTempFile("image", "jpg");
+                            StorageReference profileImageRef = FirebaseManagement.getStorage().getReference()
+                                    .child("users")
+                                    .child(FirebaseManagement.getUser().getUid())
+                                    .child("profileimage.jpg");
+
+                            profileImageRef.getFile(localFile)
+                                    .addOnSuccessListener(taskSnapshot -> navImage.setImageBitmap(BitmapFactory.decodeFile(localFile.getPath())))
+                                    .addOnFailureListener(e -> Log.d("errore",e.toString()));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    } else {//default image
+                        navImage.setImageDrawable(getDrawable(R.drawable.default_profile));
+                    }
                 }
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
@@ -286,6 +317,12 @@ public class AddBook extends AppCompatActivity
                editISBN.setText(this.ISBNcode);
            }
        }
+    }
+
+    private void onInsertClick(View v){
+        Intent intent = new Intent(this, SaveBook.class);
+        intent.putExtra("rawData", true);
+        startActivity(intent);
     }
     /*
 

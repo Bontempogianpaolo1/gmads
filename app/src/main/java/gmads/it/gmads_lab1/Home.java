@@ -119,17 +119,7 @@ public class Home extends AppCompatActivity  implements NavigationView.OnNavigat
                         e.printStackTrace();
                     }
                 } else {//default image
-                    File directory = getApplicationContext().getDir(getString(R.string.imageDirectory), Context.MODE_PRIVATE);
-                    String path = directory.getPath();
-                    File f = new File(path, "profileimage.jpg");
-                    if (f.exists()) {
-                        try {
-                            Bitmap image = BitmapFactory.decodeStream(new FileInputStream(f));
-                            navImage.setImageBitmap(image);
-                        } catch (FileNotFoundException e) {
-                            e.printStackTrace();
-                        }
-                    }
+                            navImage.setImageDrawable(getDrawable(R.drawable.default_profile));
                 }
             }
 
