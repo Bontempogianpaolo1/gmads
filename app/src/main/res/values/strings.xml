@@ -69,5 +69,6 @@
     <string name="autore">autore</string>
     <string name="descrizione">descrizione</string>
     <string name="title">Title</string>
+    <string name="Uploading">Uploading...</string>
     <!--end-->
 </resources>

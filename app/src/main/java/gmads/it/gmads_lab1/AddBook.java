@@ -50,7 +50,6 @@ public class AddBook extends AppCompatActivity
     Toolbar toolbar;
     SharedPreferences prefs;
     DrawerLayout drawer;
-    private Profile profile;
     private DatabaseReference mProfileReference;
     ValueEventListener mProfileListener;
     private TextView navName;
@@ -80,9 +79,9 @@ public class AddBook extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         headerView.setBackgroundResource(R.color.colorPrimaryDark);
-        next.setOnClickListener(this::onNextClick);
-        ISBNbutton.setOnClickListener(this::onGetISBNClick);
-        insertButton.setOnClickListener(this::onInsertClick);
+        next.setOnClickListener(v->onNextClick());
+        ISBNbutton.setOnClickListener(v->onGetISBNClick());
+        insertButton.setOnClickListener(v->onInsertClick());
     }
     public void findNavViews(){
         drawer =  findViewById(R.id.drawer_layout);
@@ -101,7 +100,6 @@ public class AddBook extends AppCompatActivity
         this.ISBNbutton = findViewById(R.id.scan);
         this.next = findViewById(R.id.next);
         this.insertButton = findViewById(R.id.insertInfoButton);
-
     }
     @Override
     public void onStart() {
@@ -116,7 +114,6 @@ public class AddBook extends AppCompatActivity
                     navName.append(" " + myuser.getSurname());
                     navMail.setText(myuser.getEmail());
                     //setto foto
-
                     if (Objects.requireNonNull(myuser).getImage() != null) {
                         try {
                             File localFile = File.createTempFile("image", "jpg");
@@ -148,7 +145,6 @@ public class AddBook extends AppCompatActivity
         };
         mProfileReference.addValueEventListener(postListener);
         mProfileListener = postListener;
-
         TextWatcher textWatcher = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -168,10 +164,11 @@ public class AddBook extends AppCompatActivity
     }
 
     public void setISBNcode(String isbn){
+
         this.ISBNcode = isbn;
     }
 
-    public void onNextClick(View v){
+    public void onNextClick(){
 
             if(this.ISBNcode== null || this.ISBNcode.length()!=13){
                 Tools t= new Tools();
@@ -213,8 +210,6 @@ public class AddBook extends AppCompatActivity
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        DrawerLayout mDrawerLayout;
-        mDrawerLayout = findViewById(R.id.drawer_layout);
         if (id == R.id.nav_showProfile) {
             // Handle the camera action
             Intent intentMod = new Intent(this, ShowProfile.class);
@@ -222,19 +217,17 @@ public class AddBook extends AppCompatActivity
             return true;
         } else if (id == R.id.nav_addBook) {
             //deve solo chiudersi la navbar
-            mDrawerLayout.closeDrawers();
+            drawer.closeDrawers();
         } else if(id == R.id.nav_home){
             Intent intentMod = new Intent(this, Home.class);
             startActivity(intentMod);
             return true;
         }
-
-
-        mDrawerLayout.closeDrawer(GravityCompat.START);
+        drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
-    private void onGetISBNClick( View v) {
+    private void onGetISBNClick() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
@@ -248,7 +241,6 @@ public class AddBook extends AppCompatActivity
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
         if (requestCode == ZBAR_CAMERA_PERMISSION) {
 
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -272,10 +264,9 @@ public class AddBook extends AppCompatActivity
        }
     }
 
-    private void onInsertClick(View v){
+    private void onInsertClick(){
         Intent intent = new Intent(this, SaveBook.class);
         intent.putExtra("rawData", true);
         startActivity(intent);
     }
-
 }

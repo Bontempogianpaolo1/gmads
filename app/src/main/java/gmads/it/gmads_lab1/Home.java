@@ -24,16 +24,13 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 import java.io.File;
 import java.io.IOException;
-import java.util.Objects;
 
 public class Home extends AppCompatActivity  implements NavigationView.OnNavigationItemSelectedListener{
 
     DatabaseReference mProfileReference;
-    public ValueEventListener mProfileListener;
     private TextView navName;
     private TextView navMail;
     private ImageView navImage;
-    private Profile profile;
     Toolbar toolbar;
     DrawerLayout drawer;
     NavigationView navigationView;

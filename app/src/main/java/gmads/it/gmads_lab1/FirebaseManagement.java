@@ -58,7 +58,6 @@ public static DatabaseReference getUserReference(){
         if(User != null) {
             Database.getReference().child("users").child(User.getUid()).setValue(profile);
         }
-
     }
 
     public static void createUser(Context context, String email){
@@ -77,5 +76,4 @@ public static DatabaseReference getUserReference(){
         User = Auth.getCurrentUser();
         ProfileInfoSync.pISInstance.loadProfileInfo();
     }
-
 }

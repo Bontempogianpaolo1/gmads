@@ -369,10 +369,10 @@ public class EditProfile extends AppCompatActivity {
                             }
                         }
                         else{
-                            vName.setText(getString(R.string.name));
-                            vSurname.setText(getString(R.string.surname));
-                            vEmail.setText(getString(R.string.email));
-                            vBio.setText(getString(R.string.description));
+                            vName.setHint(getString(R.string.name));
+                            vSurname.setHint(getString(R.string.surname));
+                            vEmail.setHint(getString(R.string.email));
+                            vBio.setHint(getString(R.string.description));
                             progressbar.setVisibility(View.GONE);
                             profileImage.setVisibility(View.VISIBLE);
                         }

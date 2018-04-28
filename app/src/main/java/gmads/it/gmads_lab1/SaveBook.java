@@ -267,11 +267,10 @@ public void findActViews(){
             String bookKey = mBooksReference.push().getKey();
             mBooksReference.child(bookKey).setValue(book);
             final ProgressDialog progressDialog = new ProgressDialog(this);
-            progressDialog.setTitle("Uploading...");
+            progressDialog.setTitle(getString(R.string.Uploading));
             progressDialog.show();
             book.setBId(bookKey);
             mProfileReference.child("myBooks").child(bookKey).setValue(book.getIsbn())
-                    .addOnSuccessListener(aVoid -> Log.v("OK", "BOMBAZZA"))
                     .addOnFailureListener(e -> Log.v("ERR", e.getMessage()));
 
             if(newBitMapBookImage!=null) {
