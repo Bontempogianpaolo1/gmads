@@ -43,7 +43,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="16dp"
-                    android:text="Title"
+                    android:hint="@string/title"
                     android:textAlignment="center"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -60,8 +60,9 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="30dp"
                     android:background="@drawable/rounded_corner"
+                    android:hint="@string/descrizione"
+                    android:inputType="text"
                     android:scrollbars="vertical"
-                    android:text="descrizione"
                     android:textAlignment="center" />
 
                 <RelativeLayout
@@ -83,7 +84,8 @@
                         android:layout_marginLeft="5dp"
                         android:layout_marginRight="5dp"
                         android:layout_marginTop="15dp"
-                        android:text="autore" />
+                        android:hint="@string/autore"
+                        android:inputType="text" />
 
                     <EditText
                         android:id="@+id/editore"
@@ -96,7 +98,8 @@
                         android:layout_marginRight="5dp"
                         android:layout_marginStart="5dp"
                         android:layout_marginTop="5dp"
-                        android:text="editore" />
+                        android:hint="@string/editore"
+                        android:inputType="text" />
 
                     <EditText
                         android:id="@+id/data"
@@ -109,7 +112,8 @@
                         android:layout_marginRight="5dp"
                         android:layout_marginStart="5dp"
                         android:layout_marginTop="5dp"
-                        android:text="data" />
+                        android:hint="@string/data"
+                        android:inputType="text|datetime" />
 
                     <EditText
                         android:id="@+id/categorie"
@@ -122,7 +126,8 @@
                         android:layout_marginRight="5dp"
                         android:layout_marginStart="5dp"
                         android:layout_marginTop="5dp"
-                        android:text="categorie" />
+                        android:hint="@string/categorie"
+                        android:inputType="text" />
 
                 </RelativeLayout>
 
