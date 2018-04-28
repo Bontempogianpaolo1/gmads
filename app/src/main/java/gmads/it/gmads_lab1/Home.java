@@ -68,7 +68,6 @@ public class Home extends AppCompatActivity  implements NavigationView.OnNavigat
                 .getReference()
                 .child("users")
                 .child(FirebaseManagement.getUser().getUid());
-
         mProfileReference.keepSynced(true);
 
         ValueEventListener postListener = new ValueEventListener() {

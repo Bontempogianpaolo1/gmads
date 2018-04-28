@@ -146,7 +146,7 @@ public class AddBook extends AppCompatActivity
     }
     public void onNextClick(){
             String ISBNcode=editISBN.getText().toString();
-            if(this.ISBNcode== null || this.ISBNcode.length()!=13){
+            if(ISBNcode.length() != 13){
                 Tools t= new Tools();
                 t.showPopup(this,getString(R.string.isbnerror),"", "Ok").show();
             }else {
