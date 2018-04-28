@@ -177,7 +177,7 @@ public class EditProfile extends AppCompatActivity {
                 Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             } else {
-                Toast.makeText(this, "camera permission denied", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, R.string.permission_denied, Toast.LENGTH_LONG).show();
             }
 
         }
@@ -262,17 +262,17 @@ public class EditProfile extends AppCompatActivity {
         String bio = vBio.getText().toString();
 
         if(name.isEmpty()){
-            vName.setError("Name required");
+            vName.setError(getString(R.string.name_require));
             vName.requestFocus();
             return;
         }
         if(surname.isEmpty()){
-            vSurname.setError("Surname required");
+            vSurname.setError(getString(R.string.surname_required));
             vSurname.requestFocus();
             return;
         }
         if(email.isEmpty()){
-            vEmail.setError("Email required");
+            vEmail.setError(getString(R.string.email_required));
             vEmail.requestFocus();
             return;
         }
@@ -365,7 +365,7 @@ public class EditProfile extends AppCompatActivity {
                         // Getting Post failed, log a message
                         Log.w("loadPost:onCancelled", databaseError.toException());
                         // [START_EXCLUDE]
-                        Toast.makeText(EditProfile.this, "Failed to load profile.",
+                        Toast.makeText(EditProfile.this, R.string.Failed_to_load_profile,
                                 Toast.LENGTH_SHORT).show();
                         // [END_EXCLUDE]
                     }

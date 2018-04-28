@@ -51,7 +51,7 @@
         android:layout_marginRight="16dp"
         android:layout_marginTop="16dp"
         android:layout_weight="0.1"
-        android:textSize="20sp"
+        android:textSize="@dimen/name_dimen"
         android:textStyle="bold" />
 
     <View
@@ -66,7 +66,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:text="@string/email"
-        android:textSize="15sp"
+        android:textSize="@dimen/label"
         android:textStyle="bold|italic"
         tools:ignore="RtlHardcoded" />
 
@@ -87,7 +87,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:text="@string/bio"
-        android:textSize="15sp"
+        android:textSize="@dimen/label"
         android:textStyle="bold|italic"
         tools:ignore="RtlHardcoded" />
 

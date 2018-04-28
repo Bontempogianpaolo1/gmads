@@ -33,8 +33,8 @@ public class Login extends AppCompatActivity {
         } else {
             //se non è loggato mi loggo attraverso l'attività di firebase
             /*
-            TODO assegnare login a facebook e google
-             */
+            TODO assegnare login a facebook
+            */
 
             startActivityForResult(
                     AuthUI.getInstance()

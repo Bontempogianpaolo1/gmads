@@ -24,7 +24,7 @@
             android:id="@+id/imageView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:contentDescription="@strng/home"
+            android:contentDescription="@string/home"
             app:srcCompat="@drawable/ic_home_black_24dp"
             tools:layout_editor_absoluteX="189dp"
             tools:layout_editor_absoluteY="299dp" />
