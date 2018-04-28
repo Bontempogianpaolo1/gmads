@@ -26,6 +26,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.auth.api.Auth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -197,6 +200,12 @@ public class AddBook extends AppCompatActivity
         } else if(id == R.id.nav_home){
             Intent intentMod = new Intent(this, Home.class);
             startActivity(intentMod);
+            return true;
+        }else if(id == R.id.nav_logout){
+            AuthUI.getInstance().signOut(this).addOnCompleteListener(v->{
+                startActivity(new Intent(this,Login.class));
+                finish();
+            });
             return true;
         }
         drawer.closeDrawer(GravityCompat.START);

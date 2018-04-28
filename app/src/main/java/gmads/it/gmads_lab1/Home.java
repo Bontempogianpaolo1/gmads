@@ -17,6 +17,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -35,7 +37,7 @@ public class Home extends AppCompatActivity  implements NavigationView.OnNavigat
     DrawerLayout drawer;
     NavigationView navigationView;
     View headerView;
-
+    boolean uploaded=false;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
@@ -63,59 +65,61 @@ public class Home extends AppCompatActivity  implements NavigationView.OnNavigat
     @Override
     public void onStart(){
         super.onStart();
-        mProfileReference = FirebaseManagement
-                .getDatabase()
-                .getReference()
-                .child("users")
-                .child(FirebaseManagement.getUser().getUid());
-        mProfileReference.keepSynced(true);
+        if(!uploaded) {
+            uploaded=true;
+            mProfileReference = FirebaseManagement
+                    .getDatabase()
+                    .getReference()
+                    .child("users")
+                    .child(FirebaseManagement.getUser().getUid());
+            mProfileReference.keepSynced(true);
 
-        ValueEventListener postListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Profile myuser = dataSnapshot.getValue(Profile.class);
-                if(myuser!=null) {
-                    //dati navbar
-                    navName.setText(myuser.getName());
-                    navName.append(" " + myuser.getSurname());
-                    navMail.setText(myuser.getEmail());
-                    //setto foto
-                    if (myuser.getImage() != null) {
-                        try {
-                            File localFile = File.createTempFile("image", "jpg");
-                            StorageReference profileImageRef = FirebaseManagement
-                                    .getStorage()
-                                    .getReference()
-                                    .child("users")
-                                    .child(FirebaseManagement.getUser().getUid())
-                                    .child("profileimage.jpg");
+            ValueEventListener postListener = new ValueEventListener() {
+                @Override
+                public void onDataChange( DataSnapshot dataSnapshot ) {
+                    Profile myuser = dataSnapshot.getValue(Profile.class);
+                    if (myuser != null) {
+                        //dati navbar
+                        navName.setText(myuser.getName());
+                        navName.append(" " + myuser.getSurname());
+                        navMail.setText(myuser.getEmail());
+                        //setto foto
+                        if (myuser.getImage() != null) {
+                            try {
+                                File localFile = File.createTempFile("image", "jpg");
+                                StorageReference profileImageRef = FirebaseManagement
+                                        .getStorage()
+                                        .getReference()
+                                        .child("users")
+                                        .child(FirebaseManagement.getUser().getUid())
+                                        .child("profileimage.jpg");
 
-                            profileImageRef
-                                    .getFile(localFile)
-                                    .addOnSuccessListener(taskSnapshot -> navImage.setImageBitmap(BitmapFactory.decodeFile(localFile.getPath())))
-                                    .addOnFailureListener(e -> Log.d("errore", e.toString()));
-                        } catch (IOException e) {
-                            e.printStackTrace();
+                                profileImageRef
+                                        .getFile(localFile)
+                                        .addOnSuccessListener(taskSnapshot -> navImage.setImageBitmap(BitmapFactory.decodeFile(localFile.getPath())))
+                                        .addOnFailureListener(e -> Log.d("errore", e.toString()));
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+                            //default image
+                            navImage.setImageDrawable(getDrawable(R.drawable.default_profile));
                         }
                     } else {
-                        //default image
+                        navName.setText(getString(R.string.name));
+                        navName.append(" " + getString(R.string.surname));
+                        navMail.setText(getString(R.string.email));
                         navImage.setImageDrawable(getDrawable(R.drawable.default_profile));
                     }
-                }else{
-                    navName.setText(getString(R.string.name));
-                    navName.append(" " + getString(R.string.surname));
-                    navMail.setText(getString(R.string.email));
-                    navImage.setImageDrawable(getDrawable(R.drawable.default_profile));
                 }
-            }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.d("error",databaseError.getDetails());
-            }
-        };
-        mProfileReference.addValueEventListener(postListener);
-
+                @Override
+                public void onCancelled( DatabaseError databaseError ) {
+                    Log.d("error", databaseError.getDetails());
+                }
+            };
+            mProfileReference.addValueEventListener(postListener);
+        }
     }
 
     //for EditButton in the action bar
@@ -158,6 +162,12 @@ public class Home extends AppCompatActivity  implements NavigationView.OnNavigat
         } else if (id == R.id.nav_home) {
             //deve solo chiudersi la navbar
             drawer.closeDrawers();
+            return true;
+        }else if(id == R.id.nav_logout){
+            AuthUI.getInstance().signOut(this).addOnCompleteListener(v->{
+                startActivity(new Intent(this,Login.class));
+                finish();
+            });
             return true;
         }else{
             drawer.closeDrawer(GravityCompat.START);
