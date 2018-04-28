@@ -27,10 +27,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -38,6 +37,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -60,7 +60,7 @@ public class SaveBook extends AppCompatActivity{
     static final int MY_CAMERA_REQUEST_CODE = 100;
     static final int REQUEST_IMAGE_CAPTURE = 1888;
     static final int REQUEST_IMAGE_LIBRARY = 1889;
-    private WebView bookImage;//profile image
+    private ImageView bookImage;//profile image
     private Bitmap newBitMapBookImage; //temp for new image
     private SharedPreferences prefs;
     boolean imagechanged=false;
@@ -129,7 +129,6 @@ public void findActViews(){
     vPublisher = findViewById(R.id.editore);
     vDescription = findViewById(R.id.descrizione);
     bookImage = findViewById(R.id.bookimage);
-    bookImage.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NORMAL);
     progressBar=findViewById(R.id.progressBar);
     ll=findViewById(R.id.ll);
     add = findViewById(R.id.addphoto);
@@ -219,7 +218,8 @@ public void findActViews(){
                         }catch(Exception e){
                             vDescription.setText(R.string.descriptionNotFound);
                         }
-                        bookImage.loadUrl("https://process.filestackapi.com/AhTgLagciQByzXpFGRI0Az/resize=width:128,height:200/"+  urlimage);
+                        Glide.with(this).load(urlimage).into((ImageView)findViewById(R.id.bookimage));
+
                         progressBar.setVisibility(View.GONE);
                         ll.setVisibility(View.VISIBLE);
                         prefs = PreferenceManager.getDefaultSharedPreferences(c);
@@ -264,6 +264,7 @@ public void findActViews(){
         //set popup
         android.app.AlertDialog.Builder ad = t.showPopup(this, getString(R.string.saveQuestion), "", getString(R.string.cancel));
         ad.setPositiveButton("Ok", (vi, w) -> {
+            mBooksReference=FirebaseManagement.getDatabase().getReference().child("books");
             String bookKey = mBooksReference.push().getKey();
             mBooksReference.child(bookKey).setValue(book);
             final ProgressDialog progressDialog = new ProgressDialog(this);
@@ -357,10 +358,9 @@ public void findActViews(){
         if (requestCode == REQUEST_IMAGE_CAPTURE  && resultCode == RESULT_OK) {
             imagechanged=true;
             Bundle imageUri = data.getExtras();
-            assert imageUri != null;
-            newBitMapBookImage = (Bitmap) imageUri.get("data");
-            bookImage.loadUrl(bitmapToUrl(newBitMapBookImage));
-
+            newBitMapBookImage = (Bitmap) Objects.requireNonNull(imageUri).get("data");
+            //bookImage.loadUrl(bitmapToUrl(newBitMapBookImage));
+            bookImage.setImageBitmap(newBitMapBookImage);
            // bookImage.setImageBitmap(newBitMapBookImage);
             //manage request image from gallery
         } else if ( requestCode==REQUEST_IMAGE_LIBRARY && resultCode == RESULT_OK) {
@@ -370,7 +370,8 @@ public void findActViews(){
                 assert imageUri != null;
                 final InputStream imageStream = getContentResolver().openInputStream(imageUri);
                 newBitMapBookImage = BitmapFactory.decodeStream(imageStream);
-                bookImage.loadUrl(bitmapToUrl(newBitMapBookImage));
+               // bookImage.loadUrl(bitmapToUrl(newBitMapBookImage));
+                bookImage.setImageBitmap(newBitMapBookImage);
                 //bookImage.setImageBitmap(newBitMapBookImage);
             } catch (IOException e) {
                 e.printStackTrace();

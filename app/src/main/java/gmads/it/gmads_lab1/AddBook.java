@@ -11,8 +11,6 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -28,6 +26,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.auth.api.Auth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -145,32 +146,10 @@ public class AddBook extends AppCompatActivity
         };
         mProfileReference.addValueEventListener(postListener);
         mProfileListener = postListener;
-        TextWatcher textWatcher = new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                setISBNcode(String.valueOf(charSequence));
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-            }
-        };
-        editISBN.addTextChangedListener(textWatcher);
     }
-
-    public void setISBNcode(String isbn){
-
-        this.ISBNcode = isbn;
-    }
-
     public void onNextClick(){
-
-            if(this.ISBNcode== null || this.ISBNcode.length()!=13){
+            String ISBNcode=editISBN.getText().toString();
+            if(ISBNcode.length() != 13){
                 Tools t= new Tools();
                 t.showPopup(this,getString(R.string.isbnerror),"", "Ok").show();
             }else {
@@ -221,6 +200,12 @@ public class AddBook extends AppCompatActivity
         } else if(id == R.id.nav_home){
             Intent intentMod = new Intent(this, Home.class);
             startActivity(intentMod);
+            return true;
+        }else if(id == R.id.nav_logout){
+            AuthUI.getInstance().signOut(this).addOnCompleteListener(v->{
+                startActivity(new Intent(this,Login.class));
+                finish();
+            });
             return true;
         }
         drawer.closeDrawer(GravityCompat.START);

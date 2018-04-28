@@ -41,9 +41,6 @@ public static FirebaseDatabase getDatabase(){
         }
         else return Database;
 }
-public static DatabaseReference getUserReference(){
-        return getDatabase().getReference().child("users").child(getUser().getUid());
-}
     //private constructor
     public FirebaseManagement() {
 

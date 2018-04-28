@@ -18,6 +18,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
@@ -50,7 +52,7 @@ public class ShowProfile extends AppCompatActivity  implements NavigationView.On
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-        getUserInfo();
+
     }
     public void setActViews(){
         profileImage = findViewById(R.id.profile_image);
@@ -75,7 +77,10 @@ public class ShowProfile extends AppCompatActivity  implements NavigationView.On
         navImage =  headerView.findViewById(R.id.navImage);
         headerView.setBackgroundResource(R.color.colorPrimaryDark);
     }
-
+protected void onStart(){
+        super.onStart();
+        getUserInfo();
+}
     //for EditButton in the action bar
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -116,6 +121,12 @@ public class ShowProfile extends AppCompatActivity  implements NavigationView.On
             Intent intentMod = new Intent(this, Home.class);
             startActivity(intentMod);
             finish();
+            return true;
+        }else if(id == R.id.nav_logout){
+            AuthUI.getInstance().signOut(this).addOnCompleteListener(v->{
+                startActivity(new Intent(this,Login.class));
+                finish();
+            });
             return true;
         }
         drawer.closeDrawer(GravityCompat.START);
