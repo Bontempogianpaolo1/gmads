@@ -52,7 +52,6 @@ public class EditProfile extends AppCompatActivity {
     Bitmap newBitMapProfileImage; //temp for new image
     private Uri uriProfileImage;
     private String profileImageUrl;
-    SharedPreferences prefs;
     boolean imagechanged=false;
     File tempFile;
     Toolbar toolbar;
@@ -73,42 +72,37 @@ public class EditProfile extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
-        prefs= PreferenceManager.getDefaultSharedPreferences(this);
-        toolbar = findViewById(R.id.toolbar);
-        cw = new ContextWrapper(getApplicationContext());
-        progressbar = findViewById(R.id.progressBar);
+        findViews();
 
+        cw = new ContextWrapper(getApplicationContext());
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-
         // path to /data/data/yourapp/app_data/imageDir
         directory = cw.getDir(getString(R.string.imageDirectory), Context.MODE_PRIVATE);
         path = directory.getPath();
         //inizialize  layout
-        ll= findViewById(R.id.linearLayout1);
-        l2= findViewById(R.id.linearlayout2);
         ll.setOnClickListener(this::setFocusOnClick);
         l2.setOnClickListener(this::setFocusOnClick);
         //inizialize  user data
 
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         //set image
-        profileImage = findViewById(R.id.profile_image);
         profileImage.setImageDrawable(getDrawable(R.drawable.default_profile));
         profileImage.setOnClickListener(this::onClickImage);
-
-
-        vName = findViewById(R.id.name_input);
-        vSurname = findViewById(R.id.surname_input);
-        vEmail = findViewById(R.id.email_input);
-        vBio = findViewById(R.id.address_input);
         getUserInfo();
 
     }
     public void findViews(){
         toolbar = findViewById(R.id.toolbar);
-
+        progressbar = findViewById(R.id.progressBar);
+        ll= findViewById(R.id.linearLayout1);
+        l2= findViewById(R.id.linearlayout2);
+        profileImage = findViewById(R.id.profile_image);
+        vName = findViewById(R.id.name_input);
+        vSurname = findViewById(R.id.surname_input);
+        vEmail = findViewById(R.id.email_input);
+        vBio = findViewById(R.id.address_input);
     }
     //save data on click save
     private void onSaveClick() {
