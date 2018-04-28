@@ -106,6 +106,10 @@ public class EditProfile extends AppCompatActivity {
         getUserInfo();
 
     }
+    public void findViews(){
+        toolbar = findViewById(R.id.toolbar);
+
+    }
     //save data on click save
     private void onSaveClick() {
 

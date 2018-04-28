@@ -11,8 +11,6 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -145,31 +143,9 @@ public class AddBook extends AppCompatActivity
         };
         mProfileReference.addValueEventListener(postListener);
         mProfileListener = postListener;
-        TextWatcher textWatcher = new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                setISBNcode(String.valueOf(charSequence));
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-            }
-        };
-        editISBN.addTextChangedListener(textWatcher);
     }
-
-    public void setISBNcode(String isbn){
-
-        this.ISBNcode = isbn;
-    }
-
     public void onNextClick(){
-
+            String ISBNcode=editISBN.getText().toString();
             if(this.ISBNcode== null || this.ISBNcode.length()!=13){
                 Tools t= new Tools();
                 t.showPopup(this,getString(R.string.isbnerror),"", "Ok").show();
