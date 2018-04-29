@@ -16,6 +16,7 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.method.ScrollingMovementMethod;
@@ -47,6 +48,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class SaveBook extends AppCompatActivity{
@@ -79,12 +82,20 @@ public class SaveBook extends AppCompatActivity{
     Button add;
     Book book;
     ProgressBar progressBar;
+    List<String> images=new ArrayList<>();
 
+
+    ViewPagerAdapter adapter;
+    ViewPager viewPager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_save_book);
         findActViews();
+        viewPager= findViewById(R.id.ViewPager);
+        viewPager.setVisibility(View.INVISIBLE);
+        adapter= new ViewPagerAdapter(SaveBook.this,images);
+        viewPager.setAdapter(adapter);
         t1 = new Tools();
         if (!(t1.isOnline(getApplicationContext()))){
             //rendo invisibile l'xml
@@ -220,7 +231,8 @@ public void findActViews(){
                             vDescription.setText(R.string.descriptionNotFound);
                         }
                         Glide.with(this).load(urlimage).into((ImageView)findViewById(R.id.bookimage));
-
+                        adapter.addUrl(urlimage);
+                        adapter.notifyDataSetChanged();
                         progressBar.setVisibility(View.GONE);
                         ll.setVisibility(View.VISIBLE);
                         prefs = PreferenceManager.getDefaultSharedPreferences(c);
@@ -393,6 +405,8 @@ public void findActViews(){
             newBitMapBookImage = (Bitmap) Objects.requireNonNull(imageUri).get("data");
             //bookImage.loadUrl(bitmapToUrl(newBitMapBookImage));
             bookImage.setImageBitmap(newBitMapBookImage);
+            adapter.addUrl(bitmapToUrl(newBitMapBookImage));
+            adapter.notifyDataSetChanged();
            // bookImage.setImageBitmap(newBitMapBookImage);
             //manage request image from gallery
         } else if ( requestCode==REQUEST_IMAGE_LIBRARY && resultCode == RESULT_OK) {

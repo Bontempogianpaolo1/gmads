@@ -141,6 +141,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:contentDescription="@string/profileImage" />
+
         </RelativeLayout>
     </LinearLayout>
 
@@ -151,6 +152,11 @@
         android:layout_centerInParent="true"
         android:layout_centerVertical="true"
         android:visibility="invisible"/>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/ViewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 
 </RelativeLayout>
