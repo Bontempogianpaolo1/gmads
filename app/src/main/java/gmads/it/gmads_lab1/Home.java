@@ -1,11 +1,7 @@
 package gmads.it.gmads_lab1;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -21,57 +17,42 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
+
+import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.StorageReference;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.URL;
-import java.util.Objects;
 
 public class Home extends AppCompatActivity  implements NavigationView.OnNavigationItemSelectedListener{
-    ImageView profileImage;
-    private static final String EXTRA_PROFILE_KEY="my_token";
-    private DatabaseReference mProfileReference;
-    FirebaseDatabase database;
-    public ValueEventListener mProfileListener;
-    public String mProfile;
+
+    DatabaseReference mProfileReference;
     private TextView navName;
     private TextView navMail;
     private ImageView navImage;
-    private Profile profile;
-    SharedPreferences prefs;
     Toolbar toolbar;
     DrawerLayout drawer;
     NavigationView navigationView;
     View headerView;
-
+    boolean uploaded=false;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        //profilo
-        mProfile= prefs.getString(EXTRA_PROFILE_KEY,null);
-        database= FirebaseManagement.getDatabase();
-        if(mProfile==null){
-            database.setPersistenceEnabled((true));
-        }
-        if(mProfile!=null) {
-            mProfileReference = FirebaseDatabase.getInstance().getReference().child("users").child(mProfile);
-            mProfileReference.keepSynced(true);
-        }
-        //settare toolbar + titolo
-        toolbar =  findViewById(R.id.toolbarHome);
-        toolbar.setTitle("Home");
+        setActViews();
+        setNavViews();
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+    }
+    public void setActViews(){
+        toolbar =  findViewById(R.id.toolbar);
+        toolbar.setTitle(getString(R.string.home));
         setSupportActionBar(toolbar);
+    }
+    public void setNavViews(){
         drawer =  findViewById(R.id.drawer_layout);
         navigationView =  findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -79,81 +60,66 @@ public class Home extends AppCompatActivity  implements NavigationView.OnNavigat
         navName =  headerView.findViewById(R.id.navName);
         navMail =  headerView.findViewById(R.id.navMail);
         navImage =  headerView.findViewById(R.id.navImage);
+        headerView.setBackgroundResource(R.color.colorPrimaryDark);
     }
-
     @Override
     public void onStart(){
         super.onStart();
-        //settare navbar
+        if(!uploaded) {
+            uploaded=true;
+            mProfileReference = FirebaseManagement
+                    .getDatabase()
+                    .getReference()
+                    .child("users")
+                    .child(FirebaseManagement.getUser().getUid());
+            mProfileReference.keepSynced(true);
 
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-        headerView.setBackgroundResource(R.color.colorPrimaryDark);
-        mProfileReference = database.getReference()
-                .child("users")
-                .child(FirebaseManagement.getUser().getUid());
-        mProfileReference.keepSynced(true);
+            ValueEventListener postListener = new ValueEventListener() {
+                @Override
+                public void onDataChange( DataSnapshot dataSnapshot ) {
+                    Profile myuser = dataSnapshot.getValue(Profile.class);
+                    if (myuser != null) {
+                        //dati navbar
+                        navName.setText(myuser.getName());
+                        navName.append(" " + myuser.getSurname());
+                        navMail.setText(myuser.getEmail());
+                        //setto foto
+                        if (myuser.getImage() != null) {
+                            try {
+                                File localFile = File.createTempFile("image", "jpg");
+                                StorageReference profileImageRef = FirebaseManagement
+                                        .getStorage()
+                                        .getReference()
+                                        .child("users")
+                                        .child(FirebaseManagement.getUser().getUid())
+                                        .child("profileimage.jpg");
 
-        ValueEventListener postListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Profile myuser = dataSnapshot.getValue(Profile.class);
-                assert myuser != null;
-                //dati navbar
-                navName.setText(myuser.getName());
-                navName.append(" " + myuser.getSurname());
-                navMail.setText(myuser.getEmail());
-                //setto foto
-                profile = dataSnapshot.getValue(Profile.class);
-                URL url = null;
-
-                if(Objects.requireNonNull(profile).getImage()!=null) {
-                    try {
-                        File localFile = File.createTempFile("image", "jpg");
-                        StorageReference profileImageRef = FirebaseManagement.getStorage().getReference()
-                                .child("users")
-                                .child(FirebaseManagement.getUser().getUid())
-                                .child("profileimage.jpg");
-
-                        profileImageRef.getFile(localFile)
-                                .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                                    @Override
-                                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                                        navImage.setImageBitmap(BitmapFactory.decodeFile(localFile.getPath()));
-                                    }
-                                })
-                                .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.d("errore",e.toString());
+                                profileImageRef
+                                        .getFile(localFile)
+                                        .addOnSuccessListener(taskSnapshot -> navImage.setImageBitmap(BitmapFactory.decodeFile(localFile.getPath())))
+                                        .addOnFailureListener(e -> Log.d("errore", e.toString()));
+                            } catch (IOException e) {
+                                e.printStackTrace();
                             }
-                        });
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                } else {//default image
-                    File directory = getApplicationContext().getDir(getString(R.string.imageDirectory), Context.MODE_PRIVATE);
-                    String path = directory.getPath();
-                    File f = new File(path, "profileimage.jpg");
-                    if (f.exists()) {
-                        try {
-                            Bitmap image = BitmapFactory.decodeStream(new FileInputStream(f));
-                            navImage.setImageBitmap(image);
-                        } catch (FileNotFoundException e) {
-                            e.printStackTrace();
+                        } else {
+                            //default image
+                            navImage.setImageDrawable(getDrawable(R.drawable.default_profile));
                         }
+                    } else {
+                        navName.setText(getString(R.string.name));
+                        navName.append(" " + getString(R.string.surname));
+                        navMail.setText(getString(R.string.email));
+                        navImage.setImageDrawable(getDrawable(R.drawable.default_profile));
                     }
                 }
-            }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        };
-        mProfileReference.addValueEventListener(postListener);
-        mProfileListener = postListener;
+                @Override
+                public void onCancelled( DatabaseError databaseError ) {
+                    Log.d("error", databaseError.getDetails());
+                }
+            };
+            mProfileReference.addValueEventListener(postListener);
+        }
     }
 
     //for EditButton in the action bar
@@ -165,12 +131,9 @@ public class Home extends AppCompatActivity  implements NavigationView.OnNavigat
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        //Intent intentMod = new Intent(this, EditProfile.class);
         Intent intentMod = new Intent(this, SaveBook.class);
-        //intentMod.putExtra(EXTRA_PROFILE_KEY,mProfile);
         startActivity(intentMod);
         overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
-
         return true;
     }
     //
@@ -198,12 +161,17 @@ public class Home extends AppCompatActivity  implements NavigationView.OnNavigat
             return true;
         } else if (id == R.id.nav_home) {
             //deve solo chiudersi la navbar
-            DrawerLayout mDrawerLayout;
-            mDrawerLayout = findViewById(R.id.drawer_layout);
-            mDrawerLayout.closeDrawers();
+            drawer.closeDrawers();
+            return true;
+        }else if(id == R.id.nav_logout){
+            AuthUI.getInstance().signOut(this).addOnCompleteListener(v->{
+                startActivity(new Intent(this,Login.class));
+                finish();
+            });
+            return true;
+        }else{
+            drawer.closeDrawer(GravityCompat.START);
             return true;
         }
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
     }
 }

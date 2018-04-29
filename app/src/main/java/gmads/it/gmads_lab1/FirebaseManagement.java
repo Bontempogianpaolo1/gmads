@@ -8,6 +8,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 
+import java.util.Objects;
+
 public class FirebaseManagement {
 
     private static volatile FirebaseManagement firebaseManagementInstance = new FirebaseManagement();
@@ -39,9 +41,6 @@ public static FirebaseDatabase getDatabase(){
         }
         else return Database;
 }
-public static DatabaseReference getUserReference(){
-        return getDatabase().getReference().child("users").child(getUser().getUid());
-}
     //private constructor
     public FirebaseManagement() {
 
@@ -56,12 +55,11 @@ public static DatabaseReference getUserReference(){
         if(User != null) {
             Database.getReference().child("users").child(User.getUid()).setValue(profile);
         }
-
     }
 
     public static void createUser(Context context, String email){
         User = Auth.getCurrentUser();
-        String name[] = getUser().getDisplayName().split(" ");
+        String name[] = Objects.requireNonNull(getUser().getDisplayName()).split(" ");
         Profile newProfile;
         if(name[0]!=null && name[1]!=null) {
             newProfile = new Profile(name[0], name[1], email, context.getString(R.string.description));
@@ -75,5 +73,4 @@ public static DatabaseReference getUserReference(){
         User = Auth.getCurrentUser();
         ProfileInfoSync.pISInstance.loadProfileInfo();
     }
-
 }
