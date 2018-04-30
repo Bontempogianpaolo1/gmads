@@ -71,6 +71,7 @@ public class SaveBook extends AppCompatActivity{
     ContextWrapper cw;
     File directory;
     String path;
+    Uri uriConditionImage;
     LinearLayout ll;
     EditText vTitle;
     EditText vDate;

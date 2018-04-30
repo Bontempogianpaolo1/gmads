@@ -5,4 +5,8 @@
     <color name="colorAccent">#3db5fa</color>
     <color name="colorPale">#e3f2fd</color>
     <color name="newwhiteBackground">#f9f9f9</color>
+
+    <!--cambiare-->
+    <color name="viewBg">#f1f5f8</color>
+    <color name="album_title">#4c4c4c</color>
 </resources>

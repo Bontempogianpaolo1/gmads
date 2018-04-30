@@ -1,177 +1,211 @@
 package gmads.it.gmads_lab1;
 
-import android.content.Intent;
-import android.graphics.BitmapFactory;
-import android.support.annotation.NonNull;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
+import android.content.res.Resources;
+import android.graphics.Rect;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
 
-import com.firebase.ui.auth.AuthUI;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.StorageReference;
-import java.io.File;
-import java.io.IOException;
+import com.arlib.floatingsearchview.FloatingSearchView;
+import com.bumptech.glide.Glide;
 
-public class Home extends AppCompatActivity  implements NavigationView.OnNavigationItemSelectedListener{
+import java.util.ArrayList;
+import java.util.List;
 
-    DatabaseReference mProfileReference;
-    private TextView navName;
-    private TextView navMail;
-    private ImageView navImage;
-    Toolbar toolbar;
-    DrawerLayout drawer;
-    NavigationView navigationView;
-    View headerView;
-    boolean uploaded=false;
+public class Home extends AppCompatActivity {
+
+    private RecyclerView recyclerView;
+    private BookAdapter adapter;
+    private List<Book> bookList;
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        setActViews();
-        setNavViews();
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-    }
-    public void setActViews(){
-        toolbar =  findViewById(R.id.toolbar);
-        toolbar.setTitle(getString(R.string.home));
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-    }
-    public void setNavViews(){
-        drawer =  findViewById(R.id.drawer_layout);
-        navigationView =  findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-        headerView = navigationView.getHeaderView(0);
-        navName =  headerView.findViewById(R.id.navName);
-        navMail =  headerView.findViewById(R.id.navMail);
-        navImage =  headerView.findViewById(R.id.navImage);
-        headerView.setBackgroundResource(R.color.colorPrimaryDark);
-    }
-    @Override
-    public void onStart(){
-        super.onStart();
-        if(!uploaded) {
-            uploaded=true;
-            mProfileReference = FirebaseManagement
-                    .getDatabase()
-                    .getReference()
-                    .child("users")
-                    .child(FirebaseManagement.getUser().getUid());
-            mProfileReference.keepSynced(true);
 
-            ValueEventListener postListener = new ValueEventListener() {
-                @Override
-                public void onDataChange( DataSnapshot dataSnapshot ) {
-                    Profile myuser = dataSnapshot.getValue(Profile.class);
-                    if (myuser != null) {
-                        //dati navbar
-                        navName.setText(myuser.getName());
-                        navName.append(" " + myuser.getSurname());
-                        navMail.setText(myuser.getEmail());
-                        //setto foto
-                        if (myuser.getImage() != null) {
-                            try {
-                                File localFile = File.createTempFile("image", "jpg");
-                                StorageReference profileImageRef = FirebaseManagement
-                                        .getStorage()
-                                        .getReference()
-                                        .child("users")
-                                        .child(FirebaseManagement.getUser().getUid())
-                                        .child("profileimage.jpg");
+        CollapsingToolbarLayout ctl = findViewById(R.id.collapsing_toolbar);
 
-                                profileImageRef
-                                        .getFile(localFile)
-                                        .addOnSuccessListener(taskSnapshot -> navImage.setImageBitmap(BitmapFactory.decodeFile(localFile.getPath())))
-                                        .addOnFailureListener(e -> Log.d("errore", e.toString()));
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        } else {
-                            //default image
-                            navImage.setImageDrawable(getDrawable(R.drawable.default_profile));
-                        }
-                    } else {
-                        navName.setText(getString(R.string.name));
-                        navName.append(" " + getString(R.string.surname));
-                        navMail.setText(getString(R.string.email));
-                        navImage.setImageDrawable(getDrawable(R.drawable.default_profile));
-                    }
-                }
+        //SearchView mSearchView = (SearchView) findViewById(R.id.searchView); // initiate a search view
+        //mSearchView.attachNavigationDrawerToMenuButton(findViewById(R.id.drawer_layout));
+        initCollapsingToolbar();
 
-                @Override
-                public void onCancelled( DatabaseError databaseError ) {
-                    Log.d("error", databaseError.getDetails());
-                }
-            };
-            mProfileReference.addValueEventListener(postListener);
+        //mSearchView.setIconifiedByDefault(false);  // set the default or resting state of the search field
+
+        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+
+        bookList = new ArrayList<>();
+        adapter = new BookAdapter(this, bookList);
+
+        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 2);
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, dpToPx(10), true));
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(adapter);
+
+        prepareBooks();
+
+        try {
+            Glide.with(this).load(R.drawable.cover).into((ImageView) findViewById(R.id.backdrop));
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
-    //for EditButton in the action bar
+    /*@Override
+    public boolean onQueryTextSubmit(String query) {
+        // do something on text submit
+        //parte la query di gogo
+        return false;
+    }*/
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater mi = getMenuInflater();
-        mi.inflate(R.menu.actionbar_empty, menu);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.options_menu, menu);
+
         return true;
-    }
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        Intent intentMod = new Intent(this, SaveBook.class);
-        startActivity(intentMod);
-        overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
-        return true;
-    }
-    //
-    //to close the application on back button
-    @Override
-    public void onBackPressed() {
-        moveTaskToBack(true);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-        if (id == R.id.nav_showProfile) {
-            // Handle the camera action
-            Intent intentMod = new Intent(this, ShowProfile.class);
-            startActivity(intentMod);
-            finish();
-            return true;
-        } else if (id == R.id.nav_addBook) {
-            Intent intentMod = new Intent(this, AddBook.class);
-            startActivity(intentMod);
-            finish();
-            return true;
-        } else if (id == R.id.nav_home) {
-            //deve solo chiudersi la navbar
-            drawer.closeDrawers();
-            return true;
-        }else if(id == R.id.nav_logout){
-            AuthUI.getInstance().signOut(this).addOnCompleteListener(v->{
-                startActivity(new Intent(this,Login.class));
-                finish();
-            });
-            return true;
-        }else{
-            drawer.closeDrawer(GravityCompat.START);
-            return true;
+     /*mSearchView.setOnQueryChangeListener(new FloatingSearchView.OnQueryChangeListener() {
+        @Override
+        public void onSearchTextChanged(String oldQuery, final String newQuery) {
+
+            //get suggestions based on newQuery
+
+            //pass them on to the search view
+            mSearchView.swapSuggestions(newSuggestions);
         }
+    });*/
+
+    /**
+     * Initializing collapsing toolbar
+     * Will show and hide the toolbar title on scroll
+     */
+    private void initCollapsingToolbar() {
+        final CollapsingToolbarLayout collapsingToolbar =
+                (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
+        collapsingToolbar.setTitle(" ");
+        AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.appbar);
+        appBarLayout.setExpanded(true);
+
+        // hiding & showing the title when toolbar expanded & collapsed
+        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            boolean isShow = false;
+            int scrollRange = -1;
+
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                if (scrollRange == -1) {
+                    scrollRange = appBarLayout.getTotalScrollRange();
+                }
+                if (scrollRange + verticalOffset == 0) {
+                    collapsingToolbar.setTitle(getString(R.string.app_name));
+                    isShow = true;
+                } else if (isShow) {
+                    collapsingToolbar.setTitle(" ");
+                    isShow = false;
+                }
+            }
+        });
+    }
+
+    /**
+     * Adding few albums for testing
+     */
+    private void prepareBooks() {
+
+        Book b = new Book ("1", "","Harry Potter", "", "http://books.google.com/books/content?id=oPBGnwEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api", "", "", "", "", "Pinco");
+        bookList.add(b);
+        b = new Book ("2", "","Signore degli Anelli", "", "http://books.google.com/books/content?id=j1TNygAACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api", "", "", "", "", "Pallino");
+        bookList.add(b);
+        b = new Book ("3", "","Novecento", "", "http://books.google.com/books/content?id=bVx9NAEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api", "", "", "", "", "Tizio");
+        bookList.add(b);
+        b = new Book ("4", "","La ragazza del treno", "", "http://books.google.com/books/content?id=IUo3rgEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api", "", "", "", "", "Caio");
+        bookList.add(b);
+        b = new Book ("1", "","Harry Potter", "", "http://books.google.com/books/content?id=oPBGnwEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api", "", "", "", "", "Pinco");
+        bookList.add(b);
+        b = new Book ("2", "","Signore degli Anelli", "", "http://books.google.com/books/content?id=j1TNygAACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api", "", "", "", "", "Pallino");
+        bookList.add(b);
+        b = new Book ("3", "","Novecento", "", "http://books.google.com/books/content?id=bVx9NAEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api", "", "", "", "", "Tizio");
+        bookList.add(b);
+        b = new Book ("4", "","La ragazza del treno", "", "http://books.google.com/books/content?id=IUo3rgEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api", "", "", "", "", "Caio");
+        bookList.add(b);
+        b = new Book ("1", "","Harry Potter", "", "http://books.google.com/books/content?id=oPBGnwEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api", "", "", "", "", "Pinco");
+        bookList.add(b);
+        b = new Book ("2", "","Signore degli Anelli", "", "http://books.google.com/books/content?id=j1TNygAACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api", "", "", "", "", "Pallino");
+        bookList.add(b);
+        b = new Book ("3", "","Novecento", "", "http://books.google.com/books/content?id=bVx9NAEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api", "", "", "", "", "Tizio");
+        bookList.add(b);
+        b = new Book ("4", "","La ragazza del treno", "", "http://books.google.com/books/content?id=IUo3rgEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api", "", "", "", "", "Caio");
+        bookList.add(b);
+        b = new Book ("1", "","Harry Potter", "", "http://books.google.com/books/content?id=oPBGnwEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api", "", "", "", "", "Pinco");
+        bookList.add(b);
+        b = new Book ("2", "","Signore degli Anelli", "", "http://books.google.com/books/content?id=j1TNygAACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api", "", "", "", "", "Pallino");
+        bookList.add(b);
+        b = new Book ("3", "","Novecento", "", "http://books.google.com/books/content?id=bVx9NAEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api", "", "", "", "", "Tizio");
+        bookList.add(b);
+        b = new Book ("4", "","La ragazza del treno", "", "http://books.google.com/books/content?id=IUo3rgEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api", "", "", "", "", "Caio");
+        bookList.add(b);
+
+        adapter.notifyDataSetChanged();
+    }
+
+    /**
+     * RecyclerView item decoration - give equal margin around grid item
+     */
+    public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
+
+        private int spanCount;
+        private int spacing;
+        private boolean includeEdge;
+
+        public GridSpacingItemDecoration(int spanCount, int spacing, boolean includeEdge) {
+            this.spanCount = spanCount;
+            this.spacing = spacing;
+            this.includeEdge = includeEdge;
+        }
+
+        @Override
+        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+            int position = parent.getChildAdapterPosition(view); // item position
+            int column = position % spanCount; // item column
+
+            if (includeEdge) {
+                outRect.left = spacing - column * spacing / spanCount; // spacing - column * ((1f / spanCount) * spacing)
+                outRect.right = (column + 1) * spacing / spanCount; // (column + 1) * ((1f / spanCount) * spacing)
+
+                if (position < spanCount) { // top edge
+                    outRect.top = spacing;
+                }
+                outRect.bottom = spacing; // item bottom
+            } else {
+                outRect.left = column * spacing / spanCount; // column * ((1f / spanCount) * spacing)
+                outRect.right = spacing - (column + 1) * spacing / spanCount; // spacing - (column + 1) * ((1f /    spanCount) * spacing)
+                if (position >= spanCount) {
+                    outRect.top = spacing; // item top
+                }
+            }
+        }
+    }
+
+    /**
+     * Converting dp to pixel
+     */
+    private int dpToPx(int dp) {
+        Resources r = getResources();
+        return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics()));
     }
 }
