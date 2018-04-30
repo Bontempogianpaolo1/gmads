@@ -7,6 +7,8 @@ import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
 import java.util.Arrays;
 import java.util.Objects;
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
 
 public class Login extends AppCompatActivity {
     private static final int RC_SIGN_IN = 123;
@@ -31,14 +33,14 @@ public class Login extends AppCompatActivity {
         } else {
             //se non è loggato mi loggo attraverso l'attività di firebase
             /*
-            TODO assegnare login a facebook e google
-             */
+            TODO assegnare login a facebook
+            */
+
             startActivityForResult(
                     AuthUI.getInstance()
                             .createSignInIntentBuilder()
                             .setAvailableProviders(Arrays.asList(
                                     new AuthUI.IdpConfig.EmailBuilder().build(),
-                                    new AuthUI.IdpConfig.PhoneBuilder().build(),
                                     new AuthUI.IdpConfig.GoogleBuilder().build(),
                                     new AuthUI.IdpConfig.FacebookBuilder().build()
                             ))

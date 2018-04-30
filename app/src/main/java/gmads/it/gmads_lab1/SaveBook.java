@@ -16,6 +16,7 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.method.ScrollingMovementMethod;
@@ -27,10 +28,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -38,6 +38,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -47,6 +48,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class SaveBook extends AppCompatActivity{
@@ -60,7 +63,7 @@ public class SaveBook extends AppCompatActivity{
     static final int MY_CAMERA_REQUEST_CODE = 100;
     static final int REQUEST_IMAGE_CAPTURE = 1888;
     static final int REQUEST_IMAGE_LIBRARY = 1889;
-    private WebView bookImage;//profile image
+    private ImageView bookImage;//profile image
     private Bitmap newBitMapBookImage; //temp for new image
     private SharedPreferences prefs;
     boolean imagechanged=false;
@@ -80,12 +83,20 @@ public class SaveBook extends AppCompatActivity{
     Button add;
     Book book;
     ProgressBar progressBar;
+    List<String> images=new ArrayList<>();
 
+
+    ViewPagerAdapter adapter;
+    ViewPager viewPager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_save_book);
         findActViews();
+        viewPager= findViewById(R.id.ViewPager);
+        viewPager.setVisibility(View.INVISIBLE);
+        adapter= new ViewPagerAdapter(SaveBook.this,images);
+        viewPager.setAdapter(adapter);
         t1 = new Tools();
         if (!(t1.isOnline(getApplicationContext()))){
             //rendo invisibile l'xml
@@ -130,13 +141,13 @@ public void findActViews(){
     vPublisher = findViewById(R.id.editore);
     vDescription = findViewById(R.id.descrizione);
     bookImage = findViewById(R.id.bookimage);
-    bookImage.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NORMAL);
     progressBar=findViewById(R.id.progressBar);
     ll=findViewById(R.id.ll);
     add = findViewById(R.id.addphoto);
     toolbar = findViewById(R.id.toolbar);
     toolbar.setTitle(getString(R.string.bookTitle));
     setSupportActionBar(toolbar);
+    vDescription.setVerticalScrollBarEnabled(true);
     vDescription.setMovementMethod(new ScrollingMovementMethod());
     add.setOnClickListener(this::onAddPhotoClick);
 }
@@ -220,7 +231,9 @@ public void findActViews(){
                         }catch(Exception e){
                             vDescription.setText(R.string.descriptionNotFound);
                         }
-                        bookImage.loadUrl("https://process.filestackapi.com/AhTgLagciQByzXpFGRI0Az/resize=width:128,height:200/"+  urlimage);
+                        Glide.with(this).load(urlimage).into((ImageView)findViewById(R.id.bookimage));
+                        adapter.addUrl(urlimage);
+                        adapter.notifyDataSetChanged();
                         progressBar.setVisibility(View.GONE);
                         ll.setVisibility(View.VISIBLE);
                         prefs = PreferenceManager.getDefaultSharedPreferences(c);
@@ -240,66 +253,98 @@ public void findActViews(){
         // Add the request to the RequestQueue.
         queue.add(stringRequest);
     }
+    public boolean fieldsEmpty(){
+        if(vTitle.getText().toString().isEmpty()){
+            vTitle.setError(getString(R.string.titleNotFound));
+            vTitle.requestFocus();
+            return false;
+        }else if(vDate.getText().toString().isEmpty()){
+            vDate.setError(getString(R.string.pDateNotFound));
+            vDate.requestFocus();
+            return false;
+        }else if(vCategories.getText().toString().isEmpty()){
+            vCategories.setError(getString(R.string.categoryNotFound));
+            vCategories.requestFocus();
+            return false;
+        }else if(vAuthor.getText().toString().isEmpty()){
+            vAuthor.setError(getString(R.string.authorNotFound));
+            vAuthor.requestFocus();
+            return false;
+        }else if(vPublisher.getText().toString().isEmpty()){
+            vPublisher.setError(getString(R.string.publisherNotFound));
+            vPublisher.requestFocus();
+            return false;
+        }else if(vDescription.getText().toString().isEmpty()){
+            vDescription.setError(getString(R.string.descriptionNotFound));
+            vDescription.requestFocus();
+            return false;
+        }
+        return true;
+    }
     //save data on click save
     private void onSaveClick() {
         //check on email using a regex
         View view = this.getCurrentFocus();
-        if (view != null) {
-            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-            assert imm != null;
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        }
-        Tools t = new Tools();
-        book = new Book(
-                null,
-                isbn,
-                vTitle.getText().toString(),
-                "",
-                urlimage,
-                vDate.getText().toString(),
-                vAuthor.getText().toString(),
-                vCategories.getText().toString(),
-                vPublisher.getText().toString(),
-                FirebaseManagement.getUser().getUid()
-        );
-        //set popup
-        android.app.AlertDialog.Builder ad = t.showPopup(this, getString(R.string.saveQuestion), "", getString(R.string.cancel));
-        ad.setPositiveButton("Ok", (vi, w) -> {
-            String bookKey = mBooksReference.push().getKey();
-            mBooksReference.child(bookKey).setValue(book);
-            final ProgressDialog progressDialog = new ProgressDialog(this);
-            progressDialog.setTitle(getString(R.string.Uploading));
-            progressDialog.show();
-            book.setBId(bookKey);
-            mProfileReference.child("myBooks").child(bookKey).setValue(book.getIsbn())
-                    .addOnFailureListener(e -> Log.v("ERR", e.getMessage()));
-
-            if(newBitMapBookImage!=null) {
-                storageReference = FirebaseManagement
-                        .getStorage()
-                        .getReference()
-                        .child("books")
-                        .child(this.book.getBId())
-                        .child("personal_images")
-                        .child("1.jpg");
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                newBitMapBookImage.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-                byte[] data = baos.toByteArray();
-                UploadTask uploadTask = storageReference.putBytes(data);
-                uploadTask
-                        .addOnFailureListener(exception -> toastMessage("Upload failed"))
-                        .addOnSuccessListener(taskSnapshot -> {
-                            toastMessage("Image upload successful");
-                            progressDialog.dismiss();
-                        });
-                storageReference.putFile(Uri.fromFile(new File(path))).addOnSuccessListener(taskSnapshot -> {
-                }).addOnFailureListener(e -> Log.d("error",e.toString()));
+        if(fieldsEmpty()) {
+            if (view != null) {
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                assert imm != null;
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
             }
-            Intent pickIntent = new Intent(this, Home.class);
-            prefs.edit().putString(EXTRA_ISBN, isbn).apply();
-            startActivity(pickIntent);
-        });
-        ad.show();
+            Tools t = new Tools();
+            book = new Book(
+                    null,
+                    isbn,
+                    vTitle.getText().toString(),
+                    "",
+                    urlimage,
+                    vDate.getText().toString(),
+                    vAuthor.getText().toString(),
+                    vCategories.getText().toString(),
+                    vPublisher.getText().toString(),
+                    FirebaseManagement.getUser().getUid()
+            );
+            //set popup
+            android.app.AlertDialog.Builder ad = t.showPopup(this, getString(R.string.saveQuestion), "", getString(R.string.cancel));
+            ad.setPositiveButton("Ok", ( vi, w ) -> {
+                mBooksReference = FirebaseManagement.getDatabase().getReference().child("books");
+                String bookKey = mBooksReference.push().getKey();
+                mBooksReference.child(bookKey).setValue(book);
+                final ProgressDialog progressDialog = new ProgressDialog(this);
+                progressDialog.setTitle(getString(R.string.Uploading));
+                progressDialog.show();
+                book.setBId(bookKey);
+                mProfileReference=FirebaseManagement.getDatabase().getReference();
+                mProfileReference.child("myBooks").child(bookKey).setValue(book.getIsbn())
+                        .addOnFailureListener(e -> Log.v("ERR", e.getMessage()));
+
+                if (newBitMapBookImage != null) {
+                    storageReference = FirebaseManagement
+                            .getStorage()
+                            .getReference()
+                            .child("books")
+                            .child(this.book.getBId())
+                            .child("personal_images")
+                            .child("1.jpg");
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    newBitMapBookImage.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                    byte[] data = baos.toByteArray();
+                    UploadTask uploadTask = storageReference.putBytes(data);
+                    uploadTask
+                            .addOnFailureListener(exception -> toastMessage(getString(R.string.failed_book_upload)))
+                            .addOnSuccessListener(taskSnapshot -> {
+                                toastMessage("Image upload successful");
+                                progressDialog.dismiss();
+                            });
+                    storageReference.putFile(Uri.fromFile(new File(path))).addOnSuccessListener(taskSnapshot -> {
+                    }).addOnFailureListener(e -> Log.d("error", e.toString()));
+                }
+                Intent pickIntent = new Intent(this, Home.class);
+                prefs.edit().putString(EXTRA_ISBN, isbn).apply();
+                startActivity(pickIntent);
+            });
+            ad.show();
+        }
     }
     private void toastMessage(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
@@ -346,7 +391,7 @@ public void findActViews(){
                 Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             } else {
-                Toast.makeText(this, "camera permission denied", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, R.string.permission_denied, Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -358,10 +403,11 @@ public void findActViews(){
         if (requestCode == REQUEST_IMAGE_CAPTURE  && resultCode == RESULT_OK) {
             imagechanged=true;
             Bundle imageUri = data.getExtras();
-            assert imageUri != null;
-            newBitMapBookImage = (Bitmap) imageUri.get("data");
-            bookImage.loadUrl(bitmapToUrl(newBitMapBookImage));
-
+            newBitMapBookImage = (Bitmap) Objects.requireNonNull(imageUri).get("data");
+            //bookImage.loadUrl(bitmapToUrl(newBitMapBookImage));
+            bookImage.setImageBitmap(newBitMapBookImage);
+            adapter.addUrl(bitmapToUrl(newBitMapBookImage));
+            adapter.notifyDataSetChanged();
            // bookImage.setImageBitmap(newBitMapBookImage);
             //manage request image from gallery
         } else if ( requestCode==REQUEST_IMAGE_LIBRARY && resultCode == RESULT_OK) {
@@ -371,7 +417,8 @@ public void findActViews(){
                 assert imageUri != null;
                 final InputStream imageStream = getContentResolver().openInputStream(imageUri);
                 newBitMapBookImage = BitmapFactory.decodeStream(imageStream);
-                bookImage.loadUrl(bitmapToUrl(newBitMapBookImage));
+               // bookImage.loadUrl(bitmapToUrl(newBitMapBookImage));
+                bookImage.setImageBitmap(newBitMapBookImage);
                 //bookImage.setImageBitmap(newBitMapBookImage);
             } catch (IOException e) {
                 e.printStackTrace();

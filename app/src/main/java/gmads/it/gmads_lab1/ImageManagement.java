@@ -1,9 +1,15 @@
 package gmads.it.gmads_lab1;
 
+import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v7.app.AppCompatActivity;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 public class ImageManagement extends AppCompatActivity {
     public ImageManagement(){
@@ -43,5 +49,25 @@ public class ImageManagement extends AppCompatActivity {
 
         return inSampleSize;
     }
+    public static File saveImage( Bitmap bitmapImage,File directory) {
 
+        // Create imageDir
+        File tempFile = new File(directory,"profile.jpg");
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(tempFile);
+            // Use the compress method on the BitMap object to write image to the OutputStream
+            bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fos);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                assert fos != null;
+                fos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return tempFile;
+    }
 }

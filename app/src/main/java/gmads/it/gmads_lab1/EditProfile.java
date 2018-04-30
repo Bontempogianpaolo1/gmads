@@ -52,7 +52,6 @@ public class EditProfile extends AppCompatActivity {
     Bitmap newBitMapProfileImage; //temp for new image
     private Uri uriProfileImage;
     private String profileImageUrl;
-    SharedPreferences prefs;
     boolean imagechanged=false;
     File tempFile;
     Toolbar toolbar;
@@ -73,38 +72,34 @@ public class EditProfile extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
-        prefs= PreferenceManager.getDefaultSharedPreferences(this);
-        toolbar = findViewById(R.id.toolbar);
+        findViews();
         cw = new ContextWrapper(getApplicationContext());
-        progressbar = findViewById(R.id.progressBar);
-
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-
         // path to /data/data/yourapp/app_data/imageDir
         directory = cw.getDir(getString(R.string.imageDirectory), Context.MODE_PRIVATE);
         path = directory.getPath();
         //inizialize  layout
-        ll= findViewById(R.id.linearLayout1);
-        l2= findViewById(R.id.linearlayout2);
         ll.setOnClickListener(this::setFocusOnClick);
         l2.setOnClickListener(this::setFocusOnClick);
         //inizialize  user data
-
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         //set image
-        profileImage = findViewById(R.id.profile_image);
         profileImage.setImageDrawable(getDrawable(R.drawable.default_profile));
         profileImage.setOnClickListener(this::onClickImage);
-
-
+        getUserInfo();
+    }
+    public void findViews(){
+        toolbar = findViewById(R.id.toolbar);
+        progressbar = findViewById(R.id.progressBar);
+        ll= findViewById(R.id.linearLayout1);
+        l2= findViewById(R.id.linearlayout2);
+        profileImage = findViewById(R.id.profile_image);
         vName = findViewById(R.id.name_input);
         vSurname = findViewById(R.id.surname_input);
         vEmail = findViewById(R.id.email_input);
         vBio = findViewById(R.id.address_input);
-        getUserInfo();
-
     }
     //save data on click save
     private void onSaveClick() {
@@ -130,7 +125,6 @@ public class EditProfile extends AppCompatActivity {
         ad.setPositiveButton("Ok", (vi, w) -> updateUserInfo());
         ad.show();
     }
-
     //for SaveButton in the action bar
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -170,7 +164,6 @@ public class EditProfile extends AppCompatActivity {
                 Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             }
-
         });
         ad.show();
         //-->
@@ -180,14 +173,11 @@ public class EditProfile extends AppCompatActivity {
 
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == MY_CAMERA_REQUEST_CODE) {
-
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
                 Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-
             } else {
-                Toast.makeText(this, "camera permission denied", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, R.string.permission_denied, Toast.LENGTH_LONG).show();
             }
 
         }
@@ -201,8 +191,7 @@ public class EditProfile extends AppCompatActivity {
         if (requestCode == REQUEST_IMAGE_CAPTURE  && resultCode == RESULT_OK) {
             imagechanged=true;
             Bundle imageUri = data.getExtras();
-            assert imageUri != null;
-            newBitMapProfileImage = (Bitmap) imageUri.get("data");
+            newBitMapProfileImage = (Bitmap) Objects.requireNonNull(imageUri).get("data");
             tempFile = saveImage(newBitMapProfileImage);
             uriProfileImage = Uri.fromFile(tempFile);
             profileImage.setImageBitmap(newBitMapProfileImage);
@@ -211,8 +200,7 @@ public class EditProfile extends AppCompatActivity {
             imagechanged=true;
             try{
                 final Uri imageUri = data.getData();
-                assert imageUri != null;
-                final InputStream imageStream = getContentResolver().openInputStream(imageUri);
+                final InputStream imageStream = getContentResolver().openInputStream(Objects.requireNonNull(imageUri));
                 newBitMapProfileImage = BitmapFactory.decodeStream(imageStream);
                 uriProfileImage = imageUri;
                 profileImage.setImageBitmap(newBitMapProfileImage);
@@ -239,7 +227,6 @@ public class EditProfile extends AppCompatActivity {
             try {
                 assert fos != null;
                 fos.close();
-
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -275,17 +262,17 @@ public class EditProfile extends AppCompatActivity {
         String bio = vBio.getText().toString();
 
         if(name.isEmpty()){
-            vName.setError("Name required");
+            vName.setError(getString(R.string.name_require));
             vName.requestFocus();
             return;
         }
         if(surname.isEmpty()){
-            vSurname.setError("Surname required");
+            vSurname.setError(getString(R.string.surname_required));
             vSurname.requestFocus();
             return;
         }
         if(email.isEmpty()){
-            vEmail.setError("Email required");
+            vEmail.setError(getString(R.string.email_required));
             vEmail.requestFocus();
             return;
         }
@@ -305,13 +292,9 @@ public class EditProfile extends AppCompatActivity {
                         profile.setEmail(email);
                         profile.setDescription(bio);
                         profile.setImage(profileImageUrl);
-
                         FirebaseManagement.updateUserData(profile);
-
                         startActivity(pickIntent);
                         progressbar.setVisibility(View.GONE);
-                        //changeIm.setVisibility(View.GONE);
-
                     })
                     .addOnFailureListener(e -> progressbar.setVisibility(View.GONE));
         }else{
@@ -382,7 +365,7 @@ public class EditProfile extends AppCompatActivity {
                         // Getting Post failed, log a message
                         Log.w("loadPost:onCancelled", databaseError.toException());
                         // [START_EXCLUDE]
-                        Toast.makeText(EditProfile.this, "Failed to load profile.",
+                        Toast.makeText(EditProfile.this, R.string.Failed_to_load_profile,
                                 Toast.LENGTH_SHORT).show();
                         // [END_EXCLUDE]
                     }
