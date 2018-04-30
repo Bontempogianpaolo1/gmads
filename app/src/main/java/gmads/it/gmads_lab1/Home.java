@@ -38,18 +38,11 @@ public class Home extends AppCompatActivity {
 
         CollapsingToolbarLayout ctl = findViewById(R.id.collapsing_toolbar);
 
-        FloatingSearchView mSearchView = (FloatingSearchView) findViewById(R.id.searchView); // initiate a search view
-        mSearchView.attachNavigationDrawerToMenuButton(findViewById(R.id.drawer_layout));
-        ctl.setMinimumHeight(200);
-        mSearchView.setMinimumHeight(300);
-
-        //initCollapsingToolbar();
-
-
-
+        //SearchView mSearchView = (SearchView) findViewById(R.id.searchView); // initiate a search view
+        //mSearchView.attachNavigationDrawerToMenuButton(findViewById(R.id.drawer_layout));
+        initCollapsingToolbar();
 
         //mSearchView.setIconifiedByDefault(false);  // set the default or resting state of the search field
-
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 
@@ -78,13 +71,13 @@ public class Home extends AppCompatActivity {
         return false;
     }*/
 
-    /*@Override
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.options_menu, menu);
 
         return true;
-    }*/
+    }
 
      /*mSearchView.setOnQueryChangeListener(new FloatingSearchView.OnQueryChangeListener() {
         @Override
@@ -108,8 +101,6 @@ public class Home extends AppCompatActivity {
         AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.appbar);
         appBarLayout.setExpanded(true);
 
-        FloatingSearchView mSearchView = (FloatingSearchView) findViewById(R.id.searchView);
-        mSearchView.isShown();
         // hiding & showing the title when toolbar expanded & collapsed
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             boolean isShow = false;
