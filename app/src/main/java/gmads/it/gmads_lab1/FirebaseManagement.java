@@ -71,6 +71,6 @@ public static FirebaseDatabase getDatabase(){
 
     public static void loginUser(){
         User = Auth.getCurrentUser();
-        ProfileInfoSync.pISInstance.loadProfileInfo();
+        //ProfileInfoSync.pISInstance.loadProfileInfo();
     }
 }

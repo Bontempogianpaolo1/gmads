@@ -27,6 +27,7 @@ public class Login extends AppCompatActivity {
             // already signed in
             //se è gia loggato invio alla classe home uid e chiudo l'attività
             FirebaseManagement.loginUser();
+            Datasource.getInstance().sincMyProfile();
             Intent intent = new Intent(this, Home.class);
             startActivity(intent);
             //finish();
