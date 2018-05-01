@@ -2,6 +2,7 @@ package gmads.it.gmads_lab1;
 
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.widget.SearchView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -22,6 +23,8 @@ public class MapSearch extends FragmentActivity implements OnMapReadyCallback {
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        //SearchView sv = findViewById(R.id.searchView);
+       // sv.getLeft()
     }
 
 
@@ -37,7 +40,7 @@ public class MapSearch extends FragmentActivity implements OnMapReadyCallback {
     @Override
     public void onMapReady( GoogleMap googleMap ) {
         mMap = googleMap;
-
+        mMap.setMinZoomPreference(20);
         // Add a marker in Sydney and move the camera
         LatLng sydney = new LatLng(45.074045, 7.597933399999988);
         mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
