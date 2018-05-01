@@ -47,5 +47,8 @@
     <string name="scan2">Oppure scansionalo</string>
     <string name="bookTitle">Dettagli Libro</string>
     <string name="isbnerror">\nL'ISBN deve essere lungo 13 numeri</string>
+    <string name="tab1">Tutti</string>
+    <string name="tab2">Noleggiati</string>
+    <string name="tab3">Aggiunti</string>
     <!--end-->
 </resources>
