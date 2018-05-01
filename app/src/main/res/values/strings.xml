@@ -82,5 +82,6 @@
     <string name="tab1">My Books</string>
     <string name="tab2">Rented</string>
     <string name="tab3">Added</string>
+    <string name="title_activity_map_search">Map</string>
     <!--end-->
 </resources>

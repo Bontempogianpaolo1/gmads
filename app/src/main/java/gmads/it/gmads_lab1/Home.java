@@ -1,5 +1,6 @@
 package gmads.it.gmads_lab1;
 
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -73,6 +74,8 @@ public class Home extends AppCompatActivity {
         tableLayout.getTabAt(1).setText(getString(R.string.tab2));
         tableLayout.getTabAt(2).setText(getString(R.string.tab3));
 
+
+
 //
         //era per mettere foto libri nell appbar, ma l'abbiamo messa come sfondo per ora
         try {
@@ -140,6 +143,12 @@ public class Home extends AppCompatActivity {
         });
     }
 
+    public void mapcreate( View view ) {
+        Intent intentMod = new Intent(this, MapSearch.class);
+        startActivity(intentMod);
+        overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
+
+    }
 }
 class FragmentViewPagerAdapter extends FragmentPagerAdapter {
     private final List<Fragment> mFragmentList = new ArrayList<>();
