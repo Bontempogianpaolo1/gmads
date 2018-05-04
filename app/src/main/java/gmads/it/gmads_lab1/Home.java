@@ -26,8 +26,16 @@ import android.widget.ImageView;
 import android.support.design.widget.TabLayout;
 
 
+import com.algolia.search.saas.AlgoliaException;
+import com.algolia.search.saas.Client;
+import com.algolia.search.saas.CompletionHandler;
+import com.algolia.search.saas.Index;
+import com.algolia.search.saas.Query;
 import com.arlib.floatingsearchview.FloatingSearchView;
 import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +48,10 @@ public class Home extends AppCompatActivity {
     private BookAdapter adapter;
     private List<Book> bookList;
     SearchView searchview;
+    Client algoClient;
+    Index algoIndex;
+    Gson gson = new Gson();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,8 +87,6 @@ public class Home extends AppCompatActivity {
         tableLayout.getTabAt(1).setText(getString(R.string.tab2));
         tableLayout.getTabAt(2).setText(getString(R.string.tab3));
 
-
-
 //
         //era per mettere foto libri nell appbar, ma l'abbiamo messa come sfondo per ora
         try {
@@ -84,6 +94,11 @@ public class Home extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+
+        algoClient = new Client("L6B7L7WXZW", "9d2de9e724fa9289953e6b2d5ec978a5");
+        algoIndex = algoClient.getIndex("BookIndex");
+
     }
 
     /*@Override
@@ -99,9 +114,18 @@ public class Home extends AppCompatActivity {
         inflater.inflate(R.menu.options_menu, menu);
         MenuItem m= menu.findItem(R.id.search);
         searchview = (android.widget.SearchView)m.getActionView();
+
+        CompletionHandler completionHandler = new CompletionHandler() {
+            @Override
+            public void requestCompleted(JSONObject content, AlgoliaException error) {
+
+            }
+        };
+
         searchview.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit( String query ) {
+                algoIndex.searchAsync(new Query(query), completionHandler);
                 return false;
             }
 

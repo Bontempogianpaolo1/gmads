@@ -25,15 +25,7 @@ public class Book {
     private String holder;
     private List<Bitmap> images;
     private String indirizzo;
-    private HashMap<String, Long> geoloc = new HashMap<String, Long>();
-
-    public HashMap<String, Long> getGeoloc() {
-        return geoloc;
-    }
-
-    public void setGeoloc(HashMap<String, Long> geoloc) {
-        this.geoloc = geoloc;
-    }
+    private Geoloc _geoloc;
 
     public Geoloc get_geoloc() {
         return _geoloc;
@@ -42,8 +34,6 @@ public class Book {
     public void set_geoloc(Geoloc _geoloc) {
         this._geoloc = _geoloc;
     }
-
-    private Geoloc _geoloc;
 
     public String getIndirizzo() {
         return indirizzo;
@@ -70,7 +60,6 @@ public class Book {
         avgRating=0;
         nRates=0;
         sumRates=0;
-
 
     }
 
