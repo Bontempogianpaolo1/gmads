@@ -64,7 +64,6 @@ public class Profile implements Serializable{
         nrates=0;
     }
 
-
     public HashMap<String, String> getMyBooks() {
         return myBooks;
     }
