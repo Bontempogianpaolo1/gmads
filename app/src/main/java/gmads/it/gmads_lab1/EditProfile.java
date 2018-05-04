@@ -349,6 +349,13 @@ public class EditProfile extends AppCompatActivity {
                             vSurname.setText(profile.getSurname());
                             vEmail.setText(profile.getEmail());
                             vBio.setText(profile.getDescription());
+                            //controllo che ci sia il CAP
+                            if(profile.getCAP().length()!=0){
+                                String[] tmp = profile.getCAP().split(", ");
+                                vCAP.setText(tmp[0]);
+                                vCountry.setText(tmp[1]);
+                            }
+
                             if (profile.getImage() != null) {
                                 try {
                                     File localFile = File.createTempFile("images", "jpg");
@@ -380,7 +387,7 @@ public class EditProfile extends AppCompatActivity {
                             vName.setHint(getString(R.string.name));
                             vSurname.setHint(getString(R.string.surname));
                             vEmail.setHint(getString(R.string.email));
-                            vBio.setHint(getString(R.string.bioExample));
+                            vBio.setHint(getString(R.string.bioEditP));
                             progressbar.setVisibility(View.GONE);
                             profileImage.setVisibility(View.VISIBLE);
                         }

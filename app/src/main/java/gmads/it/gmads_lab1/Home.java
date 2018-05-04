@@ -114,8 +114,6 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
         algoClient = new Client("L6B7L7WXZW", "9d2de9e724fa9289953e6b2d5ec978a5");
         algoIndex = algoClient.getIndex("BookIndex");
 
