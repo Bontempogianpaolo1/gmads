@@ -2,15 +2,21 @@ package gmads.it.gmads_lab1;
 
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
@@ -24,28 +30,54 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.support.design.widget.TabLayout;
+import android.widget.TextView;
 
 
+import com.algolia.search.saas.AlgoliaException;
+import com.algolia.search.saas.Client;
+import com.algolia.search.saas.CompletionHandler;
+import com.algolia.search.saas.Index;
+import com.algolia.search.saas.Query;
 import com.arlib.floatingsearchview.FloatingSearchView;
 import com.bumptech.glide.Glide;
+import com.firebase.ui.auth.AuthUI;
+import com.google.gson.Gson;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import gmads.it.gmads_lab1.fragments.Home_1;
 
-public class Home extends AppCompatActivity {
+public class Home extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     private RecyclerView recyclerView;
     private BookAdapter adapter;
     private List<Book> bookList;
     SearchView searchview;
+    Client algoClient;
+    Index algoIndex;
+    Gson gson = new Gson();
+    TextView navName;
+    TextView navMail;
+    ImageView navImage;
+    NavigationView navigationView;
+    DrawerLayout drawer;
+    private Profile profile;
+    private Bitmap myProfileBitImage;
+    View headerView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        setNavViews();
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
 
         CollapsingToolbarLayout collapsingToolbarLayout = findViewById(R.id.collapsing_toolbar);
         //SearchView mSearchView = (SearchView) findViewById(R.id.searchView); // initiate a search view
@@ -75,8 +107,6 @@ public class Home extends AppCompatActivity {
         tableLayout.getTabAt(1).setText(getString(R.string.tab2));
         tableLayout.getTabAt(2).setText(getString(R.string.tab3));
 
-
-
 //
         //era per mettere foto libri nell appbar, ma l'abbiamo messa come sfondo per ora
         try {
@@ -84,6 +114,11 @@ public class Home extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+
+        algoClient = new Client("L6B7L7WXZW", "9d2de9e724fa9289953e6b2d5ec978a5");
+        algoIndex = algoClient.getIndex("BookIndex");
+
     }
 
     /*@Override
@@ -93,15 +128,53 @@ public class Home extends AppCompatActivity {
         return false;
     }*/
 
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.nav_showProfile) {
+            Intent intentMod = new Intent(this, ShowProfile.class);
+            startActivity(intentMod);
+            finish();
+            return true;
+        } else if (id == R.id.nav_addBook) {
+            Intent intentMod = new Intent(this, AddBook.class);
+            startActivity(intentMod);
+            finish();
+            return true;
+        } else if (id == R.id.nav_home) {
+            //deve solo chiudersi la navbar
+            drawer.closeDrawers();
+            return true;
+        }else if(id == R.id.nav_logout){
+            AuthUI.getInstance().signOut(this).addOnCompleteListener(v->{
+                startActivity(new Intent(this,Login.class));
+                finish();
+            });
+            return true;
+        }
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.options_menu, menu);
         MenuItem m= menu.findItem(R.id.search);
         searchview = (android.widget.SearchView)m.getActionView();
+
+        CompletionHandler completionHandler = new CompletionHandler() {
+            @Override
+            public void requestCompleted(JSONObject content, AlgoliaException error) {
+
+            }
+        };
+
         searchview.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit( String query ) {
+                algoIndex.searchAsync(new Query(query), completionHandler);
                 return false;
             }
 
@@ -162,6 +235,30 @@ public class Home extends AppCompatActivity {
         overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
 
     }
+
+    public void setNavViews(){
+        drawer =  findViewById(R.id.drawer_layout);
+        navigationView =  findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+        headerView = navigationView.getHeaderView(0);
+        navName =  headerView.findViewById(R.id.navName);
+        navMail =  headerView.findViewById(R.id.navMail);
+        navImage =  headerView.findViewById(R.id.navImage);
+        headerView.setBackgroundResource(R.color.colorPrimaryDark);
+
+        if(profile!=null) {
+            navName.setText(profile.getName());
+            navName.append(" " + profile.getSurname());
+            navMail.setText(profile.getEmail());
+
+            if (myProfileBitImage != null) {
+                navImage.setImageBitmap(myProfileBitImage);
+            } else {
+                navImage.setImageDrawable(getDrawable(R.drawable.default_profile));
+            }
+        }
+    }
+
 }
 class FragmentViewPagerAdapter extends FragmentPagerAdapter {
     private final List<Fragment> mFragmentList = new ArrayList<>();
@@ -179,4 +276,5 @@ class FragmentViewPagerAdapter extends FragmentPagerAdapter {
     public void addFragment(Fragment fragment) {
         mFragmentList.add(fragment);
     }
+
 }

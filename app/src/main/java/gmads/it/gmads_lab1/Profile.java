@@ -18,16 +18,16 @@ public class Profile implements Serializable{
     private List<String> publishedBooks= new ArrayList<>();
     private List<String> takenBooks= new ArrayList<>();
     private int nrates;
-    private String address; //n+via,+city,+state
+    private String CAP; //"CAP, ITA"
     private double lat;
     private double lng;
 
-    public String getAddress() {
-        return address;
+    public String getCAP() {
+        return CAP;
     }
 
-    public void setAddress( String indirizzo ) {
-        this.address = address;
+    public void setCAP( String CAP ) {
+        this.CAP = CAP;
     }
 
     public double getLat() {
@@ -51,7 +51,7 @@ public class Profile implements Serializable{
         this.surname = surname;
         this.email = email;
         this.description= description;
-        this.address = "";
+        this.CAP = "";
         valutation=0;
         npublishedBooks=0;
         ntakenBooks=0;
@@ -142,14 +142,11 @@ public class Profile implements Serializable{
         this.ntakenBooks = ntakenBooks;
     }
 
-
     public List<String> getPublishedBooks() {
         return publishedBooks;
     }
 
-    public void setPublishedBooks(List<String> publishedBooks) {
-        this.publishedBooks = publishedBooks;
-    }
+    public void setPublishedBooks(List<String> publishedBooks) { this.publishedBooks = publishedBooks; }
 
     public List<String> getTakenBooks() {
         return takenBooks;

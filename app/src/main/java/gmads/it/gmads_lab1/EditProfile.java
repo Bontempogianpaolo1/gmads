@@ -73,11 +73,8 @@ public class EditProfile extends AppCompatActivity {
     TextView vSurname;
     TextView vEmail;
     TextView vBio;
-    TextView vAddress;
-    TextView vNum;
-    TextView vProvince;
-    TextView vCity;
-    TextView vState;
+    TextView vCAP;
+    TextView vCountry;
     //TextView changeIm;
 
     @Override
@@ -94,7 +91,6 @@ public class EditProfile extends AppCompatActivity {
         directory = cw.getDir(getString(R.string.imageDirectory), Context.MODE_PRIVATE);
         path = directory.getPath();
         //inizialize  layout
-        ll.setOnClickListener(this::setFocusOnClick);
         l2.setOnClickListener(this::setFocusOnClick);
         //inizialize  user data
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
@@ -106,17 +102,15 @@ public class EditProfile extends AppCompatActivity {
     public void findViews(){
         toolbar = findViewById(R.id.toolbar);
         progressbar = findViewById(R.id.progressBar);
-        ll= findViewById(R.id.linearLayout1);
+        //ll= findViewById(R.id.linearLayout1);
         l2= findViewById(R.id.linearlayout2);
         profileImage = findViewById(R.id.profile_image);
         vName = findViewById(R.id.name_input);
         vSurname = findViewById(R.id.surname_input);
         vEmail = findViewById(R.id.email_input);
         vBio = findViewById(R.id.address_input);
-        vAddress = findViewById(R.id.userAddress);
-        vNum = findViewById(R.id.num);
-        vCity = findViewById(R.id.city);
-        vState = findViewById(R.id.state);
+        vCountry = findViewById(R.id.country);
+        vCAP = findViewById(R.id.CAP);
     }
     //save data on click save
     private void onSaveClick() {
@@ -277,10 +271,8 @@ public class EditProfile extends AppCompatActivity {
         String surname = vSurname.getText().toString();
         String email = vEmail.getText().toString();
         String bio = vBio.getText().toString();
-        String city = vCity.getText().toString();
-        String address = vAddress.getText().toString();
-        String num = vNum.getText().toString();
-        String state = vState.getText().toString();
+        String cap = vCAP.getText().toString();
+        String country = vCountry.getText().toString();
 
         if(name.isEmpty()){
             vName.setError(getString(R.string.name_require));
@@ -297,9 +289,14 @@ public class EditProfile extends AppCompatActivity {
             vEmail.requestFocus();
             return;
         }
-        if(city.isEmpty()){
-            vCity.setError("Metti la città stronzo");
-            vCity.requestFocus();
+        if(cap.isEmpty()){
+            vCAP.setError("@string/cap_required");
+            vCAP.requestFocus();
+            return;
+        }
+        if(country.isEmpty()){
+            vCountry.setError("@string/country_required");
+            vCountry.requestFocus();
             return;
         }
 
@@ -330,10 +327,11 @@ public class EditProfile extends AppCompatActivity {
             profile.setEmail(email);
             profile.setDescription(bio);
             profile.setImage(profileImageUrl);
-            String s = num + " " +address + "," + city + "," + state;
+            String s = cap + ", " + country;
+            profile.setCAP(s);
             //piglio coordinate
             getCoords(s);
-            FirebaseManagement.updateUserData(profile);
+
             startActivity(pickIntent);
         }
     }
@@ -399,32 +397,31 @@ public class EditProfile extends AppCompatActivity {
                 });
     }
 
-    private void getCoords(String address) {
-        String url = "https://maps.googleapis.com/maps/api/geocode/json?address="+address+"&key=AIzaSyAheBkNImDIqf4oQZ_A_hiNEug28vFw7A8";
+    private void getCoords(String CAP) {//CAP = cap, country
+        String url = "https://maps.googleapis.com/maps/api/geocode/json?address="+CAP+"&key=AIzaSyAheBkNImDIqf4oQZ_A_hiNEug28vFw7A8";
         RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
         // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 response -> {//Display the first 500 characters of the response string.
 
                     JSONObject resultObject;
-                    String formatted_address;
+                    String formatted_address = CAP;
                     Double lat;
                     Double lng;
 
                     try {
                         //piglio Json
                         resultObject = new JSONObject(response);
-                        formatted_address = resultObject.getJSONArray("results").getJSONObject(0).getString("formatted_address");
                         lat = resultObject.getJSONArray("results").getJSONObject(0).getJSONObject("geometry").getJSONObject("location").getDouble("lat");
                         lng = resultObject.getJSONArray("results").getJSONObject(0).getJSONObject("geometry").getJSONObject("location").getDouble("lng");
                     }catch (Exception e){
                         lat = 0.0;
                         lng = 0.0;
-                        formatted_address = address;
                     }
-                    profile.setAddress(formatted_address);
+                    profile.setCAP(formatted_address);
                     profile.setLat(lat);
                     profile.setLng(lng);
+                    FirebaseManagement.updateUserData(profile);
                 }, error -> Log.d("That didn't work!","Error: "+error));
         // Add the request to the RequestQueue.
         queue.add(stringRequest);
