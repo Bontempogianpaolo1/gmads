@@ -3,6 +3,7 @@ package gmads.it.gmads_lab1;
 import android.graphics.Bitmap;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 public class Book {
@@ -23,9 +24,26 @@ public class Book {
     private String owner;
     private String holder;
     private List<Bitmap> images;
+    private String indirizzo;
+    private Geoloc _geoloc;
 
+    public Geoloc get_geoloc() {
+        return _geoloc;
+    }
 
-    public Book(String BId, String isbn, String title, String description, String urlimage, String publishDate, String author, String categories, String publisher, String owner) {
+    public void set_geoloc(Geoloc _geoloc) {
+        this._geoloc = _geoloc;
+    }
+
+    public String getIndirizzo() {
+        return indirizzo;
+    }
+
+    public void setIndirizzo( String indirizzo ) {
+        this.indirizzo = indirizzo;
+    }
+
+    public Book( String BId, String isbn, String title, String description, String urlimage, String publishDate, String author, String categories, String publisher, String owner, Double lat, Double lng) {
         this.BId = BId;
         this.isbn = isbn;
         this.title = title;
@@ -36,11 +54,13 @@ public class Book {
         this.categories = categories;
         this.publisher = publisher;
         this.owner = owner;
+        this._geoloc = new Geoloc(lat, lng);
         comments= Collections.emptyList();
         images=Collections.emptyList();
         avgRating=0;
         nRates=0;
         sumRates=0;
+
     }
 
     public Book() {

@@ -34,15 +34,24 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+
+import com.algolia.search.saas.Client;
+import com.algolia.search.saas.Index;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.google.gson.Gson;
+
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -71,6 +80,7 @@ public class SaveBook extends AppCompatActivity{
     ContextWrapper cw;
     File directory;
     String path;
+    Uri uriConditionImage;
     LinearLayout ll;
     EditText vTitle;
     EditText vDate;
@@ -83,7 +93,10 @@ public class SaveBook extends AppCompatActivity{
     Book book;
     ProgressBar progressBar;
     List<String> images=new ArrayList<>();
-
+    Client algoClient;
+    Index algoIndex;
+    Gson gson = new Gson();
+    Profile profile;
 
     ViewPagerAdapter adapter;
     ViewPager viewPager;
@@ -116,40 +129,44 @@ public class SaveBook extends AppCompatActivity{
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         boolean isRawData = getIntent().getBooleanExtra("rawData", false);
         if(!isRawData) {
-            getjson(getApplicationContext(), isbn);
+            getUserInfo();
         } else {
             isbn = null;
         }
+
+        algoClient = new Client("L6B7L7WXZW", "9d2de9e724fa9289953e6b2d5ec978a5");
+        algoIndex = algoClient.getIndex("BookIndex");
+
     }
-   public void setReferences(){
-       prefs = PreferenceManager.getDefaultSharedPreferences(this);
-       isbn = prefs.getString(EXTRA_ISBN, null);
-       if (isbn != null) {
-           mProfileReference =FirebaseManagement.getDatabase().getReference()
-                   .child("users")
-                   .child(FirebaseManagement.getUser().getUid());
-           mBooksReference = FirebaseManagement.getDatabase().getReference()
-                   .child("books");
-       }
+    public void setReferences(){
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        isbn = prefs.getString(EXTRA_ISBN, null);
+        if (isbn != null) {
+            mProfileReference =FirebaseManagement.getDatabase().getReference()
+                    .child("users")
+                    .child(FirebaseManagement.getUser().getUid());
+            mBooksReference = FirebaseManagement.getDatabase().getReference()
+                    .child("books");
+        }
     }
-public void findActViews(){
-    vTitle = findViewById(R.id.title);
-    vDate = findViewById(R.id.data);
-    vAuthor = findViewById(R.id.autore);
-    vCategories = findViewById(R.id.categorie);
-    vPublisher = findViewById(R.id.editore);
-    vDescription = findViewById(R.id.descrizione);
-    bookImage = findViewById(R.id.bookimage);
-    progressBar=findViewById(R.id.progressBar);
-    ll=findViewById(R.id.ll);
-    add = findViewById(R.id.addphoto);
-    toolbar = findViewById(R.id.toolbar);
-    toolbar.setTitle(getString(R.string.bookTitle));
-    setSupportActionBar(toolbar);
-    vDescription.setVerticalScrollBarEnabled(true);
-    vDescription.setMovementMethod(new ScrollingMovementMethod());
-    add.setOnClickListener(this::onAddPhotoClick);
-}
+    public void findActViews(){
+        vTitle = findViewById(R.id.title);
+        vDate = findViewById(R.id.data);
+        vAuthor = findViewById(R.id.autore);
+        vCategories = findViewById(R.id.categorie);
+        vPublisher = findViewById(R.id.editore);
+        vDescription = findViewById(R.id.descrizione);
+        bookImage = findViewById(R.id.bookimage);
+        progressBar=findViewById(R.id.progressBar);
+        ll=findViewById(R.id.ll);
+        add = findViewById(R.id.addphoto);
+        toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle(getString(R.string.bookTitle));
+        setSupportActionBar(toolbar);
+        vDescription.setVerticalScrollBarEnabled(true);
+        vDescription.setMovementMethod(new ScrollingMovementMethod());
+        add.setOnClickListener(this::onAddPhotoClick);
+    }
     public void getjson(Context c,  String isbn) {
         String url = "https://www.googleapis.com/books/v1/volumes?q=ISBN:<";
         url = url + isbn + ">";
@@ -179,75 +196,77 @@ public void findActViews(){
                     }catch (Exception e){
                         volumeObject= new JSONObject();
                     }
-                        try{
-                            title = volumeObject.getString("title");
-                            vTitle.setText(title);
-                        }catch (Exception e){
-                            vTitle.setText(getString(R.string.titleNotFound));
-                        }
-                        try{
-                            author = volumeObject.getString("authors");
-                            author = author.replaceAll("[\"\\[\\]]","");
-                            vAuthor.setText(author);
-                        }catch (Exception e){
-                            vAuthor.setText(getString(R.string.authorNotFound));
-                        }
-                        try{
-                            if(!volumeObject.isNull("publisher")&& volumeObject.has("publisher")){
-                                publisher = volumeObject.getString("publisher");
-                                vPublisher.setText(publisher);
+                    try{
+                        title = volumeObject.getString("title");
+                        vTitle.setText(title);
+                    }catch (Exception e){
+                        vTitle.setText(getString(R.string.titleNotFound));
+                    }
+                    try{
+                        author = volumeObject.getString("authors");
+                        author = author.replaceAll("[\"\\[\\]]","");
+                        vAuthor.setText(author);
+                    }catch (Exception e){
+                        vAuthor.setText(getString(R.string.authorNotFound));
+                    }
+                    try{
+                        if(!volumeObject.isNull("publisher")&& volumeObject.has("publisher")){
+                            publisher = volumeObject.getString("publisher");
+                            vPublisher.setText(publisher);
                         }else{
                             vPublisher.setText(getString(R.string.publisherNotFound));
                         }
-                        }catch (Exception e){
-                            vPublisher.setText(getString(R.string.publisherNotFound));
-                        }
-                        try{
-                            publishdate= volumeObject.getString("publishedDate");
-                            vDate.setText(publishdate);
-                        }catch (Exception e){
-                            vDate.setText(getString(R.string.pDateNotFound));
-                        }
-                        try{
-                            categories = volumeObject.getString("categories");
-                            categories = categories.replaceAll("[\"\\[\\]]","");
-                            vCategories.setText(categories);
-                        }catch (Exception e){
-                            vCategories.setText(getString(R.string.categoryNotFound));
-                        }
-                        try{
-                            urlimage = volumeObject.getJSONObject("imageLinks").getString("thumbnail");
-                        }catch (Exception e){
-                            urlimage="";
-                        }
-                        try {
-                            if(!volumeObject.isNull("description")&& volumeObject.has("description")) {
-                                description = volumeObject.getString("description");
-                                vDescription.setText(description);
-                            }else{
-                                vDescription.setText(R.string.descriptionNotFound);
-                            }
-                        }catch(Exception e){
+                    }catch (Exception e){
+                        vPublisher.setText(getString(R.string.publisherNotFound));
+                    }
+                    try{
+                        publishdate= volumeObject.getString("publishedDate");
+                        vDate.setText(publishdate);
+                    }catch (Exception e){
+                        vDate.setText(getString(R.string.pDateNotFound));
+                    }
+                    try{
+                        categories = volumeObject.getString("categories");
+                        categories = categories.replaceAll("[\"\\[\\]]","");
+                        vCategories.setText(categories);
+                    }catch (Exception e){
+                        vCategories.setText(getString(R.string.categoryNotFound));
+                    }
+                    try{
+                        urlimage = volumeObject.getJSONObject("imageLinks").getString("thumbnail");
+                    }catch (Exception e){
+                        urlimage="";
+                    }
+                    try {
+                        if(!volumeObject.isNull("description")&& volumeObject.has("description")) {
+                            description = volumeObject.getString("description");
+                            vDescription.setText(description);
+                        }else{
                             vDescription.setText(R.string.descriptionNotFound);
                         }
-                        Glide.with(this).load(urlimage).into((ImageView)findViewById(R.id.bookimage));
-                        adapter.addUrl(urlimage);
-                        adapter.notifyDataSetChanged();
-                        progressBar.setVisibility(View.GONE);
-                        ll.setVisibility(View.VISIBLE);
-                        prefs = PreferenceManager.getDefaultSharedPreferences(c);
-                        book = new Book(
-                                null,
-                                isbn,
-                                vTitle.getText().toString(),
-                                "",
-                                urlimage,
-                                vDate.getText().toString(),
-                                vAuthor.getText().toString(),
-                                vCategories.getText().toString(),
-                                vPublisher.getText().toString(),
-                                FirebaseManagement.getUser().getUid()
-                        );
+                    }catch(Exception e){
+                        vDescription.setText(R.string.descriptionNotFound);
+                    }
+                    Glide.with(this).load(urlimage).into((ImageView)findViewById(R.id.bookimage));
+                    adapter.addUrl(urlimage);
+                    adapter.notifyDataSetChanged();
+                    progressBar.setVisibility(View.GONE);
+                    ll.setVisibility(View.VISIBLE);
+                    prefs = PreferenceManager.getDefaultSharedPreferences(c);
+                    book = new Book(
+                            null,
+                            isbn,
+                            vTitle.getText().toString(),
+                            "",
+                            urlimage,
+                            vDate.getText().toString(),
+                            vAuthor.getText().toString(),
+                            vCategories.getText().toString(),
+                            vPublisher.getText().toString(),
+                            FirebaseManagement.getUser().getUid(),
+                            profile.getLat(), //da inserire da profilo da firebase
+                            profile.getLng()
+                    );
                 }, error -> Log.d("That didn't work!","Error: "+error));
         // Add the request to the RequestQueue.
         queue.add(stringRequest);
@@ -301,7 +320,9 @@ public void findActViews(){
                     vAuthor.getText().toString(),
                     vCategories.getText().toString(),
                     vPublisher.getText().toString(),
-                    FirebaseManagement.getUser().getUid()
+                    FirebaseManagement.getUser().getUid(),
+                    profile.getLat(), //da prendere dal profilo utente da firebase
+                    profile.getLng()
             );
             //set popup
             android.app.AlertDialog.Builder ad = t.showPopup(this, getString(R.string.saveQuestion), "", getString(R.string.cancel));
@@ -313,9 +334,15 @@ public void findActViews(){
                 progressDialog.setTitle(getString(R.string.Uploading));
                 progressDialog.show();
                 book.setBId(bookKey);
-                mProfileReference=FirebaseManagement.getDatabase().getReference();
+                mProfileReference = FirebaseManagement.getDatabase().getReference();
                 mProfileReference.child("myBooks").child(bookKey).setValue(book.getIsbn())
                         .addOnFailureListener(e -> Log.v("ERR", e.getMessage()));
+
+                try {
+                    algoIndex.addObjectAsync(new JSONObject(gson.toJson(book)), null);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
 
                 if (newBitMapBookImage != null) {
                     storageReference = FirebaseManagement
@@ -363,7 +390,7 @@ public void findActViews(){
 
     private void onAddPhotoClick(View v) {
         //set popup
-       setFocusOnClick(Objects.requireNonNull(this.getCurrentFocus()));
+        setFocusOnClick(Objects.requireNonNull(this.getCurrentFocus()));
         v.getContext();
         android.app.AlertDialog.Builder ad=t1.showPopup(this,getString(R.string.addBookImage),getString(R.string.selectGallery),getString(R.string.selectFromCamera));
         ad.setPositiveButton(getString(R.string.selectGallery),(vi,w)->{
@@ -407,7 +434,7 @@ public void findActViews(){
             bookImage.setImageBitmap(newBitMapBookImage);
             adapter.addUrl(bitmapToUrl(newBitMapBookImage));
             adapter.notifyDataSetChanged();
-           // bookImage.setImageBitmap(newBitMapBookImage);
+            // bookImage.setImageBitmap(newBitMapBookImage);
             //manage request image from gallery
         } else if ( requestCode==REQUEST_IMAGE_LIBRARY && resultCode == RESULT_OK) {
             imagechanged=true;
@@ -416,7 +443,7 @@ public void findActViews(){
                 assert imageUri != null;
                 final InputStream imageStream = getContentResolver().openInputStream(imageUri);
                 newBitMapBookImage = BitmapFactory.decodeStream(imageStream);
-               // bookImage.loadUrl(bitmapToUrl(newBitMapBookImage));
+                // bookImage.loadUrl(bitmapToUrl(newBitMapBookImage));
                 bookImage.setImageBitmap(newBitMapBookImage);
                 //bookImage.setImageBitmap(newBitMapBookImage);
             } catch (IOException e) {
@@ -454,5 +481,21 @@ public void findActViews(){
         byte[] byteArray = byteArrayOutputStream.toByteArray();
         String imgageBase64 = Base64.encodeToString(byteArray, Base64.DEFAULT);
         return "data:image/png;base64," + imgageBase64;
+    }
+    private void getUserInfo(){
+        FirebaseManagement.getDatabase().getReference().child("users").child(FirebaseManagement.getUser().getUid())
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        profile = dataSnapshot.getValue(Profile.class);
+                        getjson(getApplicationContext(), isbn);
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        // Getting Post failed, log a message
+                    }
+                });
+
     }
 }
