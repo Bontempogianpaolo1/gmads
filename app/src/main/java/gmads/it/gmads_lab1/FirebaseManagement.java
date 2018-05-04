@@ -72,6 +72,6 @@ public class FirebaseManagement {
 
     public static void loginUser(){
         User = Auth.getCurrentUser();
-        ProfileInfoSync.pISInstance.loadProfileInfo();
+        //ProfileInfoSync.pISInstance.loadProfileInfo();
     }
 }
