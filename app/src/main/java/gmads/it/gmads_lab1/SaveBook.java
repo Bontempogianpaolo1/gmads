@@ -42,7 +42,10 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.google.gson.Gson;
@@ -93,7 +96,7 @@ public class SaveBook extends AppCompatActivity{
     Client algoClient;
     Index algoIndex;
     Gson gson = new Gson();
-
+    Profile profile;
 
     ViewPagerAdapter adapter;
     ViewPager viewPager;
@@ -126,7 +129,7 @@ public class SaveBook extends AppCompatActivity{
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         boolean isRawData = getIntent().getBooleanExtra("rawData", false);
         if(!isRawData) {
-            getjson(getApplicationContext(), isbn);
+            getUserInfo();
         } else {
             isbn = null;
         }
@@ -261,8 +264,8 @@ public class SaveBook extends AppCompatActivity{
                             vCategories.getText().toString(),
                             vPublisher.getText().toString(),
                             FirebaseManagement.getUser().getUid(),
-                            10.1, //da inserire da profilo da firebase
-                            11.1
+                            profile.getLat(), //da inserire da profilo da firebase
+                            profile.getLng()
                     );
                 }, error -> Log.d("That didn't work!","Error: "+error));
         // Add the request to the RequestQueue.
@@ -318,8 +321,8 @@ public class SaveBook extends AppCompatActivity{
                     vCategories.getText().toString(),
                     vPublisher.getText().toString(),
                     FirebaseManagement.getUser().getUid(),
-                    10.1, //da prendere dal profilo utente da firebase
-                    12.1
+                    profile.getLat(), //da prendere dal profilo utente da firebase
+                    profile.getLng()
             );
             //set popup
             android.app.AlertDialog.Builder ad = t.showPopup(this, getString(R.string.saveQuestion), "", getString(R.string.cancel));
@@ -478,5 +481,21 @@ public class SaveBook extends AppCompatActivity{
         byte[] byteArray = byteArrayOutputStream.toByteArray();
         String imgageBase64 = Base64.encodeToString(byteArray, Base64.DEFAULT);
         return "data:image/png;base64," + imgageBase64;
+    }
+    private void getUserInfo(){
+        FirebaseManagement.getDatabase().getReference().child("users").child(FirebaseManagement.getUser().getUid())
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        profile = dataSnapshot.getValue(Profile.class);
+                        getjson(getApplicationContext(), isbn);
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        // Getting Post failed, log a message
+                    }
+                });
+
     }
 }

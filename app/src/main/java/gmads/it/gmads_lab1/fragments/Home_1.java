@@ -61,6 +61,10 @@ public class Home_1 extends Fragment {
         return root;
     }
 
+    public BookAdapter getAdapter() {
+        return adapter;
+    }
+
     /**
      * Adding few albums for testing
      */

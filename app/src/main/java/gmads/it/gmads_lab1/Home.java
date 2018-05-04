@@ -1,5 +1,6 @@
 package gmads.it.gmads_lab1;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -21,6 +22,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
@@ -43,10 +46,12 @@ import com.bumptech.glide.Glide;
 import com.firebase.ui.auth.AuthUI;
 import com.google.gson.Gson;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import gmads.it.gmads_lab1.fragments.Home_1;
 
@@ -67,7 +72,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     private Profile profile;
     private Bitmap myProfileBitImage;
     View headerView;
-
+    Home_1 tab1= new Home_1();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,7 +102,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 //
         ViewPager pager= findViewById(R.id.viewPager);
         FragmentViewPagerAdapter vpadapter= new FragmentViewPagerAdapter(getSupportFragmentManager());
-        vpadapter.addFragment(new Home_1());
+        vpadapter.addFragment(tab1);
         vpadapter.addFragment(new Home_1());
         vpadapter.addFragment(new Home_1());
         pager.setAdapter(vpadapter);
@@ -162,18 +167,24 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         MenuItem m= menu.findItem(R.id.search);
         searchview = (android.widget.SearchView)m.getActionView();
 
-        CompletionHandler completionHandler = new CompletionHandler() {
-            @Override
-            public void requestCompleted(JSONObject content, AlgoliaException error) {
-
-            }
-        };
-
         searchview.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit( String query ) {
-                algoIndex.searchAsync(new Query(query), completionHandler);
-                return false;
+               algoIndex.searchAsync(new Query(query), new CompletionHandler() {
+                   @Override
+                   public void requestCompleted( JSONObject jsonObject, AlgoliaException e ) {
+                       if(e==null){
+                           InputMethodManager imm = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                           assert imm != null;
+                           imm.hideSoftInputFromWindow(Objects.requireNonNull(getCurrentFocus()).getWindowToken(), 0);
+                           SearchResultsJsonParser search= new SearchResultsJsonParser();
+                           Log.d("lista",jsonObject.toString());
+                           List<Book> books= search.parseResults(jsonObject);
+                           tab1.getAdapter().setbooks(books);
+                       }
+                   }
+               });
+                return true;
             }
 
             @Override
@@ -276,3 +287,4 @@ class FragmentViewPagerAdapter extends FragmentPagerAdapter {
     }
 
 }
+
