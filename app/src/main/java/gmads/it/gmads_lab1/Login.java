@@ -28,7 +28,7 @@ public class Login extends AppCompatActivity {
             //se è gia loggato invio alla classe home uid e chiudo l'attività
             FirebaseManagement.loginUser();
             Datasource.getInstance().sincMyProfile();
-            Intent intent = new Intent(this, Home.class);
+            Intent intent = new Intent(this, ShowProfile.class);
             startActivity(intent);
             //finish();
         } else {
@@ -56,7 +56,7 @@ public class Login extends AppCompatActivity {
         //ritorno dall'attività di firebase e se si è loggato vado a home
         if (resultCode == RESULT_OK) {
             FirebaseManagement.createUser(getApplicationContext(), Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getEmail());
-            startActivity(new Intent(this, Home.class));
+            startActivity(new Intent(this, ShowProfile.class));
         }
     }
 }
