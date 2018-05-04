@@ -18,10 +18,35 @@ public class Profile implements Serializable{
     private List<String> publishedBooks= new ArrayList<>();
     private List<String> takenBooks= new ArrayList<>();
     private int nrates;
+    private String indirizzo;
+    private long lat;
+    private long lng;
 
+    public String getIndirizzo() {
+        return indirizzo;
+    }
 
+    public void setIndirizzo( String indirizzo ) {
+        this.indirizzo = indirizzo;
+    }
 
-    public Profile(String name, String surname, String email,String Description) {
+    public long getLat() {
+        return lat;
+    }
+
+    public void setLat( long lat ) {
+        this.lat = lat;
+    }
+
+    public long getLng() {
+        return lng;
+    }
+
+    public void setLng( long lng ) {
+        this.lng = lng;
+    }
+
+    public Profile( String name, String surname, String email, String Description) {
         this.name = name;
         this.surname = surname;
         this.email = email;

@@ -1,21 +1,30 @@
 package gmads.it.gmads_lab1;
 
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
+import android.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.support.design.widget.TabLayout;
+
 
 import com.arlib.floatingsearchview.FloatingSearchView;
 import com.bumptech.glide.Glide;
@@ -23,12 +32,14 @@ import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 import java.util.List;
 
+import gmads.it.gmads_lab1.fragments.Home_1;
+
 public class Home extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private BookAdapter adapter;
     private List<Book> bookList;
-
+    SearchView searchview;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,27 +47,38 @@ public class Home extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        CollapsingToolbarLayout ctl = findViewById(R.id.collapsing_toolbar);
-
+        CollapsingToolbarLayout collapsingToolbarLayout = findViewById(R.id.collapsing_toolbar);
         //SearchView mSearchView = (SearchView) findViewById(R.id.searchView); // initiate a search view
         //mSearchView.attachNavigationDrawerToMenuButton(findViewById(R.id.drawer_layout));
-        initCollapsingToolbar();
-
         //mSearchView.setIconifiedByDefault(false);  // set the default or resting state of the search field
 
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+       // recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        initCollapsingToolbar();
+        /*bookList = new ArrayList<>();
+        adapter = new BookAdapter(this, bookList);*/
 
-        bookList = new ArrayList<>();
-        adapter = new BookAdapter(this, bookList);
+        //RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 2);
+        //recyclerView.setLayoutManager(mLayoutManager);
+        //recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, dpToPx(10), true));
+        //recyclerView.setItemAnimator(new DefaultItemAnimator());
+        //recyclerView.setAdapter(adapter);
+//
+        ViewPager pager= findViewById(R.id.viewPager);
+        FragmentViewPagerAdapter vpadapter= new FragmentViewPagerAdapter(getSupportFragmentManager());
+        vpadapter.addFragment(new Home_1());
+        vpadapter.addFragment(new Home_1());
+        vpadapter.addFragment(new Home_1());
+        pager.setAdapter(vpadapter);
+        TabLayout tableLayout= findViewById(R.id.tabs);
+        tableLayout.setupWithViewPager(pager);
+        tableLayout.getTabAt(0).setText(getString(R.string.tab1));
+        tableLayout.getTabAt(1).setText(getString(R.string.tab2));
+        tableLayout.getTabAt(2).setText(getString(R.string.tab3));
 
-        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 2);
-        recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, dpToPx(10), true));
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(adapter);
 
-        prepareBooks();
 
+//
+        //era per mettere foto libri nell appbar, ma l'abbiamo messa come sfondo per ora
         try {
             Glide.with(this).load(R.drawable.cover).into((ImageView) findViewById(R.id.backdrop));
         } catch (Exception e) {
@@ -75,7 +97,19 @@ public class Home extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.options_menu, menu);
+        MenuItem m= menu.findItem(R.id.search);
+        searchview = (android.widget.SearchView)m.getActionView();
+        searchview.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit( String query ) {
+                return false;
+            }
 
+            @Override
+            public boolean onQueryTextChange( String newText ) {
+                return false;
+            }
+        });
         return true;
     }
 
@@ -122,90 +156,27 @@ public class Home extends AppCompatActivity {
         });
     }
 
-    /**
-     * Adding few albums for testing
-     */
-    private void prepareBooks() {
+    public void mapcreate( View view ) {
+        Intent intentMod = new Intent(this, MapSearch.class);
+        startActivity(intentMod);
+        overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
 
-        Book b = new Book ("1", "","Harry Potter", "", "http://books.google.com/books/content?id=oPBGnwEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api", "", "", "", "", "Pinco");
-        bookList.add(b);
-        b = new Book ("2", "","Signore degli Anelli", "", "http://books.google.com/books/content?id=j1TNygAACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api", "", "", "", "", "Pallino");
-        bookList.add(b);
-        b = new Book ("3", "","Novecento", "", "http://books.google.com/books/content?id=bVx9NAEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api", "", "", "", "", "Tizio");
-        bookList.add(b);
-        b = new Book ("4", "","La ragazza del treno", "", "http://books.google.com/books/content?id=IUo3rgEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api", "", "", "", "", "Caio");
-        bookList.add(b);
-        b = new Book ("1", "","Harry Potter", "", "http://books.google.com/books/content?id=oPBGnwEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api", "", "", "", "", "Pinco");
-        bookList.add(b);
-        b = new Book ("2", "","Signore degli Anelli", "", "http://books.google.com/books/content?id=j1TNygAACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api", "", "", "", "", "Pallino");
-        bookList.add(b);
-        b = new Book ("3", "","Novecento", "", "http://books.google.com/books/content?id=bVx9NAEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api", "", "", "", "", "Tizio");
-        bookList.add(b);
-        b = new Book ("4", "","La ragazza del treno", "", "http://books.google.com/books/content?id=IUo3rgEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api", "", "", "", "", "Caio");
-        bookList.add(b);
-        b = new Book ("1", "","Harry Potter", "", "http://books.google.com/books/content?id=oPBGnwEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api", "", "", "", "", "Pinco");
-        bookList.add(b);
-        b = new Book ("2", "","Signore degli Anelli", "", "http://books.google.com/books/content?id=j1TNygAACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api", "", "", "", "", "Pallino");
-        bookList.add(b);
-        b = new Book ("3", "","Novecento", "", "http://books.google.com/books/content?id=bVx9NAEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api", "", "", "", "", "Tizio");
-        bookList.add(b);
-        b = new Book ("4", "","La ragazza del treno", "", "http://books.google.com/books/content?id=IUo3rgEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api", "", "", "", "", "Caio");
-        bookList.add(b);
-        b = new Book ("1", "","Harry Potter", "", "http://books.google.com/books/content?id=oPBGnwEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api", "", "", "", "", "Pinco");
-        bookList.add(b);
-        b = new Book ("2", "","Signore degli Anelli", "", "http://books.google.com/books/content?id=j1TNygAACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api", "", "", "", "", "Pallino");
-        bookList.add(b);
-        b = new Book ("3", "","Novecento", "", "http://books.google.com/books/content?id=bVx9NAEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api", "", "", "", "", "Tizio");
-        bookList.add(b);
-        b = new Book ("4", "","La ragazza del treno", "", "http://books.google.com/books/content?id=IUo3rgEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api", "", "", "", "", "Caio");
-        bookList.add(b);
-
-        adapter.notifyDataSetChanged();
     }
-
-    /**
-     * RecyclerView item decoration - give equal margin around grid item
-     */
-    public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
-
-        private int spanCount;
-        private int spacing;
-        private boolean includeEdge;
-
-        public GridSpacingItemDecoration(int spanCount, int spacing, boolean includeEdge) {
-            this.spanCount = spanCount;
-            this.spacing = spacing;
-            this.includeEdge = includeEdge;
-        }
-
-        @Override
-        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-            int position = parent.getChildAdapterPosition(view); // item position
-            int column = position % spanCount; // item column
-
-            if (includeEdge) {
-                outRect.left = spacing - column * spacing / spanCount; // spacing - column * ((1f / spanCount) * spacing)
-                outRect.right = (column + 1) * spacing / spanCount; // (column + 1) * ((1f / spanCount) * spacing)
-
-                if (position < spanCount) { // top edge
-                    outRect.top = spacing;
-                }
-                outRect.bottom = spacing; // item bottom
-            } else {
-                outRect.left = column * spacing / spanCount; // column * ((1f / spanCount) * spacing)
-                outRect.right = spacing - (column + 1) * spacing / spanCount; // spacing - (column + 1) * ((1f /    spanCount) * spacing)
-                if (position >= spanCount) {
-                    outRect.top = spacing; // item top
-                }
-            }
-        }
+}
+class FragmentViewPagerAdapter extends FragmentPagerAdapter {
+    private final List<Fragment> mFragmentList = new ArrayList<>();
+    public FragmentViewPagerAdapter(FragmentManager manager) {
+        super(manager);
     }
-
-    /**
-     * Converting dp to pixel
-     */
-    private int dpToPx(int dp) {
-        Resources r = getResources();
-        return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics()));
+    @Override
+    public Fragment getItem(int position) {
+        return mFragmentList.get(position);
+    }
+    @Override
+    public int getCount() {
+        return mFragmentList.size();
+    }
+    public void addFragment(Fragment fragment) {
+        mFragmentList.add(fragment);
     }
 }
