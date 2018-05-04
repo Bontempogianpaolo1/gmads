@@ -23,9 +23,35 @@ public class Book {
     private String owner;
     private String holder;
     private List<Bitmap> images;
+    private String indirizzo;
+    private long lat;
+    private long lng;
 
+    public String getIndirizzo() {
+        return indirizzo;
+    }
 
-    public Book(String BId, String isbn, String title, String description, String urlimage, String publishDate, String author, String categories, String publisher, String owner) {
+    public void setIndirizzo( String indirizzo ) {
+        this.indirizzo = indirizzo;
+    }
+
+    public long getLat() {
+        return lat;
+    }
+
+    public void setLat( long lat ) {
+        this.lat = lat;
+    }
+
+    public long getLng() {
+        return lng;
+    }
+
+    public void setLng( long lng ) {
+        this.lng = lng;
+    }
+
+    public Book( String BId, String isbn, String title, String description, String urlimage, String publishDate, String author, String categories, String publisher, String owner) {
         this.BId = BId;
         this.isbn = isbn;
         this.title = title;
