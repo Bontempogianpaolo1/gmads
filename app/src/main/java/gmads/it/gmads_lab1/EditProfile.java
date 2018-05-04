@@ -36,10 +36,19 @@ import java.util.regex.Pattern;
 import static android.graphics.Color.RED;
 import android.view.WindowManager;
 import android.widget.Toast;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class EditProfile extends AppCompatActivity {
 
@@ -64,8 +73,12 @@ public class EditProfile extends AppCompatActivity {
     TextView vSurname;
     TextView vEmail;
     TextView vBio;
+    TextView vAddress;
+    TextView vNum;
+    TextView vProvince;
+    TextView vCity;
+    TextView vState;
     //TextView changeIm;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +113,10 @@ public class EditProfile extends AppCompatActivity {
         vSurname = findViewById(R.id.surname_input);
         vEmail = findViewById(R.id.email_input);
         vBio = findViewById(R.id.address_input);
+        vAddress = findViewById(R.id.userAddress);
+        vNum = findViewById(R.id.num);
+        vCity = findViewById(R.id.city);
+        vState = findViewById(R.id.state);
     }
     //save data on click save
     private void onSaveClick() {
@@ -260,6 +277,10 @@ public class EditProfile extends AppCompatActivity {
         String surname = vSurname.getText().toString();
         String email = vEmail.getText().toString();
         String bio = vBio.getText().toString();
+        String city = vCity.getText().toString();
+        String address = vAddress.getText().toString();
+        String num = vNum.getText().toString();
+        String state = vState.getText().toString();
 
         if(name.isEmpty()){
             vName.setError(getString(R.string.name_require));
@@ -274,6 +295,11 @@ public class EditProfile extends AppCompatActivity {
         if(email.isEmpty()){
             vEmail.setError(getString(R.string.email_required));
             vEmail.requestFocus();
+            return;
+        }
+        if(city.isEmpty()){
+            vCity.setError("Metti la città stronzo");
+            vCity.requestFocus();
             return;
         }
 
@@ -304,10 +330,11 @@ public class EditProfile extends AppCompatActivity {
             profile.setEmail(email);
             profile.setDescription(bio);
             profile.setImage(profileImageUrl);
-
+            String s = num + " " +address + "," + city + "," + state;
+            //piglio coordinate
+            getCoords(s);
             FirebaseManagement.updateUserData(profile);
             startActivity(pickIntent);
-            progressbar.setVisibility(View.GONE);
         }
     }
 
@@ -355,7 +382,7 @@ public class EditProfile extends AppCompatActivity {
                             vName.setHint(getString(R.string.name));
                             vSurname.setHint(getString(R.string.surname));
                             vEmail.setHint(getString(R.string.email));
-                            vBio.setHint(getString(R.string.description));
+                            vBio.setHint(getString(R.string.bioExample));
                             progressbar.setVisibility(View.GONE);
                             profileImage.setVisibility(View.VISIBLE);
                         }
@@ -370,6 +397,36 @@ public class EditProfile extends AppCompatActivity {
                         // [END_EXCLUDE]
                     }
                 });
+    }
 
+    private void getCoords(String address) {
+        String url = "https://maps.googleapis.com/maps/api/geocode/json?address="+address+"&key=AIzaSyAheBkNImDIqf4oQZ_A_hiNEug28vFw7A8";
+        RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+        // Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                response -> {//Display the first 500 characters of the response string.
+
+                    JSONObject resultObject;
+                    String formatted_address;
+                    Double lat;
+                    Double lng;
+
+                    try {
+                        //piglio Json
+                        resultObject = new JSONObject(response);
+                        formatted_address = resultObject.getJSONArray("results").getJSONObject(0).getString("formatted_address");
+                        lat = resultObject.getJSONArray("results").getJSONObject(0).getJSONObject("geometry").getJSONObject("location").getDouble("lat");
+                        lng = resultObject.getJSONArray("results").getJSONObject(0).getJSONObject("geometry").getJSONObject("location").getDouble("lng");
+                    }catch (Exception e){
+                        lat = 0.0;
+                        lng = 0.0;
+                        formatted_address = address;
+                    }
+                    profile.setAddress(formatted_address);
+                    profile.setLat(lat);
+                    profile.setLng(lng);
+                }, error -> Log.d("That didn't work!","Error: "+error));
+        // Add the request to the RequestQueue.
+        queue.add(stringRequest);
     }
 }
