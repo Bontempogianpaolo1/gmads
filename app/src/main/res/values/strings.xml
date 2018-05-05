@@ -72,5 +72,19 @@
     <string name="Uploading">Uploading...</string>
     <string name="settings">Settings</string>
     <string name="logout">Logout</string>
+    <string name="plus">+</string>
+    <string name="permission_denied">camera permission denied</string>
+    <string name="name_require">Name required</string>
+    <string name="surname_required">Surname required</string>
+    <string name="email_required">Email required</string>
+    <string name="Failed_to_load_profile">Failed to load profile.</string>
+    <string name="failed_book_upload">Upload failed</string>
+    <string name="tab1">My Books</string>
+    <string name="tab2">Rented</string>
+    <string name="tab3">Added</string>
+    <string name="title_activity_map_search">Map</string>
+    <string name="country">Country (abbr.)</string>
+    <string name="country_required">Country required</string>
+    <string name="cap_required">CAP required</string>
     <!--end-->
 </resources>

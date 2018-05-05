@@ -51,18 +51,6 @@
                 app:civ_border_width="2dp"
                 android:visibility="visible"/>
 
-            <!--da sostituire con icona (forse)
-            <TextView
-                android:id="@+id/selectimage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:clickable="true"
-                android:focusable="true"
-                android:focusableInTouchMode="false"
-                android:text="@string/selectImage"
-                android:textColor="@color/colorPrimary"
-                android:textSize="16sp" />-->
 
             <ProgressBar
                 android:id="@+id/progressBar"
@@ -86,7 +74,8 @@
                 android:layout_marginRight="16dp"
                 android:layout_marginTop="16dp"
                 android:text="@string/name"
-                android:textStyle="bold"/>
+                android:textSize="@dimen/label"
+                android:textStyle="bold|italic" />
 
             <EditText
                 android:id="@+id/name_input"
@@ -109,7 +98,8 @@
                 android:layout_marginRight="16dp"
                 android:layout_marginTop="16dp"
                 android:text="@string/surname"
-                android:textStyle="bold" />
+                android:textSize="@dimen/label"
+                android:textStyle="bold|italic" />
 
             <EditText
                 android:id="@+id/surname_input"
@@ -133,7 +123,8 @@
                 android:layout_marginRight="16dp"
                 android:layout_marginTop="16dp"
                 android:text="@string/email"
-                android:textStyle="bold" />
+                android:textSize="@dimen/label"
+                android:textStyle="bold|italic"  />
 
             <EditText
                 android:id="@+id/email_input"
@@ -147,6 +138,50 @@
                 android:inputType="textEmailAddress" />
 
             <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="6dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="16dp"
+                android:text="CAP"
+                android:textSize="@dimen/label"
+                android:textStyle="bold|italic"  />
+
+            <EditText
+                android:id="@+id/CAP"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="6dp"
+                android:hint="CAP"
+                android:inputType="number" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="6dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/country"
+                android:textSize="@dimen/label"
+                android:textStyle="bold|italic"  />
+
+            <EditText
+                android:id="@+id/country"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="6dp"
+                android:hint="@string/country"
+                android:inputType="text" />
+
+            <TextView
                 android:id="@+id/address"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -155,7 +190,8 @@
                 android:layout_marginRight="16dp"
                 android:layout_marginTop="16dp"
                 android:text="@string/bioEditP"
-                android:textStyle="bold" />
+                android:textSize="@dimen/label"
+                android:textStyle="bold|italic"  />
 
             <EditText
                 android:id="@+id/address_input"
@@ -167,18 +203,7 @@
                 android:layout_marginTop="6dp"
                 android:hint="@string/bio"
                 android:inputType="textMultiLine"
-                android:maxLength="250"
-                />
-
-            <LinearLayout
-                android:id="@+id/linearLayout1"
-                style="?android:attr/buttonBarStyle"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:orientation="horizontal">
-
-            </LinearLayout>
-
+                android:maxLength="250" />
 
         </LinearLayout>
     </ScrollView>

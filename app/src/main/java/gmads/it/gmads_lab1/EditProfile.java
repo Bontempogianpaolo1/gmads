@@ -36,10 +36,19 @@ import java.util.regex.Pattern;
 import static android.graphics.Color.RED;
 import android.view.WindowManager;
 import android.widget.Toast;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class EditProfile extends AppCompatActivity {
 
@@ -64,8 +73,9 @@ public class EditProfile extends AppCompatActivity {
     TextView vSurname;
     TextView vEmail;
     TextView vBio;
+    TextView vCAP;
+    TextView vCountry;
     //TextView changeIm;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +91,6 @@ public class EditProfile extends AppCompatActivity {
         directory = cw.getDir(getString(R.string.imageDirectory), Context.MODE_PRIVATE);
         path = directory.getPath();
         //inizialize  layout
-        ll.setOnClickListener(this::setFocusOnClick);
         l2.setOnClickListener(this::setFocusOnClick);
         //inizialize  user data
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
@@ -93,13 +102,15 @@ public class EditProfile extends AppCompatActivity {
     public void findViews(){
         toolbar = findViewById(R.id.toolbar);
         progressbar = findViewById(R.id.progressBar);
-        ll= findViewById(R.id.linearLayout1);
+        //ll= findViewById(R.id.linearLayout1);
         l2= findViewById(R.id.linearlayout2);
         profileImage = findViewById(R.id.profile_image);
         vName = findViewById(R.id.name_input);
         vSurname = findViewById(R.id.surname_input);
         vEmail = findViewById(R.id.email_input);
         vBio = findViewById(R.id.address_input);
+        vCountry = findViewById(R.id.country);
+        vCAP = findViewById(R.id.CAP);
     }
     //save data on click save
     private void onSaveClick() {
@@ -177,7 +188,7 @@ public class EditProfile extends AppCompatActivity {
                 Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             } else {
-                Toast.makeText(this, "camera permission denied", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, R.string.permission_denied, Toast.LENGTH_LONG).show();
             }
 
         }
@@ -260,20 +271,32 @@ public class EditProfile extends AppCompatActivity {
         String surname = vSurname.getText().toString();
         String email = vEmail.getText().toString();
         String bio = vBio.getText().toString();
+        String cap = vCAP.getText().toString();
+        String country = vCountry.getText().toString();
 
         if(name.isEmpty()){
-            vName.setError("Name required");
+            vName.setError(getString(R.string.name_require));
             vName.requestFocus();
             return;
         }
         if(surname.isEmpty()){
-            vSurname.setError("Surname required");
+            vSurname.setError(getString(R.string.surname_required));
             vSurname.requestFocus();
             return;
         }
         if(email.isEmpty()){
-            vEmail.setError("Email required");
+            vEmail.setError(getString(R.string.email_required));
             vEmail.requestFocus();
+            return;
+        }
+        if(cap.isEmpty()){
+            vCAP.setError("@string/cap_required");
+            vCAP.requestFocus();
+            return;
+        }
+        if(country.isEmpty()){
+            vCountry.setError("@string/country_required");
+            vCountry.requestFocus();
             return;
         }
 
@@ -304,10 +327,12 @@ public class EditProfile extends AppCompatActivity {
             profile.setEmail(email);
             profile.setDescription(bio);
             profile.setImage(profileImageUrl);
+            String s = cap + ", " + country;
+            profile.setCAP(s);
+            //piglio coordinate
+            getCoords(s);
 
-            FirebaseManagement.updateUserData(profile);
             startActivity(pickIntent);
-            progressbar.setVisibility(View.GONE);
         }
     }
 
@@ -324,6 +349,13 @@ public class EditProfile extends AppCompatActivity {
                             vSurname.setText(profile.getSurname());
                             vEmail.setText(profile.getEmail());
                             vBio.setText(profile.getDescription());
+                            //controllo che ci sia il CAP
+                            if(profile.getCAP().length()!=0){
+                                String[] tmp = profile.getCAP().split(", ");
+                                vCAP.setText(tmp[0]);
+                                vCountry.setText(tmp[1]);
+                            }
+
                             if (profile.getImage() != null) {
                                 try {
                                     File localFile = File.createTempFile("images", "jpg");
@@ -355,7 +387,7 @@ public class EditProfile extends AppCompatActivity {
                             vName.setHint(getString(R.string.name));
                             vSurname.setHint(getString(R.string.surname));
                             vEmail.setHint(getString(R.string.email));
-                            vBio.setHint(getString(R.string.description));
+                            vBio.setHint(getString(R.string.bioEditP));
                             progressbar.setVisibility(View.GONE);
                             profileImage.setVisibility(View.VISIBLE);
                         }
@@ -365,11 +397,40 @@ public class EditProfile extends AppCompatActivity {
                         // Getting Post failed, log a message
                         Log.w("loadPost:onCancelled", databaseError.toException());
                         // [START_EXCLUDE]
-                        Toast.makeText(EditProfile.this, "Failed to load profile.",
+                        Toast.makeText(EditProfile.this, R.string.Failed_to_load_profile,
                                 Toast.LENGTH_SHORT).show();
                         // [END_EXCLUDE]
                     }
                 });
+    }
 
+    private void getCoords(String CAP) {//CAP = cap, country
+        String url = "https://maps.googleapis.com/maps/api/geocode/json?address="+CAP+"&key=AIzaSyAheBkNImDIqf4oQZ_A_hiNEug28vFw7A8";
+        RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+        // Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                response -> {//Display the first 500 characters of the response string.
+
+                    JSONObject resultObject;
+                    String formatted_address = CAP;
+                    Double lat;
+                    Double lng;
+
+                    try {
+                        //piglio Json
+                        resultObject = new JSONObject(response);
+                        lat = resultObject.getJSONArray("results").getJSONObject(0).getJSONObject("geometry").getJSONObject("location").getDouble("lat");
+                        lng = resultObject.getJSONArray("results").getJSONObject(0).getJSONObject("geometry").getJSONObject("location").getDouble("lng");
+                    }catch (Exception e){
+                        lat = 0.0;
+                        lng = 0.0;
+                    }
+                    profile.setCAP(formatted_address);
+                    profile.setLat(lat);
+                    profile.setLng(lng);
+                    FirebaseManagement.updateUserData(profile);
+                }, error -> Log.d("That didn't work!","Error: "+error));
+        // Add the request to the RequestQueue.
+        queue.add(stringRequest);
     }
 }
