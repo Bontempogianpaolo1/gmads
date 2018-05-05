@@ -49,10 +49,10 @@ public class Home_1 extends Fragment {
         bookList = new ArrayList<>();
         adapter = new BookAdapter(getContext(), bookList);
 
-        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getContext(), 2);
+        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getContext(), 3);
 
         recycle.setLayoutManager(mLayoutManager);
-        recycle.addItemDecoration(new GridSpacingItemDecoration(2, dpToPx(10), true));
+        recycle.addItemDecoration(new GridSpacingItemDecoration(3, dpToPx(10), true));
         recycle.setItemAnimator(new DefaultItemAnimator());
         prepareBooks();
         recycle.setAdapter(adapter);

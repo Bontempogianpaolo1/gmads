@@ -33,7 +33,9 @@
         </activity>
         <activity
             android:name=".Home"
-            android:label="gMADs"></activity>
+            android:label="gMADs"
+            android:screenOrientation="portrait"
+            ></activity>
         <activity
             android:name=".ShowProfile"
             android:label="@string/showProfile" />
@@ -69,7 +71,8 @@
 
         <activity
             android:name=".MapSearch"
-            android:label="@string/title_activity_map_search"></activity>
+            android:label="@string/title_activity_map_search"
+            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>

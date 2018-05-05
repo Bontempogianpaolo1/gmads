@@ -56,7 +56,6 @@ import java.util.Objects;
 import gmads.it.gmads_lab1.fragments.Home_1;
 
 public class Home extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
-
     private RecyclerView recyclerView;
     private BookAdapter adapter;
     private List<Book> bookList;

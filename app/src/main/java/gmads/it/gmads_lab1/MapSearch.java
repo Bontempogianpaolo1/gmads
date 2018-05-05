@@ -1,10 +1,17 @@
 package gmads.it.gmads_lab1;
-
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Rect;
 import android.location.Location;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.SearchView;
 
@@ -27,12 +34,18 @@ import org.json.JSONObject;
 import java.util.List;
 import java.util.Objects;
 
-public class MapSearch extends FragmentActivity implements OnMapReadyCallback {
+import gmads.it.gmads_lab1.fragments.Home_1;
+
+import static com.arlib.floatingsearchview.util.Util.dpToPx;
+
+public class MapSearch extends FragmentActivity implements OnMapReadyCallback{
 
     private GoogleMap mMap;
     Client algoClient;
     Index algoIndex;
     LatLngBounds bounds;
+    RecyclerView recycle;
+    List<Book> books;
     @Override
     protected void onCreate( Bundle savedInstanceState ) {
         super.onCreate(savedInstanceState);
@@ -45,6 +58,18 @@ public class MapSearch extends FragmentActivity implements OnMapReadyCallback {
         algoIndex = algoClient.getIndex("BookIndex");
         //SearchView sv = findViewById(R.id.searchView);
        // sv.getLeft()
+    }
+
+    private void initRecycler() {
+        Log.d("info", "initRecyclerView: init recyclerview");
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        recycle = findViewById(R.id.books_list);
+        recycle.setHasFixedSize(true);
+        recycle.setLayoutManager(layoutManager);
+       // recycle.addItemDecoration(new GridSpacingItemDecoration(3,dpToPx(10),true));
+        BookAdapterMap adapter = new BookAdapterMap(this,books);
+        recycle.setAdapter(adapter);
     }
 
 
@@ -67,31 +92,69 @@ public class MapSearch extends FragmentActivity implements OnMapReadyCallback {
                 imm.hideSoftInputFromWindow(Objects.requireNonNull(getCurrentFocus()).getWindowToken(), 0);
                 SearchResultsJsonParser search= new SearchResultsJsonParser();
                 Log.d("lista",jsonObject.toString());
-                List<Book> books= search.parseResults(jsonObject);
+                books= search.parseResults(jsonObject);
+
                 LatLngBounds.Builder builder= new LatLngBounds.Builder();
-
-
-
                for(Book b : books){
                   Marker m= mMap.addMarker(new MarkerOptions().position(new LatLng(b.get_geoloc().getLat(),b.get_geoloc().getLng())).title(b.getTitle()));
                   builder.include(m.getPosition());
                }
+               initRecycler();
                bounds=builder.build();
-                if (areBoundsTooSmall(bounds, 300)) {
-                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(bounds.getCenter(), 30));
+                if (areBoundsTooSmall(bounds, 2000)) {
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 200));
                 } else {
-                    mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 20));
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 200));
                 }
             }
         });
         // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(45.074045, 7.597933399999988);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
     }
     private boolean areBoundsTooSmall(LatLngBounds bounds, int minDistanceInMeter) {
         float[] result = new float[1];
         Location.distanceBetween(bounds.southwest.latitude, bounds.southwest.longitude, bounds.northeast.latitude, bounds.northeast.longitude, result);
         return result[0] < minDistanceInMeter;
+    }
+    public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
+
+        private int spanCount;
+        private int spacing;
+        private boolean includeEdge;
+
+        public GridSpacingItemDecoration( int spanCount, int spacing, boolean includeEdge ) {
+            this.spanCount = spanCount;
+            this.spacing = spacing;
+            this.includeEdge = includeEdge;
+        }
+
+        @Override
+        public void getItemOffsets( Rect outRect, View view, RecyclerView parent, RecyclerView.State state ) {
+            int position = parent.getChildAdapterPosition(view); // item position
+            int column = position % spanCount; // item column
+
+            if (includeEdge) {
+                outRect.left = spacing - column * spacing / spanCount; // spacing - column * ((1f / spanCount) * spacing)
+                outRect.right = (column + 1) * spacing / spanCount; // (column + 1) * ((1f / spanCount) * spacing)
+
+                if (position < spanCount) { // top edge
+                    outRect.top = spacing;
+                }
+                outRect.bottom = spacing; // item bottom
+            } else {
+                outRect.left = column * spacing / spanCount; // column * ((1f / spanCount) * spacing)
+                outRect.right = spacing - (column + 1) * spacing / spanCount; // spacing - (column + 1) * ((1f /    spanCount) * spacing)
+                if (position >= spanCount) {
+                    outRect.top = spacing; // item top
+                }
+            }
+        }
+    }
+
+    /**
+     * Converting dp to pixel
+     */
+    private int dpToPx( int dp ) {
+        Resources r = getResources();
+        return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics()));
     }
 }

@@ -20,6 +20,8 @@ public class BookJsonParser
         String publisher= jsonObject.optString("publisher");
         int rating = jsonObject.optInt("rating", -1);
         int year = jsonObject.optInt("year", 0);
+        Double lat= jsonObject.optJSONObject("_geoloc").optDouble("lat",0.0);
+        Double lng= jsonObject.optJSONObject("_geoloc").optDouble("lng",0.0);
         if (title != null )
             return new Book(
                     bid,
@@ -32,8 +34,8 @@ public class BookJsonParser
                     categories,
                     publisher,
                     owner,
-                    0.0,
-                    0.0);
+                    lat,
+                    lng);
         return null;
     }
 }

@@ -9,14 +9,25 @@
     android:orientation="vertical"
     tools:context="gmads.it.gmads_lab1.ShowProfile">
 
-    <com.lapism.searchview.widget.SearchView
+   <!-- <com.lapism.searchview.widget.SearchView
         android:id="@+id/searchView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content" />-->
+
     <fragment
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="306dp"
         tools:context=".MapSearch" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/books_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:paddingBottom="16dp"
+        android:paddingEnd="16dp"
+        android:paddingStart="16dp" />
+
 </LinearLayout>
