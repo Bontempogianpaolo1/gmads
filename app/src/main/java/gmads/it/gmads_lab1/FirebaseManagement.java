@@ -74,7 +74,8 @@ public static FirebaseDatabase getDatabase(){
             newProfile = new Profile(context.getString(R.string.name), context.getString(R.string.surname), email, context.getString(R.string.description));
         }
         Database.getReference().child("users").child(User.getUid()).setValue(newProfile);
-    
+
+        /*
         LocationProvider locationProvider = new LocationProvider();
         Location loc = locationProvider.getLocation(context);
 
@@ -83,6 +84,7 @@ public static FirebaseDatabase getDatabase(){
             GeoFire geoFire = new GeoFire(ref);
             geoFire.setLocation("location", new GeoLocation(loc.getLatitude(), loc.getLongitude()));
         }
+        */
     }
 
     public static void loginUser(){

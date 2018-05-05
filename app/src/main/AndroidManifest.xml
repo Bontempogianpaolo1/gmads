@@ -30,6 +30,13 @@
         android:name=".Home"
         android:label="gMADs">
         </activity>
+
+        <activity
+            android:name=".LocationProvider">
+        </activity>
+        <activity android:name=".PermissionManager">
+        </activity>
+
         <activity
             android:name=".ShowProfile"
             android:label="@string/showProfile"/>

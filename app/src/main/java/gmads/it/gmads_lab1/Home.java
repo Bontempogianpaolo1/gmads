@@ -2,6 +2,7 @@ package gmads.it.gmads_lab1;
 
 import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -73,7 +74,6 @@ public class Home extends AppCompatActivity  implements NavigationView.OnNavigat
                     .child("users")
                     .child(FirebaseManagement.getUser().getUid());
             mProfileReference.keepSynced(true);
-
             ValueEventListener postListener = new ValueEventListener() {
                 @Override
                 public void onDataChange( DataSnapshot dataSnapshot ) {
