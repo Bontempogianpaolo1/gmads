@@ -235,7 +235,7 @@ public class AddBook extends AppCompatActivity
 
             } else {
 
-                Toast.makeText(this, "camera permission denied", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, R.string.permission_denied, Toast.LENGTH_LONG).show();
             }
         }
     }

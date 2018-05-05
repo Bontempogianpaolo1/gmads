@@ -33,7 +33,8 @@ public class FirebaseManagement {
         }
         return storage;
     }
-public static FirebaseDatabase getDatabase(){
+
+    public static FirebaseDatabase getDatabase(){
         if(Database ==null){
             Database =FirebaseDatabase.getInstance();
             Database.setPersistenceEnabled(true);
@@ -62,15 +63,15 @@ public static FirebaseDatabase getDatabase(){
         String name[] = Objects.requireNonNull(getUser().getDisplayName()).split(" ");
         Profile newProfile;
         if(name[0]!=null && name[1]!=null) {
-            newProfile = new Profile(name[0], name[1], email, context.getString(R.string.description));
+            newProfile = new Profile(name[0], name[1], email, context.getString(R.string.bioExample));
         } else {
-            newProfile = new Profile(context.getString(R.string.name), context.getString(R.string.surname), email, context.getString(R.string.description));
+            newProfile = new Profile(context.getString(R.string.name), context.getString(R.string.surname), email, context.getString(R.string.bioExample));
         }
         Database.getReference().child("users").child(User.getUid()).setValue(newProfile);
     }
 
     public static void loginUser(){
         User = Auth.getCurrentUser();
-        ProfileInfoSync.pISInstance.loadProfileInfo();
+        //ProfileInfoSync.pISInstance.loadProfileInfo();
     }
 }

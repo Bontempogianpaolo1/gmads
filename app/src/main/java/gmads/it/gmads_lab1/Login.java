@@ -27,14 +27,15 @@ public class Login extends AppCompatActivity {
             // already signed in
             //se è gia loggato invio alla classe home uid e chiudo l'attività
             FirebaseManagement.loginUser();
+            Datasource.getInstance().sincMyProfile();
             Intent intent = new Intent(this, Home.class);
             startActivity(intent);
             //finish();
         } else {
             //se non è loggato mi loggo attraverso l'attività di firebase
             /*
-            TODO assegnare login a facebook e google
-             */
+            TODO assegnare login a facebook
+            */
 
             startActivityForResult(
                     AuthUI.getInstance()
@@ -55,7 +56,7 @@ public class Login extends AppCompatActivity {
         //ritorno dall'attività di firebase e se si è loggato vado a home
         if (resultCode == RESULT_OK) {
             FirebaseManagement.createUser(getApplicationContext(), Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getEmail());
-            startActivity(new Intent(this, Home.class));
+            startActivity(new Intent(this, ShowProfile.class));
         }
     }
 }

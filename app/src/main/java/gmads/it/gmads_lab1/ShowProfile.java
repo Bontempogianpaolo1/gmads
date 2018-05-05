@@ -1,6 +1,7 @@
 package gmads.it.gmads_lab1;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -27,6 +28,8 @@ import com.google.firebase.storage.StorageReference;
 import java.io.File;
 import java.io.IOException;
 
+import javax.sql.DataSource;
+
 public class ShowProfile extends AppCompatActivity  implements NavigationView.OnNavigationItemSelectedListener{
     //nav
     TextView navName;
@@ -43,10 +46,13 @@ public class ShowProfile extends AppCompatActivity  implements NavigationView.On
     TextView vEmail;
     TextView vBio;
     private Profile profile;
+    private Bitmap myProfileBitImage;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_profile);
+        profile = Datasource.getInstance().getMyProfile();
+        myProfileBitImage = Datasource.getInstance().getMyProfileBitImage();
         setNavViews();
         setActViews();
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -64,8 +70,25 @@ public class ShowProfile extends AppCompatActivity  implements NavigationView.On
         toolbar.setTitle(getString(R.string.showProfile));
         setSupportActionBar(toolbar);
         vBio.setMovementMethod(new ScrollingMovementMethod());
-        progressbar.setVisibility(View.VISIBLE);
+
         profileImage.setVisibility(View.GONE);
+        progressbar.setVisibility(View.VISIBLE);
+
+        if(profile!=null) {
+            vName.setText(profile.getName());
+            vName.append(" " + profile.getSurname());
+            vEmail.setText(profile.getEmail());
+            vBio.setText(profile.getDescription());
+
+            if (myProfileBitImage != null) {
+                profileImage.setImageBitmap(myProfileBitImage);
+            } else {
+                profileImage.setImageDrawable(getDrawable(R.drawable.default_profile));
+            }
+        }
+
+        progressbar.setVisibility(View.GONE);
+        profileImage.setVisibility(View.VISIBLE);
     }
     public void setNavViews(){
         drawer =  findViewById(R.id.drawer_layout);
@@ -76,6 +99,18 @@ public class ShowProfile extends AppCompatActivity  implements NavigationView.On
         navMail =  headerView.findViewById(R.id.navMail);
         navImage =  headerView.findViewById(R.id.navImage);
         headerView.setBackgroundResource(R.color.colorPrimaryDark);
+
+        if(profile!=null) {
+            navName.setText(profile.getName());
+            navName.append(" " + profile.getSurname());
+            navMail.setText(profile.getEmail());
+
+            if (myProfileBitImage != null) {
+                navImage.setImageBitmap(myProfileBitImage);
+            } else {
+                navImage.setImageDrawable(getDrawable(R.drawable.default_profile));
+            }
+        }
     }
 protected void onStart(){
         super.onStart();
