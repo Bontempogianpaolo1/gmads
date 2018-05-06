@@ -70,5 +70,11 @@ dependencies {
     implementation  'com.lapism:searchview:27.1.1.0.0'
     implementation 'com.algolia:algoliasearch-android:3.+'
     implementation 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
+    implementation 'uk.co.chrisjenx:calligraphy:2.3.0'
+    implementation 'com.squareup.okhttp3:okhttp:3.7.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.0.0'
+    implementation 'com.jakewharton:butterknife:8.8.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+    implementation 'com.google.maps.android:android-maps-utils:0.4+'
 }
 apply plugin: 'com.google.gms.google-services'
