@@ -81,12 +81,9 @@
                 app:cardElevation="8dp"
                 app:contentPadding="16dp">
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:lineSpacingExtra="8dp"
-                    android:text="@string/space"
-                    android:textSize="18sp" />
+
+
+                <include layout="@layout/showp_card" />
             </android.support.v7.widget.CardView>
 
         </android.support.v4.widget.NestedScrollView>
@@ -116,7 +113,6 @@
                     android:layout_marginLeft="8dp"
                     android:gravity="center_vertical"
                     android:text="Nome Cognome"
-                    android:textAlignment="textEnd"
                     android:textColor="@android:color/white"
                     android:textSize="20sp" />
 
