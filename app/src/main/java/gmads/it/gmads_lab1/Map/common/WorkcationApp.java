@@ -2,7 +2,7 @@ package gmads.it.gmads_lab1.Map.common;
 
 import android.app.Application;
 
-import gmads.it.gmads_lab1.Map.common.model.BaliDataProvider;
+import gmads.it.gmads_lab1.Map.common.model.LibraryProvider;
 import gmads.it.gmads_lab1.Map.common.model.MapsApiManager;
 import gmads.it.gmads_lab1.R;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
@@ -16,7 +16,7 @@ public class WorkcationApp extends Application {
         super.onCreate();
         sInstance = this;
         MapsApiManager.instance().initialize();
-        BaliDataProvider.instance().initialize("");
+        LibraryProvider.instance().initialize("");
         initCalligraphy();
     }
 

@@ -10,7 +10,7 @@ import java.util.List;
 
 import com.google.maps.android.PolyUtil;
 import gmads.it.gmads_lab1.Map.common.maps.MapsUtil;
-import gmads.it.gmads_lab1.Map.common.model.BaliDataProvider;
+import gmads.it.gmads_lab1.Map.common.model.LibraryProvider;
 import gmads.it.gmads_lab1.Map.common.model.Bounds;
 import gmads.it.gmads_lab1.Map.common.model.DirectionsResponse;
 import gmads.it.gmads_lab1.Map.common.model.MapsApiManager;
@@ -23,11 +23,11 @@ import okhttp3.Response;
 public class DetailsFragmentPresenterImpl extends MvpPresenterImpl<DetailsFragmentView> implements DetailsFragmentPresenter {
 
     private MapsApiManager mapsApiManager = MapsApiManager.instance();
-    private BaliDataProvider baliDataProvider = BaliDataProvider.instance();
+    private LibraryProvider libraryProvider = LibraryProvider.instance();
 
     @Override
     public void drawRoute(final LatLng first, final int position) {
-        final LatLng second = new LatLng(baliDataProvider.getLatByPosition(position), baliDataProvider.getLngByPosition(position));
+        final LatLng second = new LatLng(libraryProvider.getLatByPosition(position), libraryProvider.getLngByPosition(position));
         mapsApiManager.getRoute(first, second, new Callback() {
             @Override
             public void onFailure(final Call call, final IOException e) {
@@ -48,17 +48,17 @@ public class DetailsFragmentPresenterImpl extends MvpPresenterImpl<DetailsFragme
 
     @Override
     public void provideBaliData() {
-        getView().provideBaliData(baliDataProvider.providePlacesList());
+        getView().provideBaliData(libraryProvider.providePlacesList());
     }
 
     @Override
     public void onBackPressedWithScene() {
-        getView().onBackPressedWithScene(baliDataProvider.provideLatLngBoundsForAllPlaces());
+        getView().onBackPressedWithScene(libraryProvider.provideLatLngBoundsForAllPlaces());
     }
 
     @Override
     public void moveMapAndAddMarker() {
-        getView().moveMapAndAddMaker(baliDataProvider.provideLatLngBoundsForAllPlaces());
+        getView().moveMapAndAddMaker(libraryProvider.provideLatLngBoundsForAllPlaces());
     }
 
     private void updateMapZoomAndRegion(final Bounds bounds) {

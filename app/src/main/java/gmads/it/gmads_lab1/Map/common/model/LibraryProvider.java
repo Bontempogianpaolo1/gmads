@@ -1,50 +1,31 @@
 package gmads.it.gmads_lab1.Map.common.model;
 
-import android.content.Context;
-import android.content.res.AssetManager;
-import android.util.Log;
-import android.view.inputmethod.InputMethodManager;
-
-import com.algolia.search.saas.AlgoliaException;
 import com.algolia.search.saas.Client;
-import com.algolia.search.saas.CompletionHandler;
 import com.algolia.search.saas.Index;
 import com.algolia.search.saas.Query;
-import com.algolia.search.saas.RequestOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.gson.Gson;
 
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.util.List;
-import java.util.Objects;
 
 import gmads.it.gmads_lab1.Book;
-import gmads.it.gmads_lab1.Map.common.WorkcationApp;
 import gmads.it.gmads_lab1.SearchResultsJsonParser;
 
-import static com.firebase.ui.auth.AuthUI.getApplicationContext;
-
-public class BaliDataProvider {
+public class LibraryProvider {
     private final static String JSON_PATH = "bali.json";
 
-    private static BaliDataProvider sInstance;
+    private static LibraryProvider sInstance;
     Client algoClient;
     Index algoIndex;
-    private BaliData mBaliData;
+    private Library mLibrary;
 
-    private BaliDataProvider() {
+    private LibraryProvider() {
 
     }
 
-    public static BaliDataProvider instance() {
+    public static LibraryProvider instance() {
         if(sInstance == null) {
-            sInstance = new BaliDataProvider();
+            sInstance = new LibraryProvider();
             return sInstance;
         }
         return sInstance;
@@ -57,27 +38,27 @@ public class BaliDataProvider {
         //algoIndex.searchAsync(new Query(query), ( jsonObject, e ) -> {
               // SearchResultsJsonParser search= new SearchResultsJsonParser();
             //    Log.d("lista",jsonObject.toString());
-              //  mBaliData= new BaliData();
-               // mBaliData.setPlacesList(search.parseResults(jsonObject));
+              //  mLibrary= new Library();
+               // mLibrary.setBookList(search.parseResults(jsonObject));
            // }
-        //);mBaliData
-     //  while (mBaliData==null||mBaliData.isEmpty()){
+        //);mLibrary
+     //  while (mLibrary==null||mLibrary.isEmpty()){
        //    Log.d("waiting","waiting");
        //}
         //
-        mBaliData=new BaliData();
+        mLibrary =new Library();
         Thread t= new Thread(() -> {/*
            algoIndex.searchAsync(new Query(query), new CompletionHandler() {
                 @Override
                 public void requestCompleted( JSONObject jsonObject, AlgoliaException e ) {
                     SearchResultsJsonParser search= new SearchResultsJsonParser();
-                    mBaliData.setPlacesList(search.parseResults(jsonObject));
+                    mLibrary.setBookList(search.parseResults(jsonObject));
                     return;
                 }
             });*/
             SearchResultsJsonParser search= new SearchResultsJsonParser();
             try {
-                mBaliData.setPlacesList(search.parseResults(algoIndex.searchSync(new Query(query))));
+                mLibrary.setBookList(search.parseResults(algoIndex.searchSync(new Query(query))));
             }catch (Exception e){
                 e.printStackTrace();
             }
@@ -96,21 +77,21 @@ public class BaliDataProvider {
 
     public LatLngBounds provideLatLngBoundsForAllPlaces() {
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
-        for(Book place : mBaliData.getPlacesList()) {
+        for(Book place : mLibrary.getBookList()) {
             builder.include(new LatLng(place.get_geoloc().getLat(), place.get_geoloc().getLng()));
         }
         return builder.build();
     }
 
     public List<Book> providePlacesList() {
-        return mBaliData.getPlacesList();
+        return mLibrary.getBookList();
     }
 
     public double getLatByPosition(final int position) {
-        return mBaliData.getPlacesList().get(position).get_geoloc().getLat();
+        return mLibrary.getBookList().get(position).get_geoloc().getLat();
     }
 
     public double getLngByPosition(final int position) {
-        return mBaliData.getPlacesList().get(position).get_geoloc().getLng();
+        return mLibrary.getBookList().get(position).get_geoloc().getLng();
     }
 }

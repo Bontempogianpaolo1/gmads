@@ -3,7 +3,7 @@ package gmads.it.gmads_lab1.Map.main;
 import android.graphics.Bitmap;
 
 import gmads.it.gmads_lab1.Map.common.maps.MapBitmapCache;
-import gmads.it.gmads_lab1.Map.common.model.BaliDataProvider;
+import gmads.it.gmads_lab1.Map.common.model.LibraryProvider;
 import gmads.it.gmads_lab1.Map.common.mvp.MvpPresenterImpl;
 
 
@@ -15,6 +15,6 @@ public class MainPresenterImpl extends MvpPresenterImpl<MainView> implements Mai
 
     @Override
     public void provideMapLatLngBounds() {
-        getView().setMapLatLngBounds(BaliDataProvider.instance().provideLatLngBoundsForAllPlaces());
+        getView().setMapLatLngBounds(LibraryProvider.instance().provideLatLngBoundsForAllPlaces());
     }
 }

@@ -1,8 +1,8 @@
 package gmads.it.gmads_lab1.Map.main;
 import android.os.Bundle;
-import butterknife.OnClick;
+
 import gmads.it.gmads_lab1.Map.common.maps.MapsUtil;
-import gmads.it.gmads_lab1.Map.common.model.BaliDataProvider;
+import gmads.it.gmads_lab1.Map.common.model.LibraryProvider;
 import gmads.it.gmads_lab1.Map.common.mvp.MvpActivity;
 import gmads.it.gmads_lab1.Map.common.mvp.MvpFragment;
 import gmads.it.gmads_lab1.Map.main.m.DetailsFragment;
@@ -32,7 +32,7 @@ public class MainActivity extends MvpActivity<MainView, MainPresenter> implement
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        BaliDataProvider.instance().initialize("ha");
+        LibraryProvider.instance().initialize("ha");
         presenter.provideMapLatLngBounds();
         getSupportFragmentManager()
                 .beginTransaction()
@@ -58,7 +58,7 @@ public class MainActivity extends MvpActivity<MainView, MainPresenter> implement
 */
     @Override
     public void onBackPressed() {
-        if(getSupportFragmentManager().getBackStackEntryCount() > 1) {
+        if(getSupportFragmentManager().getBackStackEntryCount() > 0) {
             triggerFragmentBackPress(getSupportFragmentManager().getBackStackEntryCount());
         } else {
             finish();

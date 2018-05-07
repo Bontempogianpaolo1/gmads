@@ -12,6 +12,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import gmads.it.gmads_lab1.Book;
@@ -40,12 +43,13 @@ public class DetailsLayout extends CoordinatorLayout {
     }
 
     private void setData(Book place) {
+        Glide.with(getContext()).load(place.getUrlimage()).into(imageViewPlaceDetails);
         textViewTitle.setText(place.getTitle());
         textViewDescription.setText(place.getDescription());
     }
 
     public static Scene showScene(Activity activity, final ViewGroup container, final View sharedView, final String transitionName, final Book data) {
-        DetailsLayout detailsLayout = (DetailsLayout) activity.getLayoutInflater().inflate(R.layout.item_place, container, false);
+        DetailsLayout detailsLayout = (DetailsLayout) activity.getLayoutInflater().inflate(R.layout.item_book_map_big, container, false);
         detailsLayout.setData(data);
 
         TransitionSet set = new ShowDetailsTransitionSet(activity, transitionName, sharedView, detailsLayout);

@@ -32,7 +32,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/default_layout_margin"
-                android:text="MONKEY FOREST"
+                android:text=""
                 android:textAppearance="@style/RobotoBold"
                 android:textColor="@android:color/black"
                 android:textSize="@dimen/textsize_very_huge"
@@ -64,7 +64,7 @@
                     android:ellipsize="end"
                     android:gravity="center_vertical"
                     android:maxLines="1"
-                    android:text="08:30 - 18:00"
+                    android:text=""
                     android:textAppearance="@style/RobotoMedium"
                     android:textColor="@color/item_place_details_subtitle"
                     android:textSize="@dimen/textsize_big" />
@@ -84,7 +84,7 @@
                     android:layout_marginStart="@dimen/default_layout_margin_quartered"
                     android:layout_weight="1"
                     android:ellipsize="end"
-                    android:text="40000"
+                    android:text=""
                     android:textAppearance="@style/RobotoMedium"
                     android:textColor="@color/item_place_details_subtitle"
                     android:textSize="@dimen/textsize_big" />
@@ -104,7 +104,7 @@
                     android:layout_marginStart="@dimen/default_layout_margin_quartered"
                     android:layout_weight="1"
                     android:ellipsize="end"
-                    android:text="6 min"
+                    android:text=""
                     android:textAppearance="@style/RobotoMedium"
                     android:textColor="@color/item_place_details_subtitle"
                     android:textSize="@dimen/textsize_big" />

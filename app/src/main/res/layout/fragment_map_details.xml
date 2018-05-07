@@ -19,7 +19,7 @@
         />
 
     <include
-        layout="@layout/item_place"
+        layout="@layout/item_book_map_big"
         />
 
 </android.support.design.widget.CoordinatorLayout>

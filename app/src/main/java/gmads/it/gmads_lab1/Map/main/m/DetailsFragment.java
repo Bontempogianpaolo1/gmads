@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.FrameLayout;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import gmads.it.gmads_lab1.Book;
 import gmads.it.gmads_lab1.Map.common.maps.MapBitmapCache;
 import gmads.it.gmads_lab1.Map.common.maps.PulseOverlayLayout;
@@ -22,7 +21,7 @@ import gmads.it.gmads_lab1.Map.common.views.HorizontalRecyclerViewScrollListener
 import gmads.it.gmads_lab1.Map.common.views.TranslateItemAnimator;
 import gmads.it.gmads_lab1.Map.main.MainActivity;
 import gmads.it.gmads_lab1.R;
-import android.support.v7.widget.RecyclerView;
+
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -32,7 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DetailsFragment extends MvpFragment<DetailsFragmentView, DetailsFragmentPresenter>
-        implements DetailsFragmentView, OnMapReadyCallback, BaliPlacesAdapter.OnPlaceClickListener, HorizontalRecyclerViewScrollListener.OnItemCoverListener {
+        implements DetailsFragmentView, OnMapReadyCallback, SearchBooksAdapter.OnPlaceClickListener, HorizontalRecyclerViewScrollListener.OnItemCoverListener {
     public static final String TAG = DetailsFragment.class.getSimpleName();
 
     @BindView(R.id.recyclerview) RecyclerView recyclerView;
@@ -40,7 +39,7 @@ public class DetailsFragment extends MvpFragment<DetailsFragmentView, DetailsFra
     @BindView(R.id.mapOverlayLayout)
     PulseOverlayLayout mapOverlayLayout;
     private List<Book> baliPlaces;
-    private BaliPlacesAdapter baliAdapter;
+    private SearchBooksAdapter baliAdapter;
     private String currentTransitionName;
     private Scene detailsScene;
 
@@ -78,7 +77,7 @@ public class DetailsFragment extends MvpFragment<DetailsFragmentView, DetailsFra
 
     @Override
     public int getLayout() {
-        return R.layout.fragment_details;
+        return R.layout.layout_map_recycle;
     }
 
     @Override
@@ -100,7 +99,7 @@ public class DetailsFragment extends MvpFragment<DetailsFragmentView, DetailsFra
     private void setupRecyclerView() {
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-        baliAdapter = new BaliPlacesAdapter(this, getActivity());
+        baliAdapter = new SearchBooksAdapter(this, getActivity());
     }
 
     @Override
@@ -117,7 +116,7 @@ public class DetailsFragment extends MvpFragment<DetailsFragmentView, DetailsFra
     private void addDataToRecyclerView() {
         recyclerView.setItemAnimator(new TranslateItemAnimator());
         recyclerView.setAdapter(baliAdapter);
-        baliAdapter.setPlacesList(baliPlaces);
+        baliAdapter.setBooksList(baliPlaces);
         recyclerView.addOnScrollListener(new HorizontalRecyclerViewScrollListener(this));
     }
 
