@@ -112,10 +112,10 @@ public class ShowProfile extends AppCompatActivity  implements NavigationView.On
             }
         }
     }
-protected void onStart(){
-        super.onStart();
-        getUserInfo();
-}
+    protected void onStart(){
+            super.onStart();
+            getUserInfo();
+    }
     //for EditButton in the action bar
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

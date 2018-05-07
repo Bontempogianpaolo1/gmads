@@ -1,6 +1,7 @@
 package gmads.it.gmads_lab1;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -64,6 +65,15 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
         // loading album cover using Glide library
         Glide.with(mContext).load(book.getUrlimage()).into(holder.thumbnail);
 
+        holder.thumbnail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext, BookPage.class);
+                intent.putExtra("book_id", book.getBId());
+                mContext.startActivity(intent);
+            }
+        });
+
         holder.overflow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -111,4 +121,5 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
     public int getItemCount() {
         return bookList.size();
     }
+
 }

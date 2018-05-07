@@ -66,7 +66,7 @@ public class Home_1 extends Fragment {
      */
     private void prepareBooks() {
 
-        Book b = new Book ("1", "","Harry Potter", "", "http://books.google.com/books/content?id=oPBGnwEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api", "", "", "", "", "Pinco", 10.0, 12.0);
+        Book b = new Book ("-LBgchlxfj-iAY__eW2r", "","Harry Potter", "", "http://books.google.com/books/content?id=oPBGnwEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api", "", "", "", "", "Pinco", 10.0, 12.0);
         bookList.add(b);
         b = new Book ("2", "","Signore degli Anelli", "", "http://books.google.com/books/content?id=j1TNygAACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api", "", "", "", "", "Pallino", 10.0, 12.0);
         bookList.add(b);
