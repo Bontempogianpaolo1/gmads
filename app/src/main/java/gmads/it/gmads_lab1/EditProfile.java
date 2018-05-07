@@ -93,7 +93,7 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //Fresco.initialize(this);
-        setContentView(R.layout.activity_show_profile);
+        setContentView(R.layout.activity_edit_profile);
         findViews();
 
         toolbar.setTitle("");
@@ -109,7 +109,7 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.actionbar_showp, menu);
+        getMenuInflater().inflate(R.menu.actionbar_editp, menu);
         return true;
     }
 
