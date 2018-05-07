@@ -27,7 +27,7 @@
                 <ImageView
                     android:id="@+id/imageview_placeholder"
                     android:layout_width="match_parent"
-                    android:layout_height="320dp"
+                    android:layout_height="250dp"
                     android:contentDescription="@string/app_name"
                     android:scaleType="centerCrop"
                     android:tint="#11000000"
