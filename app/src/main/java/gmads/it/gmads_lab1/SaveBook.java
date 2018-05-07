@@ -1,9 +1,12 @@
 package gmads.it.gmads_lab1;
 
 import android.Manifest;
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -176,12 +179,14 @@ public class SaveBook extends AppCompatActivity{
         // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 response -> {//Display the first 500 characters of the response string.
+
                     String title;
                     String author;
                     String publisher;
                     String publishdate;
                     String categories;
                     String description;
+                    int valuesFound;
                     JSONObject resultObject;
                     JSONObject volumeObject;
                     JSONArray bookArray;
@@ -189,6 +194,21 @@ public class SaveBook extends AppCompatActivity{
                     try {
                         //piglio Json
                         resultObject = new JSONObject(response);
+                        valuesFound = resultObject.getInt("totalItems");
+                        if(valuesFound == 0){
+                            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                            builder.setMessage("Book not found, check inserted isbn!")
+                                    .setCancelable(false)
+                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            Intent i = new Intent(c, AddBook.class);
+                                            startActivity(i);
+                                        }
+                                    });
+                            AlertDialog alert = builder.create();
+                            alert.show();
+                        }
+
                         bookArray = resultObject.getJSONArray("items");
                         bookObject = bookArray.getJSONObject(0);
                         volumeObject = bookObject.getJSONObject("volumeInfo");
