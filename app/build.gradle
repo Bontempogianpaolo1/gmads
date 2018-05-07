@@ -70,5 +70,7 @@ dependencies {
     implementation  'com.lapism:searchview:27.1.1.0.0'
     implementation 'com.algolia:algoliasearch-android:3.+'
     implementation 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
+    //per effetto in showp
+    implementation 'com.facebook.fresco:fresco:0.9.0'
 }
 apply plugin: 'com.google.gms.google-services'

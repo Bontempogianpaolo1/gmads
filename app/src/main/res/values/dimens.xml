@@ -25,8 +25,13 @@
     <dimen name="ic_album_overflow_width">20dp</dimen>
     <dimen name="ic_album_overflow_height">30dp</dimen>
     <dimen name="ic_album_overflow_margin_top">10dp</dimen>
+
     <dimen name="spacing_normal">16dp</dimen>
     <dimen name="prof_image_width">120dp</dimen>
     <dimen name="prof_image_final_width">32dp</dimen>
+
+    <!--effetto in showp-->
+    <dimen name="image_width">110dp</dimen>
+    <dimen name="image_small_width">32dp</dimen>
 
 </resources>
