@@ -86,6 +86,6 @@
     <string name="country">Country (abbr.)</string>
     <string name="country_required">Country required</string>
     <string name="cap_required">CAP required</string>
-    <string name="space">\nciao</string>
+    <string name="space">\n</string>
     <!--end-->
 </resources>

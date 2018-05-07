@@ -57,9 +57,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.view.SimpleDraweeView;
-
 public class ShowProfile extends AppCompatActivity implements AppBarLayout.OnOffsetChangedListener {
 
     private static final float PERCENTAGE_TO_SHOW_TITLE_AT_TOOLBAR = 0.9f;
@@ -95,7 +92,7 @@ public class ShowProfile extends AppCompatActivity implements AppBarLayout.OnOff
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Fresco.initialize(this);
+        //Fresco.initialize(this);
         setContentView(R.layout.content_show_profile);
         findViews();
 

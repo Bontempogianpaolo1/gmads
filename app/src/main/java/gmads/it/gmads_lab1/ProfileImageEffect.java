@@ -8,8 +8,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.facebook.drawee.view.SimpleDraweeView;
-
 import de.hdodenhof.circleimageview.CircleImageView;
 
 @SuppressWarnings("unused")
