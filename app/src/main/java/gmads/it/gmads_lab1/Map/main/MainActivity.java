@@ -60,6 +60,9 @@ public class MainActivity extends MvpActivity<MainView, MainPresenter> implement
     public void onBackPressed() {
         if(getSupportFragmentManager().getBackStackEntryCount() > 0) {
             triggerFragmentBackPress(getSupportFragmentManager().getBackStackEntryCount());
+            if(getSupportFragmentManager().getBackStackEntryCount()==0){
+                finish();
+            }
         } else {
             finish();
         }

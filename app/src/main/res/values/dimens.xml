@@ -44,7 +44,7 @@
     <dimen name="main_cardview_trip_height">142dp</dimen>
     <dimen name="recycler_item_place">120dp</dimen>
     <dimen name="map_margin_bottom">200dp</dimen>
-    <dimen name="item_recycler_number_dimen">24dp</dimen>
+    <dimen name="item_recycler_number_dimen">16dp</dimen>
     <dimen name="default_layout_margin_three_fourths">12dp</dimen>
     <dimen name="item_place_details_height">380dp</dimen>
 

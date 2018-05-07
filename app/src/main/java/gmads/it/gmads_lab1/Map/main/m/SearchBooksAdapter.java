@@ -44,6 +44,7 @@ class SearchBooksAdapter extends RecyclerView.Adapter<SearchBooksAdapter.Library
         Glide.with(context).load(BookList.get(position).getUrlimage()).into( holder.BookPhoto);
        // holder.BookPhoto.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_menu_camera));
         holder.root.setOnClickListener(view -> listener.onPlaceClicked(holder.root, TransitionUtils.getRecyclerViewTransitionName(position), position));
+        holder.number.setText(String.valueOf(position));
     }
 
     @Override
@@ -69,7 +70,7 @@ class SearchBooksAdapter extends RecyclerView.Adapter<SearchBooksAdapter.Library
         @BindView(R.id.Author) TextView vAuthor;
         @BindView(R.id.root) CardView root;
         @BindView(R.id.headerImage) ImageView BookPhoto;
-
+        @BindView(R.id.number) TextView number;
         LibraryViewHolder( final View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);

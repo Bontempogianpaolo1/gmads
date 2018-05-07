@@ -93,13 +93,13 @@
 
 
     </LinearLayout>
-<!--
-    <ImageView
+
+    <TextView
         android:id="@+id/number"
         android:layout_width="@dimen/item_recycler_number_dimen"
         android:layout_height="@dimen/item_recycler_number_dimen"
-        android:src="@drawable/ic_home_black_24dp"
+        android:background="@color/button_red"
         app:layout_anchor="@id/container"
-        app:layout_anchorGravity="top|center"/>-->
+        app:layout_anchorGravity="top|center"/>
 
 </android.support.v7.widget.CardView>
