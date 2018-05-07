@@ -46,7 +46,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import gmads.it.gmads_lab1.Map.main.MainActivity;
+import gmads.it.gmads_lab1.Map.main.MapActivity;
 import gmads.it.gmads_lab1.fragments.Home_1;
 
 public class Home extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
@@ -232,7 +232,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     }
 
     public void mapcreate( View view ) {
-        Intent intentMod = new Intent(this, MainActivity.class);
+        Intent intentMod = new Intent(this, MapActivity.class);
         startActivity(intentMod);
         overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
 

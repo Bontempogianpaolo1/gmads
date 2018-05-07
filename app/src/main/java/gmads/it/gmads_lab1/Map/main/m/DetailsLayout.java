@@ -45,7 +45,7 @@ public class DetailsLayout extends CoordinatorLayout {
     private void setData(Book place) {
         Glide.with(getContext()).load(place.getUrlimage()).into(imageViewPlaceDetails);
         textViewTitle.setText(place.getTitle());
-        textViewDescription.setText(place.getDescription());
+        textViewDescription.setText(place.getOwner());
     }
 
     public static Scene showScene(Activity activity, final ViewGroup container, final View sharedView, final String transitionName, final Book data) {

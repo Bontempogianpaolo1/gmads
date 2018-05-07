@@ -22,8 +22,10 @@
 
             <ImageView
                 android:id="@+id/headerImage"
-                android:layout_width="match_parent"
+                android:layout_width="140dp"
                 android:layout_height="150dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
                 android:scaleType="fitXY"
                 android:src="@drawable/default_profile" />
 
@@ -37,7 +39,7 @@
                 android:textColor="@android:color/black"
                 android:textSize="@dimen/textsize_very_huge"
                 android:textStyle="bold"
-                android:transitionName="titleTransition"/>
+                android:transitionName="titleTransition" />
 
             <LinearLayout
                 android:id="@+id/descriptionLayout"
@@ -48,95 +50,66 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:id="@+id/clock"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_gravity="center_vertical"
-                    android:src="@drawable/ic_add_book_24dp" />
-
-                <TextView
-                    android:id="@+id/hours"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/default_layout_margin_quartered"
-                    android:layout_marginStart="@dimen/default_layout_margin_quartered"
-                    android:layout_weight="1"
-                    android:ellipsize="end"
-                    android:gravity="center_vertical"
-                    android:maxLines="1"
-                    android:text=""
-                    android:textAppearance="@style/RobotoMedium"
-                    android:textColor="@color/item_place_details_subtitle"
-                    android:textSize="@dimen/textsize_big" />
-
-                <ImageView
-                    android:id="@+id/priceImage"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_gravity="center_vertical"
-                    android:src="@drawable/ic_add_book_24dp" />
-
-                <TextView
-                    android:id="@+id/priceTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/default_layout_margin_quartered"
-                    android:layout_marginStart="@dimen/default_layout_margin_quartered"
-                    android:layout_weight="1"
-                    android:ellipsize="end"
-                    android:text=""
-                    android:textAppearance="@style/RobotoMedium"
-                    android:textColor="@color/item_place_details_subtitle"
-                    android:textSize="@dimen/textsize_big" />
-
-                <ImageView
-                    android:id="@+id/scooter"
+                    android:id="@+id/imagelabelauthor"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_gravity="center_vertical"
                     android:src="@drawable/ic_account_24dp" />
 
                 <TextView
-                    android:id="@+id/time"
+                    android:id="@+id/description"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/default_layout_margin_quartered"
-                    android:layout_marginStart="@dimen/default_layout_margin_quartered"
-                    android:layout_weight="1"
                     android:ellipsize="end"
-                    android:text=""
-                    android:textAppearance="@style/RobotoMedium"
-                    android:textColor="@color/item_place_details_subtitle"
-                    android:textSize="@dimen/textsize_big" />
+                    android:maxLines="3"
+                    android:padding="@dimen/default_layout_margin"
+                    android:text="@string/lorem"
+                    android:textAppearance="@style/RobotoThin"
+                    android:textColor="@color/item_place_description" />
 
             </LinearLayout>
 
 
-            <TextView
-                android:id="@+id/description"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:ellipsize="end"
-                android:maxLines="3"
-                android:padding="@dimen/default_layout_margin"
-                android:text="@string/lorem"
-                android:textAppearance="@style/RobotoThin"
-                android:textColor="@color/item_place_description" />
-
         </LinearLayout>
-
-        <TextView
-            android:id="@+id/takeMe"
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:id="@+id/bottonLayout"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:background="@color/button_red"
-            android:drawableStart="@drawable/ic_home_black_24dp"
-            android:gravity="center"
-            android:padding="@dimen/default_layout_margin"
-            android:text="TAKE ME THERE"
-            android:textAppearance="@style/RobotoBold"
-            android:textColor="@color/white" />
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/toprofile"
+                android:layout_width="167dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:background="@color/button_red"
+                android:drawableStart="@drawable/ic_account_24dp"
+                android:gravity="center"
+                android:padding="@dimen/default_layout_margin"
+                android:text="Show Profile"
+                android:textAppearance="@style/RobotoBold"
+                android:textColor="@color/white" />
+
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center_vertical" />
+
+            <TextView
+                android:id="@+id/tobook"
+                android:layout_width="178dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:background="@color/button_red"
+                android:drawableStart="@drawable/ic_add_book_24dp"
+                android:gravity="center"
+                android:padding="@dimen/default_layout_margin"
+                android:text="More Info"
+                android:textAppearance="@style/RobotoBold"
+                android:textColor="@color/white" />
+        </LinearLayout>
 
     </android.support.v7.widget.CardView>
 

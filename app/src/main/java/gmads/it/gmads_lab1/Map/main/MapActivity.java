@@ -14,7 +14,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLngBounds;
 
-public class MainActivity extends MvpActivity<MainView, MainPresenter> implements MainView, OnMapReadyCallback {
+public class MapActivity extends MvpActivity<MainView, MainPresenter> implements MainView, OnMapReadyCallback {
 
     SupportMapFragment mapFragment;
     private LatLngBounds mapLatLngBounds;

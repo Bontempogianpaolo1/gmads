@@ -70,9 +70,11 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".Map.main.MainActivity"
+            android:name=".Map.main.MapActivity"
             android:label="@string/title_activity_map_search"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait">
+
+        </activity>
     </application>
 
 </manifest>

@@ -19,7 +19,7 @@ import gmads.it.gmads_lab1.Map.common.transitions.ScaleDownImageTransition;
 import gmads.it.gmads_lab1.Map.common.transitions.TransitionUtils;
 import gmads.it.gmads_lab1.Map.common.views.HorizontalRecyclerViewScrollListener;
 import gmads.it.gmads_lab1.Map.common.views.TranslateItemAnimator;
-import gmads.it.gmads_lab1.Map.main.MainActivity;
+import gmads.it.gmads_lab1.Map.main.MapActivity;
 import gmads.it.gmads_lab1.R;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -38,8 +38,8 @@ public class DetailsFragment extends MvpFragment<DetailsFragmentView, DetailsFra
     @BindView(R.id.container) FrameLayout containerLayout;
     @BindView(R.id.mapOverlayLayout)
     PulseOverlayLayout mapOverlayLayout;
-    private List<Book> baliPlaces;
-    private SearchBooksAdapter baliAdapter;
+    private List<Book> booklist;
+    private SearchBooksAdapter libraryAdapter;
     private String currentTransitionName;
     private Scene detailsScene;
 
@@ -62,7 +62,7 @@ public class DetailsFragment extends MvpFragment<DetailsFragmentView, DetailsFra
         if (detailsScene != null) {
             presenter.onBackPressedWithScene();
         } else {
-            ((MainActivity) getActivity()).superOnBackPressed();
+            ((MapActivity) getActivity()).superOnBackPressed();
         }
     }
 
@@ -99,7 +99,7 @@ public class DetailsFragment extends MvpFragment<DetailsFragmentView, DetailsFra
     private void setupRecyclerView() {
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-        baliAdapter = new SearchBooksAdapter(this, getActivity());
+        libraryAdapter = new SearchBooksAdapter(this, getActivity());
     }
 
     @Override
@@ -115,15 +115,15 @@ public class DetailsFragment extends MvpFragment<DetailsFragmentView, DetailsFra
 
     private void addDataToRecyclerView() {
         recyclerView.setItemAnimator(new TranslateItemAnimator());
-        recyclerView.setAdapter(baliAdapter);
-        baliAdapter.setBooksList(baliPlaces);
+        recyclerView.setAdapter(libraryAdapter);
+        libraryAdapter.setBooksList(booklist);
         recyclerView.addOnScrollListener(new HorizontalRecyclerViewScrollListener(this));
     }
 
     @Override
     public void onPlaceClicked(final View sharedView, final String transitionName, final int position) {
         currentTransitionName = transitionName;
-        detailsScene = DetailsLayout.showScene(getActivity(), containerLayout, sharedView, transitionName, baliPlaces.get(position));
+        detailsScene = DetailsLayout.showScene(getActivity(), containerLayout, sharedView, transitionName, booklist.get(position));
         drawRoute(position);
         hideAllMarkers();
     }
@@ -144,7 +144,7 @@ public class DetailsFragment extends MvpFragment<DetailsFragmentView, DetailsFra
 
     @Override
     public void provideBaliData(final List<Book> places) {
-        baliPlaces = places;
+        booklist = places;
     }
 
     @Override
@@ -160,15 +160,15 @@ public class DetailsFragment extends MvpFragment<DetailsFragmentView, DetailsFra
         containerLayout.removeAllViews();
         containerLayout.addView(recyclerView);
         recyclerView.requestLayout();
-        baliAdapter.notifyItemChanged(childPosition);
+        libraryAdapter.notifyItemChanged(childPosition);
     }
 
     @Override
     public void moveMapAndAddMaker(final LatLngBounds latLngBounds) {
         mapOverlayLayout.moveCamera(latLngBounds);
         mapOverlayLayout.setOnCameraIdleListener(() -> {
-            for (int i = 0; i < baliPlaces.size(); i++) {
-                mapOverlayLayout.createAndShowMarker(i, new LatLng(baliPlaces.get(i).get_geoloc().getLat(),baliPlaces.get(i).get_geoloc().getLng()));
+            for (int i = 0; i < booklist.size(); i++) {
+                mapOverlayLayout.createAndShowMarker(i, new LatLng(booklist.get(i).get_geoloc().getLat(), booklist.get(i).get_geoloc().getLng()));
             }
             mapOverlayLayout.setOnCameraIdleListener(null);
         });
