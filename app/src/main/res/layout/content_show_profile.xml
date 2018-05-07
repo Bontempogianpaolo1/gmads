@@ -106,8 +106,8 @@
                 android:orientation="horizontal">
 
                 <Space
-                    android:layout_width="@dimen/image_small_width"
-                    android:layout_height="@dimen/image_small_width" />
+                    android:layout_width="80dp"
+                    android:layout_height="80dp" />
 
                 <TextView
                     android:id="@+id/textview_title"
@@ -116,6 +116,7 @@
                     android:layout_marginLeft="8dp"
                     android:gravity="center_vertical"
                     android:text="Nome Cognome"
+                    android:textAlignment="textEnd"
                     android:textColor="@android:color/white"
                     android:textSize="20sp" />
 
