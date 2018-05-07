@@ -33,7 +33,9 @@
         </activity>
         <activity
             android:name=".Home"
-            android:label="gMADs" />
+            android:label="gMADs"
+            android:screenOrientation="portrait"
+            ></activity>
         <activity
             android:name=".ShowProfile"
             android:label="@string/showProfile" />
@@ -68,8 +70,11 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".MapSearch"
-            android:label="@string/title_activity_map_search" />
+            android:name=".Map.main.MapActivity"
+            android:label="@string/title_activity_map_search"
+            android:screenOrientation="portrait">
+
+        </activity>
         <activity android:name=".BookPage"></activity>
     </application>
 

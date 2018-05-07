@@ -18,43 +18,46 @@ public class Profile implements Serializable{
     private List<String> publishedBooks= new ArrayList<>();
     private List<String> takenBooks= new ArrayList<>();
     private int nrates;
-    private String indirizzo;
-    private long lat;
-    private long lng;
+    private String CAP; //"CAP, ITA"
+    private double lat;
+    private double lng;
 
-    public String getIndirizzo() {
-        return indirizzo;
+    public String getCAP() {
+        return CAP;
     }
 
-    public void setIndirizzo( String indirizzo ) {
-        this.indirizzo = indirizzo;
+    public void setCAP( String CAP ) {
+        this.CAP = CAP;
     }
 
-    public long getLat() {
+    public double getLat() {
         return lat;
     }
 
-    public void setLat( long lat ) {
+    public void setLat( double lat ) {
         this.lat = lat;
     }
 
-    public long getLng() {
+    public double getLng() {
         return lng;
     }
 
-    public void setLng( long lng ) {
+    public void setLng( double lng ) {
         this.lng = lng;
     }
 
-    public Profile( String name, String surname, String email, String Description) {
+    public Profile( String name, String surname, String email, String description) {
         this.name = name;
         this.surname = surname;
         this.email = email;
-        this.description=Description;
+        this.description= description;
+        this.CAP = "";
         valutation=0;
         npublishedBooks=0;
         ntakenBooks=0;
         nrates=0;
+        lat = 0;
+        lng = 0;
     }
 
     public Profile() {
@@ -63,7 +66,6 @@ public class Profile implements Serializable{
         ntakenBooks=0;
         nrates=0;
     }
-
 
     public HashMap<String, String> getMyBooks() {
         return myBooks;
@@ -140,14 +142,11 @@ public class Profile implements Serializable{
         this.ntakenBooks = ntakenBooks;
     }
 
-
     public List<String> getPublishedBooks() {
         return publishedBooks;
     }
 
-    public void setPublishedBooks(List<String> publishedBooks) {
-        this.publishedBooks = publishedBooks;
-    }
+    public void setPublishedBooks(List<String> publishedBooks) { this.publishedBooks = publishedBooks; }
 
     public List<String> getTakenBooks() {
         return takenBooks;
