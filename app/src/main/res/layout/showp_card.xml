@@ -2,23 +2,29 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:layout_gravity="center_horizontal"
+    android:orientation="vertical"
+    android:padding="8dp">
 
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
         android:layout_marginTop="18dp">
 
         <android.support.v7.widget.CardView
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true">
+            android:layout_centerHorizontal="false"
+            android:layout_centerInParent="true">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="16dp"
                 android:orientation="horizontal"
                 android:weightSum="3">
 
@@ -63,8 +69,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingTop="10dp"
-                        android:textColor="@color/colorPrimary"
                         android:text="6"
+                        android:textColor="@color/colorPrimary"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
@@ -87,8 +93,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingTop="10dp"
-                        android:textColor="@color/colorPrimary"
                         android:text="4"
+                        android:textColor="@color/colorPrimary"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
@@ -101,8 +107,8 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_margin="16dp"
         android:layout_gravity="center"
+        android:layout_margin="16dp"
         android:background="@android:color/darker_gray" />
 
     <LinearLayout
@@ -119,12 +125,13 @@
             android:paddingLeft="25dp">
 
             <ImageView
-                android:layout_width="36dp"
+                android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:tint="@color/colorPrimary"
-                android:src="@drawable/ic_email_black_24px" />
+                android:src="@drawable/ic_email_black_24px"
+                android:tint="@color/colorPrimary" />
 
             <TextView
+                android:id="@+id/email"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -142,14 +149,15 @@
             <ImageView
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:tint="@color/colorPrimary"
-                android:src="@drawable/ic_home_black_24dp" />
+                android:src="@drawable/ic_home_black_24dp"
+                android:tint="@color/colorPrimary" />
 
             <TextView
-                android:layout_width="wrap_content"
+                android:id="@+id/cap"
 
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
+                android:layout_gravity="center_vertical|center_horizontal"
                 android:paddingLeft="20dp"
                 android:text="10136" />
         </LinearLayout>
@@ -164,10 +172,11 @@
             <ImageView
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:tint="@color/colorPrimary"
-                android:src="@drawable/ic_info_black_24px" />
+                android:src="@drawable/ic_info_black_24px"
+                android:tint="@color/colorPrimary" />
 
             <TextView
+                android:id="@+id/bio"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
