@@ -162,6 +162,23 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         inflater.inflate(R.menu.options_menu, menu);
         MenuItem m= menu.findItem(R.id.search);
         searchview = (android.widget.SearchView)m.getActionView();
+        searchview.setIconified(false);
+        searchview.setFocusable(true);
+        m.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                item.getActionView().requestFocus();
+                ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(0, 0);
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(item.getActionView().getWindowToken(), 0);
+                return true;
+            }
+        });
+
 
         searchview.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
