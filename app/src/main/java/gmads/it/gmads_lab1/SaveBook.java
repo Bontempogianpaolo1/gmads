@@ -117,15 +117,15 @@ public class SaveBook extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_save_book);
         findActViews();
-        viewPager= findViewById(R.id.ViewPager);
-        viewPager.setVisibility(View.INVISIBLE);
-        adapter= new ViewPagerAdapter(SaveBook.this,images);
-        viewPager.setAdapter(adapter);
+        //viewPager= findViewById(R.id.ViewPager);
+        //viewPager.setVisibility(View.INVISIBLE);
+        //adapter= new ViewPagerAdapter(SaveBook.this,images);
+        //viewPager.setAdapter(adapter);
         t1 = new Tools();
         if (!(t1.isOnline(getApplicationContext()))){
             //rendo invisibile l'xml
             ll.setVisibility(View.GONE);
-            progressBar.setVisibility(View.GONE);
+            //progressBar.setVisibility(View.GONE);
             android.app.AlertDialog.Builder ad = t1.showPopup(this, getString(R.string.noInternet), "", "");
             //tasto retry rimanda ad addbook
             ad.setPositiveButton(getString(R.string.retry), (vi, w) -> onBackPressed());
@@ -171,16 +171,16 @@ public class SaveBook extends AppCompatActivity{
         vCategories = findViewById(R.id.categorie);
         vPublisher = findViewById(R.id.editore);
         vDescription = findViewById(R.id.descrizione);
-        bookImage = findViewById(R.id.bookimage);
-        progressBar=findViewById(R.id.progressBar);
-        ll=findViewById(R.id.ll);
-        add = findViewById(R.id.addphoto);
+        bookImage = findViewById(R.id.avatar);
+        //progressBar=findViewById(R.id.progressBar);
+        //ll=findViewById(R.id.ll);
+        //add = findViewById(R.id.addphoto);
         toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(getString(R.string.bookTitle));
         setSupportActionBar(toolbar);
         vDescription.setVerticalScrollBarEnabled(true);
         vDescription.setMovementMethod(new ScrollingMovementMethod());
-        add.setOnClickListener(this::onAddPhotoClick);
+        //add.setOnClickListener(this::onAddPhotoClick);
     }
     public void onAddAuthor(View v){
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -228,7 +228,7 @@ public class SaveBook extends AppCompatActivity{
         TODO:controllo solo se campo vuoto...
          */
         if(field.getText().length()!=0) {
-            ll_notes.addView(rowView, ll_notes.getChildCount() - 1);
+            ll_notes.addView(rowView, ll_notes.getChildCount());
         }
     }
     public void getjson(Context c,  String isbn) {
@@ -236,7 +236,7 @@ public class SaveBook extends AppCompatActivity{
         url = url + isbn + ">";
         RequestQueue queue = Volley.newRequestQueue(c);
         ll.setVisibility(View.GONE);
-        progressBar.setVisibility(View.VISIBLE);
+        //progressBar.setVisibility(View.VISIBLE);
         // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 response -> {//Display the first 500 characters of the response string.
@@ -333,10 +333,10 @@ public class SaveBook extends AppCompatActivity{
                     }catch(Exception e){
                         vDescription.setText(R.string.descriptionNotFound);
                     }
-                    Glide.with(this).load(urlimage).into((ImageView)findViewById(R.id.bookimage));
+                    Glide.with(this).load(urlimage).into((ImageView)findViewById(R.id.avatar));
                     adapter.addUrl(urlimage);
                     adapter.notifyDataSetChanged();
-                    progressBar.setVisibility(View.GONE);
+                    //progressBar.setVisibility(View.GONE);
                     ll.setVisibility(View.VISIBLE);
                     prefs = PreferenceManager.getDefaultSharedPreferences(c);
 /*
