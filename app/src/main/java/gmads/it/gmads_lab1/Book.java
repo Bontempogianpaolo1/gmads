@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Book {
     private String BId;
@@ -13,8 +14,8 @@ public class Book {
     private String description;
     private String urlimage;
     private String publishDate;
-    private String author;
-    private String categories;
+    private List<String> author;
+    private List<String> categories;//
     private double avgRating;
     private int nRates;
     private double sumRates;
@@ -26,6 +27,32 @@ public class Book {
     private List<Bitmap> images;
     private String indirizzo;
     private Geoloc _geoloc;
+
+    public List<String> getAuthor() {
+        return author;
+    }
+
+    public void setAuthor( List<String> author ) {
+        this.author = author;
+    }
+
+    public List<String> getCategories() {
+        return categories;
+    }
+
+    public void setCategories( List<String> categories ) {
+        this.categories = categories;
+    }
+
+    public Map<String, String> getNotes() {
+        return notes;
+    }
+
+    public void setNotes( Map<String, String> notes ) {
+        this.notes = notes;
+    }
+
+    private Map<String,String> notes=new  HashMap<>();
 
     public Geoloc get_geoloc() {
         return _geoloc;
@@ -43,7 +70,7 @@ public class Book {
         this.indirizzo = indirizzo;
     }
 
-    public Book( String BId, String isbn, String title, String description, String urlimage, String publishDate, String author, String categories, String publisher, String owner, Double lat, Double lng) {
+    public Book( String BId, String isbn, String title, String description, String urlimage, String publishDate, List<String> author, List<String> categories, String publisher, String owner, Double lat, Double lng) {
         this.BId = BId;
         this.isbn = isbn;
         this.title = title;
@@ -57,6 +84,7 @@ public class Book {
         this._geoloc = new Geoloc(lat, lng);
         comments= Collections.emptyList();
         images=Collections.emptyList();
+        notes= Collections.emptyMap();
         avgRating=0;
         nRates=0;
         sumRates=0;
@@ -122,21 +150,7 @@ public class Book {
         this.publishDate = publishDate;
     }
 
-    public String getAuthor() {
-        return author;
-    }
 
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
-    public String getCategories() {
-        return categories;
-    }
-
-    public void setCategories(String categories) {
-        this.categories = categories;
-    }
 
     public double getAvgRating() {
         return avgRating;

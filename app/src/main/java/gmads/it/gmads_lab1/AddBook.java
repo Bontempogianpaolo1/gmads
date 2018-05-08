@@ -37,7 +37,9 @@ import com.google.firebase.storage.StorageReference;
 import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
-
+/*
+TODO:mettere collapsing pure qui
+ */
 public class AddBook extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -97,10 +99,10 @@ public class AddBook extends AppCompatActivity
         toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Scanner");
         setSupportActionBar(toolbar);
-        this.editISBN =  findViewById(R.id.EditIsbn);
-        this.ISBNbutton = findViewById(R.id.scan);
-        this.next = findViewById(R.id.next);
-        this.insertButton = findViewById(R.id.insertInfoButton);
+        this.editISBN =  findViewById(R.id.et_isbn);
+        this.ISBNbutton = findViewById(R.id.b_scan);
+        this.next = findViewById(R.id.b_next);
+        this.insertButton = findViewById(R.id.insert);
     }
     @Override
     public void onStart() {

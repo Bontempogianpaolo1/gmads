@@ -1,9 +1,12 @@
 package gmads.it.gmads_lab1;
 
 import android.Manifest;
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -22,6 +25,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Base64;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -33,6 +37,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.algolia.search.saas.Client;
@@ -58,7 +63,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 public class SaveBook extends AppCompatActivity{
@@ -97,23 +104,28 @@ public class SaveBook extends AppCompatActivity{
     Index algoIndex;
     Gson gson = new Gson();
     Profile profile;
-
+    List<String> authors= Collections.emptyList();
+    List<String> categories= Collections.emptyList();
+    Map<String,String> notes= Collections.emptyMap();
     ViewPagerAdapter adapter;
     ViewPager viewPager;
+    LinearLayout ll_author;
+    LinearLayout ll_categ;
+    LinearLayout ll_notes;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_save_book);
         findActViews();
-        viewPager= findViewById(R.id.ViewPager);
-        viewPager.setVisibility(View.INVISIBLE);
-        adapter= new ViewPagerAdapter(SaveBook.this,images);
-        viewPager.setAdapter(adapter);
+        //viewPager= findViewById(R.id.ViewPager);
+        //viewPager.setVisibility(View.INVISIBLE);
+        //adapter= new ViewPagerAdapter(SaveBook.this,images);
+        //viewPager.setAdapter(adapter);
         t1 = new Tools();
         if (!(t1.isOnline(getApplicationContext()))){
             //rendo invisibile l'xml
             ll.setVisibility(View.GONE);
-            progressBar.setVisibility(View.GONE);
+            //progressBar.setVisibility(View.GONE);
             android.app.AlertDialog.Builder ad = t1.showPopup(this, getString(R.string.noInternet), "", "");
             //tasto retry rimanda ad addbook
             ad.setPositiveButton(getString(R.string.retry), (vi, w) -> onBackPressed());
@@ -150,38 +162,92 @@ public class SaveBook extends AppCompatActivity{
         }
     }
     public void findActViews(){
+        ll_author=findViewById(R.id.ll_author);
+        ll_categ=findViewById(R.id.ll_categ);
+        ll_notes=findViewById(R.id.ll_notes);
         vTitle = findViewById(R.id.title);
         vDate = findViewById(R.id.data);
-        vAuthor = findViewById(R.id.autore);
+        vAuthor = findViewById(R.id.author);
         vCategories = findViewById(R.id.categorie);
         vPublisher = findViewById(R.id.editore);
         vDescription = findViewById(R.id.descrizione);
-        bookImage = findViewById(R.id.bookimage);
-        progressBar=findViewById(R.id.progressBar);
-        ll=findViewById(R.id.ll);
-        add = findViewById(R.id.addphoto);
+        bookImage = findViewById(R.id.avatar);
+        //progressBar=findViewById(R.id.progressBar);
+        //ll=findViewById(R.id.ll);
+        //add = findViewById(R.id.addphoto);
         toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(getString(R.string.bookTitle));
         setSupportActionBar(toolbar);
         vDescription.setVerticalScrollBarEnabled(true);
         vDescription.setMovementMethod(new ScrollingMovementMethod());
-        add.setOnClickListener(this::onAddPhotoClick);
+        //add.setOnClickListener(this::onAddPhotoClick);
+    }
+    public void onAddAuthor(View v){
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        final View rowView = inflater.inflate(R.layout.author_layout, null);
+        // Add the new row before the add field button.
+        if(ll_author.getChildCount()<3){
+
+            LinearLayout ll;
+            ll=(LinearLayout) ll_author.getChildAt(ll_author.getChildCount()-1);
+            EditText field=(EditText) ll.getChildAt(0);
+            /*
+            TODO:controllo solo se campo vuoto...
+             */
+            if(field.getText().length()!=0) {
+                ll_author.addView(rowView, ll_author.getChildCount() );
+            }
+        }
+    }
+
+    public void onAddCateg(View v){
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        final View rowView = inflater.inflate(R.layout.categ_layout, null);
+        // Add the new row before the add field button.
+        if(ll_categ.getChildCount()<3) {
+            LinearLayout ll;
+            ll=(LinearLayout) ll_categ.getChildAt(ll_categ.getChildCount()-1);
+            EditText field=(EditText) ll.getChildAt(0);
+            /*
+            TODO:controllo solo se campo vuoto...
+             */
+            if (field.getText().length() != 0) {
+                ll_categ.addView(rowView, ll_categ.getChildCount());
+            }
+        }
+    }
+    public void onAddNotes(View v){
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        final View rowView = inflater.inflate(R.layout.notes_layout, null);
+        // Add the new row before the add field button.
+        LinearLayout ll;
+        ll=(LinearLayout) ll_notes.getChildAt(ll_notes.getChildCount()-1);
+        EditText field=(EditText) ll.getChildAt(0);
+        EditText field2=(EditText) ll.getChildAt(1);
+        /*
+        TODO:controllo solo se campo vuoto...
+         */
+        if(field.getText().length()!=0) {
+            ll_notes.addView(rowView, ll_notes.getChildCount());
+        }
     }
     public void getjson(Context c,  String isbn) {
         String url = "https://www.googleapis.com/books/v1/volumes?q=ISBN:<";
         url = url + isbn + ">";
         RequestQueue queue = Volley.newRequestQueue(c);
         ll.setVisibility(View.GONE);
-        progressBar.setVisibility(View.VISIBLE);
+        //progressBar.setVisibility(View.VISIBLE);
         // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 response -> {//Display the first 500 characters of the response string.
+                    LinearLayout l2;
                     String title;
                     String author;
                     String publisher;
                     String publishdate;
                     String categories;
                     String description;
+                    int valuesFound;
                     JSONObject resultObject;
                     JSONObject volumeObject;
                     JSONArray bookArray;
@@ -189,6 +255,21 @@ public class SaveBook extends AppCompatActivity{
                     try {
                         //piglio Json
                         resultObject = new JSONObject(response);
+                        valuesFound = resultObject.getInt("totalItems");
+                        if(valuesFound == 0){
+                            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                            builder.setMessage("Book not found, check inserted isbn!")
+                                    .setCancelable(false)
+                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            Intent i = new Intent(c, AddBook.class);
+                                            startActivity(i);
+                                        }
+                                    });
+                            AlertDialog alert = builder.create();
+                            alert.show();
+                        }
+
                         bookArray = resultObject.getJSONArray("items");
                         bookObject = bookArray.getJSONObject(0);
                         volumeObject = bookObject.getJSONObject("volumeInfo");
@@ -205,9 +286,11 @@ public class SaveBook extends AppCompatActivity{
                     try{
                         author = volumeObject.getString("authors");
                         author = author.replaceAll("[\"\\[\\]]","");
-                        vAuthor.setText(author);
+                        l2=(LinearLayout)ll_author.getChildAt(0);
+                        EditText et=(EditText)l2.getChildAt(0);
+                        et.setText(author);
                     }catch (Exception e){
-                        vAuthor.setText(getString(R.string.authorNotFound));
+                        //vAuthor.setText(getString(R.string.authorNotFound));
                     }
                     try{
                         if(!volumeObject.isNull("publisher")&& volumeObject.has("publisher")){
@@ -228,9 +311,12 @@ public class SaveBook extends AppCompatActivity{
                     try{
                         categories = volumeObject.getString("categories");
                         categories = categories.replaceAll("[\"\\[\\]]","");
-                        vCategories.setText(categories);
+                        l2=(LinearLayout)ll_categ.getChildAt(0);
+                        EditText edit_cat=(EditText)l2.getChildAt(0);
+                        edit_cat.setText(categories);
+                       // vCategories.setText(categories);
                     }catch (Exception e){
-                        vCategories.setText(getString(R.string.categoryNotFound));
+                        //vCategories.setText(getString(R.string.categoryNotFound));
                     }
                     try{
                         urlimage = volumeObject.getJSONObject("imageLinks").getString("thumbnail");
@@ -247,26 +333,15 @@ public class SaveBook extends AppCompatActivity{
                     }catch(Exception e){
                         vDescription.setText(R.string.descriptionNotFound);
                     }
-                    Glide.with(this).load(urlimage).into((ImageView)findViewById(R.id.bookimage));
+                    Glide.with(this).load(urlimage).into((ImageView)findViewById(R.id.avatar));
                     adapter.addUrl(urlimage);
                     adapter.notifyDataSetChanged();
-                    progressBar.setVisibility(View.GONE);
+                    //progressBar.setVisibility(View.GONE);
                     ll.setVisibility(View.VISIBLE);
                     prefs = PreferenceManager.getDefaultSharedPreferences(c);
-                    book = new Book(
-                            null,
-                            isbn,
-                            vTitle.getText().toString(),
-                            "",
-                            urlimage,
-                            vDate.getText().toString(),
-                            vAuthor.getText().toString(),
-                            vCategories.getText().toString(),
-                            vPublisher.getText().toString(),
-                            FirebaseManagement.getUser().getUid(),
-                            profile.getLat(), //da inserire da profilo da firebase
-                            profile.getLng()
-                    );
+/*
+todo rimpire stringhe
+ */
                 }, error -> Log.d("That didn't work!","Error: "+error));
         // Add the request to the RequestQueue.
         queue.add(stringRequest);
@@ -310,6 +385,10 @@ public class SaveBook extends AppCompatActivity{
                 imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
             }
             Tools t = new Tools();
+            /*
+            TODO:riempire liste
+             */
+
             book = new Book(
                     null,
                     isbn,
@@ -317,8 +396,8 @@ public class SaveBook extends AppCompatActivity{
                     "",
                     urlimage,
                     vDate.getText().toString(),
-                    vAuthor.getText().toString(),
-                    vCategories.getText().toString(),
+                    authors,
+                    categories,
                     vPublisher.getText().toString(),
                     FirebaseManagement.getUser().getUid(),
                     profile.getLat(), //da prendere dal profilo utente da firebase
@@ -333,7 +412,42 @@ public class SaveBook extends AppCompatActivity{
                 final ProgressDialog progressDialog = new ProgressDialog(this);
                 progressDialog.setTitle(getString(R.string.Uploading));
                 progressDialog.show();
+                /*
+                todo inserisco dati nelle liste
+                 */
+                LinearLayout l1;
+                EditText et;
+                EditText et2;
+                /*
+                for(int i=0; i< ll_author.getChildCount();i++){
+                    ll=(LinearLayout)ll_author.getChildAt(i);
+                    et=(EditText)ll_author.getChildAt(0);
+                    if(et.getText().length()!=0){
+                        authors.add(et.getText().toString());
+                    }
+                }
+                for(int i=0; i< ll_categ.getChildCount();i++){
+                    ll=(LinearLayout)ll_categ.getChildAt(i);
+                    et=(EditText)ll_categ.getChildAt(0);
+                    if(et.getText().length()!=0){
+                        this.categories.add(et.getText().toString());
+                    }
+                }
+*/
+                for(int i=0; i< ll_notes.getChildCount();i++){
+                    ll=(LinearLayout)ll_notes.getChildAt(i);
+                    et=(EditText)ll_author.getChildAt(0);
+                    et2=(EditText)ll_author.getChildAt(1);
+                    if(et.getText().length()!=0 && et2.getText().length()!=0) {
+                        this.notes.put(et.getText().toString(), et2.getText().toString());
+                    }
+                }
+                book.setAuthor(authors);
+                book.setCategories(categories);
+                book.setNotes(notes);
                 book.setBId(bookKey);
+
+                //fine inserimento nelle liste
                 mProfileReference = FirebaseManagement.getDatabase().getReference();
                 mProfileReference.child("myBooks").child(bookKey).setValue(book.getIsbn())
                         .addOnFailureListener(e -> Log.v("ERR", e.getMessage()));
