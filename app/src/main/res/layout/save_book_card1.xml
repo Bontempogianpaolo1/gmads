@@ -52,35 +52,8 @@
             android:gravity="center"
             android:orientation="horizontal">
 
-            <EditText
-                android:id="@+id/autore"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginBottom="5dp"
-                android:layout_marginRight="3dp"
-                android:layout_marginTop="5dp"
-                android:layout_weight="1"
-                android:background="@drawable/rounded_corner"
-                android:hint="@string/sb_author"
-                android:inputType="textEmailAddress"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp" />
-
-            <EditText
-                android:id="@+id/categorie"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="3dp"
-                android:layout_marginTop="5dp"
-                android:layout_weight="1"
-                android:background="@drawable/rounded_corner"
-                android:hint="@string/sb_category"
-                android:inputType="number"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp" />
+            <include layout="@layout/author_layout" />
+            <include layout="@layout/categ_layout" />
 
         </LinearLayout>
 
