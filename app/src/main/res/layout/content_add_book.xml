@@ -7,89 +7,106 @@
     android:layout_height="match_parent"
     android:gravity="center"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    app:layout_constraintHorizontal_weight="1"
     tools:context=".AddBook"
     tools:showIn="@layout/app_bar_add_book">
 
-    <TextView
-        android:id="@+id/LabelManual"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"
-        android:text="@string/scan1"
-        android:textAlignment="center"
-        android:textSize="@dimen/label"
-        tools:layout_editor_absoluteX="164dp"
-        tools:layout_editor_absoluteY="73dp" />
-
-    <EditText
-        android:id="@+id/EditIsbn"
+    <android.support.v7.widget.CardView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_centerInParent="false"
-        android:layout_marginTop="60dp"
-        android:ems="10"
-        android:hint="@string/insert"
-        android:inputType="number" />
+        android:layout_gravity="center"
+        android:layout_margin="8dp"
+        android:padding="16dp"
+        app:cardElevation="8dp">
 
-    <TextView
-        android:id="@+id/LabelScan"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_below="@id/EditIsbn"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="130dp"
-        android:text="@string/scan2"
-        android:textSize="@dimen/label" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp">
 
-    <Button
-        android:id="@+id/scan"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/LabelScan"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="51dp"
-        android:background="@drawable/roundedbutton"
-        android:text="@string/scan3"
-        android:textColor="#FFFFFF"
-        android:textSize="@dimen/button_text_size" />
+            <TextView
+                android:id="@+id/scan1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:text="@string/scan1"
+                android:textAlignment="center"
+                android:textSize="@dimen/label" />
 
-    <ImageButton
-        android:id="@+id/next"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_alignTop="@+id/EditIsbn"
-        android:layout_centerHorizontal="true"
-        android:layout_toEndOf="@+id/EditIsbn"
-        android:background="@color/colorPrimaryDark"
-        app:srcCompat="@android:drawable/ic_menu_search"
-        android:contentDescription="@string/selectImage" />
+            <Button
+                android:id="@+id/insert"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="false"
+                android:layout_below="@+id/scan1"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/roundedbutton"
+                android:text="@string/insert"
+                android:textColor="#FFFFFF"
+                android:textSize="@dimen/button_text_size" />
 
-    <TextView
-        android:id="@+id/Labelinsert"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/insertInfoButton"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="14dp"
-        android:text="@string/click_to_insert_book"
-        android:textSize="@dimen/label" />
+            <TextView
+                android:id="@+id/scan2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="false"
+                android:layout_below="@id/insert"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="30dp"
+                android:text="@string/scan2"
+                android:textAlignment="center"
+                android:textSize="@dimen/label" />
 
-    <Button
-        android:id="@+id/insertInfoButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/LabelManual"
-        android:layout_alignStart="@+id/scan"
-        android:layout_marginBottom="13dp"
-        android:background="@drawable/roundedbutton"
-        android:text="@string/insert"
-        android:textSize="@dimen/button_text_size"
-        android:textColor="#FFFFFF" />
+            <ImageButton
+                android:id="@+id/b_next"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignTop="@id/et_isbn"
+                android:layout_below="@id/scan2"
+                android:layout_centerHorizontal="true"
+                android:layout_toEndOf="@id/et_isbn"
+                android:background="@color/colorPrimaryDark"
+                android:contentDescription="@string/selectImage"
+                app:srcCompat="@android:drawable/ic_menu_search" />
+
+            <EditText
+                android:id="@+id/et_isbn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="false"
+                android:layout_below="@+id/scan2"
+                android:layout_centerHorizontal="true"
+                android:layout_centerInParent="false"
+                android:layout_marginTop="10dp"
+                android:ems="10"
+                android:hint="ISBN"
+                android:inputType="number" />
+
+            <TextView
+                android:id="@+id/scan3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="false"
+                android:layout_below="@id/et_isbn"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="30dp"
+                android:text="@string/scan3"
+                android:textSize="@dimen/label" />
+
+            <Button
+                android:id="@+id/b_scan"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/scan3"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/roundedbutton"
+                android:text="@string/scan"
+                android:textColor="#FFFFFF"
+                android:textSize="@dimen/button_text_size" />
+
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
 
 </RelativeLayout>
