@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/linearlayout"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -51,6 +52,16 @@
                         android:layout_gravity="center"
                         android:orientation="vertical">
 
+                        <TextView
+                            android:id="@+id/name_surname"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:gravity="bottom|center"
+                            android:textColor="@android:color/white"
+                            android:textSize="25sp"
+                            android:text="@string/editProfile"
+                            />
                     </LinearLayout>
                 </FrameLayout>
             </android.support.design.widget.CollapsingToolbarLayout>
@@ -94,8 +105,8 @@
                 android:orientation="horizontal">
 
                 <Space
-                    android:layout_width="80dp"
-                    android:layout_height="80dp" />
+                    android:layout_width="@dimen/image_small_width"
+                    android:layout_height="@dimen/image_small_width" />
 
                 <TextView
                     android:id="@+id/textview_title"
@@ -103,6 +114,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="8dp"
                     android:gravity="center_vertical"
+                    android:text="@string/editProfile"
                     android:textColor="@android:color/white"
                     android:textSize="20sp" />
 

@@ -23,7 +23,7 @@
     <string name="alertUpd">\nSalvataggio avvenuto!</string>
     <string name="nameExample">Nome</string>
     <string name="surnameExample">Cognome</string>
-    <string name="bioExample">--vuoto--</string>
+    <string name="bioExample">-- vuoto --</string>
     <string name="emailExample">esempio@p.com</string>
     <string name="imageDirectory">ImageDir</string>
     <string name="selectImage">Cambia foto profilo</string>

@@ -23,7 +23,7 @@
     <string name="nameExample">Name</string>
     <string name="surnameExample">Surname</string>
     <string name="emailExample">example@p.com</string>
-    <string name="bioExample">--empty--</string>
+    <string name="bioExample">-- empty --</string>
     <string name="address">Bio</string>
     <string name="selectImage">Change Image</string>
     <string name="takeImage">\nTake Image</string>

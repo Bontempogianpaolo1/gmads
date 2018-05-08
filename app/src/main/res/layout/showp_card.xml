@@ -136,7 +136,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:paddingLeft="20dp"
-                android:text="email@gmail.com" />
+                android:text="@string/bioExample" />
         </LinearLayout>
 
         <LinearLayout
@@ -145,7 +145,7 @@
             android:layout_marginTop="25dp"
             android:orientation="horizontal"
             android:paddingLeft="25dp">
-
+\
             <ImageView
                 android:layout_width="30dp"
                 android:layout_height="30dp"
@@ -159,7 +159,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical|center_horizontal"
                 android:paddingLeft="20dp"
-                android:text="10136" />
+                android:text="@string/bioExample" />
         </LinearLayout>
 
         <LinearLayout
@@ -180,10 +180,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:inputType="textMultiLine"
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp"
-                android:text="Ciao a tutti    eskere eskere eskere eskere eskere  eskere eskere eskere eskere eskere  eskere eskere eskere eskere eskere eskere eskere eskere eskere eskere eskere eskere eskere eskere eskere eskere eskere eskere eskere eskere eskere eskere eskere eskere eskere eskere eskere eskere eskere eskere eskere eskere eskere eskere eskere eskere eskere eskere eskere eskere eskere eskere eskere eskere eskere eskere eskere eskere " />
+                android:text="@string/bioExample" />
         </LinearLayout>
     </LinearLayout>
 
