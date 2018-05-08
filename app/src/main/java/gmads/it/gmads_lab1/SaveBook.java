@@ -112,6 +112,7 @@ public class SaveBook extends AppCompatActivity{
     LinearLayout ll_author;
     LinearLayout ll_categ;
     LinearLayout ll_notes;
+    boolean isRawData;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -139,12 +140,10 @@ public class SaveBook extends AppCompatActivity{
         directory = cw.getDir(getString(R.string.imageDirectory), Context.MODE_PRIVATE);
         path = directory.getPath();
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-        boolean isRawData = getIntent().getBooleanExtra("rawData", false);
-        if(!isRawData) {
+         isRawData = getIntent().getBooleanExtra("rawData", false);
+
             getUserInfo();
-        } else {
-            isbn = null;
-        }
+
 
         algoClient = new Client("L6B7L7WXZW", "9d2de9e724fa9289953e6b2d5ec978a5");
         algoIndex = algoClient.getIndex("BookIndex");
@@ -385,9 +384,6 @@ todo rimpire stringhe
                 imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
             }
             Tools t = new Tools();
-            /*
-            TODO:riempire liste
-             */
 
             book = new Book(
                     null,
@@ -418,26 +414,26 @@ todo rimpire stringhe
                 LinearLayout l1;
                 EditText et;
                 EditText et2;
-                /*
+
                 for(int i=0; i< ll_author.getChildCount();i++){
                     ll=(LinearLayout)ll_author.getChildAt(i);
-                    et=(EditText)ll_author.getChildAt(0);
+                    et=(EditText)ll.getChildAt(0);
                     if(et.getText().length()!=0){
                         authors.add(et.getText().toString());
                     }
                 }
                 for(int i=0; i< ll_categ.getChildCount();i++){
                     ll=(LinearLayout)ll_categ.getChildAt(i);
-                    et=(EditText)ll_categ.getChildAt(0);
+                    et=(EditText)ll.getChildAt(0);
                     if(et.getText().length()!=0){
                         this.categories.add(et.getText().toString());
                     }
                 }
-*/
+
                 for(int i=0; i< ll_notes.getChildCount();i++){
                     ll=(LinearLayout)ll_notes.getChildAt(i);
-                    et=(EditText)ll_author.getChildAt(0);
-                    et2=(EditText)ll_author.getChildAt(1);
+                    et=(EditText)ll.getChildAt(0);
+                    et2=(EditText)ll.getChildAt(1);
                     if(et.getText().length()!=0 && et2.getText().length()!=0) {
                         this.notes.put(et.getText().toString(), et2.getText().toString());
                     }
@@ -603,7 +599,9 @@ todo rimpire stringhe
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         profile = dataSnapshot.getValue(Profile.class);
-                        getjson(getApplicationContext(), isbn);
+                        if(!isRawData) {
+                            getjson(getApplicationContext(), isbn);
+                        }
                     }
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
