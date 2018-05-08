@@ -102,6 +102,8 @@ public class Home_1 extends Fragment {
         bookList.add(b);
         b = new Book ("4", "","La ragazza del treno", "", "http://books.google.com/books/content?id=IUo3rgEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api", "", "", "", "", "Caio", 10.0, 12.0);
         bookList.add(b);
+        b = new Book ("-LBv0gB3Sp67mvgSYyiG", "","The lord of the rings", "", "https://i.pinimg.com/originals/b9/6e/10/b96e102e55020e8ad72af19b8e2d1f60.jpg", "", "", "", "", "Caio", 10.0, 12.0);
+        bookList.add(b);
 
         adapter.notifyDataSetChanged();
     }
