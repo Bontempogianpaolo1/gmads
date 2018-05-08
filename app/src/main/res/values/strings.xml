@@ -94,5 +94,6 @@
     <string name="monkey_forest">Monkey Forest</string>
     <string name="sign_up_for_this">SIGN UP FOR THIS</string>
     <string name="mapPlaceholderTransition">mapPlaceholderTransition</string>
+    <string name="space">\n</string>
     <!--end-->
 </resources>

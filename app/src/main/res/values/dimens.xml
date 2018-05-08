@@ -48,4 +48,12 @@
     <dimen name="default_layout_margin_three_fourths">12dp</dimen>
     <dimen name="item_place_details_height">380dp</dimen>
 
+    <dimen name="spacing_normal">16dp</dimen>
+    <dimen name="prof_image_width">120dp</dimen>
+    <dimen name="prof_image_final_width">32dp</dimen>
+
+    <!--effetto in showp-->
+    <dimen name="image_width">110dp</dimen>
+    <dimen name="image_small_width">32dp</dimen>
+
 </resources>

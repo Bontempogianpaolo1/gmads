@@ -66,6 +66,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     private Bitmap myProfileBitImage;
     View headerView;
     Home_1 tab1= new Home_1();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,17 +77,14 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-
         CollapsingToolbarLayout collapsingToolbarLayout = findViewById(R.id.collapsing_toolbar);
         //SearchView mSearchView = (SearchView) findViewById(R.id.searchView); // initiate a search view
         //mSearchView.attachNavigationDrawerToMenuButton(findViewById(R.id.drawer_layout));
         //mSearchView.setIconifiedByDefault(false);  // set the default or resting state of the search field
-
-       // recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        //recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         initCollapsingToolbar();
         /*bookList = new ArrayList<>();
         adapter = new BookAdapter(this, bookList);*/
-
         //RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 2);
         //recyclerView.setLayoutManager(mLayoutManager);
         //recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, dpToPx(10), true));
@@ -104,7 +102,6 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         tableLayout.getTabAt(0).setText(getString(R.string.tab1));
         tableLayout.getTabAt(1).setText(getString(R.string.tab2));
         tableLayout.getTabAt(2).setText(getString(R.string.tab3));
-
 //
         //era per mettere foto libri nell appbar, ma l'abbiamo messa come sfondo per ora
         try {
@@ -114,7 +111,6 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         }
         algoClient = new Client("L6B7L7WXZW", "9d2de9e724fa9289953e6b2d5ec978a5");
         algoIndex = algoClient.getIndex("BookIndex");
-
     }
 
     /*@Override
