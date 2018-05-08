@@ -17,23 +17,32 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.method.ScrollingMovementMethod;
+import android.util.ArrayMap;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.animation.AlphaAnimation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -64,11 +73,26 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-public class SaveBook extends AppCompatActivity{
+public class SaveBook extends AppCompatActivity  implements AppBarLayout.OnOffsetChangedListener{
+
+    private static final float PERCENTAGE_TO_SHOW_TITLE_AT_TOOLBAR = 0.9f;
+    private static final float PERCENTAGE_TO_HIDE_TITLE_DETAILS = 0.3f;
+    private static final int ALPHA_ANIMATIONS_DURATION = 200;
+
+    private boolean mIsTheTitleVisible = false;
+    private boolean mIsTheTitleContainerVisible = true;
+    private AppBarLayout appbar;
+    private CollapsingToolbarLayout collapsing;
+    private ImageView coverImage;
+    private FrameLayout framelayoutTitle;
+    private LinearLayout linearlayoutTitle;
+    private TextView textviewTitle;
+    private ImageView avatar;
 
     private static final String EXTRA_ISBN ="ISBN";
     private DatabaseReference mProfileReference;
@@ -95,6 +119,7 @@ public class SaveBook extends AppCompatActivity{
     EditText vCategories;
     EditText vDescription;
     EditText vPublisher;
+    DrawerLayout drawer;
     Tools t1;
     Button add;
     Book book;
@@ -104,20 +129,28 @@ public class SaveBook extends AppCompatActivity{
     Index algoIndex;
     Gson gson = new Gson();
     Profile profile;
-    List<String> authors= Collections.emptyList();
-    List<String> categories= Collections.emptyList();
-    Map<String,String> notes= Collections.emptyMap();
+    List<String> authors= new ArrayList<>();
+    List<String> categories= new ArrayList<>();
+    Map<String,String> notes= new HashMap<>();
     ViewPagerAdapter adapter;
     ViewPager viewPager;
     LinearLayout ll_author;
     LinearLayout ll_categ;
     LinearLayout ll_notes;
     boolean isRawData;
+    EditText condition;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_save_book);
         findActViews();
+        setupUI(findViewById(R.id.linearlayout));
+        coverImage.setImageResource(R.drawable.cover_edit);
+        toolbar.setTitle("");
+        appbar.addOnOffsetChangedListener(this);
+        textviewTitle.setText(getString(R.string.title_activity_save_book));
+        setSupportActionBar(toolbar);
+        startAlphaAnimation(textviewTitle, 0, View.INVISIBLE);
         //viewPager= findViewById(R.id.ViewPager);
         //viewPager.setVisibility(View.INVISIBLE);
         //adapter= new ViewPagerAdapter(SaveBook.this,images);
@@ -125,7 +158,7 @@ public class SaveBook extends AppCompatActivity{
         t1 = new Tools();
         if (!(t1.isOnline(getApplicationContext()))){
             //rendo invisibile l'xml
-            ll.setVisibility(View.GONE);
+            //ll.setVisibility(View.GONE);
             //progressBar.setVisibility(View.GONE);
             android.app.AlertDialog.Builder ad = t1.showPopup(this, getString(R.string.noInternet), "", "");
             //tasto retry rimanda ad addbook
@@ -149,6 +182,55 @@ public class SaveBook extends AppCompatActivity{
         algoIndex = algoClient.getIndex("BookIndex");
 
     }
+    public void onOffsetChanged(AppBarLayout appBarLayout, int offset) {
+        int maxScroll = appBarLayout.getTotalScrollRange();
+        float percentage = (float) Math.abs(offset) / (float) maxScroll;
+
+        handleAlphaOnTitle(percentage);
+        handleToolbarTitleVisibility(percentage);
+    }
+    private void handleAlphaOnTitle(float percentage) {
+        if (percentage >= PERCENTAGE_TO_HIDE_TITLE_DETAILS) {
+            if (mIsTheTitleContainerVisible) {
+                startAlphaAnimation(linearlayoutTitle, ALPHA_ANIMATIONS_DURATION, View.INVISIBLE);
+                mIsTheTitleContainerVisible = false;
+            }
+
+        } else {
+
+            if (!mIsTheTitleContainerVisible) {
+                startAlphaAnimation(linearlayoutTitle, ALPHA_ANIMATIONS_DURATION, View.VISIBLE);
+                mIsTheTitleContainerVisible = true;
+            }
+        }
+    }
+
+    public static void startAlphaAnimation(View v, long duration, int visibility) {
+        AlphaAnimation alphaAnimation = (visibility == View.VISIBLE)
+                ? new AlphaAnimation(0f, 1f)
+                : new AlphaAnimation(1f, 0f);
+
+        alphaAnimation.setDuration(duration);
+        alphaAnimation.setFillAfter(true);
+        v.startAnimation(alphaAnimation);
+    }
+
+    private void handleToolbarTitleVisibility(float percentage) {
+        if (percentage >= PERCENTAGE_TO_SHOW_TITLE_AT_TOOLBAR) {
+
+            if (!mIsTheTitleVisible) {
+                startAlphaAnimation(textviewTitle, ALPHA_ANIMATIONS_DURATION, View.VISIBLE);
+                mIsTheTitleVisible = true;
+            }
+
+        } else {
+
+            if (mIsTheTitleVisible) {
+                startAlphaAnimation(textviewTitle, ALPHA_ANIMATIONS_DURATION, View.INVISIBLE);
+                mIsTheTitleVisible = false;
+            }
+        }
+    }
     public void setReferences(){
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         isbn = prefs.getString(EXTRA_ISBN, null);
@@ -161,6 +243,19 @@ public class SaveBook extends AppCompatActivity{
         }
     }
     public void findActViews(){
+        appbar = (AppBarLayout) findViewById(R.id.appbar);
+        collapsing = (CollapsingToolbarLayout) findViewById(R.id.collapsing);
+        coverImage = (ImageView) findViewById(R.id.imageview_placeholder);
+        framelayoutTitle = (FrameLayout) findViewById(R.id.framelayout_title);
+        linearlayoutTitle = (LinearLayout) findViewById(R.id.linearlayout_title);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        textviewTitle = (TextView) findViewById(R.id.textview_title);
+        //avatar = (SimpleDraweeView) findViewById(R.id.avatar);
+        avatar = findViewById(R.id.avatar);
+        avatar.setImageDrawable(getDrawable(R.drawable.default_picture));
+
+
+        condition=findViewById(R.id.condition);
         ll_author=findViewById(R.id.ll_author);
         ll_categ=findViewById(R.id.ll_categ);
         ll_notes=findViewById(R.id.ll_notes);
@@ -234,7 +329,7 @@ public class SaveBook extends AppCompatActivity{
         String url = "https://www.googleapis.com/books/v1/volumes?q=ISBN:<";
         url = url + isbn + ">";
         RequestQueue queue = Volley.newRequestQueue(c);
-        ll.setVisibility(View.GONE);
+        //ll.setVisibility(View.GONE);
         //progressBar.setVisibility(View.VISIBLE);
         // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
@@ -333,10 +428,10 @@ public class SaveBook extends AppCompatActivity{
                         vDescription.setText(R.string.descriptionNotFound);
                     }
                     Glide.with(this).load(urlimage).into((ImageView)findViewById(R.id.avatar));
-                    adapter.addUrl(urlimage);
-                    adapter.notifyDataSetChanged();
+                    //adapter.addUrl(urlimage);
+                    //adapter.notifyDataSetChanged();
                     //progressBar.setVisibility(View.GONE);
-                    ll.setVisibility(View.VISIBLE);
+                    //ll.setVisibility(View.VISIBLE);
                     prefs = PreferenceManager.getDefaultSharedPreferences(c);
 /*
 todo rimpire stringhe
@@ -404,7 +499,6 @@ todo rimpire stringhe
             ad.setPositiveButton("Ok", ( vi, w ) -> {
                 mBooksReference = FirebaseManagement.getDatabase().getReference().child("books");
                 String bookKey = mBooksReference.push().getKey();
-                mBooksReference.child(bookKey).setValue(book);
                 final ProgressDialog progressDialog = new ProgressDialog(this);
                 progressDialog.setTitle(getString(R.string.Uploading));
                 progressDialog.show();
@@ -438,11 +532,12 @@ todo rimpire stringhe
                         this.notes.put(et.getText().toString(), et2.getText().toString());
                     }
                 }
+                book.setCondition(condition.getText().toString());
                 book.setAuthor(authors);
                 book.setCategories(categories);
                 book.setNotes(notes);
                 book.setBId(bookKey);
-
+                mBooksReference.child(bookKey).setValue(book);
                 //fine inserimento nelle liste
                 mProfileReference = FirebaseManagement.getDatabase().getReference();
                 mProfileReference.child("myBooks").child(bookKey).setValue(book.getIsbn())
@@ -498,7 +593,7 @@ todo rimpire stringhe
         imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
     }
 
-    private void onAddPhotoClick(View v) {
+    public void onAddPhotoClick(View v) {
         //set popup
         setFocusOnClick(Objects.requireNonNull(this.getCurrentFocus()));
         v.getContext();
@@ -542,8 +637,8 @@ todo rimpire stringhe
             newBitMapBookImage = (Bitmap) Objects.requireNonNull(imageUri).get("data");
             //bookImage.loadUrl(bitmapToUrl(newBitMapBookImage));
             bookImage.setImageBitmap(newBitMapBookImage);
-            adapter.addUrl(bitmapToUrl(newBitMapBookImage));
-            adapter.notifyDataSetChanged();
+            //adapter.addUrl(bitmapToUrl(newBitMapBookImage));
+            //adapter.notifyDataSetChanged();
             // bookImage.setImageBitmap(newBitMapBookImage);
             //manage request image from gallery
         } else if ( requestCode==REQUEST_IMAGE_LIBRARY && resultCode == RESULT_OK) {
@@ -609,5 +704,32 @@ todo rimpire stringhe
                     }
                 });
 
+    }
+    public void setupUI(View view) {
+
+        // Set up touch listener for non-text box views to hide keyboard.
+        if (!(view instanceof EditText)) {
+            view.setOnTouchListener(new View.OnTouchListener() {
+                public boolean onTouch(View v, MotionEvent event) {
+                    hideSoftKeyboard(SaveBook.this);
+                    return false;
+                }
+            });
+        }
+
+        //If a layout container, iterate over children and seed recursion.
+        if (view instanceof ViewGroup) {
+            for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
+                View innerView = ((ViewGroup) view).getChildAt(i);
+                setupUI(innerView);
+            }
+        }
+    }
+    public static void hideSoftKeyboard(Activity activity) {
+        InputMethodManager inputMethodManager =
+                (InputMethodManager) activity.getSystemService(
+                        Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(
+                activity.getCurrentFocus().getWindowToken(), 0);
     }
 }
