@@ -42,8 +42,8 @@
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
-    <string name="scan1">Please insert ISBN</string>
-    <string name="scan2">Or scan with camera</string>
+    <string name="scan2">Or insert ISBN</string>
+    <string name="scan3">Or scan ISBN</string>
     <string name="title_activity_save_book">SaveBook</string>
     <string name="addBook">Add Book</string>
     <!--string for data not found-->
@@ -60,8 +60,8 @@
     <string name="facebook_login_protocol_scheme" translatable="false">fbAPP_ID</string>
     <string name="bookTitle">Book Details</string>
     <string name="home">Home</string>
-    <string name="scan3">SCAN</string>
-    <string name="click_to_insert_book">Click to insert book</string>
+    <string name="scan">SCAN</string>
+    <string name="scan1">Enter book manually</string>
     <string name="insert">Insert</string>
     <string name="categorie">categorie</string>
     <string name="data">data</string>
