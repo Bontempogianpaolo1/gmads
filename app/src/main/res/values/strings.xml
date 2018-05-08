@@ -63,12 +63,20 @@
     <string name="scan">SCAN</string>
     <string name="scan1">Enter book manually</string>
     <string name="insert">Insert</string>
-    <string name="categorie">categorie</string>
-    <string name="data">data</string>
-    <string name="editore">editore</string>
-    <string name="autore">autore</string>
-    <string name="descrizione">descrizione</string>
-    <string name="title">Title</string>
+    <!-- stringhe save book-->
+    <string name="sb_category">Category</string>
+    <string name="sb_data">Date</string>
+    <string name="sb_editor">Editor</string>
+    <string name="sb_author">Author</string>
+    <string name="sb_description">Description</string>
+    <string name="sb_title">Title</string>
+    <string name="edit_book">Edit Book</string>
+    <string name="sb_condition">Book Conditions</string>
+    <string name="sb_key">Key</string>
+    <string name="sb_value">Value</string>
+    <string name="sb_info">Additional Info</string>
+    <string name="sb_main_info">Main Info</string>
+
     <string name="Uploading">Uploading...</string>
     <string name="settings">Settings</string>
     <string name="logout">Logout</string>
