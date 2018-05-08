@@ -8,7 +8,7 @@ public class BookJsonParser
     {
         if (jsonObject == null)
             return null;
-        String bid=jsonObject.optString("bid");
+        String bId=jsonObject.optString("bId");
         String isbn=jsonObject.optString("isbn");
         String title = jsonObject.optString("title");
         String description = jsonObject.optString("description");
@@ -24,7 +24,7 @@ public class BookJsonParser
         Double lng= jsonObject.optJSONObject("_geoloc").optDouble("lng",0.0);
         if (title != null )
             return new Book(
-                    bid,
+                    bId,
                     isbn,
                     title,
                     description,

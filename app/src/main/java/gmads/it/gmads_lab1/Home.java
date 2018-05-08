@@ -3,6 +3,7 @@ package gmads.it.gmads_lab1;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
@@ -31,6 +32,7 @@ import android.support.design.widget.TabLayout;
 import android.widget.TextView;
 
 
+import com.algolia.search.saas.AbstractQuery;
 import com.algolia.search.saas.AlgoliaException;
 import com.algolia.search.saas.Client;
 import com.algolia.search.saas.CompletionHandler;
@@ -38,10 +40,16 @@ import com.algolia.search.saas.Index;
 import com.algolia.search.saas.Query;
 import com.bumptech.glide.Glide;
 import com.firebase.ui.auth.AuthUI;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.StorageReference;
 import com.google.gson.Gson;
 
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -52,7 +60,7 @@ import gmads.it.gmads_lab1.fragments.Home_1;
 public class Home extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
     private RecyclerView recyclerView;
     private BookAdapter adapter;
-    private List<Book> bookList;
+    private List<Book> books;
     SearchView searchview;
     Client algoClient;
     Index algoIndex;
@@ -111,6 +119,9 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         }
         algoClient = new Client("L6B7L7WXZW", "9d2de9e724fa9289953e6b2d5ec978a5");
         algoIndex = algoClient.getIndex("BookIndex");
+
+        getUserInfo();
+
     }
 
     /*@Override
@@ -158,8 +169,11 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
         searchview.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
-            public boolean onQueryTextSubmit( String query ) {
-               algoIndex.searchAsync(new Query(query), new CompletionHandler() {
+            public boolean onQueryTextSubmit( String text ) {
+                Query query = new Query(text)
+                        .setAroundLatLng(new AbstractQuery.LatLng(profile.getLat(), profile.getLng()));
+
+               algoIndex.searchAsync(query, new CompletionHandler() {
                    @Override
                    public void requestCompleted( JSONObject jsonObject, AlgoliaException e ) {
                        if(e==null){
@@ -168,7 +182,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                            imm.hideSoftInputFromWindow(Objects.requireNonNull(getCurrentFocus()).getWindowToken(), 0);
                            SearchResultsJsonParser search= new SearchResultsJsonParser();
                            Log.d("lista",jsonObject.toString());
-                           List<Book> books= search.parseResults(jsonObject);
+                           books= search.parseResults(jsonObject);
                            tab1.getAdapter().setbooks(books);
                        }
                    }
@@ -255,6 +269,79 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                 navImage.setImageDrawable(getDrawable(R.drawable.default_profile));
             }
         }
+    }
+
+    private void getUserInfo(){
+        //progressbar.setVisibility(View.VISIBLE);
+        //avatar.setVisibility(View.GONE);
+        FirebaseManagement.getDatabase().getReference().child("users").child(FirebaseManagement.getUser().getUid())
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        profile = dataSnapshot.getValue(Profile.class);
+                        if (profile != null) {
+                            navName.setText(profile.getName());
+                            navName.append(" " + profile.getSurname());
+                            navMail.setText(profile.getEmail());
+                            if (profile.getImage() != null) {
+                                try {
+                                    File localFile = File.createTempFile("images", "jpg");
+                                    StorageReference profileImageRef =
+                                            FirebaseManagement
+                                                    .getStorage()
+                                                    .getReference()
+                                                    .child("users")
+                                                    .child(FirebaseManagement.getUser().getUid())
+                                                    .child("profileimage.jpg");
+
+                                    profileImageRef.getFile(localFile)
+                                            .addOnSuccessListener(taskSnapshot -> {
+                                                navImage.setImageBitmap(BitmapFactory.decodeFile(localFile.getPath()));
+                                            }).addOnFailureListener(e -> {
+                                    });
+
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            } else {
+                                navImage.setImageDrawable(getDrawable(R.drawable.default_picture));
+                            }
+
+                            getStartingHomeBooks();
+                        }else{
+                            navName.setText(getString(R.string.name));
+                            navName.append(" " + getString(R.string.surname));
+                            navMail.setText(getString(R.string.email));
+                            navImage.setImageDrawable(getDrawable(R.drawable.default_picture));
+                        }
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        // Getting Post failed, log a message
+                    }
+                });
+
+    }
+
+    private void getStartingHomeBooks(){
+        Query query = new Query()
+                .setAroundLatLng(new AbstractQuery.LatLng(profile.getLat(), profile.getLng()));
+
+        algoIndex.searchAsync(query, new CompletionHandler() {
+            @Override
+            public void requestCompleted( JSONObject jsonObject, AlgoliaException e ) {
+                if(e==null){
+                    InputMethodManager imm = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    assert imm != null;
+                    imm.hideSoftInputFromWindow(Objects.requireNonNull(getCurrentFocus()).getWindowToken(), 0);
+                    SearchResultsJsonParser search= new SearchResultsJsonParser();
+                    Log.d("lista",jsonObject.toString());
+                    books= search.parseResults(jsonObject);
+                    tab1.getAdapter().setbooks(books);
+                }
+            }
+        });
     }
 
 }

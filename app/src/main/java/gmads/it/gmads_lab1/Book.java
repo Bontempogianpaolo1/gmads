@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class Book {
-    private String BId;
+    private String bId;
     private String isbn;
     private String title;
     private String description;
@@ -43,8 +43,8 @@ public class Book {
         this.indirizzo = indirizzo;
     }
 
-    public Book( String BId, String isbn, String title, String description, String urlimage, String publishDate, String author, String categories, String publisher, String owner, Double lat, Double lng) {
-        this.BId = BId;
+    public Book( String bId, String isbn, String title, String description, String urlimage, String publishDate, String author, String categories, String publisher, String owner, Double lat, Double lng) {
+        this.bId = bId;
         this.isbn = isbn;
         this.title = title;
         this.description = description;
@@ -75,11 +75,11 @@ public class Book {
     }
 
     public String getBId() {
-        return BId;
+        return bId;
     }
 
     public void setBId(String BId) {
-        this.BId = BId;
+        this.bId = BId;
     }
 
     public String getIsbn() {
