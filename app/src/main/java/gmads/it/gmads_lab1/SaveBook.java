@@ -162,12 +162,12 @@ public class SaveBook extends AppCompatActivity{
         }
     }
     public void findActViews(){
-        //ll_author=findViewById(R.id.ll_author);
-        //ll_categ=findViewById(R.id.ll_categ);
+        ll_author=findViewById(R.id.ll_author);
+        ll_categ=findViewById(R.id.ll_categ);
         ll_notes=findViewById(R.id.ll_notes);
         vTitle = findViewById(R.id.title);
         vDate = findViewById(R.id.data);
-        vAuthor = findViewById(R.id.autore);
+        vAuthor = findViewById(R.id.author);
         vCategories = findViewById(R.id.categorie);
         vPublisher = findViewById(R.id.editore);
         vDescription = findViewById(R.id.descrizione);
@@ -184,7 +184,7 @@ public class SaveBook extends AppCompatActivity{
     }
     public void onAddAuthor(View v){
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        final View rowView = inflater.inflate(R.layout.fragment_home_1, null);
+        final View rowView = inflater.inflate(R.layout.author_layout, null);
         // Add the new row before the add field button.
         if(ll_author.getChildCount()<3){
 
@@ -195,14 +195,14 @@ public class SaveBook extends AppCompatActivity{
             TODO:controllo solo se campo vuoto...
              */
             if(field.getText().length()!=0) {
-                ll_author.addView(rowView, ll_author.getChildCount() - 1);
+                ll_author.addView(rowView, ll_author.getChildCount() );
             }
         }
     }
 
     public void onAddCateg(View v){
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        final View rowView = inflater.inflate(R.layout.fragment_home_1, null);
+        final View rowView = inflater.inflate(R.layout.categ_layout, null);
         // Add the new row before the add field button.
         if(ll_categ.getChildCount()<3) {
             LinearLayout ll;
@@ -212,7 +212,7 @@ public class SaveBook extends AppCompatActivity{
             TODO:controllo solo se campo vuoto...
              */
             if (field.getText().length() != 0) {
-                ll_categ.addView(rowView, ll_categ.getChildCount() - 1);
+                ll_categ.addView(rowView, ll_categ.getChildCount());
             }
         }
     }
