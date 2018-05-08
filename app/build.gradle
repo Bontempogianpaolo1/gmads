@@ -67,7 +67,7 @@ dependencies {
     implementation 'com.android.support:cardview-v7:26.0.+'
     //search bar
     implementation 'com.github.arimorty:floatingsearchview:2.1.1'
-    implementation  'com.lapism:searchview:27.1.1.0.0'
+    implementation 'com.lapism:searchview:27.1.1.0.0'
     implementation 'com.algolia:algoliasearch-android:3.+'
     implementation 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
     implementation 'uk.co.chrisjenx:calligraphy:2.3.0'

@@ -67,5 +67,10 @@ public class ViewPagerAdapter extends PagerAdapter{
     }
     public void addUrl(String url){
         images.add(url);
+        notifyDataSetChanged();
+    }
+    public void clearUrl(){
+        images.clear();
+        notifyDataSetChanged();
     }
 }
