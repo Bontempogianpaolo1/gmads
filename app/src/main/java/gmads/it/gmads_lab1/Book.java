@@ -30,6 +30,16 @@ public class Book {
     private String indirizzo;
     private Geoloc _geoloc;
     private Double finderLat;
+    private String nomeproprietario;
+
+    public String getNomeproprietario() {
+        return nomeproprietario;
+    }
+
+    public void setNomeproprietario( String nomeproprietario ) {
+        this.nomeproprietario = nomeproprietario;
+    }
+
 
     public Double getFinderLat() {
         return finderLat;

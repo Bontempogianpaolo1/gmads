@@ -61,7 +61,7 @@ public class BookPage extends AppCompatActivity {
     }
 
     public void getBookInfo(){
-
+        getIntent().getStringExtra("book_id");
         bookId = getIntent().getExtras().getString("book_id");
         FirebaseManagement.getDatabase().getReference().child("books").child(bookId)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
@@ -72,8 +72,8 @@ public class BookPage extends AppCompatActivity {
                         vAuthor.setText(book.getAuthor().get(0));
                         vRating.setText(Double.toString(book.getAvgRating()));
                         vCategory.setText(book.getCategories().get(0));
-                        distance.setText(String.valueOf(book.getDistance()/1000));
-                        distance.append(" Km");
+                       // distance.setText(String.valueOf(book.getDistance()/1000));
+                       // distance.append(" Km");
                         bookImageAdapter.clearUrl();
                         bookImageAdapter.addUrl(book.getUrlimage());
 

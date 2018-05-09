@@ -532,6 +532,7 @@ todo rimpire stringhe
                         this.notes.put(et.getText().toString(), et2.getText().toString());
                     }
                 }
+                book.setNomeproprietario(profile.getName()+" "+profile.getSurname());
                 book.setCondition(condition.getText().toString());
                 book.setAuthor(authors);
                 book.setCategories(categories);

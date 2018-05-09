@@ -308,6 +308,10 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         profile = dataSnapshot.getValue(Profile.class);
                         if (profile != null) {
+                            if(profile.getCAP()==null || profile.getCAP().length()==0){
+                                Intent i=new Intent(getApplicationContext(), EditProfile.class);
+                                startActivity(i);
+                            }
                             navName.setText(profile.getName());
                             navName.append(" " + profile.getSurname());
                             navMail.setText(profile.getEmail());
@@ -337,10 +341,14 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
                             getStartingHomeBooks();
                         }else{
+                            Intent i=new Intent(getApplicationContext(), EditProfile.class);
+                            startActivity(i);
+                            /*
                             navName.setText(getString(R.string.name));
                             navName.append(" " + getString(R.string.surname));
                             navMail.setText(getString(R.string.email));
                             navImage.setImageDrawable(getDrawable(R.drawable.default_picture));
+                            */
                         }
                     }
                     @Override

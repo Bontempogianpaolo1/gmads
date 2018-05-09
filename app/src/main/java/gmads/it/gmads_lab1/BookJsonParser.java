@@ -41,6 +41,7 @@ public class BookJsonParser
         String publisher= jsonObject.optString("publisher");
         int rating = jsonObject.optInt("rating", -1);
         int year = jsonObject.optInt("year", 0);
+        String name=jsonObject.optString("nomeproprietario");
         Double lat= jsonObject.optJSONObject("_geoloc").optDouble("lat",0.0);
         Double lng= jsonObject.optJSONObject("_geoloc").optDouble("lng",0.0);
         if (title != null ){
@@ -57,6 +58,8 @@ public class BookJsonParser
                     owner,
                     lat,
                     lng);
+            b.setBId(bId);
+            b.setNomeproprietario(name);
             b.setDistance(distance);
             b.setfinder(finderlat,finderlng);
             return b;

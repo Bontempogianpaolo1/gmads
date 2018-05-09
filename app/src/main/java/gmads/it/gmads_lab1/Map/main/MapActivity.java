@@ -60,6 +60,9 @@ public class MapActivity extends MvpActivity<MainView, MainPresenter> implements
         }
     }
 */
+public void onClickShowBook(String bid){
+
+}
     @Override
     public void onBackPressed() {
         if(getSupportFragmentManager().getBackStackEntryCount() > 0) {

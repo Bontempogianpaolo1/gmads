@@ -181,7 +181,10 @@ public class ShowProfile extends AppCompatActivity implements AppBarLayout.OnOff
     //to close the application on back button
     @Override
     public void onBackPressed() {
-        moveTaskToBack(true);
+        Intent intentMod = new Intent(this, Home.class);
+        startActivity(intentMod);
+        finish();
+        //moveTaskToBack(true);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -234,6 +237,10 @@ public class ShowProfile extends AppCompatActivity implements AppBarLayout.OnOff
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         profile = dataSnapshot.getValue(Profile.class);
                         if (profile != null) {
+                            if(profile.getCAP()==null || profile.getCAP().length()==0){
+                                Intent i=new Intent(getApplicationContext(), EditProfile.class);
+                                startActivity(i);
+                            }
                             vName.setText(profile.getName());
                             vName.append(" " + profile.getSurname());
                             navName.setText(profile.getName());
@@ -272,6 +279,8 @@ public class ShowProfile extends AppCompatActivity implements AppBarLayout.OnOff
                                 navImage.setImageDrawable(getDrawable(R.drawable.default_picture));
                             }
                         }else{
+                            Intent i=new Intent(getApplicationContext(), EditProfile.class);
+                            startActivity(i);
                             vName.setText(getString(R.string.name));
                             vName.append(" " + getString(R.string.surname));
                             navName.setText(getString(R.string.name));
