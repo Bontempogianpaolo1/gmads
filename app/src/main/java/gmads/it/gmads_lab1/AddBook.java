@@ -212,7 +212,13 @@ public class AddBook extends AppCompatActivity
                 finish();
             });
             return true;
+        }else if(id == R.id.nav_mylibrary){
+            startActivity(new Intent(this,MyLibrary.class));
+            finish();
+
+            return true;
         }
+
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }

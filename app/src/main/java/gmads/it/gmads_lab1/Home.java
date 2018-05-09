@@ -157,8 +157,8 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
             startActivity(new Intent(this,MyLibrary.class));
             finish();
 
-        return true;
-    }
+            return true;
+        }
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
