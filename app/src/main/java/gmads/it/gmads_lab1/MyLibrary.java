@@ -150,8 +150,9 @@ public class MyLibrary extends AppCompatActivity implements NavigationView.OnNav
             finish();
             return true;
         } else if (id == R.id.nav_home) {
-            //deve solo chiudersi la navbar
-            drawer.closeDrawers();
+            Intent intentMod = new Intent(this, Home.class);
+            startActivity(intentMod);
+            finish();
             return true;
         }else if(id == R.id.nav_logout){
             AuthUI.getInstance().signOut(this).addOnCompleteListener(v->{

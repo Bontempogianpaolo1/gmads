@@ -157,10 +157,9 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
             });
             return true;
         }else if(id == R.id.nav_mylibrary){
-        AuthUI.getInstance().signOut(this).addOnCompleteListener(v->{
             startActivity(new Intent(this,MyLibrary.class));
             finish();
-        });
+
         return true;
     }
         drawer.closeDrawer(GravityCompat.START);
