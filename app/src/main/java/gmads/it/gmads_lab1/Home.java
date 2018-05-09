@@ -204,6 +204,11 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                            SearchResultsJsonParser search= new SearchResultsJsonParser();
                            Log.d("lista",jsonObject.toString());
                            books= search.parseResults(jsonObject);
+                           for(int i = 0; i<books.size(); i++){
+                               if(books.get(i).getOwner().equals(FirebaseManagement.getUser().getUid())){
+                                   books.remove(i);
+                               }
+                           }
                            tab1.getAdapter().setbooks(books);
                        }
                    }
@@ -372,6 +377,11 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                     SearchResultsJsonParser search= new SearchResultsJsonParser();
                     Log.d("lista",jsonObject.toString());
                     books= search.parseResults(jsonObject);
+                    for(int i = 0; i<books.size(); i++){
+                        if(books.get(i).getOwner().equals(FirebaseManagement.getUser().getUid())){
+                            books.remove(i);
+                        }
+                    }
                     tab1.getAdapter().setbooks(books);
                     tab1.getAdapter().notifyDataSetChanged();
                 }
