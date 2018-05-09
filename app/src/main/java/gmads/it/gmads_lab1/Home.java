@@ -107,9 +107,6 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         FragmentViewPagerAdapter vpadapter= new FragmentViewPagerAdapter(getSupportFragmentManager());
         vpadapter.addFragment(tab1);
         pager.setAdapter(vpadapter);
-        TabLayout tableLayout= findViewById(R.id.tabs);
-        tableLayout.setupWithViewPager(pager);
-        tableLayout.getTabAt(0).setText(getString(R.string.tab1));
 
 //
         //era per mettere foto libri nell appbar, ma l'abbiamo messa come sfondo per ora
