@@ -500,8 +500,8 @@ todo rimpire stringhe
                 mBooksReference = FirebaseManagement.getDatabase().getReference().child("books");
                 String bookKey = mBooksReference.push().getKey();
                 final ProgressDialog progressDialog = new ProgressDialog(this);
-                progressDialog.setTitle(getString(R.string.Uploading));
-                progressDialog.show();
+                //progressDialog.setTitle(getString(R.string.Uploading));
+                //progressDialog.show();
                 /*
                 todo inserisco dati nelle liste
                  */
@@ -541,8 +541,9 @@ todo rimpire stringhe
                 mBooksReference.child(bookKey).setValue(book);
                 //fine inserimento nelle liste
                 mProfileReference = FirebaseManagement.getDatabase().getReference();
-                mProfileReference.child("myBooks").child(bookKey).setValue(book.getIsbn())
-                        .addOnFailureListener(e -> Log.v("ERR", e.getMessage()));
+                mProfileReference.child("users").child(book.getOwner()).child("myBooks").child(bookKey).setValue(book.getIsbn())
+                        .addOnFailureListener(e ->{
+                            Log.v("ERR", e.getMessage());});
 
                 try {
                     algoIndex.addObjectAsync(new JSONObject(gson.toJson(book)), null);
