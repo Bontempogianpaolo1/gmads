@@ -2,9 +2,11 @@ package gmads.it.gmads_lab1;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -53,6 +55,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.prefs.Preferences;
 
 import gmads.it.gmads_lab1.Map.main.MapActivity;
 import gmads.it.gmads_lab1.fragments.Home_1;
@@ -68,6 +71,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     TextView navName;
     TextView navMail;
     ImageView navImage;
+    String query="";
     NavigationView navigationView;
     DrawerLayout drawer;
     private Profile profile;
@@ -187,8 +191,9 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         searchview.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit( String text ) {
+                query=text;
                 Query query = new Query(text)
-                        .setAroundLatLng(new AbstractQuery.LatLng(profile.getLat(), profile.getLng()));
+                        .setAroundLatLng(new AbstractQuery.LatLng(profile.getLat(), profile.getLng())).setGetRankingInfo(true);
 
                algoIndex.searchAsync(query, new CompletionHandler() {
                    @Override
@@ -259,7 +264,12 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     }
 
     public void mapcreate( View view ) {
+        SharedPreferences pref= PreferenceManager.getDefaultSharedPreferences(this);
+
         Intent intentMod = new Intent(this, MapActivity.class);
+        intentMod.putExtra("query",query);
+        intentMod.putExtra("lat",profile.getLat());
+        intentMod.putExtra("lng",profile.getLng());
         startActivity(intentMod);
         overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
 
@@ -343,8 +353,8 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
     private void getStartingHomeBooks(){
         Query query = new Query()
-                .setAroundLatLng(new AbstractQuery.LatLng(profile.getLat(), profile.getLng()));
-
+                .setAroundLatLng(new AbstractQuery.LatLng(profile.getLat(), profile.getLng())).setGetRankingInfo(true);
+                    //.setAroundLatLngViaIP(true).setGetRankingInfo(true);
         algoIndex.searchAsync(query, new CompletionHandler() {
             @Override
             public void requestCompleted( JSONObject jsonObject, AlgoliaException e ) {
@@ -356,6 +366,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                     Log.d("lista",jsonObject.toString());
                     books= search.parseResults(jsonObject);
                     tab1.getAdapter().setbooks(books);
+                    tab1.getAdapter().notifyDataSetChanged();
                 }
             }
         });

@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 
 public class Book {
+
+
     private String bId;
     private String isbn;
     private String title;
@@ -27,6 +29,34 @@ public class Book {
     private List<Bitmap> images;
     private String indirizzo;
     private Geoloc _geoloc;
+    private Double finderLat;
+
+    public Double getFinderLat() {
+        return finderLat;
+    }
+
+    public void setFinderLat( Double finderLat ) {
+        this.finderLat = finderLat;
+    }
+
+    public Double getFinderLng() {
+        return finderLng;
+    }
+
+    public void setFinderLng( Double finderLng ) {
+        this.finderLng = finderLng;
+    }
+
+    private Double finderLng;
+    public long getDistance() {
+        return distance;
+    }
+
+    public void setDistance( long distance ) {
+        this.distance = distance;
+    }
+
+    private long  distance;
 
     public List<String> getAuthor() {
         return author;
@@ -71,8 +101,7 @@ public class Book {
     }
 
     public Book( String BId, String isbn, String title, String description, String urlimage, String publishDate, List<String> author, List<String> categories, String publisher, String owner, Double lat, Double lng) {
-        this.BId = BId;
-    public Book( String bId, String isbn, String title, String description, String urlimage, String publishDate, String author, String categories, String publisher, String owner, Double lat, Double lng) {
+
         this.bId = bId;
         this.isbn = isbn;
         this.title = title;
@@ -214,5 +243,10 @@ public class Book {
 
     public void setHolder(String holder) {
         this.holder = holder;
+    }
+
+    public void setfinder( Double finderlat, Double finderlng ) {
+        this.finderLat=finderlat;
+        this.finderLng=finderlng;
     }
 }

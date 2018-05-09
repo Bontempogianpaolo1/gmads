@@ -71,7 +71,9 @@ public class PulseOverlayLayout extends MapOverlayLayout {
     }
 
     public void showMarker(final int position) {
+        if(markersList.size()>position){
         ((PulseMarkerView)markersList.get(position)).pulse();
+        }
     }
 
     public void drawStartAndFinishMarker() {

@@ -15,14 +15,17 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import java.util.ArrayList;
 import java.util.List;
 
+import gmads.it.gmads_lab1.Book;
+
 public class MapOverlayLayout<V extends MarkerView> extends FrameLayout {
 
     protected List<V> markersList;
     protected Polyline currentPolyline;
     protected GoogleMap googleMap;
     protected ArrayList<LatLng> polylines;
-
-    public MapOverlayLayout(final Context context) {
+    private Double lat;
+    private Double lng;
+    public MapOverlayLayout( final Context context) {
         this(context, null);
     }
 
@@ -66,8 +69,10 @@ public class MapOverlayLayout<V extends MarkerView> extends FrameLayout {
         markersList.get(position).refresh(point);
     }
 
-    public void setupMap(final GoogleMap googleMap) {
+    public void setupMap(final GoogleMap googleMap,Book b) {
         this.googleMap = googleMap;
+        lat=b.getFinderLat();
+        lng=b.getFinderLng();
     }
 
     public void refresh() {
@@ -97,7 +102,8 @@ public class MapOverlayLayout<V extends MarkerView> extends FrameLayout {
     }
 
     public LatLng getCurrentLatLng() {
-        return new LatLng(googleMap.getCameraPosition().target.latitude, googleMap.getCameraPosition().target.longitude);
+        //return new LatLng(googleMap.getCameraPosition().target.latitude, googleMap.getCameraPosition().target.longitude);
+        return new LatLng(lat, lng);
     }
 
     public void addPolyline(final ArrayList<LatLng> polylines) {

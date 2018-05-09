@@ -61,9 +61,10 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
         //titolo libro
         holder.title.setText(book.getTitle());
         //owner
-        holder.owner.setText("di" + book.getOwner());
+        holder.owner.setText("di " + book.getOwner());
         //distanza
-        holder.distance.setText("23,3Km");
+        holder.distance.setText(String.valueOf(book.getDistance()/1000));
+        holder.distance.append(" Km");
         //rating
         holder.rating.setText("Rate: 4,5");
         // loading album cover using Glide library

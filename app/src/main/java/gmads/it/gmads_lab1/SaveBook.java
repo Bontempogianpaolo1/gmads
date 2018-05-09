@@ -573,6 +573,7 @@ todo rimpire stringhe
                 Intent pickIntent = new Intent(this, Home.class);
                 prefs.edit().putString(EXTRA_ISBN, isbn).apply();
                 startActivity(pickIntent);
+                finish();
             });
             ad.show();
         }

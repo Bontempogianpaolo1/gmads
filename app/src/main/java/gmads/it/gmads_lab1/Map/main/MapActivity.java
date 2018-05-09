@@ -32,7 +32,11 @@ public class MapActivity extends MvpActivity<MainView, MainPresenter> implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        LibraryProvider.instance().initialize("ha");
+        Double lat= getIntent().getDoubleExtra("lat",0.0);
+        Double lng=getIntent().getDoubleExtra("lng",0.0);
+        String query=getIntent().getStringExtra("query");
+        LibraryProvider.instance().initialize(query,lat,lng);
+
         presenter.provideMapLatLngBounds();
         getSupportFragmentManager()
                 .beginTransaction()

@@ -42,6 +42,24 @@ public class DetailsFragment extends MvpFragment<DetailsFragmentView, DetailsFra
     private SearchBooksAdapter libraryAdapter;
     private String currentTransitionName;
     private Scene detailsScene;
+    private Double lat;
+    private Double lng;
+    public Double getLat() {
+        return lat;
+    }
+
+    public void setLat( Double lat ) {
+        this.lat = lat;
+    }
+
+    public Double getLng() {
+        return lng;
+    }
+
+    public void setLng( Double lng ) {
+        this.lng = lng;
+    }
+
 
     public static Fragment newInstance(final Context ctx) {
         DetailsFragment fragment = new DetailsFragment();
@@ -104,7 +122,7 @@ public class DetailsFragment extends MvpFragment<DetailsFragmentView, DetailsFra
 
     @Override
     public void onMapReady(final GoogleMap googleMap) {
-        mapOverlayLayout.setupMap(googleMap);
+        mapOverlayLayout.setupMap(googleMap,booklist.get(0));
         setupGoogleMap();
         addDataToRecyclerView();
     }

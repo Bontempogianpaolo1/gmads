@@ -16,7 +16,7 @@ public class WorkcationApp extends Application {
         super.onCreate();
         sInstance = this;
         MapsApiManager.instance().initialize();
-        LibraryProvider.instance().initialize("");
+        LibraryProvider.instance().initialize("",0.0,0.0);
         initCalligraphy();
     }
 
