@@ -1,15 +1,12 @@
 package gmads.it.gmads_lab1;
-
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -19,51 +16,72 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.StorageReference;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Objects;
 import java.util.regex.Pattern;
-import static android.graphics.Color.RED;
-import android.view.WindowManager;
+
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
+import android.view.animation.AlphaAnimation;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+
+import android.net.Uri;
 import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-import com.bumptech.glide.Glide;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.StorageReference;
-
-import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class EditProfile extends AppCompatActivity {
+import static android.graphics.Color.RED;
 
+public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOffsetChangedListener {
+
+    private static final float PERCENTAGE_TO_SHOW_TITLE_AT_TOOLBAR = 0.9f;
+    private static final float PERCENTAGE_TO_HIDE_TITLE_DETAILS = 0.3f;
+    private static final int ALPHA_ANIMATIONS_DURATION = 200;
+
+    private boolean mIsTheTitleVisible = false;
+    private boolean mIsTheTitleContainerVisible = true;
+    private AppBarLayout appbar;
+    private CollapsingToolbarLayout collapsing;
+    private ImageView coverImage;
+    private FrameLayout framelayoutTitle;
+    private LinearLayout linearlayoutTitle;
+    private Toolbar toolbar;
+    private TextView textviewTitle;
+    //private SimpleDraweeView avatar;
+    private ImageView avatar;
     private Profile profile;
     static final int MY_CAMERA_REQUEST_CODE = 100;
     static final int REQUEST_IMAGE_CAPTURE = 1888;
     static final int REQUEST_IMAGE_LIBRARY = 1889;
-    private ImageView profileImage;//profile image
     private ProgressBar progressbar;
     Bitmap newBitMapProfileImage; //temp for new image
     private Uri uriProfileImage;
     private String profileImageUrl;
     boolean imagechanged=false;
     File tempFile;
-    Toolbar toolbar;
     ContextWrapper cw;
     File directory;
     String path;
@@ -75,42 +93,62 @@ public class EditProfile extends AppCompatActivity {
     TextView vBio;
     TextView vCAP;
     TextView vCountry;
-    //TextView changeIm;
+
+
+    private void findViews() {
+        appbar = (AppBarLayout) findViewById(R.id.appbar);
+        collapsing = (CollapsingToolbarLayout) findViewById(R.id.collapsing);
+        coverImage = (ImageView) findViewById(R.id.imageview_placeholder);
+        framelayoutTitle = (FrameLayout) findViewById(R.id.framelayout_title);
+        linearlayoutTitle = (LinearLayout) findViewById(R.id.linearlayout_title);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        textviewTitle = (TextView) findViewById(R.id.textview_title);
+        //avatar = (SimpleDraweeView) findViewById(R.id.avatar);
+        avatar = findViewById(R.id.avatar);
+        avatar.setImageDrawable(getDrawable(R.drawable.default_picture));
+
+        //progressbar = findViewById(R.id.progressBar);
+        l2= findViewById(R.id.linearlayout);
+        //l2= findViewById(R.id.linearlayout2);
+        vName = findViewById(R.id.name);
+        vSurname = findViewById(R.id.surname);
+        vEmail = findViewById(R.id.email);
+        vBio = findViewById(R.id.bio);
+        vCountry = findViewById(R.id.country);
+        vCAP = findViewById(R.id.cap);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
+        //Fresco.initialize(this);
         setContentView(R.layout.activity_edit_profile);
         findViews();
-        cw = new ContextWrapper(getApplicationContext());
+        setupUI(findViewById(R.id.linearlayout));
+        toolbar.setTitle("");
+        appbar.addOnOffsetChangedListener(this);
+        textviewTitle.setText(getString(R.string.editProfile));
         setSupportActionBar(toolbar);
+        startAlphaAnimation(textviewTitle, 0, View.INVISIBLE);
+
+        //set avatar and cover
+        avatar.setImageResource(R.drawable.default_picture);
+        coverImage.setImageResource(R.drawable.cover_edit);
+
+        cw = new ContextWrapper(getApplicationContext());
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         // path to /data/data/yourapp/app_data/imageDir
         directory = cw.getDir(getString(R.string.imageDirectory), Context.MODE_PRIVATE);
         path = directory.getPath();
         //inizialize  layout
-        l2.setOnClickListener(this::setFocusOnClick);
+        //l2.setOnClickListener(this::setFocusOnClick);
         //inizialize  user data
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         //set image
-        profileImage.setImageDrawable(getDrawable(R.drawable.default_profile));
-        profileImage.setOnClickListener(this::onClickImage);
+        avatar.setImageDrawable(getDrawable(R.drawable.default_picture));
+        avatar.setOnClickListener(this::onClickImage);
         getUserInfo();
-    }
-    public void findViews(){
-        toolbar = findViewById(R.id.toolbar);
-        progressbar = findViewById(R.id.progressBar);
-        //ll= findViewById(R.id.linearLayout1);
-        l2= findViewById(R.id.linearlayout2);
-        profileImage = findViewById(R.id.profile_image);
-        vName = findViewById(R.id.name_input);
-        vSurname = findViewById(R.id.surname_input);
-        vEmail = findViewById(R.id.email_input);
-        vBio = findViewById(R.id.address_input);
-        vCountry = findViewById(R.id.country);
-        vCAP = findViewById(R.id.CAP);
     }
     //save data on click save
     private void onSaveClick() {
@@ -136,12 +174,20 @@ public class EditProfile extends AppCompatActivity {
         ad.setPositiveButton("Ok", (vi, w) -> updateUserInfo());
         ad.show();
     }
-    //for SaveButton in the action bar
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater mi = getMenuInflater();
-        mi.inflate(R.menu.actionbar_editp, menu);
+        getMenuInflater().inflate(R.menu.actionbar_editp, menu);
         return true;
+    }
+
+    @Override
+    public void onOffsetChanged(AppBarLayout appBarLayout, int offset) {
+        int maxScroll = appBarLayout.getTotalScrollRange();
+        float percentage = (float) Math.abs(offset) / (float) maxScroll;
+
+        handleAlphaOnTitle(percentage);
+        handleToolbarTitleVisibility(percentage);
     }
 
     private void setFocusOnClick(View v){
@@ -194,6 +240,50 @@ public class EditProfile extends AppCompatActivity {
         }
     }
 
+
+    private void handleToolbarTitleVisibility(float percentage) {
+        if (percentage >= PERCENTAGE_TO_SHOW_TITLE_AT_TOOLBAR) {
+
+            if (!mIsTheTitleVisible) {
+                startAlphaAnimation(textviewTitle, ALPHA_ANIMATIONS_DURATION, View.VISIBLE);
+                mIsTheTitleVisible = true;
+            }
+
+        } else {
+
+            if (mIsTheTitleVisible) {
+                startAlphaAnimation(textviewTitle, ALPHA_ANIMATIONS_DURATION, View.INVISIBLE);
+                mIsTheTitleVisible = false;
+            }
+        }
+    }
+
+    private void handleAlphaOnTitle(float percentage) {
+        if (percentage >= PERCENTAGE_TO_HIDE_TITLE_DETAILS) {
+            if (mIsTheTitleContainerVisible) {
+                startAlphaAnimation(linearlayoutTitle, ALPHA_ANIMATIONS_DURATION, View.INVISIBLE);
+                mIsTheTitleContainerVisible = false;
+            }
+
+        } else {
+
+            if (!mIsTheTitleContainerVisible) {
+                startAlphaAnimation(linearlayoutTitle, ALPHA_ANIMATIONS_DURATION, View.VISIBLE);
+                mIsTheTitleContainerVisible = true;
+            }
+        }
+    }
+
+    public static void startAlphaAnimation(View v, long duration, int visibility) {
+        AlphaAnimation alphaAnimation = (visibility == View.VISIBLE)
+                ? new AlphaAnimation(0f, 1f)
+                : new AlphaAnimation(1f, 0f);
+
+        alphaAnimation.setDuration(duration);
+        alphaAnimation.setFillAfter(true);
+        v.startAnimation(alphaAnimation);
+    }
+
     @Override
     //-->function activated when a request is terminated
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -205,7 +295,7 @@ public class EditProfile extends AppCompatActivity {
             newBitMapProfileImage = (Bitmap) Objects.requireNonNull(imageUri).get("data");
             tempFile = saveImage(newBitMapProfileImage);
             uriProfileImage = Uri.fromFile(tempFile);
-            profileImage.setImageBitmap(newBitMapProfileImage);
+            avatar.setImageBitmap(newBitMapProfileImage);
             //manage request image from gallery
         } else if ( requestCode==REQUEST_IMAGE_LIBRARY && resultCode == RESULT_OK) {
             imagechanged=true;
@@ -214,7 +304,7 @@ public class EditProfile extends AppCompatActivity {
                 final InputStream imageStream = getContentResolver().openInputStream(Objects.requireNonNull(imageUri));
                 newBitMapProfileImage = BitmapFactory.decodeStream(imageStream);
                 uriProfileImage = imageUri;
-                profileImage.setImageBitmap(newBitMapProfileImage);
+                avatar.setImageBitmap(newBitMapProfileImage);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -317,9 +407,9 @@ public class EditProfile extends AppCompatActivity {
                         profile.setImage(profileImageUrl);
                         FirebaseManagement.updateUserData(profile);
                         startActivity(pickIntent);
-                        progressbar.setVisibility(View.GONE);
-                    })
-                    .addOnFailureListener(e -> progressbar.setVisibility(View.GONE));
+                        //progressbar.setVisibility(View.GONE);
+                    });
+                   // .addOnFailureListener(e -> //progressbar.setVisibility(View.GONE)// );
         }else{
             profileImageUrl = "";
             profile.setName(name);
@@ -337,8 +427,8 @@ public class EditProfile extends AppCompatActivity {
     }
 
     private void getUserInfo(){
-        progressbar.setVisibility(View.VISIBLE);
-        profileImage.setVisibility(View.GONE);
+        //progressbar.setVisibility(View.VISIBLE);
+        //avatar.setVisibility(View.GONE);
         FirebaseManagement.getDatabase().getReference().child("users").child(FirebaseManagement.getUser().getUid())
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -367,20 +457,20 @@ public class EditProfile extends AppCompatActivity {
 
                                     profileImageRef.getFile(localFile)
                                             .addOnSuccessListener(taskSnapshot -> {
-                                                progressbar.setVisibility(View.GONE);
-                                                profileImage.setVisibility(View.VISIBLE);
-                                                profileImage.setImageBitmap(BitmapFactory.decodeFile(localFile.getPath()));
+                                                //progressbar.setVisibility(View.GONE);
+                                                //avatar.setVisibility(View.VISIBLE);
+                                                avatar.setImageBitmap(BitmapFactory.decodeFile(localFile.getPath()));
 
                                             }).addOnFailureListener(e -> {
-                                        progressbar.setVisibility(View.GONE);
-                                        profileImage.setVisibility(View.VISIBLE);
+                                        //progressbar.setVisibility(View.GONE);
+                                        //avatar.setVisibility(View.VISIBLE);
                                     });
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }
                             } else {
-                                progressbar.setVisibility(View.GONE);
-                                profileImage.setVisibility(View.VISIBLE);
+                               // progressbar.setVisibility(View.GONE);
+                                //avatar.setVisibility(View.VISIBLE);
                             }
                         }
                         else{
@@ -388,8 +478,8 @@ public class EditProfile extends AppCompatActivity {
                             vSurname.setHint(getString(R.string.surname));
                             vEmail.setHint(getString(R.string.email));
                             vBio.setHint(getString(R.string.bioEditP));
-                            progressbar.setVisibility(View.GONE);
-                            profileImage.setVisibility(View.VISIBLE);
+                            //progressbar.setVisibility(View.GONE);
+                            //avatar.setVisibility(View.VISIBLE);
                         }
                     }
                     @Override
@@ -432,5 +522,33 @@ public class EditProfile extends AppCompatActivity {
                 }, error -> Log.d("That didn't work!","Error: "+error));
         // Add the request to the RequestQueue.
         queue.add(stringRequest);
+    }
+
+    public void setupUI(View view) {
+
+        // Set up touch listener for non-text box views to hide keyboard.
+        if (!(view instanceof EditText)) {
+            view.setOnTouchListener(new View.OnTouchListener() {
+                public boolean onTouch(View v, MotionEvent event) {
+                    hideSoftKeyboard(EditProfile.this);
+                    return false;
+                }
+            });
+        }
+
+        //If a layout container, iterate over children and seed recursion.
+        if (view instanceof ViewGroup) {
+            for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
+                View innerView = ((ViewGroup) view).getChildAt(i);
+                setupUI(innerView);
+            }
+        }
+    }
+    public static void hideSoftKeyboard(Activity activity) {
+        InputMethodManager inputMethodManager =
+                (InputMethodManager) activity.getSystemService(
+                        Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(
+                activity.getCurrentFocus().getWindowToken(), 0);
     }
 }

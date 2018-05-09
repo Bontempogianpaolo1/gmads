@@ -67,18 +67,6 @@
                 android:scaleType="centerCrop"
                 android:textSize="@dimen/songs_count" />
 
-            <TextView
-                android:id="@+id/rating"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_below="@id/owner"
-                android:layout_toStartOf="@id/distance"
-                android:paddingBottom="@dimen/songs_count_padding_bottom"
-                android:paddingLeft="@dimen/album_title_padding"
-                android:paddingRight="@dimen/album_title_padding"
-                android:textSize="@dimen/songs_count" />
-
         </RelativeLayout>
 
     </android.support.v7.widget.CardView>

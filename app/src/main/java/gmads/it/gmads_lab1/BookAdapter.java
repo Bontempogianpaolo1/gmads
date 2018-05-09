@@ -1,6 +1,7 @@
 package gmads.it.gmads_lab1;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -29,7 +30,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
             owner = (TextView) view.findViewById(R.id.owner);
             thumbnail = (ImageView) view.findViewById(R.id.thumbnail);
             //mettere anche rating book
-            rating = (TextView) view.findViewById(R.id.rating);
+
             //metere distanza
             distance = (TextView) view.findViewById(R.id.distance);
             overflow = (ImageView) view.findViewById(R.id.overflow);
@@ -60,13 +61,23 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
         //titolo libro
         holder.title.setText(book.getTitle());
         //owner
-        holder.owner.setText("di" + book.getOwner());
+        holder.owner.setText("di ");
+        holder.owner.append( book.getNomeproprietario());
         //distanza
-        holder.distance.setText("23,3Km");
+        holder.distance.setText(String.valueOf(book.getDistance()/1000));
+        holder.distance.append(" Km");
         //rating
-        holder.rating.setText("Rate: 4,5");
         // loading album cover using Glide library
         Glide.with(mContext).load(book.getUrlimage()).into(holder.thumbnail);
+
+        holder.thumbnail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext, BookPage.class);
+                intent.putExtra("book_id", book.getBId());
+                mContext.startActivity(intent);
+            }
+        });
 
         holder.overflow.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -115,4 +126,5 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
     public int getItemCount() {
         return bookList.size();
     }
+
 }

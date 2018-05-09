@@ -2,10 +2,11 @@ package gmads.it.gmads_lab1;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.Rect;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -19,14 +20,11 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -36,30 +34,36 @@ import android.support.design.widget.TabLayout;
 import android.widget.TextView;
 
 
+import com.algolia.search.saas.AbstractQuery;
 import com.algolia.search.saas.AlgoliaException;
 import com.algolia.search.saas.Client;
 import com.algolia.search.saas.CompletionHandler;
 import com.algolia.search.saas.Index;
 import com.algolia.search.saas.Query;
-import com.arlib.floatingsearchview.FloatingSearchView;
 import com.bumptech.glide.Glide;
 import com.firebase.ui.auth.AuthUI;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.StorageReference;
 import com.google.gson.Gson;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.prefs.Preferences;
 
+import gmads.it.gmads_lab1.Map.main.MapActivity;
 import gmads.it.gmads_lab1.fragments.Home_1;
 
 public class Home extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
-
     private RecyclerView recyclerView;
     private BookAdapter adapter;
-    private List<Book> bookList;
+    private List<Book> books;
     SearchView searchview;
     Client algoClient;
     Index algoIndex;
@@ -67,12 +71,14 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     TextView navName;
     TextView navMail;
     ImageView navImage;
+    String query="";
     NavigationView navigationView;
     DrawerLayout drawer;
     private Profile profile;
     private Bitmap myProfileBitImage;
     View headerView;
     Home_1 tab1= new Home_1();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,17 +89,14 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-
         CollapsingToolbarLayout collapsingToolbarLayout = findViewById(R.id.collapsing_toolbar);
         //SearchView mSearchView = (SearchView) findViewById(R.id.searchView); // initiate a search view
         //mSearchView.attachNavigationDrawerToMenuButton(findViewById(R.id.drawer_layout));
         //mSearchView.setIconifiedByDefault(false);  // set the default or resting state of the search field
-
-       // recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        //recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         initCollapsingToolbar();
         /*bookList = new ArrayList<>();
         adapter = new BookAdapter(this, bookList);*/
-
         //RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 2);
         //recyclerView.setLayoutManager(mLayoutManager);
         //recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, dpToPx(10), true));
@@ -103,14 +106,10 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         ViewPager pager= findViewById(R.id.viewPager);
         FragmentViewPagerAdapter vpadapter= new FragmentViewPagerAdapter(getSupportFragmentManager());
         vpadapter.addFragment(tab1);
-        vpadapter.addFragment(new Home_1());
-        vpadapter.addFragment(new Home_1());
         pager.setAdapter(vpadapter);
         TabLayout tableLayout= findViewById(R.id.tabs);
         tableLayout.setupWithViewPager(pager);
         tableLayout.getTabAt(0).setText(getString(R.string.tab1));
-        tableLayout.getTabAt(1).setText(getString(R.string.tab2));
-        tableLayout.getTabAt(2).setText(getString(R.string.tab3));
 
 //
         //era per mettere foto libri nell appbar, ma l'abbiamo messa come sfondo per ora
@@ -121,6 +120,8 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         }
         algoClient = new Client("L6B7L7WXZW", "9d2de9e724fa9289953e6b2d5ec978a5");
         algoIndex = algoClient.getIndex("BookIndex");
+
+        getUserInfo();
 
     }
 
@@ -155,7 +156,12 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                 finish();
             });
             return true;
-        }
+        }else if(id == R.id.nav_mylibrary){
+            startActivity(new Intent(this,MyLibrary.class));
+            finish();
+
+        return true;
+    }
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -166,11 +172,32 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         inflater.inflate(R.menu.options_menu, menu);
         MenuItem m= menu.findItem(R.id.search);
         searchview = (android.widget.SearchView)m.getActionView();
+        searchview.setIconified(false);
+        searchview.setFocusable(true);
+        m.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                item.getActionView().requestFocus();
+                ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(0, 0);
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(item.getActionView().getWindowToken(), 0);
+                return true;
+            }
+        });
+
 
         searchview.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
-            public boolean onQueryTextSubmit( String query ) {
-               algoIndex.searchAsync(new Query(query), new CompletionHandler() {
+            public boolean onQueryTextSubmit( String text ) {
+                query=text;
+                Query query = new Query(text)
+                        .setAroundLatLng(new AbstractQuery.LatLng(profile.getLat(), profile.getLng())).setGetRankingInfo(true);
+
+               algoIndex.searchAsync(query, new CompletionHandler() {
                    @Override
                    public void requestCompleted( JSONObject jsonObject, AlgoliaException e ) {
                        if(e==null){
@@ -179,7 +206,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                            imm.hideSoftInputFromWindow(Objects.requireNonNull(getCurrentFocus()).getWindowToken(), 0);
                            SearchResultsJsonParser search= new SearchResultsJsonParser();
                            Log.d("lista",jsonObject.toString());
-                           List<Book> books= search.parseResults(jsonObject);
+                           books= search.parseResults(jsonObject);
                            tab1.getAdapter().setbooks(books);
                        }
                    }
@@ -239,7 +266,12 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     }
 
     public void mapcreate( View view ) {
-        Intent intentMod = new Intent(this, MapSearch.class);
+        SharedPreferences pref= PreferenceManager.getDefaultSharedPreferences(this);
+
+        Intent intentMod = new Intent(this, MapActivity.class);
+        intentMod.putExtra("query",query);
+        intentMod.putExtra("lat",profile.getLat());
+        intentMod.putExtra("lng",profile.getLng());
         startActivity(intentMod);
         overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
 
@@ -266,6 +298,88 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                 navImage.setImageDrawable(getDrawable(R.drawable.default_profile));
             }
         }
+    }
+
+    private void getUserInfo(){
+        //progressbar.setVisibility(View.VISIBLE);
+        //avatar.setVisibility(View.GONE);
+        FirebaseManagement.getDatabase().getReference().child("users").child(FirebaseManagement.getUser().getUid())
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        profile = dataSnapshot.getValue(Profile.class);
+                        if (profile != null) {
+                            if(profile.getCAP()==null || profile.getCAP().length()==0){
+                                Intent i=new Intent(getApplicationContext(), EditProfile.class);
+                                startActivity(i);
+                            }
+                            navName.setText(profile.getName());
+                            navName.append(" " + profile.getSurname());
+                            navMail.setText(profile.getEmail());
+                            if (profile.getImage() != null) {
+                                try {
+                                    File localFile = File.createTempFile("images", "jpg");
+                                    StorageReference profileImageRef =
+                                            FirebaseManagement
+                                                    .getStorage()
+                                                    .getReference()
+                                                    .child("users")
+                                                    .child(FirebaseManagement.getUser().getUid())
+                                                    .child("profileimage.jpg");
+
+                                    profileImageRef.getFile(localFile)
+                                            .addOnSuccessListener(taskSnapshot -> {
+                                                navImage.setImageBitmap(BitmapFactory.decodeFile(localFile.getPath()));
+                                            }).addOnFailureListener(e -> {
+                                    });
+
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            } else {
+                                navImage.setImageDrawable(getDrawable(R.drawable.default_picture));
+                            }
+
+                            getStartingHomeBooks();
+                        }else{
+                            Intent i=new Intent(getApplicationContext(), EditProfile.class);
+                            startActivity(i);
+                            /*
+                            navName.setText(getString(R.string.name));
+                            navName.append(" " + getString(R.string.surname));
+                            navMail.setText(getString(R.string.email));
+                            navImage.setImageDrawable(getDrawable(R.drawable.default_picture));
+                            */
+                        }
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        // Getting Post failed, log a message
+                    }
+                });
+
+    }
+
+    private void getStartingHomeBooks(){
+        Query query = new Query()
+                .setAroundLatLng(new AbstractQuery.LatLng(profile.getLat(), profile.getLng())).setGetRankingInfo(true);
+                    //.setAroundLatLngViaIP(true).setGetRankingInfo(true);
+        algoIndex.searchAsync(query, new CompletionHandler() {
+            @Override
+            public void requestCompleted( JSONObject jsonObject, AlgoliaException e ) {
+                if(e==null){
+                    InputMethodManager imm = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    assert imm != null;
+                    imm.hideSoftInputFromWindow(Objects.requireNonNull(getCurrentFocus()).getWindowToken(), 0);
+                    SearchResultsJsonParser search= new SearchResultsJsonParser();
+                    Log.d("lista",jsonObject.toString());
+                    books= search.parseResults(jsonObject);
+                    tab1.getAdapter().setbooks(books);
+                    tab1.getAdapter().notifyDataSetChanged();
+                }
+            }
+        });
     }
 
 }
