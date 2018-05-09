@@ -2,7 +2,9 @@ package gmads.it.gmads_lab1.Map.main.m;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.CardView;
 import android.transition.Scene;
 import android.transition.TransitionManager;
@@ -18,6 +20,8 @@ import com.bumptech.glide.Glide;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import gmads.it.gmads_lab1.Book;
+import gmads.it.gmads_lab1.BookPage;
+import gmads.it.gmads_lab1.Login;
 import gmads.it.gmads_lab1.R;
 
 
@@ -27,7 +31,8 @@ public class DetailsLayout extends CoordinatorLayout {
     @BindView(R.id.headerImage) ImageView imageViewPlaceDetails;
     @BindView(R.id.title) TextView textViewTitle;
     @BindView(R.id.description) TextView textViewDescription;
-
+    @BindView(R.id.tobook) TextView toBook;
+    String bid;
     public DetailsLayout(final Context context) {
         this(context, null);
     }
@@ -45,7 +50,13 @@ public class DetailsLayout extends CoordinatorLayout {
     private void setData(Book place) {
         Glide.with(getContext()).load(place.getUrlimage()).into(imageViewPlaceDetails);
         textViewTitle.setText(place.getTitle());
-        textViewDescription.setText(place.getOwner());
+        bid=place.getBId();
+        textViewDescription.setText(place.getNomeproprietario());
+        toBook.setOnClickListener(v->{
+            Intent i=new Intent(getContext(), BookPage.class);
+            i.putExtra("book_id",bid);
+            getContext().startActivity(i);
+        });
     }
 
     public static Scene showScene(Activity activity, final ViewGroup container, final View sharedView, final String transitionName, final Book data) {

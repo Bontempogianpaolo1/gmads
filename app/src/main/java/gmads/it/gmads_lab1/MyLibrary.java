@@ -60,7 +60,7 @@ import java.util.prefs.Preferences;
 import gmads.it.gmads_lab1.Map.main.MapActivity;
 import gmads.it.gmads_lab1.fragments.Home_1;
 
-public class Home extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+public class MyLibrary extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
     private RecyclerView recyclerView;
     private BookAdapter adapter;
     private List<Book> books;
@@ -106,11 +106,14 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         ViewPager pager= findViewById(R.id.viewPager);
         FragmentViewPagerAdapter vpadapter= new FragmentViewPagerAdapter(getSupportFragmentManager());
         vpadapter.addFragment(tab1);
+        vpadapter.addFragment(new Home_1());
+        vpadapter.addFragment(new Home_1());
         pager.setAdapter(vpadapter);
         TabLayout tableLayout= findViewById(R.id.tabs);
         tableLayout.setupWithViewPager(pager);
         tableLayout.getTabAt(0).setText(getString(R.string.tab1));
-
+        tableLayout.getTabAt(1).setText(getString(R.string.tab2));
+        tableLayout.getTabAt(2).setText(getString(R.string.tab3));
 //
         //era per mettere foto libri nell appbar, ma l'abbiamo messa come sfondo per ora
         try {
@@ -147,8 +150,9 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
             finish();
             return true;
         } else if (id == R.id.nav_home) {
-            //deve solo chiudersi la navbar
-            drawer.closeDrawers();
+            Intent intentMod = new Intent(this, Home.class);
+            startActivity(intentMod);
+            finish();
             return true;
         }else if(id == R.id.nav_logout){
             AuthUI.getInstance().signOut(this).addOnCompleteListener(v->{
@@ -156,12 +160,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                 finish();
             });
             return true;
-        }else if(id == R.id.nav_mylibrary){
-            startActivity(new Intent(this,MyLibrary.class));
-            finish();
-
-        return true;
-    }
+        }
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -197,20 +196,20 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                 Query query = new Query(text)
                         .setAroundLatLng(new AbstractQuery.LatLng(profile.getLat(), profile.getLng())).setGetRankingInfo(true);
 
-               algoIndex.searchAsync(query, new CompletionHandler() {
-                   @Override
-                   public void requestCompleted( JSONObject jsonObject, AlgoliaException e ) {
-                       if(e==null){
-                           InputMethodManager imm = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                           assert imm != null;
-                           imm.hideSoftInputFromWindow(Objects.requireNonNull(getCurrentFocus()).getWindowToken(), 0);
-                           SearchResultsJsonParser search= new SearchResultsJsonParser();
-                           Log.d("lista",jsonObject.toString());
-                           books= search.parseResults(jsonObject);
-                           tab1.getAdapter().setbooks(books);
-                       }
-                   }
-               });
+                algoIndex.searchAsync(query, new CompletionHandler() {
+                    @Override
+                    public void requestCompleted( JSONObject jsonObject, AlgoliaException e ) {
+                        if(e==null){
+                            InputMethodManager imm = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                            assert imm != null;
+                            imm.hideSoftInputFromWindow(Objects.requireNonNull(getCurrentFocus()).getWindowToken(), 0);
+                            SearchResultsJsonParser search= new SearchResultsJsonParser();
+                            Log.d("lista",jsonObject.toString());
+                            books= search.parseResults(jsonObject);
+                            tab1.getAdapter().setbooks(books);
+                        }
+                    }
+                });
                 return true;
             }
 
@@ -364,7 +363,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     private void getStartingHomeBooks(){
         Query query = new Query()
                 .setAroundLatLng(new AbstractQuery.LatLng(profile.getLat(), profile.getLng())).setGetRankingInfo(true);
-                    //.setAroundLatLngViaIP(true).setGetRankingInfo(true);
+        //.setAroundLatLngViaIP(true).setGetRankingInfo(true);
         algoIndex.searchAsync(query, new CompletionHandler() {
             @Override
             public void requestCompleted( JSONObject jsonObject, AlgoliaException e ) {
@@ -383,22 +382,5 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     }
 
 }
-class FragmentViewPagerAdapter extends FragmentPagerAdapter {
-    private final List<Fragment> mFragmentList = new ArrayList<>();
-    public FragmentViewPagerAdapter(FragmentManager manager) {
-        super(manager);
-    }
-    @Override
-    public Fragment getItem(int position) {
-        return mFragmentList.get(position);
-    }
-    @Override
-    public int getCount() {
-        return mFragmentList.size();
-    }
-    public void addFragment(Fragment fragment) {
-        mFragmentList.add(fragment);
-    }
 
-}
 

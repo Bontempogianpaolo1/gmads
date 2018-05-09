@@ -1,5 +1,6 @@
 package gmads.it.gmads_lab1.Map.common.model;
 
+import com.algolia.search.saas.AbstractQuery;
 import com.algolia.search.saas.Client;
 import com.algolia.search.saas.Index;
 import com.algolia.search.saas.Query;
@@ -31,7 +32,7 @@ public class LibraryProvider {
         return sInstance;
     }
 
-    public void initialize(String query) {
+    public void initialize(String query,Double lat,Double lng) {
         algoClient = new Client("L6B7L7WXZW", "9d2de9e724fa9289953e6b2d5ec978a5");
         algoIndex = algoClient.getIndex("BookIndex");
 
@@ -58,7 +59,7 @@ public class LibraryProvider {
             });*/
             SearchResultsJsonParser search= new SearchResultsJsonParser();
             try {
-                mLibrary.setBookList(search.parseResults(algoIndex.searchSync(new Query(query))));
+                mLibrary.setBookList(search.parseResults(algoIndex.searchSync(new Query(query).setAroundLatLng(new AbstractQuery.LatLng(lat,lng)).setGetRankingInfo(true))));
             }catch (Exception e){
                 e.printStackTrace();
             }

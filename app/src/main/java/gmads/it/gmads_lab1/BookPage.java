@@ -28,6 +28,7 @@ public class BookPage extends AppCompatActivity {
     TextView vAuthor;
     TextView vRating;
     TextView vCategory;
+    TextView distance;
     ViewPagerAdapter bookImageAdapter;
     ViewPager viewPager;
     List<String> images = new ArrayList<>();
@@ -56,10 +57,11 @@ public class BookPage extends AppCompatActivity {
         vAuthor = findViewById(R.id.book_author);
         vRating = findViewById(R.id.book_rating);
         vCategory = findViewById(R.id.book_category);
+        distance=findViewById(R.id.distance);
     }
 
     public void getBookInfo(){
-
+        getIntent().getStringExtra("book_id");
         bookId = getIntent().getExtras().getString("book_id");
         FirebaseManagement.getDatabase().getReference().child("books").child(bookId)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
@@ -67,10 +69,11 @@ public class BookPage extends AppCompatActivity {
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         book = dataSnapshot.getValue(Book.class);
                         vTitle.setTitle(book.getTitle());
-                        vAuthor.setText(book.getAuthor());
+                        vAuthor.setText(book.getAuthor().get(0));
                         vRating.setText(Double.toString(book.getAvgRating()));
-                        vCategory.setText(book.getCategories());
-
+                        vCategory.setText(book.getCategories().get(0));
+                       // distance.setText(String.valueOf(book.getDistance()/1000));
+                       // distance.append(" Km");
                         bookImageAdapter.clearUrl();
                         bookImageAdapter.addUrl(book.getUrlimage());
 

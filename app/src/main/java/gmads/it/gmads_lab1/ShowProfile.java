@@ -51,10 +51,7 @@ public class ShowProfile extends AppCompatActivity implements AppBarLayout.OnOff
     private LinearLayout linearlayoutTitle;
     private Toolbar toolbar;
     private TextView textviewTitle;
-    //private SimpleDraweeView avatar;
-    //private ImageView avatar;
-
-    //nav
+    private TextView uploaded;
     TextView navName;
     TextView navMail;
     ImageView navImage;
@@ -67,10 +64,14 @@ public class ShowProfile extends AppCompatActivity implements AppBarLayout.OnOff
     TextView vName;
     TextView vEmail;
     TextView vBio;
+    TextView total;
+    TextView cap;
     private Profile profile;
     private Bitmap myProfileBitImage;
 
     private void findViews() {
+        total=findViewById(R.id.totbooks);
+        uploaded= findViewById(R.id.uploaded);
         appbar = (AppBarLayout) findViewById(R.id.appbar);
         collapsing = (CollapsingToolbarLayout) findViewById(R.id.collapsing);
         coverImage = (ImageView) findViewById(R.id.imageview_placeholder);
@@ -84,6 +85,7 @@ public class ShowProfile extends AppCompatActivity implements AppBarLayout.OnOff
     }
 
     public void setActViews(){
+        cap=findViewById(R.id.cap);
         toolbar =  findViewById(R.id.toolbar);
         vName = findViewById(R.id.name_surname);
         vEmail = findViewById(R.id.email);
@@ -181,7 +183,10 @@ public class ShowProfile extends AppCompatActivity implements AppBarLayout.OnOff
     //to close the application on back button
     @Override
     public void onBackPressed() {
-        moveTaskToBack(true);
+        Intent intentMod = new Intent(this, Home.class);
+        startActivity(intentMod);
+        finish();
+        //moveTaskToBack(true);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -234,6 +239,11 @@ public class ShowProfile extends AppCompatActivity implements AppBarLayout.OnOff
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         profile = dataSnapshot.getValue(Profile.class);
                         if (profile != null) {
+                            if(profile.getCAP()==null || profile.getCAP().length()==0){
+                                Intent i=new Intent(getApplicationContext(), EditProfile.class);
+                                startActivity(i);
+                            }
+                            cap.setText(profile.getCAP());
                             vName.setText(profile.getName());
                             vName.append(" " + profile.getSurname());
                             navName.setText(profile.getName());
@@ -241,6 +251,13 @@ public class ShowProfile extends AppCompatActivity implements AppBarLayout.OnOff
                             vEmail.setText(profile.getEmail());
                             navMail.setText(profile.getEmail());
                             vBio.setText(profile.getDescription());
+                            if(profile.hasUploaded()) {
+                                uploaded.setText(String.valueOf(profile.takennBooks()));
+                                total.setText(String.valueOf(profile.takennBooks()));
+                            }else{
+                                uploaded.setText("0");
+                                total.setText("0");
+                            }
                             if (profile.getImage() != null) {
                                 try {
                                     File localFile = File.createTempFile("images", "jpg");
@@ -272,6 +289,8 @@ public class ShowProfile extends AppCompatActivity implements AppBarLayout.OnOff
                                 navImage.setImageDrawable(getDrawable(R.drawable.default_picture));
                             }
                         }else{
+                            Intent i=new Intent(getApplicationContext(), EditProfile.class);
+                            startActivity(i);
                             vName.setText(getString(R.string.name));
                             vName.append(" " + getString(R.string.surname));
                             navName.setText(getString(R.string.name));

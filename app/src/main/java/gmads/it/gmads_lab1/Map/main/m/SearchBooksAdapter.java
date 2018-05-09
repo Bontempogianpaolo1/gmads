@@ -39,8 +39,8 @@ class SearchBooksAdapter extends RecyclerView.Adapter<SearchBooksAdapter.Library
     @Override
     public void onBindViewHolder( final LibraryViewHolder holder, final int position) {
         holder.title.setText(BookList.get(position).getTitle());
-        holder.vAuthor.setText(BookList.get(position).getAuthor());
-        holder.owner.setText(String.valueOf(BookList.get(position).getCategories()));
+        holder.vAuthor.setText(BookList.get(position).getAuthor().get(0));
+        holder.owner.setText(String.valueOf("di: "+BookList.get(position).getNomeproprietario()));
         Glide.with(context).load(BookList.get(position).getUrlimage()).into( holder.BookPhoto);
        // holder.BookPhoto.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_menu_camera));
         holder.root.setOnClickListener(view -> listener.onPlaceClicked(holder.root, TransitionUtils.getRecyclerViewTransitionName(position), position));

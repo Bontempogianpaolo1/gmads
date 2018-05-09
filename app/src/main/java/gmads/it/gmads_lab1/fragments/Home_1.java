@@ -70,40 +70,6 @@ public class Home_1 extends Fragment {
      */
     private void prepareBooks() {
 
-        Book b = new Book ("-LBgchlxfj-iAY__eW2r", "","Harry Potter", "", "http://books.google.com/books/content?id=oPBGnwEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api", "", "", "", "", "Pinco", 10.0, 12.0);
-        bookList.add(b);
-        b = new Book ("2", "","Signore degli Anelli", "", "http://books.google.com/books/content?id=j1TNygAACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api", "", "", "", "", "Pallino", 10.0, 12.0);
-        bookList.add(b);
-        b = new Book ("3", "","Novecento", "", "http://books.google.com/books/content?id=bVx9NAEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api", "", "", "", "", "Tizio", 10.0, 12.0);
-        bookList.add(b);
-        b = new Book ("4", "","La ragazza del treno", "", "http://books.google.com/books/content?id=IUo3rgEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api", "", "", "", "", "Caio", 10.0, 12.0);
-        bookList.add(b);
-        b = new Book ("1", "","Harry Potter", "", "http://books.google.com/books/content?id=oPBGnwEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api", "", "", "", "", "Pinco", 10.0, 12.0);
-        bookList.add(b);
-        b = new Book ("2", "","Signore degli Anelli", "", "http://books.google.com/books/content?id=j1TNygAACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api", "", "", "", "", "Pallino", 10.0, 12.0);
-        bookList.add(b);
-        b = new Book ("3", "","Novecento", "", "http://books.google.com/books/content?id=bVx9NAEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api", "", "", "", "", "Tizio", 10.0, 12.0);
-        bookList.add(b);
-        b = new Book ("4", "","La ragazza del treno", "", "http://books.google.com/books/content?id=IUo3rgEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api", "", "", "", "", "Caio", 10.0, 12.0);
-        bookList.add(b);
-        b = new Book ("1", "","Harry Potter", "", "http://books.google.com/books/content?id=oPBGnwEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api", "", "", "", "", "Pinco", 10.0, 12.0);
-        bookList.add(b);
-        b = new Book ("2", "","Signore degli Anelli", "", "http://books.google.com/books/content?id=j1TNygAACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api", "", "", "", "", "Pallino", 10.0, 12.0);
-        bookList.add(b);
-        b = new Book ("3", "","Novecento", "", "http://books.google.com/books/content?id=bVx9NAEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api", "", "", "", "", "Tizio", 10.0, 12.0);
-        bookList.add(b);
-        b = new Book ("4", "","La ragazza del treno", "", "http://books.google.com/books/content?id=IUo3rgEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api", "", "", "", "", "Caio", 10.0, 12.0);
-        bookList.add(b);
-        b = new Book ("1", "","Harry Potter", "", "http://books.google.com/books/content?id=oPBGnwEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api", "", "", "", "", "Pinco", 10.0, 12.0);
-        bookList.add(b);
-        b = new Book ("2", "","Signore degli Anelli", "", "http://books.google.com/books/content?id=j1TNygAACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api", "", "", "", "", "Pallino", 10.0, 12.0);
-        bookList.add(b);
-        b = new Book ("3", "","Novecento", "", "http://books.google.com/books/content?id=bVx9NAEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api", "", "", "", "", "Tizio", 10.0, 12.0);
-        bookList.add(b);
-        b = new Book ("4", "","La ragazza del treno", "", "http://books.google.com/books/content?id=IUo3rgEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api", "", "", "", "", "Caio", 10.0, 12.0);
-        bookList.add(b);
-        b = new Book ("-LBv0gB3Sp67mvgSYyiG", "","The lord of the rings", "", "https://i.pinimg.com/originals/b9/6e/10/b96e102e55020e8ad72af19b8e2d1f60.jpg", "", "", "", "", "Caio", 10.0, 12.0);
-        bookList.add(b);
 
         adapter.notifyDataSetChanged();
     }
