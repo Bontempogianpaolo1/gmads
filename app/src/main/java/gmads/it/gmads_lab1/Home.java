@@ -106,14 +106,11 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         ViewPager pager= findViewById(R.id.viewPager);
         FragmentViewPagerAdapter vpadapter= new FragmentViewPagerAdapter(getSupportFragmentManager());
         vpadapter.addFragment(tab1);
-        vpadapter.addFragment(new Home_1());
-        vpadapter.addFragment(new Home_1());
         pager.setAdapter(vpadapter);
         TabLayout tableLayout= findViewById(R.id.tabs);
         tableLayout.setupWithViewPager(pager);
         tableLayout.getTabAt(0).setText(getString(R.string.tab1));
-        tableLayout.getTabAt(1).setText(getString(R.string.tab2));
-        tableLayout.getTabAt(2).setText(getString(R.string.tab3));
+
 //
         //era per mettere foto libri nell appbar, ma l'abbiamo messa come sfondo per ora
         try {
@@ -159,7 +156,13 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                 finish();
             });
             return true;
-        }
+        }else if(id == R.id.nav_mylibrary){
+        AuthUI.getInstance().signOut(this).addOnCompleteListener(v->{
+            startActivity(new Intent(this,MyLibrary.class));
+            finish();
+        });
+        return true;
+    }
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }

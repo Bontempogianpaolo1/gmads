@@ -65,6 +65,7 @@ public class ShowProfile extends AppCompatActivity implements AppBarLayout.OnOff
     TextView vEmail;
     TextView vBio;
     TextView total;
+    TextView cap;
     private Profile profile;
     private Bitmap myProfileBitImage;
 
@@ -84,6 +85,7 @@ public class ShowProfile extends AppCompatActivity implements AppBarLayout.OnOff
     }
 
     public void setActViews(){
+        cap=findViewById(R.id.cap);
         toolbar =  findViewById(R.id.toolbar);
         vName = findViewById(R.id.name_surname);
         vEmail = findViewById(R.id.email);
@@ -241,6 +243,7 @@ public class ShowProfile extends AppCompatActivity implements AppBarLayout.OnOff
                                 Intent i=new Intent(getApplicationContext(), EditProfile.class);
                                 startActivity(i);
                             }
+                            cap.setText(profile.getCAP());
                             vName.setText(profile.getName());
                             vName.append(" " + profile.getSurname());
                             navName.setText(profile.getName());
