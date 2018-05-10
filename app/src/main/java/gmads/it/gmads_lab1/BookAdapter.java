@@ -82,7 +82,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
         holder.overflow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showPopupMenu(holder.overflow);
+                showPopupMenu(holder.overflow, position);
             }
         });
     }
@@ -90,12 +90,12 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
     /**
      * Showing popup menu when tapping on 3 dots
      */
-    private void showPopupMenu(View view) {
+    private void showPopupMenu(View view, int position) {
         // inflate menu
         PopupMenu popup = new PopupMenu(mContext, view);
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.menu_book, popup.getMenu());
-        popup.setOnMenuItemClickListener(new MyMenuItemClickListener());
+        popup.setOnMenuItemClickListener(new MyMenuItemClickListener(position));
         popup.show();
     }
 
@@ -104,7 +104,10 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
      */
     class MyMenuItemClickListener implements PopupMenu.OnMenuItemClickListener {
 
-        public MyMenuItemClickListener() {
+        private int position = 0;
+
+        public MyMenuItemClickListener(int position) {
+            this.position = position;
         }
 
         @Override
@@ -114,7 +117,9 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
                     Toast.makeText(mContext, "Book added", Toast.LENGTH_SHORT).show();
                     return true;
                 case R.id.action_viewP:
-                    Toast.makeText(mContext, "Eskeree", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(mContext, ShowUserProfile.class);
+                    intent.putExtra("userId", bookList.get(position).getOwner());
+                    mContext.startActivity(intent);
                     return true;
                 default:
             }

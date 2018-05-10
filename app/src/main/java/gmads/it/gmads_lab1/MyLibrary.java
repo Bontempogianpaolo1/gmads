@@ -109,11 +109,6 @@ public class MyLibrary extends AppCompatActivity implements NavigationView.OnNav
         vpadapter.addFragment(new Home_1());
         vpadapter.addFragment(new Home_1());
         pager.setAdapter(vpadapter);
-        TabLayout tableLayout= findViewById(R.id.tabs);
-        tableLayout.setupWithViewPager(pager);
-        tableLayout.getTabAt(0).setText(getString(R.string.tab1));
-        tableLayout.getTabAt(1).setText(getString(R.string.tab2));
-        tableLayout.getTabAt(2).setText(getString(R.string.tab3));
 //
         //era per mettere foto libri nell appbar, ma l'abbiamo messa come sfondo per ora
         try {
@@ -169,55 +164,7 @@ public class MyLibrary extends AppCompatActivity implements NavigationView.OnNav
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.options_menu, menu);
-        MenuItem m= menu.findItem(R.id.search);
-        searchview = (android.widget.SearchView)m.getActionView();
-        searchview.setIconified(false);
-        searchview.setFocusable(true);
-        m.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
-            @Override
-            public boolean onMenuItemActionExpand(MenuItem item) {
-                item.getActionView().requestFocus();
-                ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(0, 0);
-                return true;
-            }
 
-            @Override
-            public boolean onMenuItemActionCollapse(MenuItem item) {
-                ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(item.getActionView().getWindowToken(), 0);
-                return true;
-            }
-        });
-
-
-        searchview.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit( String text ) {
-                query=text;
-                Query query = new Query(text)
-                        .setAroundLatLng(new AbstractQuery.LatLng(profile.getLat(), profile.getLng())).setGetRankingInfo(true);
-
-                algoIndex.searchAsync(query, new CompletionHandler() {
-                    @Override
-                    public void requestCompleted( JSONObject jsonObject, AlgoliaException e ) {
-                        if(e==null){
-                            InputMethodManager imm = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                            assert imm != null;
-                            imm.hideSoftInputFromWindow(Objects.requireNonNull(getCurrentFocus()).getWindowToken(), 0);
-                            SearchResultsJsonParser search= new SearchResultsJsonParser();
-                            Log.d("lista",jsonObject.toString());
-                            books= search.parseResults(jsonObject);
-                            tab1.getAdapter().setbooks(books);
-                        }
-                    }
-                });
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextChange( String newText ) {
-                return false;
-            }
-        });
         return true;
     }
 
@@ -294,7 +241,7 @@ public class MyLibrary extends AppCompatActivity implements NavigationView.OnNav
             if (myProfileBitImage != null) {
                 navImage.setImageBitmap(myProfileBitImage);
             } else {
-                navImage.setImageDrawable(getDrawable(R.drawable.default_profile));
+                navImage.setImageDrawable(getDrawable(R.drawable.default_picture));
             }
         }
     }
@@ -340,7 +287,7 @@ public class MyLibrary extends AppCompatActivity implements NavigationView.OnNav
                                 navImage.setImageDrawable(getDrawable(R.drawable.default_picture));
                             }
 
-                            getStartingHomeBooks();
+                            getStartingMyBooks();
                         }else{
                             Intent i=new Intent(getApplicationContext(), EditProfile.class);
                             startActivity(i);
@@ -360,9 +307,10 @@ public class MyLibrary extends AppCompatActivity implements NavigationView.OnNav
 
     }
 
-    private void getStartingHomeBooks(){
-        Query query = new Query()
-                .setAroundLatLng(new AbstractQuery.LatLng(profile.getLat(), profile.getLng())).setGetRankingInfo(true);
+    private void getStartingMyBooks(){
+        Query query = new Query(FirebaseManagement.getUser().getUid())
+                .setAroundLatLng(new AbstractQuery.LatLng(profile.getLat(), profile.getLng()))
+                .setGetRankingInfo(true);
         //.setAroundLatLngViaIP(true).setGetRankingInfo(true);
         algoIndex.searchAsync(query, new CompletionHandler() {
             @Override

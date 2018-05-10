@@ -35,7 +35,7 @@ import com.google.firebase.storage.StorageReference;
 import java.io.File;
 import java.io.IOException;
 
-public class ShowProfile extends AppCompatActivity implements AppBarLayout.OnOffsetChangedListener {
+public class ShowUserProfile extends AppCompatActivity implements AppBarLayout.OnOffsetChangedListener {
 
     private static final float PERCENTAGE_TO_SHOW_TITLE_AT_TOOLBAR = 0.9f;
     private static final float PERCENTAGE_TO_HIDE_TITLE_DETAILS = 0.3f;
@@ -116,32 +116,12 @@ public class ShowProfile extends AppCompatActivity implements AppBarLayout.OnOff
         //progressbar.setVisibility(View.GONE);
         //avatar.setVisibility(View.VISIBLE);
     }
-    public void setNavViews(){
-        drawer =  findViewById(R.id.drawer_layout);
-        navigationView =  findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this::onNavigationItemSelected);
-        headerView = navigationView.getHeaderView(0);
-        navName =  headerView.findViewById(R.id.navName);
-        navMail =  headerView.findViewById(R.id.navMail);
-        navImage =  headerView.findViewById(R.id.navImage);
-        headerView.setBackgroundResource(R.color.colorPrimaryDark);
-
-        if(profile!=null) {
-            navName.setText(profile.getName());
-            navName.append(" " + profile.getSurname());
-            navMail.setText(profile.getEmail());
-
-            if ( profile!= null) {
-                navImage.setImageBitmap(myProfileBitImage);
-            } else {
-                navImage.setImageDrawable(getDrawable(R.drawable.default_picture));
-            }
-        }
-    }
 
     protected void onStart(){
         super.onStart();
-        getUserInfo();
+        String userId = getIntent().getStringExtra("userId");
+        getUserInfo(userId);
+
     }
 
     @Override
@@ -154,29 +134,30 @@ public class ShowProfile extends AppCompatActivity implements AppBarLayout.OnOff
         //set avatar and cover
         findViews();
         setActViews();
-        setNavViews();
         avatar.setImageResource(R.drawable.default_picture);
         coverImage.setImageResource(R.drawable.cover);
         toolbar.setTitle("");
         appbar.addOnOffsetChangedListener(this);
         setSupportActionBar(toolbar);
         startAlphaAnimation(textviewTitle, 0, View.INVISIBLE);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.actionbar_showp, menu);
+        getMenuInflater().inflate(R.menu.add_book, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Intent intentMod = new Intent(this, EditProfile.class);
+        Intent intentMod = new Intent(this, Home.class);
         startActivity(intentMod);
-        overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
+        /*
+            settare animazione???
+         */
+        //overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
         return true;
     }
 
@@ -189,42 +170,6 @@ public class ShowProfile extends AppCompatActivity implements AppBarLayout.OnOff
         //moveTaskToBack(true);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
-    //@Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_showProfile) {
-            //deve solo chiudersi la navbar
-            drawer.closeDrawers();
-            return true;
-        } else if (id == R.id.nav_addBook) {
-            Intent intentMod = new Intent(this, AddBook.class);
-            startActivity(intentMod);
-            finish();
-            return true;
-        } else if (id == R.id.nav_home) {
-            Intent intentMod = new Intent(this, Home.class);
-            startActivity(intentMod);
-            finish();
-            return true;
-        }else if(id == R.id.nav_logout){
-            AuthUI.getInstance().signOut(this).addOnCompleteListener(v->{
-                startActivity(new Intent(this,Login.class));
-                finish();
-            });
-            return true;
-        }else if(id == R.id.nav_mylibrary){
-            startActivity(new Intent(this,MyLibrary.class));
-            finish();
-
-            return true;
-        }
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
-
     @Override
     public void onOffsetChanged(AppBarLayout appBarLayout, int offset) {
         int maxScroll = appBarLayout.getTotalScrollRange();
@@ -234,10 +179,10 @@ public class ShowProfile extends AppCompatActivity implements AppBarLayout.OnOff
         handleToolbarTitleVisibility(percentage);
     }
 
-    private void getUserInfo(){
+    private void getUserInfo(String userId){
         //progressbar.setVisibility(View.VISIBLE);
         //avatar.setVisibility(View.GONE);
-        FirebaseManagement.getDatabase().getReference().child("users").child(FirebaseManagement.getUser().getUid())
+        FirebaseManagement.getDatabase().getReference().child("users").child(userId)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
 
                     @Override
@@ -251,10 +196,7 @@ public class ShowProfile extends AppCompatActivity implements AppBarLayout.OnOff
                             cap.setText(profile.getCAP());
                             vName.setText(profile.getName());
                             vName.append(" " + profile.getSurname());
-                            navName.setText(profile.getName());
-                            navName.append(" " + profile.getSurname());
                             vEmail.setText(profile.getEmail());
-                            navMail.setText(profile.getEmail());
                             vBio.setText(profile.getDescription());
                             if(profile.hasUploaded()) {
                                 uploaded.setText(String.valueOf(profile.takennBooks()));
@@ -271,7 +213,7 @@ public class ShowProfile extends AppCompatActivity implements AppBarLayout.OnOff
                                                     .getStorage()
                                                     .getReference()
                                                     .child("users")
-                                                    .child(FirebaseManagement.getUser().getUid())
+                                                    .child(userId)
                                                     .child("profileimage.jpg");
 
                                     profileImageRef.getFile(localFile)
@@ -279,7 +221,6 @@ public class ShowProfile extends AppCompatActivity implements AppBarLayout.OnOff
                                                 //progressbar.setVisibility(View.GONE);
                                                 avatar.setVisibility(View.VISIBLE);
                                                 avatar.setImageBitmap(BitmapFactory.decodeFile(localFile.getPath()));
-                                                navImage.setImageBitmap(BitmapFactory.decodeFile(localFile.getPath()));
                                             }).addOnFailureListener(e -> {
                                         //progressbar.setVisibility(View.GONE);
                                         avatar.setVisibility(View.VISIBLE);
@@ -291,21 +232,14 @@ public class ShowProfile extends AppCompatActivity implements AppBarLayout.OnOff
                             } else {
                                 //progressbar.setVisibility(View.GONE);
                                 avatar.setVisibility(View.VISIBLE);
-                                navImage.setImageDrawable(getDrawable(R.drawable.default_picture));
                             }
                         }else{
                             Intent i=new Intent(getApplicationContext(), EditProfile.class);
                             startActivity(i);
                             vName.setText(getString(R.string.name));
                             vName.append(" " + getString(R.string.surname));
-                            navName.setText(getString(R.string.name));
-                            navName.append(" " + getString(R.string.surname));
                             vEmail.setText(getString(R.string.email));
-                            navMail.setText(getString(R.string.email));
                             vBio.setText(getString(R.string.description));
-                            //progressbar.setVisibility(View.GONE);
-                            //avatar.setVisibility(View.VISIBLE);
-                            navImage.setImageDrawable(getDrawable(R.drawable.default_picture));
                         }
                     }
                     @Override

@@ -4,10 +4,10 @@
     <item
         android:id="@+id/action_prenota"
         android:orderInCategory="100"
-        android:title="Prenota" />
+        android:title="@string/reserve" />
 
     <item
         android:id="@+id/action_viewP"
         android:orderInCategory="101"
-        android:title="View Profile" />
+        android:title="@string/view_owner_profile" />
 </menu>
