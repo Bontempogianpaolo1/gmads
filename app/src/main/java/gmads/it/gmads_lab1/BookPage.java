@@ -2,6 +2,7 @@ package gmads.it.gmads_lab1;
 
 import android.content.ContextWrapper;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;

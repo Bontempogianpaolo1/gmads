@@ -297,7 +297,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
             if (myProfileBitImage != null) {
                 navImage.setImageBitmap(myProfileBitImage);
             } else {
-                navImage.setImageDrawable(getDrawable(R.drawable.default_profile));
+                navImage.setImageDrawable(getDrawable(R.drawable.default_picture));
             }
         }
     }

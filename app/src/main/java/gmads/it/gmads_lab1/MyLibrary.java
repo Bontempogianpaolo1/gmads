@@ -241,7 +241,7 @@ public class MyLibrary extends AppCompatActivity implements NavigationView.OnNav
             if (myProfileBitImage != null) {
                 navImage.setImageBitmap(myProfileBitImage);
             } else {
-                navImage.setImageDrawable(getDrawable(R.drawable.default_profile));
+                navImage.setImageDrawable(getDrawable(R.drawable.default_picture));
             }
         }
     }

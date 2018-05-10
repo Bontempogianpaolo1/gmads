@@ -132,14 +132,14 @@ public class AddBook extends AppCompatActivity
                             e.printStackTrace();
                         }
                     } else {//default image
-                        navImage.setImageDrawable(getDrawable(R.drawable.default_profile));
+                        navImage.setImageDrawable(getDrawable(R.drawable.default_picture));
                     }
                 }
                 else{
                     navName.setText(getString(R.string.nameExample));
                     navName.append(" " + getString(R.string.surnameExample));
                     navMail.setText(getString(R.string.emailExample));
-                    navImage.setImageDrawable(getDrawable(R.drawable.default_profile));
+                    navImage.setImageDrawable(getDrawable(R.drawable.default_picture));
                 }
             }
             @Override

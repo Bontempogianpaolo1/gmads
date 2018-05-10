@@ -213,7 +213,7 @@ public class ShowUserProfile extends AppCompatActivity implements AppBarLayout.O
                                                     .getStorage()
                                                     .getReference()
                                                     .child("users")
-                                                    .child(FirebaseManagement.getUser().getUid())
+                                                    .child(userId)
                                                     .child("profileimage.jpg");
 
                                     profileImageRef.getFile(localFile)
