@@ -219,6 +219,7 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
                         new String[]{Manifest.permission.CAMERA}, MY_CAMERA_REQUEST_CODE);
             } else {
                 Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                takePictureIntent.putExtra("android.intent.extras.CAMERA_FACING", 1);
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             }
         });
