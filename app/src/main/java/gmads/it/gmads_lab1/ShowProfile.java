@@ -44,6 +44,8 @@ public class ShowProfile extends AppCompatActivity implements AppBarLayout.OnOff
     private boolean mIsTheTitleVisible = false;
     private boolean mIsTheTitleContainerVisible = true;
 
+    Tools tools;
+
     private AppBarLayout appbar;
     private CollapsingToolbarLayout collapsing;
     private ImageView coverImage;
@@ -164,6 +166,8 @@ public class ShowProfile extends AppCompatActivity implements AppBarLayout.OnOff
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
+
+        tools = new Tools();
     }
 
     @Override
@@ -237,82 +241,92 @@ public class ShowProfile extends AppCompatActivity implements AppBarLayout.OnOff
     private void getUserInfo(){
         //progressbar.setVisibility(View.VISIBLE);
         //avatar.setVisibility(View.GONE);
-        FirebaseManagement.getDatabase().getReference().child("users").child(FirebaseManagement.getUser().getUid())
-                .addListenerForSingleValueEvent(new ValueEventListener() {
 
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        profile = dataSnapshot.getValue(Profile.class);
-                        if (profile != null) {
-                            if(profile.getCAP()==null || profile.getCAP().length()==0){
-                                Intent i=new Intent(getApplicationContext(), EditProfile.class);
-                                startActivity(i);
-                            }
-                            cap.setText(profile.getCAP());
-                            vName.setText(profile.getName());
-                            vName.append(" " + profile.getSurname());
-                            navName.setText(profile.getName());
-                            navName.append(" " + profile.getSurname());
-                            vEmail.setText(profile.getEmail());
-                            navMail.setText(profile.getEmail());
-                            vBio.setText(profile.getDescription());
-                            if(profile.hasUploaded()) {
-                                uploaded.setText(String.valueOf(profile.takennBooks()));
-                                total.setText(String.valueOf(profile.takennBooks()));
-                            }else{
-                                uploaded.setText("0");
-                                total.setText("0");
-                            }
-                            if (profile.getImage() != null) {
-                                try {
-                                    File localFile = File.createTempFile("images", "jpg");
-                                    StorageReference profileImageRef =
-                                            FirebaseManagement
-                                                    .getStorage()
-                                                    .getReference()
-                                                    .child("users")
-                                                    .child(FirebaseManagement.getUser().getUid())
-                                                    .child("profileimage.jpg");
+        if(tools.isOnline(getApplicationContext())) {
 
-                                    profileImageRef.getFile(localFile)
-                                            .addOnSuccessListener(taskSnapshot -> {
-                                                //progressbar.setVisibility(View.GONE);
-                                                avatar.setVisibility(View.VISIBLE);
-                                                avatar.setImageBitmap(BitmapFactory.decodeFile(localFile.getPath()));
-                                                navImage.setImageBitmap(BitmapFactory.decodeFile(localFile.getPath()));
-                                            }).addOnFailureListener(e -> {
-                                        //progressbar.setVisibility(View.GONE);
-                                        avatar.setVisibility(View.VISIBLE);
-                                    });
+            FirebaseManagement.getDatabase().getReference().child("users").child(FirebaseManagement.getUser().getUid())
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
 
-                                } catch (IOException e) {
-                                    e.printStackTrace();
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            profile = dataSnapshot.getValue(Profile.class);
+                            if (profile != null) {
+                                if (profile.getCAP() == null || profile.getCAP().length() == 0) {
+                                    Intent i = new Intent(getApplicationContext(), EditProfile.class);
+                                    startActivity(i);
+                                }
+                                cap.setText(profile.getCAP());
+                                vName.setText(profile.getName());
+                                vName.append(" " + profile.getSurname());
+                                navName.setText(profile.getName());
+                                navName.append(" " + profile.getSurname());
+                                vEmail.setText(profile.getEmail());
+                                navMail.setText(profile.getEmail());
+                                vBio.setText(profile.getDescription());
+                                if (profile.hasUploaded()) {
+                                    uploaded.setText(String.valueOf(profile.takennBooks()));
+                                    total.setText(String.valueOf(profile.takennBooks()));
+                                } else {
+                                    uploaded.setText("0");
+                                    total.setText("0");
+                                }
+                                if (profile.getImage() != null) {
+                                    try {
+                                        File localFile = File.createTempFile("images", "jpg");
+                                        StorageReference profileImageRef =
+                                                FirebaseManagement
+                                                        .getStorage()
+                                                        .getReference()
+                                                        .child("users")
+                                                        .child(FirebaseManagement.getUser().getUid())
+                                                        .child("profileimage.jpg");
+
+                                        profileImageRef.getFile(localFile)
+                                                .addOnSuccessListener(taskSnapshot -> {
+                                                    //progressbar.setVisibility(View.GONE);
+                                                    avatar.setVisibility(View.VISIBLE);
+                                                    avatar.setImageBitmap(BitmapFactory.decodeFile(localFile.getPath()));
+                                                    navImage.setImageBitmap(BitmapFactory.decodeFile(localFile.getPath()));
+                                                }).addOnFailureListener(e -> {
+                                            //progressbar.setVisibility(View.GONE);
+                                            avatar.setVisibility(View.VISIBLE);
+                                        });
+
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                } else {
+                                    //progressbar.setVisibility(View.GONE);
+                                    avatar.setVisibility(View.VISIBLE);
+                                    navImage.setImageDrawable(getDrawable(R.drawable.default_picture));
                                 }
                             } else {
+                                Intent i = new Intent(getApplicationContext(), EditProfile.class);
+                                startActivity(i);
+                                vName.setText(getString(R.string.name));
+                                vName.append(" " + getString(R.string.surname));
+                                navName.setText(getString(R.string.name));
+                                navName.append(" " + getString(R.string.surname));
+                                vEmail.setText(getString(R.string.email));
+                                navMail.setText(getString(R.string.email));
+                                vBio.setText(getString(R.string.description));
                                 //progressbar.setVisibility(View.GONE);
-                                avatar.setVisibility(View.VISIBLE);
+                                //avatar.setVisibility(View.VISIBLE);
                                 navImage.setImageDrawable(getDrawable(R.drawable.default_picture));
                             }
-                        }else{
-                            Intent i=new Intent(getApplicationContext(), EditProfile.class);
-                            startActivity(i);
-                            vName.setText(getString(R.string.name));
-                            vName.append(" " + getString(R.string.surname));
-                            navName.setText(getString(R.string.name));
-                            navName.append(" " + getString(R.string.surname));
-                            vEmail.setText(getString(R.string.email));
-                            navMail.setText(getString(R.string.email));
-                            vBio.setText(getString(R.string.description));
-                            //progressbar.setVisibility(View.GONE);
-                            //avatar.setVisibility(View.VISIBLE);
-                            navImage.setImageDrawable(getDrawable(R.drawable.default_picture));
                         }
-                    }
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        // Getting Post failed, log a message
-                    }
-                });
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            // Getting Post failed, log a message
+                        }
+                    });
+        } else {
+            android.app.AlertDialog.Builder ad = tools.showPopup(this, getString(R.string.noInternet), "", "");
+            ad.setPositiveButton(getString(R.string.retry), (vi, w) -> onStart());
+            ad.setCancelable(false);
+            ad.show();
+        }
 
     }
 
