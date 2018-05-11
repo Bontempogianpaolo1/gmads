@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginBottom="10dp"
-            android:layout_marginTop="256dp"
+            android:layout_marginTop="300dp"
             android:text="@string/sb_main_info"
             android:textAlignment="center"
             android:textSize="20sp" />
@@ -36,11 +36,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginBottom="5dp"
+            android:layout_marginBottom="10dp"
             android:layout_marginTop="5dp"
             android:background="@drawable/rounded_corner"
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
+            android:text="@string/notFound"
             android:textSize="18sp" />
 
         <TextView
@@ -48,6 +49,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginBottom="10dp"
+            android:layout_marginTop="5dp"
             android:text="@string/bp_editore"
             android:textAlignment="viewStart"
             android:textSize="20sp" />
@@ -57,17 +59,20 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginBottom="5dp"
+            android:layout_marginBottom="10dp"
             android:layout_marginTop="5dp"
             android:background="@drawable/rounded_corner"
             android:paddingLeft="5dp"
-            android:paddingRight="5dp" />
+            android:paddingRight="5dp"
+            android:text="@string/notFound"
+            android:textSize="18sp" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginBottom="10dp"
+            android:layout_marginTop="5dp"
             android:text="@string/bp_autore"
             android:textAlignment="viewStart"
             android:textSize="20sp" />
@@ -77,10 +82,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:layout_marginBottom="10dp"
             android:layout_marginTop="5dp"
             android:background="@drawable/rounded_corner"
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
+            android:text="@string/notFound"
             android:textSize="18sp" />
 
         <TextView
@@ -88,6 +95,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginBottom="10dp"
+            android:layout_marginTop="5dp"
             android:text="@string/bp_owner"
             android:textAlignment="viewStart"
             android:textSize="20sp" />
@@ -97,10 +105,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:layout_marginBottom="10dp"
             android:layout_marginTop="5dp"
             android:background="@drawable/rounded_corner"
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
+            android:text="@string/notFound"
             android:textSize="18sp" />
 
         <TextView
@@ -108,6 +118,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginBottom="10dp"
+            android:layout_marginTop="5dp"
             android:text="@string/bp_categ"
             android:textAlignment="viewStart"
             android:textSize="20sp" />
@@ -117,11 +128,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:layout_marginBottom="10dp"
             android:layout_marginTop="5dp"
             android:background="@drawable/rounded_corner"
             android:inputType="textMultiLine"
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
+            android:text="@string/notFound"
             android:textSize="18sp" />
 
         <TextView
@@ -129,6 +142,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginBottom="10dp"
+            android:layout_marginTop="5dp"
             android:text="@string/bp_data"
             android:textAlignment="viewStart"
             android:textSize="20sp" />
@@ -138,11 +152,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginBottom="5dp"
+            android:layout_marginBottom="10dp"
             android:layout_marginTop="5dp"
             android:background="@drawable/rounded_corner"
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
+            android:text="@string/notFound"
             android:textSize="18sp" />
 
         <TextView
@@ -150,6 +165,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginBottom="10dp"
+            android:layout_marginTop="5dp"
             android:text="@string/bp_descr"
             android:textAlignment="viewStart"
             android:textSize="20sp" />
@@ -159,11 +175,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:layout_marginBottom="10dp"
             android:layout_marginTop="5dp"
             android:background="@drawable/rounded_corner"
-            android:inputType="textMultiLine"
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
+            android:text="@string/notFound"
             android:textSize="18sp" />
 
     </LinearLayout>
