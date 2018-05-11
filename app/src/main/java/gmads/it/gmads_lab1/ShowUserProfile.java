@@ -35,7 +35,7 @@ import com.google.firebase.storage.StorageReference;
 import java.io.File;
 import java.io.IOException;
 
-public class ShowUserProfile extends AppCompatActivity implements AppBarLayout.OnOffsetChangedListener {
+public class ShowUserProfile extends AppCompatActivity {
 
     private static final float PERCENTAGE_TO_SHOW_TITLE_AT_TOOLBAR = 0.9f;
     private static final float PERCENTAGE_TO_HIDE_TITLE_DETAILS = 0.3f;
@@ -72,7 +72,7 @@ public class ShowUserProfile extends AppCompatActivity implements AppBarLayout.O
     private void findViews() {
         total=findViewById(R.id.totbooks);
         uploaded= findViewById(R.id.uploaded);
-        appbar = (AppBarLayout) findViewById(R.id.appbar);
+        //appbar = (AppBarLayout) findViewById(R.id.appbar);
         collapsing = (CollapsingToolbarLayout) findViewById(R.id.collapsing);
         coverImage = (ImageView) findViewById(R.id.imageview_placeholder);
         framelayoutTitle = (FrameLayout) findViewById(R.id.framelayout_title);
@@ -128,7 +128,7 @@ public class ShowUserProfile extends AppCompatActivity implements AppBarLayout.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //Fresco.initialize(this);
-        setContentView(R.layout.activity_show_profile);
+        setContentView(R.layout.show_user_profile);
         profile = Datasource.getInstance().getMyProfile();
         myProfileBitImage = Datasource.getInstance().getMyProfileBitImage();
         //set avatar and cover
@@ -137,7 +137,6 @@ public class ShowUserProfile extends AppCompatActivity implements AppBarLayout.O
         avatar.setImageResource(R.drawable.default_picture);
         coverImage.setImageResource(R.drawable.cover);
         toolbar.setTitle("");
-        appbar.addOnOffsetChangedListener(this);
         setSupportActionBar(toolbar);
         startAlphaAnimation(textviewTitle, 0, View.INVISIBLE);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -170,14 +169,6 @@ public class ShowUserProfile extends AppCompatActivity implements AppBarLayout.O
         //moveTaskToBack(true);
     }
 
-    @Override
-    public void onOffsetChanged(AppBarLayout appBarLayout, int offset) {
-        int maxScroll = appBarLayout.getTotalScrollRange();
-        float percentage = (float) Math.abs(offset) / (float) maxScroll;
-
-        handleAlphaOnTitle(percentage);
-        handleToolbarTitleVisibility(percentage);
-    }
 
     private void getUserInfo(String userId){
         //progressbar.setVisibility(View.VISIBLE);
