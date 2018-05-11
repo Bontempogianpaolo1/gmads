@@ -83,7 +83,7 @@ public class MyLibrary extends AppCompatActivity implements NavigationView.OnNav
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
+        setContentView(R.layout.activity_mylibrary);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -127,6 +127,21 @@ public class MyLibrary extends AppCompatActivity implements NavigationView.OnNav
         super.onStart();
 
         getUserInfo();
+    }
+
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+        /*
+        if (getFragmentManager().getBackStackEntryCount() != 0) {
+            getFragmentManager().popBackStack();
+        } else {
+            super.onBackPressed();
+        }
+        */
+        //Intent i = new Intent(this, getCallingActivity().getClass());
+        Intent i = new Intent(this, Home.class);
+        startActivity(i);
     }
 
     /*@Override
