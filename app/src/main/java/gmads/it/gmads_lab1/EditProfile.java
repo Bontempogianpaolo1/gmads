@@ -432,7 +432,7 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
         }
         if(country.isEmpty() || vCountry.getSelectedItem().toString().equals("Choose Country")){
             //vCountry.setError("@string/country_required");
-            Toast.makeText(getApplicationContext(), "A country is required", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), getString(R.string.country_required), Toast.LENGTH_LONG).show();
             vCountry.requestFocus();
             return;
         }
