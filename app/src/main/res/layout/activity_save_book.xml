@@ -9,7 +9,7 @@
     tools:openDrawer="start">
 
     <include
-        layout="@layout/app_bar_save_book"
+        layout="@layout/content_save_book"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

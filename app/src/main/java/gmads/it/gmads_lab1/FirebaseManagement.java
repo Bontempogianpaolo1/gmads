@@ -26,6 +26,9 @@ public class FirebaseManagement {
     }
 
     public static FirebaseUser getUser() {
+        if(User==null){
+            User=Auth.getCurrentUser();
+        }
         return User;
     }
 

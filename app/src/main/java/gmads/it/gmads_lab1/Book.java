@@ -8,7 +8,9 @@ import java.util.List;
 import java.util.Map;
 
 public class Book {
-    private String BId;
+
+
+    private String bId;
     private String isbn;
     private String title;
     private String description;
@@ -27,6 +29,44 @@ public class Book {
     private List<Bitmap> images;
     private String indirizzo;
     private Geoloc _geoloc;
+    private Double finderLat;
+    private String nomeproprietario;
+
+    public String getNomeproprietario() {
+        return nomeproprietario;
+    }
+
+    public void setNomeproprietario( String nomeproprietario ) {
+        this.nomeproprietario = nomeproprietario;
+    }
+
+
+    public Double getFinderLat() {
+        return finderLat;
+    }
+
+    public void setFinderLat( Double finderLat ) {
+        this.finderLat = finderLat;
+    }
+
+    public Double getFinderLng() {
+        return finderLng;
+    }
+
+    public void setFinderLng( Double finderLng ) {
+        this.finderLng = finderLng;
+    }
+
+    private Double finderLng;
+    public long getDistance() {
+        return distance;
+    }
+
+    public void setDistance( long distance ) {
+        this.distance = distance;
+    }
+
+    private long  distance;
 
     public List<String> getAuthor() {
         return author;
@@ -71,7 +111,8 @@ public class Book {
     }
 
     public Book( String BId, String isbn, String title, String description, String urlimage, String publishDate, List<String> author, List<String> categories, String publisher, String owner, Double lat, Double lng) {
-        this.BId = BId;
+
+        this.bId = bId;
         this.isbn = isbn;
         this.title = title;
         this.description = description;
@@ -103,11 +144,11 @@ public class Book {
     }
 
     public String getBId() {
-        return BId;
+        return bId;
     }
 
     public void setBId(String BId) {
-        this.BId = BId;
+        this.bId = BId;
     }
 
     public String getIsbn() {
@@ -212,5 +253,10 @@ public class Book {
 
     public void setHolder(String holder) {
         this.holder = holder;
+    }
+
+    public void setfinder( Double finderlat, Double finderlng ) {
+        this.finderLat=finderlat;
+        this.finderLng=finderlng;
     }
 }

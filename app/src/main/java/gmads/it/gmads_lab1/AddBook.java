@@ -132,14 +132,14 @@ public class AddBook extends AppCompatActivity
                             e.printStackTrace();
                         }
                     } else {//default image
-                        navImage.setImageDrawable(getDrawable(R.drawable.default_profile));
+                        navImage.setImageDrawable(getDrawable(R.drawable.default_picture));
                     }
                 }
                 else{
                     navName.setText(getString(R.string.nameExample));
                     navName.append(" " + getString(R.string.surnameExample));
                     navMail.setText(getString(R.string.emailExample));
-                    navImage.setImageDrawable(getDrawable(R.drawable.default_profile));
+                    navImage.setImageDrawable(getDrawable(R.drawable.default_picture));
                 }
             }
             @Override
@@ -167,7 +167,10 @@ public class AddBook extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            //super.onBackPressed();
+            Intent intentMod = new Intent(this, Home.class);
+            startActivity(intentMod);
+            finish();
         }
     }
 
@@ -209,7 +212,13 @@ public class AddBook extends AppCompatActivity
                 finish();
             });
             return true;
+        }else if(id == R.id.nav_mylibrary){
+            startActivity(new Intent(this,MyLibrary.class));
+            finish();
+
+            return true;
         }
+
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }

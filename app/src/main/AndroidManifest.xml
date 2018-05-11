@@ -6,10 +6,9 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -29,13 +28,10 @@
         </activity>
         <activity
             android:name=".Home"
-            android:label="gMADs"></activity>
-        <activity
-            android:name=".LocationProvider">
-        </activity>
-        <activity android:name=".PermissionManager">
-        </activity>
-
+            android:label="gMADs"
+            android:screenOrientation="portrait" />
+        <activity android:name=".LocationProvider"></activity>
+        <activity android:name=".PermissionManager"></activity>
         <activity
             android:name=".ShowProfile"
             android:label="@string/showProfile" />
@@ -70,8 +66,12 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".MapSearch"
-            android:label="@string/title_activity_map_search"></activity>
+            android:name=".Map.main.MapActivity"
+            android:label="@string/title_activity_map_search"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".BookPage" />
+        <activity android:name=".MyLibrary" />
+        <activity android:name=".ShowUserProfile"></activity>
     </application>
 
 </manifest>

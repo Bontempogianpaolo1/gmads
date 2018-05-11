@@ -51,10 +51,24 @@
             android:layout_weight="1"
             android:gravity="center"
             android:orientation="horizontal">
-
-            <include layout="@layout/author_layout" />
+            <LinearLayout
+                android:id="@+id/ll_author"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+                <include layout="@layout/author_layout" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/ll_categ"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
             <include layout="@layout/categ_layout" />
-
+            </LinearLayout>
         </LinearLayout>
 
         <EditText
