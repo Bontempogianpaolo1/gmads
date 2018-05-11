@@ -156,11 +156,11 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
 
         Locale[] locale = Locale.getAvailableLocales();
         ArrayList<String> countries = new ArrayList<String>();
-        String country;
+        String countryt;
         for( Locale loc : locale ){
-            country = loc.getDisplayCountry();
-            if( country.length() > 0 && !countries.contains(country) ) {
-                countries.add(country);
+            countryt = loc.getDisplayCountry();
+            if( countryt.length() > 0 && !countries.contains(countryt) ) {
+                countries.add(countryt);
             }
         }
         country_l = getResources().getString(R.string.choose_country);
@@ -234,8 +234,8 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
             return;
         }
 
-        if(vCountry.getText().toString().isEmpty()){
-            vCountry.setError(getString(R.string.country_required));
+        if(country == null||country.isEmpty() || vCountry.getSelectedItem().toString().equals(country_l) ){
+            Toast.makeText(getApplicationContext(), getString(R.string.country_required), Toast.LENGTH_LONG).show();
             vCountry.requestFocus();
             return;
         }
@@ -493,6 +493,7 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
                         profile.setEmail(email);
                         profile.setDescription(bio);
                         profile.setImage(profileImageUrl);
+                        profile.setCAP(cap+", "+country);
                         FirebaseManagement.updateUserData(profile);
 
                         startActivity(pickIntent);
@@ -544,10 +545,13 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
                                     vCAP.requestFocus();
                                     return;
                                 }
-                                if(vCountry.getText().toString().isEmpty()){
-                                    vCountry.setError(getString(R.string.country_required));
-                                    vCountry.requestFocus();
-                                    return;
+
+                                if(country != null) {
+                                    if (country.isEmpty() || vCountry.getSelectedItem().toString().equals(country_l)) {
+                                        Toast.makeText(getApplicationContext(), getString(R.string.country_required), Toast.LENGTH_LONG).show();
+                                        vCountry.requestFocus();
+                                        return;
+                                    }
                                 }
 
                                 if (profile.getImage() != null) {
