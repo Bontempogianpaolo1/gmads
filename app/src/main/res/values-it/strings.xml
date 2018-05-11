@@ -51,7 +51,7 @@
     <string name="tab1">Tutti</string>
     <string name="tab2">Noleggiati</string>
     <string name="tab3">Aggiunti</string>
-    <string name="country">Stato (Sigla)</string>
+    <string name="country">Stato</string>
     <string name="country_required">Stato richiesto</string>
     <string name="cap_required">CAP richiesto</string>
     <string name="name_require">Nome richiesto</string>
