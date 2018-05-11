@@ -83,8 +83,13 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
     private TextView textviewTitle;
     //private SimpleDraweeView avatar;
     private ImageView avatar;
+
+    AlphaAnimation inAnimation;
+    AlphaAnimation outAnimation;
+
+    FrameLayout progressBarHolder;
+
     private Profile profile;
-    private ProgressBar progressbar;
     Bitmap newBitMapProfileImage; //temp for new image
     private Uri uriProfileImage;
     private String profileImageUrl;
@@ -118,6 +123,7 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
         //avatar = (SimpleDraweeView) findViewById(R.id.avatar);
         avatar = findViewById(R.id.avatar);
         avatar.setImageDrawable(getDrawable(R.drawable.default_picture));
+        progressBarHolder = (FrameLayout) findViewById(R.id.progressBarHolder);
 
         //progressbar = findViewById(R.id.progressBar);
         l2= findViewById(R.id.linearlayout);
@@ -197,6 +203,12 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
         avatar.setOnClickListener(this::onClickImage);
         getUserInfo();
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
     //save data on click save
     private void onSaveClick() {
 
@@ -213,6 +225,18 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
             vEmail.setHint(R.string.errorEmail);
             vEmail.setHintTextColor(RED);
             vEmail.requestFocus();
+            return;
+        }
+
+        if(vCAP.getText().toString().isEmpty()){
+            vCAP.setError(getString(R.string.cap_required));
+            vCAP.requestFocus();
+            return;
+        }
+
+        if(vCountry.getText().toString().isEmpty()){
+            vCountry.setError(getString(R.string.country_required));
+            vCountry.requestFocus();
             return;
         }
 
@@ -452,6 +476,8 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
             return;
         }
 
+        progressBarHolder.setVisibility(View.VISIBLE);
+
         StorageReference profileImageRef = FirebaseManagement.getStorage().getReference()
                 .child("users")
                 .child(FirebaseManagement.getUser().getUid())
@@ -468,6 +494,7 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
                         profile.setDescription(bio);
                         profile.setImage(profileImageUrl);
                         FirebaseManagement.updateUserData(profile);
+
                         startActivity(pickIntent);
                         //progressbar.setVisibility(View.GONE);
                     });
@@ -486,6 +513,7 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
 
             startActivity(pickIntent);
         }
+
     }
 
     private void getUserInfo(){
@@ -509,6 +537,17 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
                                     vCAP.setText(tmp[0]);
                                     int pos = adapter.getPosition(tmp[1]);
                                     vCountry.setSelection(pos);
+                                }
+
+                                if(vCAP.getText().toString().isEmpty()){
+                                    vCAP.setError(getString(R.string.cap_required));
+                                    vCAP.requestFocus();
+                                    return;
+                                }
+                                if(vCountry.getText().toString().isEmpty()){
+                                    vCountry.setError(getString(R.string.country_required));
+                                    vCountry.requestFocus();
+                                    return;
                                 }
 
                                 if (profile.getImage() != null) {

@@ -68,7 +68,6 @@ public class BookPage extends AppCompatActivity implements AppBarLayout.OnOffset
     private AppBarLayout appbar;
     private CollapsingToolbarLayout collapsing;
     private ImageView coverImage;
-    private FrameLayout framelayoutTitle;
     private LinearLayout linearlayoutTitle;
     private Toolbar toolbar;
     private TextView textviewTitle;
@@ -87,39 +86,48 @@ public class BookPage extends AppCompatActivity implements AppBarLayout.OnOffset
     ContextWrapper cw;
     File directory;
     Book book;
+    FrameLayout framelayoutTitle;
     String path;
     String bookId;
-    LinearLayout ll;
-    LinearLayout l2;
     TextView vTitle;
     TextView vAuthor;
+    TextView vdate;
     TextView vCategory;
     TextView vOwner;
     TextView vDescription;
-
+    TextView vNotes;
+    TextView vCondition;
+    TextView Veditor;
     Tools tools;
 
 
     private void findViews() {
         appbar = (AppBarLayout) findViewById(R.id.appbar);
+
+
         collapsing = (CollapsingToolbarLayout) findViewById(R.id.collapsing);
         coverImage = (ImageView) findViewById(R.id.imageview_placeholder);
         framelayoutTitle = (FrameLayout) findViewById(R.id.framelayout_title);
         linearlayoutTitle = (LinearLayout) findViewById(R.id.linearlayout_title);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        textviewTitle = (TextView) findViewById(R.id.textview_title);
+        textviewTitle = (TextView) findViewById(R.id.name_surname_tbar);
         //avatar = (SimpleDraweeView) findViewById(R.id.avatar);
         avatar = findViewById(R.id.avatar);
-        avatar.setImageDrawable(getDrawable(R.drawable.default_picture));
+        avatar.setImageDrawable(getDrawable(R.drawable.default_book));
 
         //progressbar = findViewById(R.id.progressBar);
-        l2= findViewById(R.id.linearlayout);
+        //l2= findViewById(R.id.linearlayout);
         //l2= findViewById(R.id.linearlayout2);
-        vTitle = findViewById(R.id.name);
-        vAuthor = findViewById(R.id.surname);
-        vCategory = findViewById(R.id.email);
-        vOwner = findViewById(R.id.bio);
-        vDescription = findViewById(R.id.country);
+        vTitle = findViewById(R.id.title);
+        Veditor=findViewById(R.id.editore);
+        vAuthor = findViewById(R.id.autore);
+        vCategory = findViewById(R.id.categorie);
+        vdate=findViewById(R.id.data);
+        vCondition=findViewById(R.id.condizioni);
+        vOwner = findViewById(R.id.owner);
+        vDescription = findViewById(R.id.descrizione);
+        vNotes= findViewById(R.id.notes);
+
     }
 
     @Override
@@ -128,15 +136,14 @@ public class BookPage extends AppCompatActivity implements AppBarLayout.OnOffset
         //Fresco.initialize(this);
         setContentView(R.layout.activity_book_page);
         findViews();
-        setupUI(findViewById(R.id.linearlayout));
         toolbar.setTitle("");
         appbar.addOnOffsetChangedListener(this);
-        textviewTitle.setText(getString(R.string.editProfile)); //CAMBIARE
+        textviewTitle.setText(getString(R.string.showBook)); //CAMBIARE
         setSupportActionBar(toolbar);
         startAlphaAnimation(textviewTitle, 0, View.INVISIBLE);
 
         //set avatar and cover
-        avatar.setImageResource(R.drawable.default_picture);
+        avatar.setImageResource(R.drawable.default_book);
         coverImage.setImageResource(R.drawable.cover_edit);
 
         cw = new ContextWrapper(getApplicationContext());
@@ -148,7 +155,7 @@ public class BookPage extends AppCompatActivity implements AppBarLayout.OnOffset
         //inizialize  user data
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         //set image
-        avatar.setImageDrawable(getDrawable(R.drawable.default_picture)); //settare copertina libro default
+        avatar.setImageDrawable(getDrawable(R.drawable.default_book)); //settare copertina libro default
 
         tools = new Tools();
 
@@ -267,15 +274,36 @@ public class BookPage extends AppCompatActivity implements AppBarLayout.OnOffset
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             book = dataSnapshot.getValue(Book.class);
                             vTitle.setText(book.getTitle());
-                        /*vAuthor.setText(book.getAuthor().get(0));
-                        vRating.setText(Double.toString(book.getAvgRating()));
-                        vCategory.setText(book.getCategories().get(0));*/
-                            // distance.setText(String.valueOf(book.getDistance()/1000));
-                            // distance.append(" Km");
-                            //bookImageAdapter.clearUrl();
-                            //bookImageAdapter.addUrl(book.getUrlimage());
+                            String authors="";
+                            Veditor.setText(book.getPublisher());
+
+                            for(String a : book.getAuthor()){
+                                authors= authors + a + ", ";
+
+                            }
+                            vAuthor.setText(authors);
+                            String categ="";
+
+                            for(String a : book.getCategories()){
+                                categ=categ+a+", ";
+                            }
+                            vCategory.setText(categ);
+
+                            vdate.setText(book.getPublishDate());
+                            vCondition.setText(book.getCondition());
+                            String notes="";
+                            for(String key : book.getNotes().keySet()){
+                                String value= book.getNotes().get(key);
+
+                                notes=notes+ key +": " +value+"\n";
+                            }
+                            vOwner.setText(book.getNomeproprietario());
+                            vDescription.setText(book.getDescription());
+                            vCondition.setText(book.getCondition());
+
+                            vNotes.setText(notes);
                             avatar.setImageDrawable(loadImageFromURL(book.getUrlimage(), "bookImage"));
-                            avatar.setImageDrawable(getDrawable(R.drawable.default_profile));
+                            avatar.setImageDrawable(getDrawable(R.drawable.default_book));
 
                         }
 

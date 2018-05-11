@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="15dp"
             android:text="@string/sb_info"
             android:textAlignment="center"
             android:textSize="20dp" />
@@ -26,11 +26,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginBottom="5dp"
-            android:layout_marginTop="5dp"
-            android:inputType="textMultiLine"
+            android:layout_marginBottom="15dp"
+            android:layout_marginTop="15dp"
             android:background="@drawable/rounded_corner"
             android:hint="@string/sb_condition"
+            android:inputType="textMultiLine"
             android:paddingLeft="5dp"
             android:paddingRight="5dp" />
 
