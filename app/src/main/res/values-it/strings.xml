@@ -35,6 +35,8 @@
     <string name="alertResetDone">reset fatto!</string>
     <string name="saveProfile">Salva Profilo</string>
     <string name="addBook">Aggiungi Libro</string>
+    <string name="choose_country">Scegli una nazione</string>
+
     <!--stringhe per dati non trovati-->
     <string name="notFound">Non trovato</string>
     <string name="titleNotFound">Titolo: assente</string>
@@ -71,6 +73,7 @@
     <string name="sb_info">Info Aggiuntive</string>
     <string name="sb_main_info">Info principali</string>
 
+    <!-- stringhe show profile -->
     <string name="books">Libri</string>
     <string name="loaded">Caricati</string>
     <string name="saved">Salvati</string>
