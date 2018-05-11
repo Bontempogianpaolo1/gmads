@@ -22,9 +22,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -39,6 +42,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
@@ -95,7 +101,9 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
     TextView vEmail;
     TextView vBio;
     TextView vCAP;
-    TextView vCountry;
+    Spinner vCountry;
+    String country = null;
+    ArrayAdapter<String> adapter;
 
 
     private void findViews() {
@@ -118,6 +126,18 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
         vEmail = findViewById(R.id.email);
         vBio = findViewById(R.id.bio);
         vCountry = findViewById(R.id.country);
+
+        vCountry.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+               @Override
+               public void onItemSelected(AdapterView<?> arg0, View arg1,
+                                          int position, long id) {
+                   country = vCountry.getSelectedItem().toString();
+               }
+               @Override
+               public void onNothingSelected(AdapterView<?> arg0) {
+               }
+           });
+
         vCAP = findViewById(R.id.cap);
     }
 
@@ -126,7 +146,27 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
         super.onCreate(savedInstanceState);
         //Fresco.initialize(this);
         setContentView(R.layout.activity_edit_profile);
+
+        Locale[] locale = Locale.getAvailableLocales();
+        ArrayList<String> countries = new ArrayList<String>();
+        String country;
+        for( Locale loc : locale ){
+            country = loc.getDisplayCountry();
+            if( country.length() > 0 && !countries.contains(country) ) {
+                countries.add(country);
+            }
+        }
+        countries.add("Choose Country");
+        Collections.sort(countries, String.CASE_INSENSITIVE_ORDER);
+
         findViews();
+        adapter = new ArrayAdapter<String>(this, R.layout.spinner_layout, countries);
+        adapter.setDropDownViewResource(R.layout.spinner_layout);
+        vCountry.setAdapter(adapter);
+        int spinnerPosition = adapter.getPosition("Choose Country");
+        vCountry.setSelection(spinnerPosition);
+
+
         setupUI(findViewById(R.id.linearlayout));
         toolbar.setTitle("");
         appbar.addOnOffsetChangedListener(this);
@@ -232,6 +272,7 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
                         new String[]{Manifest.permission.CAMERA}, MY_CAMERA_REQUEST_CODE);
             } else {
                 Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                takePictureIntent.putExtra("android.intent.extras.CAMERA_FACING", 1);
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             }
         });
@@ -375,7 +416,12 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
         String email = vEmail.getText().toString();
         String bio = vBio.getText().toString();
         String cap = vCAP.getText().toString();
-        String country = vCountry.getText().toString();
+
+        //String country = vCountry.getText().toString();
+
+
+
+
 
         if(name.isEmpty()){
             vName.setError(getString(R.string.name_require));
@@ -397,8 +443,9 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
             vCAP.requestFocus();
             return;
         }
-        if(country.isEmpty()){
-            vCountry.setError("@string/country_required");
+        if(country.isEmpty() || vCountry.getSelectedItem().toString().equals("Choose Country")){
+            //vCountry.setError("@string/country_required");
+            Toast.makeText(getApplicationContext(), getString(R.string.country_required), Toast.LENGTH_LONG).show();
             vCountry.requestFocus();
             return;
         }
