@@ -30,6 +30,7 @@
             android:ellipsize="end"
             android:textAppearance="@style/RobotoBold"
             android:textColor="@color/item_place_title"
+            android:maxLines="3"
             android:textSize="@dimen/textsize_medium"
             android:textStyle="bold"
             android:transitionName="titleTransition"
