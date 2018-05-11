@@ -68,7 +68,9 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
         holder.distance.append(" Km");
         //rating
         // loading album cover using Glide library
-        Glide.with(mContext).load(book.getUrlimage()).into(holder.thumbnail);
+        if(book.getUrlimage()!=null && book.getUrlimage().length()!=0){
+            Glide.with(mContext).load(book.getUrlimage()).into(holder.thumbnail);
+        }
 
         holder.thumbnail.setOnClickListener(new View.OnClickListener() {
             @Override

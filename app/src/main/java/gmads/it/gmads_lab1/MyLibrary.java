@@ -78,13 +78,16 @@ public class MyLibrary extends AppCompatActivity implements NavigationView.OnNav
     private Bitmap myProfileBitImage;
     View headerView;
     Home_1 tab1= new Home_1();
+    Tools tools;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        tools = new Tools();
         setNavViews();
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -116,11 +119,14 @@ public class MyLibrary extends AppCompatActivity implements NavigationView.OnNav
         } catch (Exception e) {
             e.printStackTrace();
         }
-        algoClient = new Client("L6B7L7WXZW", "9d2de9e724fa9289953e6b2d5ec978a5");
-        algoIndex = algoClient.getIndex("BookIndex");
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
 
         getUserInfo();
-
     }
 
     /*@Override
@@ -249,61 +255,75 @@ public class MyLibrary extends AppCompatActivity implements NavigationView.OnNav
     private void getUserInfo(){
         //progressbar.setVisibility(View.VISIBLE);
         //avatar.setVisibility(View.GONE);
-        FirebaseManagement.getDatabase().getReference().child("users").child(FirebaseManagement.getUser().getUid())
-                .addListenerForSingleValueEvent(new ValueEventListener() {
 
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        profile = dataSnapshot.getValue(Profile.class);
-                        if (profile != null) {
-                            if(profile.getCAP()==null || profile.getCAP().length()==0){
-                                Intent i=new Intent(getApplicationContext(), EditProfile.class);
-                                startActivity(i);
-                            }
-                            navName.setText(profile.getName());
-                            navName.append(" " + profile.getSurname());
-                            navMail.setText(profile.getEmail());
-                            if (profile.getImage() != null) {
-                                try {
-                                    File localFile = File.createTempFile("images", "jpg");
-                                    StorageReference profileImageRef =
-                                            FirebaseManagement
-                                                    .getStorage()
-                                                    .getReference()
-                                                    .child("users")
-                                                    .child(FirebaseManagement.getUser().getUid())
-                                                    .child("profileimage.jpg");
+        if(tools.isOnline(getApplicationContext())) {
 
-                                    profileImageRef.getFile(localFile)
-                                            .addOnSuccessListener(taskSnapshot -> {
-                                                navImage.setImageBitmap(BitmapFactory.decodeFile(localFile.getPath()));
-                                            }).addOnFailureListener(e -> {
-                                    });
+            algoClient = new Client("L6B7L7WXZW", "9d2de9e724fa9289953e6b2d5ec978a5");
+            algoIndex = algoClient.getIndex("BookIndex");
 
-                                } catch (IOException e) {
-                                    e.printStackTrace();
+            FirebaseManagement.getDatabase().getReference().child("users").child(FirebaseManagement.getUser().getUid())
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            profile = dataSnapshot.getValue(Profile.class);
+                            if (profile != null) {
+                                if (profile.getCAP() == null || profile.getCAP().length() == 0) {
+                                    Intent i = new Intent(getApplicationContext(), EditProfile.class);
+                                    startActivity(i);
                                 }
-                            } else {
-                                navImage.setImageDrawable(getDrawable(R.drawable.default_picture));
-                            }
+                                navName.setText(profile.getName());
+                                navName.append(" " + profile.getSurname());
+                                navMail.setText(profile.getEmail());
+                                if (profile.getImage() != null) {
+                                    try {
+                                        File localFile = File.createTempFile("images", "jpg");
+                                        StorageReference profileImageRef =
+                                                FirebaseManagement
+                                                        .getStorage()
+                                                        .getReference()
+                                                        .child("users")
+                                                        .child(FirebaseManagement.getUser().getUid())
+                                                        .child("profileimage.jpg");
 
-                            getStartingMyBooks();
-                        }else{
-                            Intent i=new Intent(getApplicationContext(), EditProfile.class);
-                            startActivity(i);
+                                        profileImageRef.getFile(localFile)
+                                                .addOnSuccessListener(taskSnapshot -> {
+                                                    navImage.setImageBitmap(BitmapFactory.decodeFile(localFile.getPath()));
+                                                }).addOnFailureListener(e -> {
+                                        });
+
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                } else {
+                                    navImage.setImageDrawable(getDrawable(R.drawable.default_picture));
+                                }
+
+                                getStartingMyBooks();
+                            } else {
+                                Intent i = new Intent(getApplicationContext(), EditProfile.class);
+                                startActivity(i);
                             /*
                             navName.setText(getString(R.string.name));
                             navName.append(" " + getString(R.string.surname));
                             navMail.setText(getString(R.string.email));
                             navImage.setImageDrawable(getDrawable(R.drawable.default_picture));
                             */
+                            }
                         }
-                    }
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        // Getting Post failed, log a message
-                    }
-                });
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            // Getting Post failed, log a message
+                        }
+                    });
+
+        } else {
+            android.app.AlertDialog.Builder ad = tools.showPopup(this, getString(R.string.noInternet), "", "");
+            ad.setPositiveButton(getString(R.string.retry), (vi, w) -> onStart());
+            ad.setCancelable(false);
+            ad.show();
+        }
 
     }
 

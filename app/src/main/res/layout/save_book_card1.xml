@@ -10,13 +10,16 @@
         android:layout_gravity="center"
         android:layout_marginTop="10dp"
         android:orientation="vertical"
-        android:paddingBottom="16dp">
+        android:paddingBottom="16dp"
+        android:paddingTop="16dp">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="15dp"
+            android:layout_marginTop="15dp"
+            android:paddingTop="30dp"
             android:text="@string/sb_main_info"
             android:textAlignment="center"
             android:textSize="20dp" />
@@ -26,8 +29,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginBottom="5dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginBottom="15dp"
+            android:layout_marginTop="15dp"
             android:background="@drawable/rounded_corner"
             android:hint="@string/sb_title"
             android:paddingLeft="5dp"
@@ -38,8 +41,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginBottom="5dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginBottom="15dp"
+            android:layout_marginTop="15dp"
             android:background="@drawable/rounded_corner"
             android:hint="@string/sb_editor"
             android:paddingLeft="5dp"
@@ -51,6 +54,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:orientation="horizontal">
+
             <LinearLayout
                 android:id="@+id/ll_author"
                 android:layout_width="match_parent"
@@ -58,8 +62,12 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:orientation="vertical">
-                <include layout="@layout/author_layout" />
+
+                <include
+                    layout="@layout/author_layout"
+                    android:layout_marginTop="15dp" />
             </LinearLayout>
+
             <LinearLayout
                 android:id="@+id/ll_categ"
                 android:layout_width="match_parent"
@@ -67,7 +75,8 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:orientation="vertical">
-            <include layout="@layout/categ_layout" />
+
+                <include layout="@layout/categ_layout" />
             </LinearLayout>
         </LinearLayout>
 
@@ -76,10 +85,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:layout_marginBottom="15dp"
+            android:layout_marginTop="15dp"
             android:background="@drawable/rounded_corner"
             android:hint="@string/sb_data"
-            android:layout_marginBottom="5dp"
-            android:layout_marginTop="5dp"
             android:paddingLeft="5dp"
             android:paddingRight="5dp" />
 
@@ -88,7 +97,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginTop="5dp"
+            android:layout_marginBottom="15dp"
+            android:layout_marginTop="15dp"
             android:background="@drawable/rounded_corner"
             android:hint="@string/sb_description"
             android:inputType="textMultiLine"

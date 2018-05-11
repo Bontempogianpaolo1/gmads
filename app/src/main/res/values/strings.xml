@@ -91,7 +91,7 @@
     <string name="tab2">Rented</string>
     <string name="tab3">Added</string>
     <string name="title_activity_map_search">Map</string>
-    <string name="country">Country (abbr.)</string>
+    <string name="country">Country</string>
     <string name="country_required">Country required</string>
     <string name="cap_required">CAP required</string>
     <string name="space">\n</string>
@@ -103,9 +103,23 @@
     <string name="monkey_forest">Monkey Forest</string>
     <string name="sign_up_for_this">SIGN UP FOR THIS</string>
     <string name="mapPlaceholderTransition">mapPlaceholderTransition</string>
+    <string name="saveBook">Save Book</string>
+    <string name="of">of: </string>
+    <string name="showBook">Book Details</string>
 
     <!-- stringhe menu_book -->
     <string name="reserve">Reserve</string>
     <string name="view_owner_profile">View profile</string>
+
+    <!-- stringhe book_page-->
+    <string name="bp_title">Title</string>
+    <string name="bp_editore">Editor</string>
+    <string name="bp_autore">Author</string>
+    <string name="bp_owner">Owner</string>
+    <string name="bp_categ">Category/ies</string>
+    <string name="bp_data">Date</string>
+    <string name="bp_descr">Description</string>
+    <string name="bp_condiz">Conditions</string>
+    <string name="bp_notes">Others</string>
 
 </resources>
