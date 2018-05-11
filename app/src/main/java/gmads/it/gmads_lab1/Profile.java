@@ -29,7 +29,10 @@ public class Profile implements Serializable{
     public void setCAP( String CAP ) {
         this.CAP = CAP;
     }
-
+    public boolean hasUploaded(){
+        return myBooks != null;
+    }
+    public int takennBooks(){ return myBooks.size(); }
     public double getLat() {
         return lat;
     }

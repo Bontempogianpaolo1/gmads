@@ -9,6 +9,10 @@ public class Geoloc {
     private Double lat;
     private Double lng;
 
+    public Geoloc(){
+
+    }
+
     public Geoloc(Double lat, Double lng){
         this.lat = lat;
         this.lng = lng;

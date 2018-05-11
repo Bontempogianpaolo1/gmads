@@ -37,7 +37,9 @@ import com.google.firebase.storage.StorageReference;
 import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
-
+/*
+TODO:mettere collapsing pure qui
+ */
 public class AddBook extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -97,10 +99,10 @@ public class AddBook extends AppCompatActivity
         toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Scanner");
         setSupportActionBar(toolbar);
-        this.editISBN =  findViewById(R.id.EditIsbn);
-        this.ISBNbutton = findViewById(R.id.scan);
-        this.next = findViewById(R.id.next);
-        this.insertButton = findViewById(R.id.insertInfoButton);
+        this.editISBN =  findViewById(R.id.et_isbn);
+        this.ISBNbutton = findViewById(R.id.b_scan);
+        this.next = findViewById(R.id.b_next);
+        this.insertButton = findViewById(R.id.insert);
     }
     @Override
     public void onStart() {
@@ -130,14 +132,14 @@ public class AddBook extends AppCompatActivity
                             e.printStackTrace();
                         }
                     } else {//default image
-                        navImage.setImageDrawable(getDrawable(R.drawable.default_profile));
+                        navImage.setImageDrawable(getDrawable(R.drawable.default_picture));
                     }
                 }
                 else{
                     navName.setText(getString(R.string.nameExample));
                     navName.append(" " + getString(R.string.surnameExample));
                     navMail.setText(getString(R.string.emailExample));
-                    navImage.setImageDrawable(getDrawable(R.drawable.default_profile));
+                    navImage.setImageDrawable(getDrawable(R.drawable.default_picture));
                 }
             }
             @Override
@@ -165,7 +167,10 @@ public class AddBook extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            //super.onBackPressed();
+            Intent intentMod = new Intent(this, Home.class);
+            startActivity(intentMod);
+            finish();
         }
     }
 
@@ -207,7 +212,13 @@ public class AddBook extends AppCompatActivity
                 finish();
             });
             return true;
+        }else if(id == R.id.nav_mylibrary){
+            startActivity(new Intent(this,MyLibrary.class));
+            finish();
+
+            return true;
         }
+
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }

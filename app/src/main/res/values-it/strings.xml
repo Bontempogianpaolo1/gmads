@@ -23,7 +23,7 @@
     <string name="alertUpd">\nSalvataggio avvenuto!</string>
     <string name="nameExample">Nome</string>
     <string name="surnameExample">Cognome</string>
-    <string name="bioExample">--vuoto--</string>
+    <string name="bioExample">-- vuoto --</string>
     <string name="emailExample">esempio@p.com</string>
     <string name="imageDirectory">ImageDir</string>
     <string name="selectImage">Cambia foto profilo</string>
@@ -43,10 +43,11 @@
     <string name="publisherNotFound">Editore: assente</string>
     <string name="pDateNotFound">Data pubblicazione: assente</string>
     <string name="categoryNotFound">Categoria: assente</string>
-    <string name="scan1">Inserisci ISBN</string>
-    <string name="scan2">Oppure scansionalo</string>
+    <string name="scan2">Oppure inserisci l'ISBN</string>
+    <string name="scan1">Enter book manually</string>
+    <string name="scan3">Oppure scansionalo</string>
     <string name="bookTitle">Dettagli Libro</string>
-    <string name="isbnerror">\nL'ISBN deve essere lungo 13 numeri</string>
+    <string name="isbnerror">\nL'ISBN deve essere di 13 numeri</string>
     <string name="tab1">Tutti</string>
     <string name="tab2">Noleggiati</string>
     <string name="tab3">Aggiunti</string>
@@ -56,5 +57,25 @@
     <string name="name_require">Nome richiesto</string>
     <string name="surname_required">Cognome richiesto</string>
     <string name="email_required">Email richiesta</string>
+    <!-- stringhe save book-->
+    <string name="sb_category">Categoria</string>
+    <string name="sb_data">Data</string>
+    <string name="sb_editor">Editore</string>
+    <string name="sb_author">Autore</string>
+    <string name="sb_description">Descrizione</string>
+    <string name="sb_title">Titolo</string>
+    <string name="edit_book">Edit Libro</string>
+    <string name="sb_condition">Condizioni Libro</string>
+    <string name="sb_key">Chiave</string>
+    <string name="sb_value">Valore</string>
+    <string name="sb_info">Info Aggiuntive</string>
+    <string name="sb_main_info">Info principali</string>
+
+
+
+    <!-- stringhe menu_book -->
+    <string name="reserve">Prenota</string>
+    <string name="view_owner_profile">Vedi profilo</string>
+
     <!--end-->
 </resources>

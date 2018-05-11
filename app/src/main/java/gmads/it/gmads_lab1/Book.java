@@ -5,16 +5,19 @@ import android.graphics.Bitmap;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Book {
-    private String BId;
+
+
+    private String bId;
     private String isbn;
     private String title;
     private String description;
     private String urlimage;
     private String publishDate;
-    private String author;
-    private String categories;
+    private List<String> author;
+    private List<String> categories;//
     private double avgRating;
     private int nRates;
     private double sumRates;
@@ -26,6 +29,70 @@ public class Book {
     private List<Bitmap> images;
     private String indirizzo;
     private Geoloc _geoloc;
+    private Double finderLat;
+    private String nomeproprietario;
+
+    public String getNomeproprietario() {
+        return nomeproprietario;
+    }
+
+    public void setNomeproprietario( String nomeproprietario ) {
+        this.nomeproprietario = nomeproprietario;
+    }
+
+
+    public Double getFinderLat() {
+        return finderLat;
+    }
+
+    public void setFinderLat( Double finderLat ) {
+        this.finderLat = finderLat;
+    }
+
+    public Double getFinderLng() {
+        return finderLng;
+    }
+
+    public void setFinderLng( Double finderLng ) {
+        this.finderLng = finderLng;
+    }
+
+    private Double finderLng;
+    public long getDistance() {
+        return distance;
+    }
+
+    public void setDistance( long distance ) {
+        this.distance = distance;
+    }
+
+    private long  distance;
+
+    public List<String> getAuthor() {
+        return author;
+    }
+
+    public void setAuthor( List<String> author ) {
+        this.author = author;
+    }
+
+    public List<String> getCategories() {
+        return categories;
+    }
+
+    public void setCategories( List<String> categories ) {
+        this.categories = categories;
+    }
+
+    public Map<String, String> getNotes() {
+        return notes;
+    }
+
+    public void setNotes( Map<String, String> notes ) {
+        this.notes = notes;
+    }
+
+    private Map<String,String> notes=new  HashMap<>();
 
     public Geoloc get_geoloc() {
         return _geoloc;
@@ -43,8 +110,9 @@ public class Book {
         this.indirizzo = indirizzo;
     }
 
-    public Book( String BId, String isbn, String title, String description, String urlimage, String publishDate, String author, String categories, String publisher, String owner, Double lat, Double lng) {
-        this.BId = BId;
+    public Book( String BId, String isbn, String title, String description, String urlimage, String publishDate, List<String> author, List<String> categories, String publisher, String owner, Double lat, Double lng) {
+
+        this.bId = bId;
         this.isbn = isbn;
         this.title = title;
         this.description = description;
@@ -57,6 +125,7 @@ public class Book {
         this._geoloc = new Geoloc(lat, lng);
         comments= Collections.emptyList();
         images=Collections.emptyList();
+        notes= Collections.emptyMap();
         avgRating=0;
         nRates=0;
         sumRates=0;
@@ -75,11 +144,11 @@ public class Book {
     }
 
     public String getBId() {
-        return BId;
+        return bId;
     }
 
     public void setBId(String BId) {
-        this.BId = BId;
+        this.bId = BId;
     }
 
     public String getIsbn() {
@@ -122,21 +191,7 @@ public class Book {
         this.publishDate = publishDate;
     }
 
-    public String getAuthor() {
-        return author;
-    }
 
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
-    public String getCategories() {
-        return categories;
-    }
-
-    public void setCategories(String categories) {
-        this.categories = categories;
-    }
 
     public double getAvgRating() {
         return avgRating;
@@ -198,5 +253,10 @@ public class Book {
 
     public void setHolder(String holder) {
         this.holder = holder;
+    }
+
+    public void setfinder( Double finderlat, Double finderlng ) {
+        this.finderLat=finderlat;
+        this.finderLng=finderlng;
     }
 }
