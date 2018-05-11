@@ -1,6 +1,7 @@
 package gmads.it.gmads_lab1;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -29,7 +30,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
             owner = (TextView) view.findViewById(R.id.owner);
             thumbnail = (ImageView) view.findViewById(R.id.thumbnail);
             //mettere anche rating book
-            rating = (TextView) view.findViewById(R.id.rating);
+
             //metere distanza
             distance = (TextView) view.findViewById(R.id.distance);
             overflow = (ImageView) view.findViewById(R.id.overflow);
@@ -60,18 +61,28 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
         //titolo libro
         holder.title.setText(book.getTitle());
         //owner
-        holder.owner.setText("di" + book.getOwner());
+        holder.owner.setText("di ");
+        holder.owner.append( book.getNomeproprietario());
         //distanza
-        holder.distance.setText("23,3Km");
+        holder.distance.setText(String.valueOf(book.getDistance()/1000));
+        holder.distance.append(" Km");
         //rating
-        holder.rating.setText("Rate: 4,5");
         // loading album cover using Glide library
         Glide.with(mContext).load(book.getUrlimage()).into(holder.thumbnail);
+
+        holder.thumbnail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext, BookPage.class);
+                intent.putExtra("book_id", book.getBId());
+                mContext.startActivity(intent);
+            }
+        });
 
         holder.overflow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showPopupMenu(holder.overflow);
+                showPopupMenu(holder.overflow, position);
             }
         });
     }
@@ -79,12 +90,12 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
     /**
      * Showing popup menu when tapping on 3 dots
      */
-    private void showPopupMenu(View view) {
+    private void showPopupMenu(View view, int position) {
         // inflate menu
         PopupMenu popup = new PopupMenu(mContext, view);
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.menu_book, popup.getMenu());
-        popup.setOnMenuItemClickListener(new MyMenuItemClickListener());
+        popup.setOnMenuItemClickListener(new MyMenuItemClickListener(position));
         popup.show();
     }
 
@@ -93,7 +104,10 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
      */
     class MyMenuItemClickListener implements PopupMenu.OnMenuItemClickListener {
 
-        public MyMenuItemClickListener() {
+        private int position = 0;
+
+        public MyMenuItemClickListener(int position) {
+            this.position = position;
         }
 
         @Override
@@ -103,7 +117,9 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
                     Toast.makeText(mContext, "Book added", Toast.LENGTH_SHORT).show();
                     return true;
                 case R.id.action_viewP:
-                    Toast.makeText(mContext, "Eskeree", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(mContext, ShowUserProfile.class);
+                    intent.putExtra("userId", bookList.get(position).getOwner());
+                    mContext.startActivity(intent);
                     return true;
                 default:
             }
@@ -115,4 +131,5 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
     public int getItemCount() {
         return bookList.size();
     }
+
 }

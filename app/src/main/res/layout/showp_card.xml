@@ -42,10 +42,11 @@
                         android:textSize="18sp" />
 
                     <TextView
+                        android:id="@+id/totbooks"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingTop="10dp"
-                        android:text="10"
+                        android:text="0"
                         android:textColor="@color/colorPrimary"
                         android:textSize="16sp"
                         android:textStyle="bold" />
@@ -66,10 +67,11 @@
                         android:textSize="18sp" />
 
                     <TextView
+                        android:id="@+id/uploaded"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingTop="10dp"
-                        android:text="6"
+                        android:text="0"
                         android:textColor="@color/colorPrimary"
                         android:textSize="16sp"
                         android:textStyle="bold" />
@@ -90,10 +92,11 @@
                         android:textSize="18sp" />
 
                     <TextView
+                        android:id="@+id/downloaded"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingTop="10dp"
-                        android:text="4"
+                        android:text="0"
                         android:textColor="@color/colorPrimary"
                         android:textSize="16sp"
                         android:textStyle="bold" />

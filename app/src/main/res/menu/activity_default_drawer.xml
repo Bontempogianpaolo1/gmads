@@ -16,6 +16,10 @@
             android:id="@+id/nav_addBook"
             android:icon="@drawable/ic_add_book_24dp"
             android:title="@string/addBook" />
+        <item
+            android:id="@+id/nav_mylibrary"
+            android:icon="@drawable/ic_add_book_24dp"
+            android:title="My Library" />
 
     </group>
 
