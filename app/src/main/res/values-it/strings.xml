@@ -71,6 +71,9 @@
     <string name="sb_info">Info Aggiuntive</string>
     <string name="sb_main_info">Info principali</string>
 
+    <string name="books">Libri</string>
+    <string name="loaded">Caricati</string>
+    <string name="saved">Salvati</string>
 
 
     <!-- stringhe menu_book -->

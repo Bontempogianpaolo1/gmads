@@ -104,6 +104,10 @@
     <string name="sign_up_for_this">SIGN UP FOR THIS</string>
     <string name="mapPlaceholderTransition">mapPlaceholderTransition</string>
 
+    <string name="books">Books</string>
+    <string name="loaded">Loaded</string>
+    <string name="saved">Saved</string>
+
     <!-- stringhe menu_book -->
     <string name="reserve">Reserve</string>
     <string name="view_owner_profile">View profile</string>
