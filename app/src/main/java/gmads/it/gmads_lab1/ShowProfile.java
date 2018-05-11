@@ -127,6 +127,7 @@ public class ShowProfile extends AppCompatActivity implements AppBarLayout.OnOff
         navMail =  headerView.findViewById(R.id.navMail);
         navImage =  headerView.findViewById(R.id.navImage);
         headerView.setBackgroundResource(R.color.colorPrimaryDark);
+        navImage.setImageDrawable(getDrawable(R.drawable.default_picture));
 
         if(profile!=null) {
             navName.setText(profile.getName());
@@ -136,7 +137,7 @@ public class ShowProfile extends AppCompatActivity implements AppBarLayout.OnOff
             if ( profile!= null) {
                 navImage.setImageBitmap(myProfileBitImage);
             } else {
-                navImage.setImageDrawable(getDrawable(R.drawable.default_picture));
+                //navImage.setImageDrawable(getDrawable(R.drawable.default_picture));
             }
         }
     }

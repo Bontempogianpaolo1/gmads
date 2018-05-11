@@ -13,34 +13,85 @@
         android:paddingBottom="16dp">
 
         <TextView
-            android:id="@+id/owner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginBottom="10dp"
+            android:text="@string/sb_main_info"
+            android:textAlignment="center"
+            android:textSize="20dp" />
+
+        <EditText
+            android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginBottom="5dp"
             android:layout_marginTop="5dp"
+            android:background="@drawable/rounded_corner"
+            android:hint="@string/sb_title"
             android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-            android:textSize="18sp" />
+            android:paddingRight="5dp" />
 
-        <TextView
-            android:id="@+id/condition"
+        <EditText
+            android:id="@+id/editore"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginBottom="5dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/rounded_corner"
+            android:hint="@string/sb_editor"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp" />
+
+        <EditText
+            android:id="@+id/autore"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/rounded_corner"
+            android:hint="@string/sb_description"
+            android:inputType="textMultiLine"
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
             android:textSize="18sp" />
 
-        <TextView
-            android:id="@+id/description"
+        <EditText
+            android:id="@+id/categorie"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/rounded_corner"
+            android:hint="@string/sb_description"
+            android:inputType="textMultiLine"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:textSize="18sp" />
+
+        <EditText
+            android:id="@+id/data"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/rounded_corner"
+            android:hint="@string/sb_data"
             android:layout_marginBottom="5dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="5dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp" />
+
+        <EditText
+            android:id="@+id/descrizione"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/rounded_corner"
+            android:hint="@string/sb_description"
+            android:inputType="textMultiLine"
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
             android:textSize="18sp" />
