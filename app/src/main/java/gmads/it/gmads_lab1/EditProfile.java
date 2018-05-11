@@ -108,6 +108,7 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
     TextView vCAP;
     Spinner vCountry;
     String country = null;
+    String country_l;
     ArrayAdapter<String> adapter;
 
 
@@ -162,14 +163,15 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
                 countries.add(country);
             }
         }
-        countries.add("Choose Country");
+        country_l = getResources().getString(R.string.choose_country);
+        countries.add(country_l);
         Collections.sort(countries, String.CASE_INSENSITIVE_ORDER);
 
         findViews();
         adapter = new ArrayAdapter<String>(this, R.layout.spinner_layout, countries);
         adapter.setDropDownViewResource(R.layout.spinner_layout);
         vCountry.setAdapter(adapter);
-        int spinnerPosition = adapter.getPosition("Choose Country");
+        int spinnerPosition = adapter.getPosition(country_l);
         vCountry.setSelection(spinnerPosition);
 
 
@@ -467,7 +469,7 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
             vCAP.requestFocus();
             return;
         }
-        if(country.isEmpty() || vCountry.getSelectedItem().toString().equals("Choose Country")){
+        if(country.isEmpty() || vCountry.getSelectedItem().toString().equals(country_l)){
             //vCountry.setError("@string/country_required");
             Toast.makeText(getApplicationContext(), getString(R.string.country_required), Toast.LENGTH_LONG).show();
             vCountry.requestFocus();
@@ -530,12 +532,11 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
                                 vEmail.setText(profile.getEmail());
                                 vBio.setText(profile.getDescription());
                                 //controllo che ci sia il CAP
-                                if(profile.getCAP() != null) {
-                                    if (profile.getCAP().length() != 0) {
-                                        String[] tmp = profile.getCAP().split(", ");
-                                        vCAP.setText(tmp[0]);
-                                        vCountry.setText(tmp[1]);
-                                    }
+                                if (profile.getCAP().length() != 0) {
+                                    String[] tmp = profile.getCAP().split(", ");
+                                    vCAP.setText(tmp[0]);
+                                    int pos = adapter.getPosition(tmp[1]);
+                                    vCountry.setSelection(pos);
                                 }
 
                                 if(vCAP.getText().toString().isEmpty()){
