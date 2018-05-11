@@ -25,6 +25,7 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.view.animation.AlphaAnimation;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.database.DataSnapshot;
@@ -72,7 +73,7 @@ public class ShowUserProfile extends AppCompatActivity {
     private void findViews() {
         total=findViewById(R.id.totbooks);
         uploaded= findViewById(R.id.uploaded);
-        //appbar = (AppBarLayout) findViewById(R.id.appbar);
+        appbar = (AppBarLayout) findViewById(R.id.appbar);
         collapsing = (CollapsingToolbarLayout) findViewById(R.id.collapsing);
         coverImage = (ImageView) findViewById(R.id.imageview_placeholder);
         framelayoutTitle = (FrameLayout) findViewById(R.id.framelayout_title);
@@ -151,23 +152,38 @@ public class ShowUserProfile extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Intent intentMod = new Intent(this, Home.class);
-        startActivity(intentMod);
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+        }
+        //Intent intentMod = new Intent(this, Home.class);
+        //startActivity(intentMod);
+        return true;
         /*
             settare animazione???
          */
         //overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
-        return true;
     }
 
     //to close the application on back button
     @Override
     public void onBackPressed() {
+
+        if (getFragmentManager().getBackStackEntryCount() != 0) {
+            getFragmentManager().popBackStack();
+        } else {
+            super.onBackPressed();
+        }
+        /*
         Intent intentMod = new Intent(this, Home.class);
         startActivity(intentMod);
         finish();
+        */
         //moveTaskToBack(true);
     }
+
+
 
 
     private void getUserInfo(String userId){
