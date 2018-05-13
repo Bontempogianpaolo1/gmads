@@ -46,6 +46,7 @@
     <string name="scan3">Or scan ISBN</string>
     <string name="title_activity_save_book">SaveBook</string>
     <string name="addBook">Add Book</string>
+    <string name="choose_country">Choose a Country</string>
     <!--string for data not found-->
     <string name="notFound">Not Found</string>
     <string name="titleNotFound">Title: not Found</string>
@@ -106,6 +107,11 @@
     <string name="saveBook">Save Book</string>
     <string name="of">of: </string>
     <string name="showBook">Book Details</string>
+
+    <!-- stringhe show profile -->
+    <string name="books">Books</string>
+    <string name="loaded">Loaded</string>
+    <string name="saved">Saved</string>
 
     <!-- stringhe menu_book -->
     <string name="reserve">Reserve</string>

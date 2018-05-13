@@ -23,6 +23,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -80,14 +81,19 @@ public class MyLibrary extends AppCompatActivity implements NavigationView.OnNav
     Home_1 tab1= new Home_1();
     Tools tools;
 
+    ProgressBar progressbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
+        setContentView(R.layout.activity_mylibrary);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         tools = new Tools();
+
+        progressbar = findViewById(R.id.progress_bar);
+
         setNavViews();
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -127,6 +133,21 @@ public class MyLibrary extends AppCompatActivity implements NavigationView.OnNav
         super.onStart();
 
         getUserInfo();
+    }
+
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+        /*
+        if (getFragmentManager().getBackStackEntryCount() != 0) {
+            getFragmentManager().popBackStack();
+        } else {
+            super.onBackPressed();
+        }
+        */
+        //Intent i = new Intent(this, getCallingActivity().getClass());
+        Intent i = new Intent(this, Home.class);
+        startActivity(i);
     }
 
     /*@Override
@@ -328,6 +349,9 @@ public class MyLibrary extends AppCompatActivity implements NavigationView.OnNav
     }
 
     private void getStartingMyBooks(){
+
+        progressbar.setVisibility(View.VISIBLE);
+
         Query query = new Query(FirebaseManagement.getUser().getUid())
                 .setAroundLatLng(new AbstractQuery.LatLng(profile.getLat(), profile.getLng()))
                 .setGetRankingInfo(true);
@@ -344,6 +368,8 @@ public class MyLibrary extends AppCompatActivity implements NavigationView.OnNav
                     books= search.parseResults(jsonObject);
                     tab1.getAdapter().setbooks(books);
                     tab1.getAdapter().notifyDataSetChanged();
+
+                    progressbar.setVisibility(View.GONE);
                 }
             }
         });
