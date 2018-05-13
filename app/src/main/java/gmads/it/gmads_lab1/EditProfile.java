@@ -22,9 +22,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -39,6 +42,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
@@ -77,8 +83,13 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
     private TextView textviewTitle;
     //private SimpleDraweeView avatar;
     private ImageView avatar;
+
+    AlphaAnimation inAnimation;
+    AlphaAnimation outAnimation;
+
+    FrameLayout progressBarHolder;
+
     private Profile profile;
-    private ProgressBar progressbar;
     Bitmap newBitMapProfileImage; //temp for new image
     private Uri uriProfileImage;
     private String profileImageUrl;
@@ -95,7 +106,10 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
     TextView vEmail;
     TextView vBio;
     TextView vCAP;
-    TextView vCountry;
+    Spinner vCountry;
+    String country = null;
+    String country_l;
+    ArrayAdapter<String> adapter;
 
 
     private void findViews() {
@@ -109,6 +123,7 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
         //avatar = (SimpleDraweeView) findViewById(R.id.avatar);
         avatar = findViewById(R.id.avatar);
         avatar.setImageDrawable(getDrawable(R.drawable.default_picture));
+        progressBarHolder = (FrameLayout) findViewById(R.id.progressBarHolder);
 
         //progressbar = findViewById(R.id.progressBar);
         l2= findViewById(R.id.linearlayout);
@@ -118,6 +133,18 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
         vEmail = findViewById(R.id.email);
         vBio = findViewById(R.id.bio);
         vCountry = findViewById(R.id.country);
+
+        vCountry.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+               @Override
+               public void onItemSelected(AdapterView<?> arg0, View arg1,
+                                          int position, long id) {
+                   country = vCountry.getSelectedItem().toString();
+               }
+               @Override
+               public void onNothingSelected(AdapterView<?> arg0) {
+               }
+           });
+
         vCAP = findViewById(R.id.cap);
     }
 
@@ -126,7 +153,28 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
         super.onCreate(savedInstanceState);
         //Fresco.initialize(this);
         setContentView(R.layout.activity_edit_profile);
+
+        Locale[] locale = Locale.getAvailableLocales();
+        ArrayList<String> countries = new ArrayList<String>();
+        String countryt;
+        for( Locale loc : locale ){
+            countryt = loc.getDisplayCountry();
+            if( countryt.length() > 0 && !countries.contains(countryt) ) {
+                countries.add(countryt);
+            }
+        }
+        country_l = getResources().getString(R.string.choose_country);
+        countries.add(country_l);
+        Collections.sort(countries, String.CASE_INSENSITIVE_ORDER);
+
         findViews();
+        adapter = new ArrayAdapter<String>(this, R.layout.spinner_layout, countries);
+        adapter.setDropDownViewResource(R.layout.spinner_layout);
+        vCountry.setAdapter(adapter);
+        int spinnerPosition = adapter.getPosition(country_l);
+        vCountry.setSelection(spinnerPosition);
+
+
         setupUI(findViewById(R.id.linearlayout));
         toolbar.setTitle("");
         appbar.addOnOffsetChangedListener(this);
@@ -155,6 +203,12 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
         avatar.setOnClickListener(this::onClickImage);
         getUserInfo();
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
     //save data on click save
     private void onSaveClick() {
 
@@ -171,6 +225,18 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
             vEmail.setHint(R.string.errorEmail);
             vEmail.setHintTextColor(RED);
             vEmail.requestFocus();
+            return;
+        }
+
+        if(vCAP.getText().toString().isEmpty()){
+            vCAP.setError(getString(R.string.cap_required));
+            vCAP.requestFocus();
+            return;
+        }
+
+        if(country == null||country.isEmpty() || vCountry.getSelectedItem().toString().equals(country_l) ){
+            Toast.makeText(getApplicationContext(), getString(R.string.country_required), Toast.LENGTH_LONG).show();
+            vCountry.requestFocus();
             return;
         }
 
@@ -232,6 +298,7 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
                         new String[]{Manifest.permission.CAMERA}, MY_CAMERA_REQUEST_CODE);
             } else {
                 Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                takePictureIntent.putExtra("android.intent.extras.CAMERA_FACING", 1);
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             }
         });
@@ -375,7 +442,12 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
         String email = vEmail.getText().toString();
         String bio = vBio.getText().toString();
         String cap = vCAP.getText().toString();
-        String country = vCountry.getText().toString();
+
+        //String country = vCountry.getText().toString();
+
+
+
+
 
         if(name.isEmpty()){
             vName.setError(getString(R.string.name_require));
@@ -397,11 +469,14 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
             vCAP.requestFocus();
             return;
         }
-        if(country.isEmpty()){
-            vCountry.setError("@string/country_required");
+        if(country.isEmpty() || vCountry.getSelectedItem().toString().equals(country_l)){
+            //vCountry.setError("@string/country_required");
+            Toast.makeText(getApplicationContext(), getString(R.string.country_required), Toast.LENGTH_LONG).show();
             vCountry.requestFocus();
             return;
         }
+
+        progressBarHolder.setVisibility(View.VISIBLE);
 
         StorageReference profileImageRef = FirebaseManagement.getStorage().getReference()
                 .child("users")
@@ -418,7 +493,9 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
                         profile.setEmail(email);
                         profile.setDescription(bio);
                         profile.setImage(profileImageUrl);
+                        profile.setCAP(cap+", "+country);
                         FirebaseManagement.updateUserData(profile);
+
                         startActivity(pickIntent);
                         //progressbar.setVisibility(View.GONE);
                     });
@@ -437,6 +514,7 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
 
             startActivity(pickIntent);
         }
+
     }
 
     private void getUserInfo(){
@@ -458,7 +536,22 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
                                 if (profile.getCAP().length() != 0) {
                                     String[] tmp = profile.getCAP().split(", ");
                                     vCAP.setText(tmp[0]);
-                                    vCountry.setText(tmp[1]);
+                                    int pos = adapter.getPosition(tmp[1]);
+                                    vCountry.setSelection(pos);
+                                }
+
+                                if(vCAP.getText().toString().isEmpty()){
+                                    vCAP.setError(getString(R.string.cap_required));
+                                    vCAP.requestFocus();
+                                    return;
+                                }
+
+                                if(country != null) {
+                                    if (country.isEmpty() || vCountry.getSelectedItem().toString().equals(country_l)) {
+                                        Toast.makeText(getApplicationContext(), getString(R.string.country_required), Toast.LENGTH_LONG).show();
+                                        vCountry.requestFocus();
+                                        return;
+                                    }
                                 }
 
                                 if (profile.getImage() != null) {

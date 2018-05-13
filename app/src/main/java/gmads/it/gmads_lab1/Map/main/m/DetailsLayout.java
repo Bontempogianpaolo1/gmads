@@ -23,6 +23,7 @@ import gmads.it.gmads_lab1.Book;
 import gmads.it.gmads_lab1.BookPage;
 import gmads.it.gmads_lab1.Login;
 import gmads.it.gmads_lab1.R;
+import gmads.it.gmads_lab1.ShowUserProfile;
 
 
 public class DetailsLayout extends CoordinatorLayout {
@@ -32,6 +33,8 @@ public class DetailsLayout extends CoordinatorLayout {
     @BindView(R.id.title) TextView textViewTitle;
     @BindView(R.id.description) TextView textViewDescription;
     @BindView(R.id.tobook) TextView toBook;
+    @BindView(R.id.toprofile) TextView toProfile;
+
     String bid;
     public DetailsLayout(final Context context) {
         this(context, null);
@@ -56,6 +59,15 @@ public class DetailsLayout extends CoordinatorLayout {
             Intent i=new Intent(getContext(), BookPage.class);
             i.putExtra("book_id",bid);
             getContext().startActivity(i);
+        });
+
+        toProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getContext(), ShowUserProfile.class);
+                i.putExtra("userId", place.getOwner());
+                getContext().startActivity(i);
+            }
         });
     }
 

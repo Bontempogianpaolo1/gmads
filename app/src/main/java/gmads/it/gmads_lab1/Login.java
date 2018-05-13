@@ -9,6 +9,9 @@ import java.util.Arrays;
 import java.util.Objects;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 
 public class Login extends AppCompatActivity {
     private static final int RC_SIGN_IN = 123;
@@ -42,8 +45,8 @@ public class Login extends AppCompatActivity {
                             .createSignInIntentBuilder()
                             .setAvailableProviders(Arrays.asList(
                                     new AuthUI.IdpConfig.EmailBuilder().build(),
-                                    new AuthUI.IdpConfig.GoogleBuilder().build(),
-                                    new AuthUI.IdpConfig.FacebookBuilder().build()
+                                    new AuthUI.IdpConfig.GoogleBuilder().build()
+                                   // ,new AuthUI.IdpConfig.FacebookBuilder().build()
                             ))
                             .build(),
                     RC_SIGN_IN);
@@ -55,8 +58,26 @@ public class Login extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         //ritorno dall'attività di firebase e se si è loggato vado a home
         if (resultCode == RESULT_OK) {
-            FirebaseManagement.createUser(getApplicationContext(), Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getEmail());
-            startActivity(new Intent(this, ShowProfile.class));
+            Intent intent = new Intent(this, ShowProfile.class);
+
+            FirebaseManagement.getDatabase().getReference()
+                    .child("users")
+                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            if(dataSnapshot.getValue() == null){
+                                FirebaseManagement.createUser(getApplicationContext(), Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getEmail());
+                            }
+                            startActivity(intent);
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+
         }
     }
 }

@@ -25,6 +25,7 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.view.animation.AlphaAnimation;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.database.DataSnapshot;
@@ -35,7 +36,7 @@ import com.google.firebase.storage.StorageReference;
 import java.io.File;
 import java.io.IOException;
 
-public class ShowUserProfile extends AppCompatActivity implements AppBarLayout.OnOffsetChangedListener {
+public class ShowUserProfile extends AppCompatActivity {
 
     private static final float PERCENTAGE_TO_SHOW_TITLE_AT_TOOLBAR = 0.9f;
     private static final float PERCENTAGE_TO_HIDE_TITLE_DETAILS = 0.3f;
@@ -128,7 +129,7 @@ public class ShowUserProfile extends AppCompatActivity implements AppBarLayout.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //Fresco.initialize(this);
-        setContentView(R.layout.activity_show_profile);
+        setContentView(R.layout.show_user_profile);
         profile = Datasource.getInstance().getMyProfile();
         myProfileBitImage = Datasource.getInstance().getMyProfileBitImage();
         //set avatar and cover
@@ -137,7 +138,6 @@ public class ShowUserProfile extends AppCompatActivity implements AppBarLayout.O
         avatar.setImageResource(R.drawable.default_picture);
         coverImage.setImageResource(R.drawable.cover);
         toolbar.setTitle("");
-        appbar.addOnOffsetChangedListener(this);
         setSupportActionBar(toolbar);
         startAlphaAnimation(textviewTitle, 0, View.INVISIBLE);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -152,32 +152,39 @@ public class ShowUserProfile extends AppCompatActivity implements AppBarLayout.O
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Intent intentMod = new Intent(this, Home.class);
-        startActivity(intentMod);
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+        }
+        //Intent intentMod = new Intent(this, Home.class);
+        //startActivity(intentMod);
+        return true;
         /*
             settare animazione???
          */
         //overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
-        return true;
     }
 
     //to close the application on back button
     @Override
     public void onBackPressed() {
+
+        if (getFragmentManager().getBackStackEntryCount() != 0) {
+            getFragmentManager().popBackStack();
+        } else {
+            super.onBackPressed();
+        }
+        /*
         Intent intentMod = new Intent(this, Home.class);
         startActivity(intentMod);
         finish();
+        */
         //moveTaskToBack(true);
     }
 
-    @Override
-    public void onOffsetChanged(AppBarLayout appBarLayout, int offset) {
-        int maxScroll = appBarLayout.getTotalScrollRange();
-        float percentage = (float) Math.abs(offset) / (float) maxScroll;
 
-        handleAlphaOnTitle(percentage);
-        handleToolbarTitleVisibility(percentage);
-    }
+
 
     private void getUserInfo(String userId){
         //progressbar.setVisibility(View.VISIBLE);
