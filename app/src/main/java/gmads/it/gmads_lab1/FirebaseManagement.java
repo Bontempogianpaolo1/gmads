@@ -1,16 +1,16 @@
 package gmads.it.gmads_lab1;
 
 import android.content.Context;
-import android.location.Location;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 
 
 import java.util.Objects;
+
+import gmads.it.gmads_lab1.model.Profile;
 
 public class FirebaseManagement {
 

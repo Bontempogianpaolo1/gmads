@@ -26,7 +26,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -58,6 +57,8 @@ import android.net.Uri;
 import android.widget.Toast;
 
 import org.json.JSONObject;
+
+import gmads.it.gmads_lab1.model.Profile;
 
 import static android.graphics.Color.RED;
 

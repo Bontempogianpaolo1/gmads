@@ -1,4 +1,4 @@
-package gmads.it.gmads_lab1;
+package gmads.it.gmads_lab1.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;

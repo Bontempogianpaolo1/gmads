@@ -9,7 +9,7 @@ import com.google.android.gms.maps.model.LatLngBounds;
 
 import java.util.List;
 
-import gmads.it.gmads_lab1.Book;
+import gmads.it.gmads_lab1.model.Book;
 import gmads.it.gmads_lab1.FirebaseManagement;
 import gmads.it.gmads_lab1.SearchResultsJsonParser;
 
