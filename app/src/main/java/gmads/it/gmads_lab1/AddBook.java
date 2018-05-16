@@ -241,8 +241,7 @@ public class AddBook extends AppCompatActivity
 
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(takePictureIntent, REQUEST_ISBN_IMAGE);
+                onGetISBNClick();
 
             } else {
 

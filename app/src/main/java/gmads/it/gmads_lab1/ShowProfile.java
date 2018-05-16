@@ -148,6 +148,12 @@ public class ShowProfile extends AppCompatActivity implements AppBarLayout.OnOff
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        getUserInfo();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //Fresco.initialize(this);
@@ -257,6 +263,7 @@ public class ShowProfile extends AppCompatActivity implements AppBarLayout.OnOff
                                     startActivity(i);
                                 }
                                 cap.setText(profile.getCAP());
+
                                 vName.setText(profile.getName());
                                 vName.append(" " + profile.getSurname());
                                 navName.setText(profile.getName());
