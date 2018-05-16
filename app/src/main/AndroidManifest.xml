@@ -82,8 +82,12 @@
                   android:screenOrientation="portrait"/>
         <activity android:name=".ShowUserProfile"
             android:screenOrientation="portrait">
-
         </activity>
+        <activity android:name=".ChatList"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ChatActivity"
+            android:screenOrientation="portrait"/>
+
     </application>
 
 </manifest>

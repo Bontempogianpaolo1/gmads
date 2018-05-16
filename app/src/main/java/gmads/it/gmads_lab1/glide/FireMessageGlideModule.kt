@@ -9,10 +9,10 @@ import com.google.firebase.storage.StorageReference
 import gmads.it.gmads_lab1.FirebaseImageLoader
 import java.io.InputStream
 
-@GlideModule
+//@GlideModule
 class FireMessageGlideModule: AppGlideModule() {
-    override fun registerComponents(context: Context, glide: Glide, registry: Registry) {
-        registry.append(StorageReference::class.java, InputStream::class.java,
-                FirebaseImageLoader.Factory())
-    }
+    //override fun registerComponents(context: Context, glide: Glide, registry: Registry) {
+     //   registry.append(StorageReference::class.java, InputStream::class.java,
+      //          FirebaseImageLoader.Factory())
+    //}
 }

@@ -69,9 +69,9 @@ public class FirebaseManagement {
         Profile newProfile;
 
         if(name[0]!=null && name[1]!=null) {
-            newProfile = new Profile(name[0], name[1], email, context.getString(R.string.bioExample));
+            newProfile = new Profile(User.getUid(), name[0], name[1], email, context.getString(R.string.bioExample));
         } else {
-            newProfile = new Profile(context.getString(R.string.name), context.getString(R.string.surname), email, context.getString(R.string.bioExample));
+            newProfile = new Profile("", context.getString(R.string.name), context.getString(R.string.surname), email, context.getString(R.string.bioExample));
         }
 
         Database.getReference().child("users").child(User.getUid()).setValue(newProfile);

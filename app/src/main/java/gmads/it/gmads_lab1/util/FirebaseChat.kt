@@ -9,11 +9,12 @@ import com.google.firebase.database.*
 import com.xwray.groupie.kotlinandroidextensions.Item
 import gmads.it.gmads_lab1.FirebaseManagement
 import gmads.it.gmads_lab1.model.*
+import gmads.it.gmads_lab1.reciclerview.item.PersonItem
 import gmads.it.gmads_lab1.reciclerview.item.TextMessageItem
 import org.w3c.dom.Text
 
 
-object FirestoreUtil {
+object FirebaseChat {
 
     private val firebaseInstance: FirebaseDatabase by lazy { FirebaseDatabase.getInstance() }
 
@@ -23,6 +24,29 @@ object FirestoreUtil {
 
     private val chatChannelsCollectionRef = firebaseInstance.reference.child("chatChannels")
 
+
+    fun addUsersListener(context: Context, onListen: (List<Item>) -> Unit): ValueEventListener {
+        return firebaseInstance.reference.child("users")
+                .addValueEventListener(object : ValueEventListener {
+
+                    override fun onDataChange(dataSnapshot: DataSnapshot?) {
+
+                        val items = mutableListOf<Item>()
+                        dataSnapshot!!.children.mapNotNull {
+                            val user = it.getValue<Profile>(Profile::class.java)
+                            if (user?.id != FirebaseAuth.getInstance().currentUser?.uid)
+                                items.add(PersonItem(user!!, user.id, context))
+                        }
+                        onListen(items)
+                   }
+
+                    override fun onCancelled(p0: DatabaseError?) {
+                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                    }
+
+
+                })
+    }
 
     fun removeListener(registration: ValueEventListener) = FirebaseManagement
             .getDatabase()
@@ -34,12 +58,12 @@ object FirestoreUtil {
 
         currentUserRef!!
                 .child("engagedChatChannels")
-                .child(FirebaseManagement.getUser()!!.uid)
                 .child(otherUserId)
+                .child("channelId")
                 .addListenerForSingleValueEvent(object : ValueEventListener{
 
                     override fun onDataChange(dataSnapshot: DataSnapshot?) {
-                        val chatChannelId = dataSnapshot?.getValue(ChatChannel::class.java)
+                        val chatChannelId = dataSnapshot?.value
                         if (chatChannelId != null) {
                             onComplete(chatChannelId as String)
                             return

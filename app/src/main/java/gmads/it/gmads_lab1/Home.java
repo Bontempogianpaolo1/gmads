@@ -61,7 +61,7 @@ import gmads.it.gmads_lab1.model.Book;
 import gmads.it.gmads_lab1.model.Profile;
 import gmads.it.gmads_lab1.fragments.Home_1;
 
-public class Home extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+public class  Home extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
     private RecyclerView recyclerView;
     private BookAdapter adapter;
     private List<Book> books;
@@ -163,7 +163,9 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
             return true;
         } else if (id == R.id.nav_home) {
             //deve solo chiudersi la navbar
-            drawer.closeDrawers();
+            //drawer.closeDrawers();
+            Intent intent = new Intent(this, ChatList.class);
+            startActivity(intent);
             return true;
         }else if(id == R.id.nav_logout){
             AuthUI.getInstance().signOut(this).addOnCompleteListener(v->{

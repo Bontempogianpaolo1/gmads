@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 
 public class Profile implements Serializable{
+
+    public String id;
     public String name;
     public String surname;
     public String email;
@@ -28,6 +30,14 @@ public class Profile implements Serializable{
 
     public void setRegistrationTokens(List<String> registrationTokens) {
         this.registrationTokens = registrationTokens;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     private List<String> registrationTokens;
@@ -59,7 +69,8 @@ public class Profile implements Serializable{
         this.lng = lng;
     }
 
-    public Profile( String name, String surname, String email, String description) {
+    public Profile( String id, String name, String surname, String email, String description) {
+        this.id = id;
         this.name = name;
         this.surname = surname;
         this.email = email;

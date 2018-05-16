@@ -6,16 +6,23 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.google.firebase.database.ValueEventListener
 import com.xwray.groupie.GroupAdapter
+import com.xwray.groupie.OnItemClickListener
 import com.xwray.groupie.Section
 import com.xwray.groupie.kotlinandroidextensions.Item
 import com.xwray.groupie.kotlinandroidextensions.ViewHolder
+import gmads.it.gmads_lab1.ChatActivity
+import gmads.it.gmads_lab1.R
 import gmads.it.gmads_lab1.constants.AppConstants
+import gmads.it.gmads_lab1.reciclerview.item.PersonItem
+import gmads.it.gmads_lab1.util.FirebaseChat
+import kotlinx.android.synthetic.main.fragment_people.*
 import org.jetbrains.anko.support.v4.startActivity
 
 class PeopleFragment : Fragment() {
 
-    private lateinit var userListenerRegistration: ListenerRegistration
+    private lateinit var userListenerRegistration: ValueEventListener
 
     private var shouldInitRecyclerView = true
 
@@ -25,14 +32,14 @@ class PeopleFragment : Fragment() {
                               savedInstanceState: Bundle?): View? {
 
         userListenerRegistration =
-                FirestoreUtil.addUsersListener(this.activity!!, this::updateRecyclerView)
+                FirebaseChat.addUsersListener(this.activity!!, this::updateRecyclerView)
 
         return inflater.inflate(R.layout.fragment_people, container, false)
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        FirestoreUtil.removeListener(userListenerRegistration)
+        FirebaseChat.removeListener(userListenerRegistration)
         shouldInitRecyclerView = true
     }
 

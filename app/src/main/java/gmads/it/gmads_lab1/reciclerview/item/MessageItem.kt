@@ -11,6 +11,7 @@ import org.jetbrains.anko.backgroundResource
 import org.jetbrains.anko.wrapContent
 import java.text.SimpleDateFormat
 import android.support.v7.widget.RecyclerView
+import kotlinx.android.synthetic.main.item_image_message.*
 
 
 abstract class MessageItem(private val message: Message)
