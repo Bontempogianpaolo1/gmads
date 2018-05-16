@@ -22,6 +22,16 @@ public class Profile implements Serializable{
     private double lat;
     private double lng;
 
+    public List<String> getRegistrationTokens() {
+        return registrationTokens;
+    }
+
+    public void setRegistrationTokens(List<String> registrationTokens) {
+        this.registrationTokens = registrationTokens;
+    }
+
+    private List<String> registrationTokens;
+
     public String getCAP() {
         return CAP;
     }
@@ -61,6 +71,7 @@ public class Profile implements Serializable{
         nrates=0;
         lat = 0;
         lng = 0;
+
     }
 
     public Profile() {
