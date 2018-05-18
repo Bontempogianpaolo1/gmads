@@ -1,16 +1,21 @@
 package gmads.it.gmads_lab1;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.storage.FirebaseStorage;
 
 
 import java.util.Objects;
 
 import gmads.it.gmads_lab1.model.Profile;
+import gmads.it.gmads_lab1.service.MyFirebaseInstanceIDService;
 
 public class FirebaseManagement {
 
@@ -74,7 +79,14 @@ public class FirebaseManagement {
             newProfile = new Profile("", context.getString(R.string.name), context.getString(R.string.surname), email, context.getString(R.string.bioExample));
         }
 
-        Database.getReference().child("users").child(User.getUid()).setValue(newProfile);
+        Database.getReference().child("users").child(User.getUid()).setValue(newProfile).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                MyFirebaseInstanceIDService fInstance = new MyFirebaseInstanceIDService();
+
+                fInstance.addToken(FirebaseInstanceId.getInstance().getToken());
+            }
+        });
 
         /*
         LocationProvider locationProvider = new LocationProvider();

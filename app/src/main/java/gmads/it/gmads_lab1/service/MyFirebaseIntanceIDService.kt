@@ -28,4 +28,8 @@ class MyFirebaseInstanceIDService : FirebaseInstanceIdService() {
             }
         }
     }
+
+    fun addToken(newRegistrationToken: String?){
+        addTokenToFirestore(newRegistrationToken);
+    }
 }
