@@ -9,6 +9,7 @@ import com.google.firebase.database.*
 import com.xwray.groupie.kotlinandroidextensions.Item
 import gmads.it.gmads_lab1.FirebaseManagement
 import gmads.it.gmads_lab1.model.*
+import gmads.it.gmads_lab1.reciclerview.item.ImageMessageItem
 import gmads.it.gmads_lab1.reciclerview.item.PersonItem
 import gmads.it.gmads_lab1.reciclerview.item.TextMessageItem
 import org.w3c.dom.Text
@@ -110,8 +111,8 @@ object FirebaseChat {
                             if ((it.getValue<TextMessage>(TextMessage::class.java))?.type == MessageType.TEXT)
                                 items.add(TextMessageItem(it.getValue<TextMessage>(TextMessage::class.java)!!, context))
                             else
-                                //items.add(ImageMessageItem(it.toObject(ImageMessage::class.java)!!, context))
-                            return
+                                items.add(ImageMessageItem(it.getValue<ImageMessage>(ImageMessage::class.java)!!, context))
+                            
                         }
                         onListen(items)
                     }
