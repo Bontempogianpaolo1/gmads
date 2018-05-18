@@ -446,10 +446,6 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
 
         //String country = vCountry.getText().toString();
 
-
-
-
-
         if(name.isEmpty()){
             vName.setError(getString(R.string.name_require));
             vName.requestFocus();

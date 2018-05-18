@@ -220,7 +220,11 @@ public class ShowProfile extends AppCompatActivity implements AppBarLayout.OnOff
             startActivity(intentMod);
             finish();
             return true;
-        }else if(id == R.id.nav_logout){
+        } else if (id == R.id.nav_chat){
+            Intent intent = new Intent(this, ChatList.class);
+            startActivity(intent);
+            return true;
+        } else if(id == R.id.nav_logout){
             AuthUI.getInstance().signOut(this).addOnCompleteListener(v->{
                 startActivity(new Intent(this,Login.class));
                 finish();
