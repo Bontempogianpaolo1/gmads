@@ -18,11 +18,11 @@ private val context: Context)
         override fun bind(viewHolder: ViewHolder, position: Int) {
         viewHolder.textView_name.text = person.name
         viewHolder.textView_bio.text = person.description
-        /*if (person.profilePicturePath != null)
-        GlideApp.with(context)
-        .load(StorageUtil.pathToReference(person.profilePicturePath))
-        .placeholder(R.drawable.ic_account_circle_black_24dp)
-        .into(viewHolder.imageView_profile_picture)*/
+        if (person.image != null)
+                GlideApp.with(context)
+                .load(person.image)
+                .placeholder(R.drawable.ic_account_circle_black_24dp)
+                .into(viewHolder.imageView_profile_picture)
         }
 
         override fun getLayout() = R.layout.item_person

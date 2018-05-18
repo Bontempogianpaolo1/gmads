@@ -5,7 +5,8 @@ import android.content.Context
 import com.xwray.groupie.kotlinandroidextensions.ViewHolder
 import gmads.it.gmads_lab1.model.ImageMessage
 import gmads.it.gmads_lab1.R
-//import gmads.it.gmads_lab1.glide.GlideApp
+import gmads.it.gmads_lab1.glide.GlideApp
+
 import gmads.it.gmads_lab1.util.StorageUtil
 import kotlinx.android.synthetic.main.item_image_message.*
 
@@ -16,10 +17,10 @@ class ImageMessageItem(val message: ImageMessage,
 
     override fun bind(viewHolder: ViewHolder, position: Int) {
         super.bind(viewHolder, position)
-        /*GlideApp.with(context)
+        GlideApp.with(context)
                 .load(StorageUtil.pathToReference(message.imagePath))
                 .placeholder(R.drawable.ic_image_black_24dp)
-                .into(viewHolder.imageView_message_image)*/
+                .into(viewHolder.imageView_message_image)
     }
 
     override fun getLayout() = R.layout.item_image_message
