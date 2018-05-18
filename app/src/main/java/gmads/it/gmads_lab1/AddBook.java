@@ -207,13 +207,17 @@ public class AddBook extends AppCompatActivity
             Intent intentMod = new Intent(this, Home.class);
             startActivity(intentMod);
             return true;
-        }else if(id == R.id.nav_logout){
+        } else if (id == R.id.nav_chat){
+            Intent intent = new Intent(this, ChatList.class);
+            startActivity(intent);
+            return true;
+        } else if(id == R.id.nav_logout){
             AuthUI.getInstance().signOut(this).addOnCompleteListener(v->{
                 startActivity(new Intent(this,Login.class));
                 finish();
             });
             return true;
-        }else if(id == R.id.nav_mylibrary){
+        } else if(id == R.id.nav_mylibrary){
             startActivity(new Intent(this,MyLibrary.class));
             finish();
 
