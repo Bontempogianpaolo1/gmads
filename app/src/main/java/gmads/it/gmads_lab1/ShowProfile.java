@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -12,7 +11,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.text.method.ScrollingMovementMethod;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,6 +32,8 @@ import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
 import java.io.IOException;
+
+import gmads.it.gmads_lab1.model.Profile;
 
 public class ShowProfile extends AppCompatActivity implements AppBarLayout.OnOffsetChangedListener {
 
@@ -220,7 +220,11 @@ public class ShowProfile extends AppCompatActivity implements AppBarLayout.OnOff
             startActivity(intentMod);
             finish();
             return true;
-        }else if(id == R.id.nav_logout){
+        } else if (id == R.id.nav_chat){
+            Intent intent = new Intent(this, ChatList.class);
+            startActivity(intent);
+            return true;
+        } else if(id == R.id.nav_logout){
             AuthUI.getInstance().signOut(this).addOnCompleteListener(v->{
                 startActivity(new Intent(this,Login.class));
                 finish();

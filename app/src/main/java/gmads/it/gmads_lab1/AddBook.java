@@ -7,7 +7,6 @@ import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -28,7 +27,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
-import com.google.android.gms.auth.api.Auth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -37,6 +35,9 @@ import com.google.firebase.storage.StorageReference;
 import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
+
+import gmads.it.gmads_lab1.model.Profile;
+
 /*
 TODO:mettere collapsing pure qui
  */
@@ -206,13 +207,17 @@ public class AddBook extends AppCompatActivity
             Intent intentMod = new Intent(this, Home.class);
             startActivity(intentMod);
             return true;
-        }else if(id == R.id.nav_logout){
+        } else if (id == R.id.nav_chat){
+            Intent intent = new Intent(this, ChatList.class);
+            startActivity(intent);
+            return true;
+        } else if(id == R.id.nav_logout){
             AuthUI.getInstance().signOut(this).addOnCompleteListener(v->{
                 startActivity(new Intent(this,Login.class));
                 finish();
             });
             return true;
-        }else if(id == R.id.nav_mylibrary){
+        } else if(id == R.id.nav_mylibrary){
             startActivity(new Intent(this,MyLibrary.class));
             finish();
 

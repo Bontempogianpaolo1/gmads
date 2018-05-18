@@ -1,13 +1,10 @@
 
 package gmads.it.gmads_lab1.fragments;
 
-import android.app.Activity;
 import android.content.res.Resources;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,12 +16,9 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
-import gmads.it.gmads_lab1.Book;
+import gmads.it.gmads_lab1.model.Book;
 import gmads.it.gmads_lab1.BookAdapter;
-import gmads.it.gmads_lab1.Home;
 import gmads.it.gmads_lab1.R;
-
-import static com.arlib.floatingsearchview.util.Util.dpToPx;
 
 public class Home_1 extends Fragment {
     RecyclerView recycle;

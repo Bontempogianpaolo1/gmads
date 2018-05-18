@@ -26,7 +26,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -58,6 +57,8 @@ import android.net.Uri;
 import android.widget.Toast;
 
 import org.json.JSONObject;
+
+import gmads.it.gmads_lab1.model.Profile;
 
 import static android.graphics.Color.RED;
 
@@ -298,7 +299,6 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
                         new String[]{Manifest.permission.CAMERA}, MY_CAMERA_REQUEST_CODE);
             } else {
                 Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                takePictureIntent.putExtra("android.intent.extras.CAMERA_FACING", 1);
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             }
         });
@@ -444,10 +444,6 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
         String cap = vCAP.getText().toString();
 
         //String country = vCountry.getText().toString();
-
-
-
-
 
         if(name.isEmpty()){
             vName.setError(getString(R.string.name_require));

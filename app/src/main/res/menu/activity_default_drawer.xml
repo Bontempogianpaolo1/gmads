@@ -7,7 +7,7 @@
         <item
             android:id="@+id/nav_home"
             android:icon="@drawable/ic_home_black_24dp"
-            android:title="Home" />
+            android:title="@string/nav_home" />
         <item
             android:id="@+id/nav_showProfile"
             android:icon="@drawable/ic_account_24dp"
@@ -19,7 +19,11 @@
         <item
             android:id="@+id/nav_mylibrary"
             android:icon="@drawable/ic_add_book_24dp"
-            android:title="My Library" />
+            android:title="@string/nav_library" />
+        <item
+            android:id="@+id/nav_chat"
+            android:icon="@drawable/ic_baseline_chat_24px"
+            android:title="@string/nav_chat" />
 
     </group>
 

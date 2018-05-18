@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.List;
 
-import gmads.it.gmads_lab1.Book;
+import gmads.it.gmads_lab1.model.Book;
 
 public class Library {
 

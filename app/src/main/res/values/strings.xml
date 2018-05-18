@@ -127,5 +127,10 @@
     <string name="bp_descr">Description</string>
     <string name="bp_condiz">Conditions</string>
     <string name="bp_notes">Others</string>
+    
+    <!-- navbar -->
+    <string name="nav_home">Home</string>
+    <string name="nav_library">My Library</string>
+    <string name="nav_chat">Chat</string>
 
 </resources>

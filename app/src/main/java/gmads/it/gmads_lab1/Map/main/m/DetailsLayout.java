@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.CardView;
 import android.transition.Scene;
 import android.transition.TransitionManager;
@@ -19,9 +18,8 @@ import com.bumptech.glide.Glide;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import gmads.it.gmads_lab1.Book;
+import gmads.it.gmads_lab1.model.Book;
 import gmads.it.gmads_lab1.BookPage;
-import gmads.it.gmads_lab1.Login;
 import gmads.it.gmads_lab1.R;
 import gmads.it.gmads_lab1.ShowUserProfile;
 
