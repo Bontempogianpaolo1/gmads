@@ -112,7 +112,7 @@ object FirebaseChat {
                                 items.add(TextMessageItem(it.getValue<TextMessage>(TextMessage::class.java)!!, context))
                             else
                                 items.add(ImageMessageItem(it.getValue<ImageMessage>(ImageMessage::class.java)!!, context))
-                            
+
                         }
                         onListen(items)
                     }
