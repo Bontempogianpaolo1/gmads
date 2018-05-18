@@ -13,7 +13,7 @@ import com.bumptech.glide.Glide;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import gmads.it.gmads_lab1.Book;
+import gmads.it.gmads_lab1.model.Book;
 import gmads.it.gmads_lab1.Map.common.transitions.TransitionUtils;
 import gmads.it.gmads_lab1.R;
 
@@ -39,10 +39,13 @@ class SearchBooksAdapter extends RecyclerView.Adapter<SearchBooksAdapter.Library
     @Override
     public void onBindViewHolder( final LibraryViewHolder holder, final int position) {
         holder.title.setText(BookList.get(position).getTitle());
-        holder.vAuthor.setText(BookList.get(position).getAuthor().get(0));
-        holder.owner.setText(String.valueOf("di: "+BookList.get(position).getNomeproprietario()));
-        Glide.with(context).load(BookList.get(position).getUrlimage()).into( holder.BookPhoto);
-       // holder.BookPhoto.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_menu_camera));
+        holder.owner.setText(String.valueOf(context.getString(R.string.of) +BookList.get(position).getNomeproprietario()));
+        if(BookList.get(position).getUrlimage()!=null && BookList.get(position).getUrlimage().length()!=0){
+            Glide.with(context).load(BookList.get(position).getUrlimage()).into( holder.BookPhoto);
+        }else{
+            Glide.with(context).load(context.getDrawable(R.drawable.default_book)).into(holder.BookPhoto);
+        }
+        //holder.BookPhoto.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_menu_camera));
         holder.root.setOnClickListener(view -> listener.onPlaceClicked(holder.root, TransitionUtils.getRecyclerViewTransitionName(position), position));
         holder.number.setText(String.valueOf(position));
     }
@@ -67,7 +70,6 @@ class SearchBooksAdapter extends RecyclerView.Adapter<SearchBooksAdapter.Library
 
         @BindView(R.id.title) TextView title;
         @BindView(R.id.owner2) TextView owner;
-        @BindView(R.id.Author) TextView vAuthor;
         @BindView(R.id.root) CardView root;
         @BindView(R.id.headerImage) ImageView BookPhoto;
         @BindView(R.id.number) TextView number;

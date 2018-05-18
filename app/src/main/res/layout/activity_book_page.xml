@@ -1,118 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="gmads.it.gmads_lab1.BookPage"
-    android:background="#303030">
+    android:fitsSystemWindows="true"
+    tools:openDrawer="start">
 
-    <android.support.design.widget.AppBarLayout
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+    <include
+        layout="@layout/content_book_page"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:id="@+id/appbarlayout_id">
+        android:layout_height="match_parent" />
 
-        <android.support.design.widget.CollapsingToolbarLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/book_title"
-            app:layout_scrollFlags="exitUntilCollapsed|scroll"
-            app:title="Book Title"
-            app:contentScrim="?attr/colorPrimary"
-            app:expandedTitleMarginStart="48dp"
-            app:expandedTitleMarginEnd="64dp"
-            >
-
-            <android.support.v7.widget.Toolbar
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                app:layout_collapseMode="pin"
-                android:theme="@style/ThemeOverlay.AppCompat.Light">
-            </android.support.v7.widget.Toolbar>
-
-
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="50dp"
-                >
-
-
-                <android.support.v4.view.ViewPager
-                    android:layout_width="100dp"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/loading_shape"
-                    android:id="@+id/book_image"/>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="130dp"
-                    android:orientation="vertical"
-                    android:layout_margin="8dp">
-
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/book_author"
-                        android:text="Book Author"
-                        android:textStyle="bold"
-                        android:textSize="18sp"/>
-
-                    <TextView
-                        android:layout_marginTop="5dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Category"
-                        android:id="@+id/book_category"/>
-
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/book_rating"
-                        android:text="0.0"
-                        android:layout_marginTop="10dp"
-                        android:background="@drawable/rating_background"
-                        android:textColor="#fff"
-                        android:textSize="15sp"
-                        android:textStyle="bold"
-                        android:drawableLeft="@drawable/ic_star_black_24dp"
-                        android:paddingRight="5dp"/>
-
-
-                </LinearLayout>
-
-
-            </LinearLayout>
-
-
-        </android.support.design.widget.CollapsingToolbarLayout>
-
-
-    </android.support.design.widget.AppBarLayout>
-
-
-    <android.support.v4.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        android:padding="16dp">
-
-
-        <TextView
-            android:textColor="#fff"
-            android:text="Bbok Description"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/aa_description"/>
-
-
-
-    </android.support.v4.widget.NestedScrollView>
-
-
-</android.support.design.widget.CoordinatorLayout>
+</android.support.v4.widget.DrawerLayout>

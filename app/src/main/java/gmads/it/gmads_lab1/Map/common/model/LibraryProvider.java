@@ -9,7 +9,8 @@ import com.google.android.gms.maps.model.LatLngBounds;
 
 import java.util.List;
 
-import gmads.it.gmads_lab1.Book;
+import gmads.it.gmads_lab1.model.Book;
+import gmads.it.gmads_lab1.FirebaseManagement;
 import gmads.it.gmads_lab1.SearchResultsJsonParser;
 
 public class LibraryProvider {
@@ -59,7 +60,13 @@ public class LibraryProvider {
             });*/
             SearchResultsJsonParser search= new SearchResultsJsonParser();
             try {
-                mLibrary.setBookList(search.parseResults(algoIndex.searchSync(new Query(query).setAroundLatLng(new AbstractQuery.LatLng(lat,lng)).setGetRankingInfo(true))));
+                List<Book> books = search.parseResults(algoIndex.searchSync(new Query(query).setAroundLatLng(new AbstractQuery.LatLng(lat,lng)).setGetRankingInfo(true)));
+                for(int i = 0; i<books.size(); i++){
+                    if(books.get(i).getOwner().equals(FirebaseManagement.getUser().getUid())){
+                        books.remove(i);
+                    }
+                }
+                mLibrary.setBookList(books);
             }catch (Exception e){
                 e.printStackTrace();
             }

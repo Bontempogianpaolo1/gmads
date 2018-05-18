@@ -1,4 +1,4 @@
-package gmads.it.gmads_lab1;
+package gmads.it.gmads_lab1.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 
 public class Profile implements Serializable{
+
+    public String id;
     public String name;
     public String surname;
     public String email;
@@ -21,6 +23,24 @@ public class Profile implements Serializable{
     private String CAP; //"CAP, ITA"
     private double lat;
     private double lng;
+
+    public List<String> getRegistrationTokens() {
+        return registrationTokens;
+    }
+
+    public void setRegistrationTokens(List<String> registrationTokens) {
+        this.registrationTokens = registrationTokens;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    private List<String> registrationTokens;
 
     public String getCAP() {
         return CAP;
@@ -49,7 +69,8 @@ public class Profile implements Serializable{
         this.lng = lng;
     }
 
-    public Profile( String name, String surname, String email, String description) {
+    public Profile( String id, String name, String surname, String email, String description) {
+        this.id = id;
         this.name = name;
         this.surname = surname;
         this.email = email;
@@ -61,6 +82,7 @@ public class Profile implements Serializable{
         nrates=0;
         lat = 0;
         lng = 0;
+
     }
 
     public Profile() {

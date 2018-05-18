@@ -23,6 +23,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -30,7 +31,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.support.design.widget.TabLayout;
 import android.widget.TextView;
 
 
@@ -55,12 +55,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.prefs.Preferences;
 
 import gmads.it.gmads_lab1.Map.main.MapActivity;
+import gmads.it.gmads_lab1.model.Book;
+import gmads.it.gmads_lab1.model.Profile;
 import gmads.it.gmads_lab1.fragments.Home_1;
 
-public class Home extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+public class  Home extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
     private RecyclerView recyclerView;
     private BookAdapter adapter;
     private List<Book> books;
@@ -78,14 +79,19 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     private Bitmap myProfileBitImage;
     View headerView;
     Home_1 tab1= new Home_1();
+    Tools tools;
+    ProgressBar progressbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        tools = new Tools();
+
         setSupportActionBar(toolbar);
         setNavViews();
+
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
@@ -108,6 +114,8 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         vpadapter.addFragment(tab1);
         pager.setAdapter(vpadapter);
 
+        progressbar = findViewById(R.id.progress_bar);
+
 //
         //era per mettere foto libri nell appbar, ma l'abbiamo messa come sfondo per ora
         try {
@@ -115,10 +123,20 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         } catch (Exception e) {
             e.printStackTrace();
         }
-        algoClient = new Client("L6B7L7WXZW", "9d2de9e724fa9289953e6b2d5ec978a5");
-        algoIndex = algoClient.getIndex("BookIndex");
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
 
         getUserInfo();
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
 
     }
 
@@ -145,7 +163,9 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
             return true;
         } else if (id == R.id.nav_home) {
             //deve solo chiudersi la navbar
-            drawer.closeDrawers();
+            //drawer.closeDrawers();
+            Intent intent = new Intent(this, ChatList.class);
+            startActivity(intent);
             return true;
         }else if(id == R.id.nav_logout){
             AuthUI.getInstance().signOut(this).addOnCompleteListener(v->{
@@ -190,35 +210,37 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         searchview.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit( String text ) {
-                query=text;
-                Query query = new Query(text)
-                        .setAroundLatLng(new AbstractQuery.LatLng(profile.getLat(), profile.getLng())).setGetRankingInfo(true);
-
-               algoIndex.searchAsync(query, new CompletionHandler() {
-                   @Override
-                   public void requestCompleted( JSONObject jsonObject, AlgoliaException e ) {
-                       if(e==null){
-                           InputMethodManager imm = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                           assert imm != null;
-                           imm.hideSoftInputFromWindow(Objects.requireNonNull(getCurrentFocus()).getWindowToken(), 0);
-                           SearchResultsJsonParser search= new SearchResultsJsonParser();
-                           Log.d("lista",jsonObject.toString());
-                           books= search.parseResults(jsonObject);
-                           for(int i = 0; i<books.size(); i++){
-                               if(books.get(i).getOwner().equals(FirebaseManagement.getUser().getUid())){
-                                   books.remove(i);
-                               }
-                           }
-                           tab1.getAdapter().setbooks(books);
-                       }
-                   }
-               });
-                return true;
+                return false;
             }
 
             @Override
             public boolean onQueryTextChange( String newText ) {
-                return false;
+                progressbar.setVisibility(View.VISIBLE);
+                books.clear();
+                tab1.getAdapter().setbooks(books);
+
+                query = newText;
+                Query query = new Query(newText)
+                        .setAroundLatLng(new AbstractQuery.LatLng(profile.getLat(), profile.getLng())).setGetRankingInfo(true);
+
+                algoIndex.searchAsync(query, new CompletionHandler() {
+                    @Override
+                    public void requestCompleted( JSONObject jsonObject, AlgoliaException e ) {
+                        if(e==null){
+                            SearchResultsJsonParser search= new SearchResultsJsonParser();
+                            Log.d("lista",jsonObject.toString());
+                            books= search.parseResults(jsonObject);
+                            for(int i = 0; i<books.size(); i++){
+                                if(books.get(i).getOwner().equals(FirebaseManagement.getUser().getUid())){
+                                    books.remove(i);
+                                }
+                            }
+                            tab1.getAdapter().setbooks(books);
+                            progressbar.setVisibility(View.GONE);
+                        }
+                    }
+                });
+                return true;
             }
         });
         return true;
@@ -303,7 +325,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     }
 
     private void getUserInfo(){
-        //progressbar.setVisibility(View.VISIBLE);
+        progressbar.setVisibility(View.VISIBLE);
         //avatar.setVisibility(View.GONE);
         FirebaseManagement.getDatabase().getReference().child("users").child(FirebaseManagement.getUser().getUid())
                 .addListenerForSingleValueEvent(new ValueEventListener() {
@@ -364,29 +386,43 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     }
 
     private void getStartingHomeBooks(){
-        Query query = new Query()
-                .setAroundLatLng(new AbstractQuery.LatLng(profile.getLat(), profile.getLng())).setGetRankingInfo(true);
-                    //.setAroundLatLngViaIP(true).setGetRankingInfo(true);
-        algoIndex.searchAsync(query, new CompletionHandler() {
-            @Override
-            public void requestCompleted( JSONObject jsonObject, AlgoliaException e ) {
-                if(e==null){
-                    InputMethodManager imm = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    assert imm != null;
-                    imm.hideSoftInputFromWindow(Objects.requireNonNull(getCurrentFocus()).getWindowToken(), 0);
-                    SearchResultsJsonParser search= new SearchResultsJsonParser();
-                    Log.d("lista",jsonObject.toString());
-                    books= search.parseResults(jsonObject);
-                    for(int i = 0; i<books.size(); i++){
-                        if(books.get(i).getOwner().equals(FirebaseManagement.getUser().getUid())){
-                            books.remove(i);
+
+        progressbar.setVisibility(View.VISIBLE);
+        if(tools.isOnline(getApplicationContext())) {
+
+            algoClient = new Client("L6B7L7WXZW", "9d2de9e724fa9289953e6b2d5ec978a5");
+            algoIndex = algoClient.getIndex("BookIndex");
+
+            Query query = new Query()
+                    .setAroundLatLng(new AbstractQuery.LatLng(profile.getLat(), profile.getLng())).setGetRankingInfo(true);
+            //.setAroundLatLngViaIP(true).setGetRankingInfo(true);
+            algoIndex.searchAsync(query, new CompletionHandler() {
+                @Override
+                public void requestCompleted(JSONObject jsonObject, AlgoliaException e) {
+                    if (e == null) {
+                        InputMethodManager imm = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                        assert imm != null;
+                        imm.hideSoftInputFromWindow(Objects.requireNonNull(getCurrentFocus()).getWindowToken(), 0);
+                        SearchResultsJsonParser search = new SearchResultsJsonParser();
+                        Log.d("lista", jsonObject.toString());
+                        books = search.parseResults(jsonObject);
+                        for (int i = 0; i < books.size(); i++) {
+                            if (books.get(i).getOwner().equals(FirebaseManagement.getUser().getUid())) {
+                                books.remove(i);
+                            }
                         }
+                        tab1.getAdapter().setbooks(books);
+                        tab1.getAdapter().notifyDataSetChanged();
+                        progressbar.setVisibility(View.GONE);
                     }
-                    tab1.getAdapter().setbooks(books);
-                    tab1.getAdapter().notifyDataSetChanged();
                 }
-            }
-        });
+            });
+        } else {
+            android.app.AlertDialog.Builder ad = tools.showPopup(this, getString(R.string.noInternet), "", "");
+            ad.setPositiveButton(getString(R.string.retry), (vi, w) -> onStart());
+            ad.setCancelable(false);
+            ad.show();
+        }
     }
 
 }

@@ -22,7 +22,8 @@
                 android:layout_height="@dimen/album_cover_height"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:clickable="true"
-                android:scaleType="fitXY" />
+                android:scaleType="fitXY"
+                android:src="@drawable/default_book" />
 
             <TextView
                 android:id="@+id/title"
@@ -59,7 +60,7 @@
                 android:id="@+id/distance"
                 android:layout_width="80dp"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
+                android:layout_alignParentEnd="false"
                 android:layout_below="@id/owner"
                 android:paddingBottom="@dimen/songs_count_padding_bottom"
                 android:paddingLeft="@dimen/album_title_padding"

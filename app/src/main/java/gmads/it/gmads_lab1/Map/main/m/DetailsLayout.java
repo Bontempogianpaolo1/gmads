@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.CardView;
 import android.transition.Scene;
 import android.transition.TransitionManager;
@@ -19,10 +18,10 @@ import com.bumptech.glide.Glide;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import gmads.it.gmads_lab1.Book;
+import gmads.it.gmads_lab1.model.Book;
 import gmads.it.gmads_lab1.BookPage;
-import gmads.it.gmads_lab1.Login;
 import gmads.it.gmads_lab1.R;
+import gmads.it.gmads_lab1.ShowUserProfile;
 
 
 public class DetailsLayout extends CoordinatorLayout {
@@ -32,6 +31,8 @@ public class DetailsLayout extends CoordinatorLayout {
     @BindView(R.id.title) TextView textViewTitle;
     @BindView(R.id.description) TextView textViewDescription;
     @BindView(R.id.tobook) TextView toBook;
+    @BindView(R.id.toprofile) TextView toProfile;
+
     String bid;
     public DetailsLayout(final Context context) {
         this(context, null);
@@ -56,6 +57,15 @@ public class DetailsLayout extends CoordinatorLayout {
             Intent i=new Intent(getContext(), BookPage.class);
             i.putExtra("book_id",bid);
             getContext().startActivity(i);
+        });
+
+        toProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getContext(), ShowUserProfile.class);
+                i.putExtra("userId", place.getOwner());
+                getContext().startActivity(i);
+            }
         });
     }
 

@@ -90,7 +90,8 @@
                 android:padding="@dimen/default_layout_margin"
                 android:text="Show Profile"
                 android:textAppearance="@style/RobotoBold"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                android:clickable="true" />
 
             <ImageView
                 android:layout_width="22dp"

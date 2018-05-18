@@ -22,9 +22,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -39,6 +41,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
@@ -53,6 +58,8 @@ import android.widget.Toast;
 
 import org.json.JSONObject;
 
+import gmads.it.gmads_lab1.model.Profile;
+
 import static android.graphics.Color.RED;
 
 public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOffsetChangedListener {
@@ -61,8 +68,13 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
     private static final float PERCENTAGE_TO_HIDE_TITLE_DETAILS = 0.3f;
     private static final int ALPHA_ANIMATIONS_DURATION = 200;
 
+    static final int MY_CAMERA_REQUEST_CODE = 100;
+    static final int REQUEST_IMAGE_CAPTURE = 1888;
+    static final int REQUEST_IMAGE_LIBRARY = 1889;
+
     private boolean mIsTheTitleVisible = false;
     private boolean mIsTheTitleContainerVisible = true;
+
     private AppBarLayout appbar;
     private CollapsingToolbarLayout collapsing;
     private ImageView coverImage;
@@ -72,17 +84,20 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
     private TextView textviewTitle;
     //private SimpleDraweeView avatar;
     private ImageView avatar;
+
+    AlphaAnimation inAnimation;
+    AlphaAnimation outAnimation;
+
+    FrameLayout progressBarHolder;
+
     private Profile profile;
-    static final int MY_CAMERA_REQUEST_CODE = 100;
-    static final int REQUEST_IMAGE_CAPTURE = 1888;
-    static final int REQUEST_IMAGE_LIBRARY = 1889;
-    private ProgressBar progressbar;
     Bitmap newBitMapProfileImage; //temp for new image
     private Uri uriProfileImage;
     private String profileImageUrl;
     boolean imagechanged=false;
     File tempFile;
     ContextWrapper cw;
+    Tools tools;
     File directory;
     String path;
     LinearLayout ll;
@@ -92,7 +107,10 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
     TextView vEmail;
     TextView vBio;
     TextView vCAP;
-    TextView vCountry;
+    Spinner vCountry;
+    String country = null;
+    String country_l;
+    ArrayAdapter<String> adapter;
 
 
     private void findViews() {
@@ -106,6 +124,7 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
         //avatar = (SimpleDraweeView) findViewById(R.id.avatar);
         avatar = findViewById(R.id.avatar);
         avatar.setImageDrawable(getDrawable(R.drawable.default_picture));
+        progressBarHolder = (FrameLayout) findViewById(R.id.progressBarHolder);
 
         //progressbar = findViewById(R.id.progressBar);
         l2= findViewById(R.id.linearlayout);
@@ -115,6 +134,18 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
         vEmail = findViewById(R.id.email);
         vBio = findViewById(R.id.bio);
         vCountry = findViewById(R.id.country);
+
+        vCountry.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+               @Override
+               public void onItemSelected(AdapterView<?> arg0, View arg1,
+                                          int position, long id) {
+                   country = vCountry.getSelectedItem().toString();
+               }
+               @Override
+               public void onNothingSelected(AdapterView<?> arg0) {
+               }
+           });
+
         vCAP = findViewById(R.id.cap);
     }
 
@@ -123,13 +154,36 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
         super.onCreate(savedInstanceState);
         //Fresco.initialize(this);
         setContentView(R.layout.activity_edit_profile);
+
+        Locale[] locale = Locale.getAvailableLocales();
+        ArrayList<String> countries = new ArrayList<String>();
+        String countryt;
+        for( Locale loc : locale ){
+            countryt = loc.getDisplayCountry();
+            if( countryt.length() > 0 && !countries.contains(countryt) ) {
+                countries.add(countryt);
+            }
+        }
+        country_l = getResources().getString(R.string.choose_country);
+        countries.add(country_l);
+        Collections.sort(countries, String.CASE_INSENSITIVE_ORDER);
+
         findViews();
+        adapter = new ArrayAdapter<String>(this, R.layout.spinner_layout, countries);
+        adapter.setDropDownViewResource(R.layout.spinner_layout);
+        vCountry.setAdapter(adapter);
+        int spinnerPosition = adapter.getPosition(country_l);
+        vCountry.setSelection(spinnerPosition);
+
+
         setupUI(findViewById(R.id.linearlayout));
         toolbar.setTitle("");
         appbar.addOnOffsetChangedListener(this);
         textviewTitle.setText(getString(R.string.editProfile));
         setSupportActionBar(toolbar);
         startAlphaAnimation(textviewTitle, 0, View.INVISIBLE);
+
+        tools = new Tools();
 
         //set avatar and cover
         avatar.setImageResource(R.drawable.default_picture);
@@ -150,6 +204,12 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
         avatar.setOnClickListener(this::onClickImage);
         getUserInfo();
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
     //save data on click save
     private void onSaveClick() {
 
@@ -168,11 +228,31 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
             vEmail.requestFocus();
             return;
         }
-        Tools t = new Tools();
-        //set popup
-        android.app.AlertDialog.Builder ad = t.showPopup(this, getString(R.string.saveQuestion), "", getString(R.string.cancel));
-        ad.setPositiveButton("Ok", (vi, w) -> updateUserInfo());
-        ad.show();
+
+        if(vCAP.getText().toString().isEmpty()){
+            vCAP.setError(getString(R.string.cap_required));
+            vCAP.requestFocus();
+            return;
+        }
+
+        if(country == null||country.isEmpty() || vCountry.getSelectedItem().toString().equals(country_l) ){
+            Toast.makeText(getApplicationContext(), getString(R.string.country_required), Toast.LENGTH_LONG).show();
+            vCountry.requestFocus();
+            return;
+        }
+
+        if(tools.isOnline(getApplicationContext())) {
+            //set popup
+            android.app.AlertDialog.Builder ad = tools.showPopup(this, getString(R.string.saveQuestion), "", getString(R.string.cancel));
+            ad.setPositiveButton("Ok", (vi, w) -> updateUserInfo());
+            ad.show();
+        } else {
+            android.app.AlertDialog.Builder ad = tools.showPopup(this, getString(R.string.noInternet), "", "");
+            ad.setNegativeButton(getString(R.string.cancel), (vi, w) -> onStart());
+            ad.setPositiveButton(getString(R.string.retry), (vi, w) -> onSaveClick());
+            ad.setCancelable(false);
+            ad.show();
+        }
     }
 
     @Override
@@ -362,7 +442,12 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
         String email = vEmail.getText().toString();
         String bio = vBio.getText().toString();
         String cap = vCAP.getText().toString();
-        String country = vCountry.getText().toString();
+
+        //String country = vCountry.getText().toString();
+
+
+
+
 
         if(name.isEmpty()){
             vName.setError(getString(R.string.name_require));
@@ -384,11 +469,14 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
             vCAP.requestFocus();
             return;
         }
-        if(country.isEmpty()){
-            vCountry.setError("@string/country_required");
+        if(country.isEmpty() || vCountry.getSelectedItem().toString().equals(country_l)){
+            //vCountry.setError("@string/country_required");
+            Toast.makeText(getApplicationContext(), getString(R.string.country_required), Toast.LENGTH_LONG).show();
             vCountry.requestFocus();
             return;
         }
+
+        progressBarHolder.setVisibility(View.VISIBLE);
 
         StorageReference profileImageRef = FirebaseManagement.getStorage().getReference()
                 .child("users")
@@ -405,7 +493,9 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
                         profile.setEmail(email);
                         profile.setDescription(bio);
                         profile.setImage(profileImageUrl);
+                        profile.setCAP(cap+", "+country);
                         FirebaseManagement.updateUserData(profile);
+
                         startActivity(pickIntent);
                         //progressbar.setVisibility(View.GONE);
                     });
@@ -424,74 +514,98 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
 
             startActivity(pickIntent);
         }
+
     }
 
     private void getUserInfo(){
         //progressbar.setVisibility(View.VISIBLE);
         //avatar.setVisibility(View.GONE);
-        FirebaseManagement.getDatabase().getReference().child("users").child(FirebaseManagement.getUser().getUid())
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        profile = dataSnapshot.getValue(Profile.class);
-                        if(profile != null) {
-                            vName.setText(profile.getName());
-                            vSurname.setText(profile.getSurname());
-                            vEmail.setText(profile.getEmail());
-                            vBio.setText(profile.getDescription());
-                            //controllo che ci sia il CAP
-                            if(profile.getCAP().length()!=0){
-                                String[] tmp = profile.getCAP().split(", ");
-                                vCAP.setText(tmp[0]);
-                                vCountry.setText(tmp[1]);
-                            }
 
-                            if (profile.getImage() != null) {
-                                try {
-                                    File localFile = File.createTempFile("images", "jpg");
+        if(tools.isOnline(getApplicationContext())) {
+            FirebaseManagement.getDatabase().getReference().child("users").child(FirebaseManagement.getUser().getUid())
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            profile = dataSnapshot.getValue(Profile.class);
+                            if (profile != null) {
+                                vName.setText(profile.getName());
+                                vSurname.setText(profile.getSurname());
+                                vEmail.setText(profile.getEmail());
+                                vBio.setText(profile.getDescription());
+                                //controllo che ci sia il CAP
+                                if (profile.getCAP().length() != 0) {
+                                    String[] tmp = profile.getCAP().split(", ");
+                                    vCAP.setText(tmp[0]);
+                                    int pos = adapter.getPosition(tmp[1]);
+                                    vCountry.setSelection(pos);
+                                }
 
-                                    StorageReference profileImageRef = FirebaseManagement.getStorage().getReference()
-                                            .child("users")
-                                            .child(FirebaseManagement.getUser().getUid())
-                                            .child("profileimage.jpg");
+                                if(vCAP.getText().toString().isEmpty()){
+                                    vCAP.setError(getString(R.string.cap_required));
+                                    vCAP.requestFocus();
+                                    return;
+                                }
 
-                                    profileImageRef.getFile(localFile)
-                                            .addOnSuccessListener(taskSnapshot -> {
-                                                //progressbar.setVisibility(View.GONE);
-                                                //avatar.setVisibility(View.VISIBLE);
-                                                avatar.setImageBitmap(BitmapFactory.decodeFile(localFile.getPath()));
+                                if(country != null) {
+                                    if (country.isEmpty() || vCountry.getSelectedItem().toString().equals(country_l)) {
+                                        Toast.makeText(getApplicationContext(), getString(R.string.country_required), Toast.LENGTH_LONG).show();
+                                        vCountry.requestFocus();
+                                        return;
+                                    }
+                                }
 
-                                            }).addOnFailureListener(e -> {
-                                        //progressbar.setVisibility(View.GONE);
-                                        //avatar.setVisibility(View.VISIBLE);
-                                    });
-                                } catch (IOException e) {
-                                    e.printStackTrace();
+                                if (profile.getImage() != null) {
+                                    try {
+                                        File localFile = File.createTempFile("images", "jpg");
+
+                                        StorageReference profileImageRef = FirebaseManagement.getStorage().getReference()
+                                                .child("users")
+                                                .child(FirebaseManagement.getUser().getUid())
+                                                .child("profileimage.jpg");
+
+                                        profileImageRef.getFile(localFile)
+                                                .addOnSuccessListener(taskSnapshot -> {
+                                                    //progressbar.setVisibility(View.GONE);
+                                                    //avatar.setVisibility(View.VISIBLE);
+                                                    avatar.setImageBitmap(BitmapFactory.decodeFile(localFile.getPath()));
+
+                                                }).addOnFailureListener(e -> {
+                                            //progressbar.setVisibility(View.GONE);
+                                            //avatar.setVisibility(View.VISIBLE);
+                                        });
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                } else {
+                                    // progressbar.setVisibility(View.GONE);
+                                    //avatar.setVisibility(View.VISIBLE);
                                 }
                             } else {
-                               // progressbar.setVisibility(View.GONE);
+                                vName.setHint(getString(R.string.name));
+                                vSurname.setHint(getString(R.string.surname));
+                                vEmail.setHint(getString(R.string.email));
+                                vBio.setHint(getString(R.string.bioEditP));
+                                //progressbar.setVisibility(View.GONE);
                                 //avatar.setVisibility(View.VISIBLE);
                             }
                         }
-                        else{
-                            vName.setHint(getString(R.string.name));
-                            vSurname.setHint(getString(R.string.surname));
-                            vEmail.setHint(getString(R.string.email));
-                            vBio.setHint(getString(R.string.bioEditP));
-                            //progressbar.setVisibility(View.GONE);
-                            //avatar.setVisibility(View.VISIBLE);
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            // Getting Post failed, log a message
+                            Log.w("loadPost:onCancelled", databaseError.toException());
+                            // [START_EXCLUDE]
+                            Toast.makeText(EditProfile.this, R.string.Failed_to_load_profile,
+                                    Toast.LENGTH_SHORT).show();
+                            // [END_EXCLUDE]
                         }
-                    }
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        // Getting Post failed, log a message
-                        Log.w("loadPost:onCancelled", databaseError.toException());
-                        // [START_EXCLUDE]
-                        Toast.makeText(EditProfile.this, R.string.Failed_to_load_profile,
-                                Toast.LENGTH_SHORT).show();
-                        // [END_EXCLUDE]
-                    }
-                });
+                    });
+        } else {
+            android.app.AlertDialog.Builder ad = tools.showPopup(this, getString(R.string.noInternet), "", "");
+            ad.setPositiveButton(getString(R.string.retry), (vi, w) -> onStart());
+            ad.setCancelable(false);
+            ad.show();
+        }
     }
 
     private void getCoords(String CAP) {//CAP = cap, country
