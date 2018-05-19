@@ -135,4 +135,6 @@
     <string name="nav_library">My Library</string>
     <string name="nav_chat">Chat</string>
 
+    <string name = "message">Message</string>
+
 </resources>

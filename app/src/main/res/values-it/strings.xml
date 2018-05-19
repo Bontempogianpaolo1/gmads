@@ -101,5 +101,6 @@
     <string name="nav_library">La mia Libreria</string>
     <string name="nav_chat">Chat</string>
 
+    <string name = "message">Messaggio</string>
     <!--end-->
 </resources>
