@@ -91,7 +91,7 @@
         <!--FCM-->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
-            android:resource="@drawable/ic_account_24dp" />
+            android:resource="@drawable/ic_add_book_24dp" />
         <service android:name=".service.MyFirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
