@@ -85,4 +85,10 @@ public class Login extends AppCompatActivity {
 
         }
     }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+        overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out);
+    }
 }
