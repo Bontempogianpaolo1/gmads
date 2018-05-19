@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
 
-        <android.support.v7.widget.Toolbar
+        <android.support.v7.widget.Toolbar android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
@@ -26,7 +26,7 @@
         android:id="@+id/recycler_view_messages"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:windowSoftInputMode="adjustResize"
+        android:windowSoftInputMode="adjustPan"
         android:layout_above="@id/relativeLayout_message"
         android:layout_below="@id/toolbarChat" />
 

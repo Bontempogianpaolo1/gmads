@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.Toolbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.ValueEventListener
 import com.xwray.groupie.GroupAdapter
@@ -36,7 +37,7 @@ class ChatActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
-
+        setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = intent.getStringExtra(AppConstants.USER_NAME)
 
