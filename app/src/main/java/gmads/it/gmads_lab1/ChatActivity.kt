@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.inputmethodservice.Keyboard
 import android.os.Bundle
 import android.provider.MediaStore
 import android.support.v4.view.GravityCompat
@@ -11,6 +12,7 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
 import android.view.MenuItem
+import android.view.MotionEvent
 import android.view.View
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -107,6 +109,7 @@ class ChatActivity : AppCompatActivity() {
                     this.add(messagesSection)
                 }
             }
+            recycler_view_messages.scrollToPosition(recycler_view_messages.adapter.itemCount - 1)
             shouldInitRecyclerView = false
         }
 

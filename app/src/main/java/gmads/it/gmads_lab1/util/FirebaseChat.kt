@@ -25,7 +25,6 @@ object FirebaseChat {
 
     private val chatChannelsCollectionRef = firebaseInstance.reference.child("chatChannels")
 
-
     fun addUsersListener(context: Context, onListen: (List<Item>) -> Unit): ValueEventListener {
         return firebaseInstance.reference.child("users")
                 .addValueEventListener(object : ValueEventListener {
@@ -44,8 +43,6 @@ object FirebaseChat {
                     override fun onCancelled(p0: DatabaseError?) {
                         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                     }
-
-
                 })
     }
 
@@ -112,7 +109,6 @@ object FirebaseChat {
                                 items.add(TextMessageItem(it.getValue<TextMessage>(TextMessage::class.java)!!, context))
                             else
                                 items.add(ImageMessageItem(it.getValue<ImageMessage>(ImageMessage::class.java)!!, context))
-
                         }
                         onListen(items)
                     }
