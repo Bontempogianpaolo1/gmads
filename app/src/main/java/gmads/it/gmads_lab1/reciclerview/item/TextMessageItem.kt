@@ -9,6 +9,9 @@ import kotlinx.android.synthetic.main.item_text_message.*
 class TextMessageItem(val message: TextMessage,
                       val context: Context)
     : MessageItem(message) {
+    /*
+       Qua si lega il messaggio in generale da cui derivano le altre
+     */
     override fun bind(viewHolder: ViewHolder, position: Int) {
         viewHolder.textView_message_text.text = message.text
         super.bind(viewHolder, position)

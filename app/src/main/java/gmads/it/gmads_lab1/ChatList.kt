@@ -16,7 +16,9 @@ class ChatList : AppCompatActivity() {
         setContentView(R.layout.chat_list)
 
         replaceFragment(PeopleFragment())
-
+/*
+classe per sostituire i fragment
+ */
         navigation.setOnNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.navigation_people -> {
