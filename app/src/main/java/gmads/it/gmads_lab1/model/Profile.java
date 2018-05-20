@@ -1,5 +1,7 @@
 package gmads.it.gmads_lab1.model;
 
+import com.google.firebase.iid.FirebaseInstanceId;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,6 +21,7 @@ public class Profile implements Serializable{
     private HashMap<String, String> myBooks = new HashMap<>();
     private List<String> publishedBooks= new ArrayList<>();
     private List<String> takenBooks= new ArrayList<>();
+    private List<String> registrationTokens = new ArrayList<>();
     private int nrates;
     private String CAP; //"CAP, ITA"
     private double lat;
@@ -39,8 +42,6 @@ public class Profile implements Serializable{
     public void setId(String id) {
         this.id = id;
     }
-
-    private List<String> registrationTokens;
 
     public String getCAP() {
         return CAP;
@@ -82,6 +83,7 @@ public class Profile implements Serializable{
         nrates=0;
         lat = 0;
         lng = 0;
+        this.registrationTokens.add(FirebaseInstanceId.getInstance().getToken());
 
     }
 

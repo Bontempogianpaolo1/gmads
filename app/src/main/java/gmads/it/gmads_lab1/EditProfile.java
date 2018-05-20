@@ -33,6 +33,9 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
@@ -111,7 +114,7 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
     String country = null;
     String country_l;
     ArrayAdapter<String> adapter;
-
+    Intent pickIntent;
 
     private void findViews() {
         appbar = (AppBarLayout) findViewById(R.id.appbar);
@@ -154,7 +157,7 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
         super.onCreate(savedInstanceState);
         //Fresco.initialize(this);
         setContentView(R.layout.activity_edit_profile);
-
+        pickIntent = new Intent(this, ShowProfile.class);
         Locale[] locale = Locale.getAvailableLocales();
         ArrayList<String> countries = new ArrayList<String>();
         String countryt;
@@ -421,6 +424,11 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
         int id = item.getItemId();
         switch(id) {
             case android.R.id.home:
+                if(vCAP.getText().toString().isEmpty()){
+                    vCAP.setError(getString(R.string.cap_required));
+                    vCAP.requestFocus();
+                    return false;
+                }
                 finish();
                 overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out);
                 return true;
@@ -433,6 +441,11 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        if(vCAP.getText().toString().isEmpty()){
+            vCAP.setError(getString(R.string.cap_required));
+            vCAP.requestFocus();
+            return;
+        }
         overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out);
     }
 
@@ -478,7 +491,6 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
                 .child("users")
                 .child(FirebaseManagement.getUser().getUid())
                 .child("profileimage.jpg");
-        Intent pickIntent = new Intent(this, ShowProfile.class);
         if(uriProfileImage != null){
 
             profileImageRef.putFile(uriProfileImage)
@@ -507,8 +519,6 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
             profile.setCAP(s);
             //piglio coordinate
             getCoords(s);
-
-            startActivity(pickIntent);
         }
 
     }
@@ -609,7 +619,7 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
         RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
         // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                response -> {//Display the first 500 characters of the response string.
+                ( String response ) -> {//Display the first 500 characters of the response string.
 
                     JSONObject resultObject;
                     String formatted_address = CAP;
@@ -628,7 +638,14 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
                     profile.setCAP(formatted_address);
                     profile.setLat(lat);
                     profile.setLng(lng);
-                    FirebaseManagement.updateUserData(profile);
+
+                    Objects.requireNonNull(FirebaseManagement.updateUserData(profile).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete( @NonNull Task<Void> task ) {
+
+                            startActivity(pickIntent);
+                        }
+                    }));
                 }, error -> Log.d("That didn't work!","Error: "+error));
         // Add the request to the RequestQueue.
         queue.add(stringRequest);

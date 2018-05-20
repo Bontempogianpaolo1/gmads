@@ -18,6 +18,7 @@ private val context: Context)
         override fun bind(viewHolder: ViewHolder, position: Int) {
         viewHolder.textView_name.text = person.name
         viewHolder.textView_bio.text = person.description
+
         if (person.image != null)
                 GlideApp.with(context)
                 .load(person.image)

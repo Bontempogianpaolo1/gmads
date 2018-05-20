@@ -21,13 +21,16 @@ abstract class MessageItem(private val message: Message)
         setTimeText(viewHolder)
         setMessageRootGravity(viewHolder)
     }
-
+//salvataggio ora
     private fun setTimeText(viewHolder: ViewHolder) {
         val dateFormat = SimpleDateFormat
                 .getDateTimeInstance(SimpleDateFormat.SHORT, SimpleDateFormat.SHORT)
         viewHolder.textView_message_time.text = dateFormat.format(message.time)
     }
-
+/*
+in base a chi è mittente e destinatario si mette il colore e la poszione del mesaggio
+TODO guardare qua in caso si volesse cammbiare lo style dei messaggi
+ */
     private fun setMessageRootGravity(viewHolder: ViewHolder) {
         if (message.senderId == FirebaseAuth.getInstance().currentUser?.uid) {
             viewHolder.message_root.apply {

@@ -1,16 +1,21 @@
 package gmads.it.gmads_lab1;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.storage.FirebaseStorage;
 
 
 import java.util.Objects;
 
 import gmads.it.gmads_lab1.model.Profile;
+import gmads.it.gmads_lab1.service.MyFirebaseInstanceIDService;
 
 public class FirebaseManagement {
 
@@ -57,24 +62,28 @@ public class FirebaseManagement {
         Storage = FirebaseStorage.getInstance();
     }
 
-    public static void updateUserData(Profile profile){
+    public static Task<Void> updateUserData( Profile profile){
         if(User != null) {
-            Database.getReference().child("users").child(User.getUid()).setValue(profile);
+            return Database.getReference().child("users").child(User.getUid()).setValue(profile);
         }
+        return null;
     }
 
     public static void createUser(Context context, String email){
         User = Auth.getCurrentUser();
         String name[] = Objects.requireNonNull(getUser().getDisplayName()).split(" ");
         Profile newProfile;
+        newProfile = new Profile(User.getUid(),getUser().getDisplayName(),"surname da togliere", email, context.getString(R.string.bioExample));
 
-        if(name[0]!=null && name[1]!=null) {
-            newProfile = new Profile(User.getUid(), name[0], name[1], email, context.getString(R.string.bioExample));
-        } else {
-            newProfile = new Profile("", context.getString(R.string.name), context.getString(R.string.surname), email, context.getString(R.string.bioExample));
-        }
 
-        Database.getReference().child("users").child(User.getUid()).setValue(newProfile);
+        Database.getReference().child("users").child(User.getUid()).setValue(newProfile).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                MyFirebaseInstanceIDService fInstance = new MyFirebaseInstanceIDService();
+
+                fInstance.addToken(FirebaseInstanceId.getInstance().getToken());
+            }
+        });
 
         /*
         LocationProvider locationProvider = new LocationProvider();
