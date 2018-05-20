@@ -127,7 +127,7 @@ public class ShowProfile extends AppCompatActivity implements AppBarLayout.OnOff
         navMail =  headerView.findViewById(R.id.navMail);
         navImage =  headerView.findViewById(R.id.navImage);
         headerView.setBackgroundResource(R.color.colorPrimaryDark);
-        navImage.setImageDrawable(getDrawable(R.drawable.default_picture));
+        //navImage.setImageDrawable(getDrawable(R.drawable.default_picture));
 
         if(profile!=null) {
             navName.setText(profile.getName());
@@ -252,7 +252,7 @@ public class ShowProfile extends AppCompatActivity implements AppBarLayout.OnOff
     private void getUserInfo(){
         //progressbar.setVisibility(View.VISIBLE);
         //avatar.setVisibility(View.GONE);
-
+        navImage.setImageDrawable(getDrawable(R.drawable.default_picture));
         if(tools.isOnline(getApplicationContext())) {
 
             FirebaseManagement.getDatabase().getReference().child("users").child(FirebaseManagement.getUser().getUid())
