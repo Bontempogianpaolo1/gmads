@@ -28,6 +28,7 @@
         android:layout_height="0dp"
         android:windowSoftInputMode="adjustPan"
         android:layout_above="@id/relativeLayout_message"
+        android:layout_alignTop="@id/relativeLayout_message"
         android:layout_below="@id/toolbarChat" />
 
     <LinearLayout
