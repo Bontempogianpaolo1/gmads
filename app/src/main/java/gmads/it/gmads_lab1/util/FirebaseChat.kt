@@ -59,7 +59,7 @@ object FirebaseChat {
     fun getOrCreateChatChannel(otherUserId: String,
                                onComplete: (channelId: String) -> Unit) {
 
-        currentUserRef!!
+        currentUserRef
                 .child("engagedChatChannels")
                 .child(otherUserId)
                 .child("channelId")

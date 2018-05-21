@@ -66,7 +66,7 @@ class PeopleFragment : Fragment() {
 
     }
 
-    private val onItemClick = OnItemClickListener { item, view ->
+    private val onItemClick = OnItemClickListener { item, _ ->
         if (item is PersonItem) {
             /*
             TODO: rendere questa stringa adatta per il java quando si cerca di chattare premendo il pulsante dalla attività del profilo del proprietario

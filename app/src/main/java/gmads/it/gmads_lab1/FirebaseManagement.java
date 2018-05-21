@@ -10,12 +10,14 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.storage.FirebaseStorage;
-
+import com.google.firebase.functions.FirebaseFunctions;
 
 import java.util.Objects;
 
 import gmads.it.gmads_lab1.model.Profile;
 import gmads.it.gmads_lab1.service.MyFirebaseInstanceIDService;
+import com.google.firebase.functions.FirebaseFunctionsException;
+
 
 public class FirebaseManagement {
 
@@ -25,7 +27,7 @@ public class FirebaseManagement {
     private static FirebaseStorage Storage;
     private static FirebaseUser User;
     private static FirebaseStorage storage;
-
+    private static FirebaseFunctions mFunctions;
     public static FirebaseAuth getAuth() {
         return Auth;
     }
@@ -42,6 +44,33 @@ public class FirebaseManagement {
             storage= FirebaseStorage.getInstance();
         }
         return storage;
+    }
+    public static void sendMessage(String text,String from,String to){
+        mFunctions = FirebaseFunctions.getInstance();
+     java.util.Map<String, Object> data = new java.util.HashMap<>();
+    data.put("text", text);
+    data.put("from",from);
+    data.put("to",to);
+    Task<String> r=mFunctions
+            .getHttpsCallable("addMessage")
+            .call(data)
+            .continueWith(task-> {
+                    // This continuation runs on either success or failure, but if the task
+                    // has failed then getResult() will throw an Exception which will be
+                    // propagated down.
+                    String result = (String) task.getResult().getData();
+                    return result;
+                });
+    r.addOnCompleteListener(task-> {
+                                        if (!task.isSuccessful()) {
+                                            Exception e = task.getException();
+                                            if (e instanceof FirebaseFunctionsException) {
+                                               FirebaseFunctionsException ffe = (FirebaseFunctionsException) e;
+                                               FirebaseFunctionsException.Code code = ffe.getCode();
+                                                Object details = ffe.getDetails();
+                                            }
+                                         }
+                                    });
     }
 
     public static FirebaseDatabase getDatabase(){
