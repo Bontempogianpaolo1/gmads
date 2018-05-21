@@ -63,8 +63,8 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
         //titolo libro
         holder.title.setText(book.getTitle());
         //owner
-        holder.owner.setText("di ");
-        holder.owner.append( book.getNomeproprietario());
+        holder.owner.setText(R.string.of);
+        holder.owner.append(": " +book.getNomeproprietario());
         //distanza
         holder.distance.setText(String.valueOf(book.getDistance()/1000));
         holder.distance.append(" Km");

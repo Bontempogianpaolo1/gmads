@@ -107,7 +107,7 @@
     <string name="sign_up_for_this">SIGN UP FOR THIS</string>
     <string name="mapPlaceholderTransition">mapPlaceholderTransition</string>
     <string name="saveBook">Save Book</string>
-    <string name="of">of: </string>
+    <string name="of">of</string>
     <string name="showBook">Book Details</string>
 
     <!-- stringhe show profile -->
@@ -137,5 +137,9 @@
 
     <string name = "message">Message</string>
     <string name = "library">Library</string>
+    <string name = "book_info">More Info</string>
+
+    <!-- FCM -->
+    <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
 
 </resources>

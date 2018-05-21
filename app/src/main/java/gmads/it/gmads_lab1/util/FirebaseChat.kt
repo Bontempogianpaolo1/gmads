@@ -41,7 +41,9 @@ object FirebaseChat {
                    }
 
                     override fun onCancelled(p0: DatabaseError?) {
+                        /*
                         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                        */
                     }
                 })
     }
@@ -54,7 +56,7 @@ object FirebaseChat {
     fun getOrCreateChatChannel(otherUserId: String,
                                onComplete: (channelId: String) -> Unit) {
 
-        currentUserRef!!
+        currentUserRef
                 .child("engagedChatChannels")
                 .child(otherUserId)
                 .child("channelId")
@@ -66,12 +68,18 @@ object FirebaseChat {
                             onComplete(chatChannelId as String)
                             return
                         }
-
+                        /*
+                        quando si scaricano messaggi solo per quei due utenti
+                        prima si prende il corrente identificativo e si scarica la lsita di messaggi
+                        TODO qua lettura messaggi...in caso bisognasse tenere conto dei lessaggi letti e non
+                         */
                         val currentUserId = FirebaseAuth.getInstance().currentUser!!.uid
 
                         val newChannelKey = chatChannelsCollectionRef.push().key
                         val newChatChannel = ChatChannel(mutableListOf(currentUserId, otherUserId))
-
+/*
+salvataggio dati sufirebase
+ */
                         chatChannelsCollectionRef.child(newChannelKey).setValue(newChatChannel)
                         currentUserRef
                                 .child("engagedChatChannels")
@@ -94,7 +102,9 @@ object FirebaseChat {
                     }
                 })
     }
-
+/*
+in caso in cui ci fossero nuovi messaggi
+ */
     fun addChatMessagesListener(channelId: String, context: Context,
                                 onListen: (List<Item>) -> Unit): ValueEventListener {
         return chatChannelsCollectionRef.child(channelId)
@@ -120,7 +130,9 @@ object FirebaseChat {
                 })
 
     }
-
+/*
+invio messaggi al token desiderato")
+ */
     fun sendMessage(message: Message, channelId: String) {
 
         var mKey = chatChannelsCollectionRef.child(channelId)
