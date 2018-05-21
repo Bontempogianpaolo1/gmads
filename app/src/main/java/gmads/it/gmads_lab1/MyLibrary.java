@@ -11,9 +11,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
@@ -31,7 +28,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.support.design.widget.TabLayout;
 import android.widget.TextView;
 
 
@@ -53,12 +49,12 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.prefs.Preferences;
 
 import gmads.it.gmads_lab1.Map.main.MapActivity;
+import gmads.it.gmads_lab1.model.Book;
+import gmads.it.gmads_lab1.model.Profile;
 import gmads.it.gmads_lab1.fragments.Home_1;
 
 public class MyLibrary extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
@@ -176,7 +172,11 @@ public class MyLibrary extends AppCompatActivity implements NavigationView.OnNav
             startActivity(intentMod);
             finish();
             return true;
-        }else if(id == R.id.nav_logout){
+        } else if (id == R.id.nav_chat){
+            Intent intent = new Intent(this, ChatList.class);
+            startActivity(intent);
+            return true;
+        } else if(id == R.id.nav_logout){
             AuthUI.getInstance().signOut(this).addOnCompleteListener(v->{
                 startActivity(new Intent(this,Login.class));
                 finish();

@@ -7,7 +7,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 import java.io.File;
 import java.io.IOException;
-import java.util.Objects;
+
+import gmads.it.gmads_lab1.model.Profile;
 
 public class ProfileInfoSync {
     public static ProfileInfoSync pISInstance = new ProfileInfoSync();

@@ -1,11 +1,8 @@
 package gmads.it.gmads_lab1;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
-import android.view.View;
-import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -14,7 +11,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
-import java.io.IOException;
+
+import gmads.it.gmads_lab1.model.Profile;
 
 /**
  * Created by giorgiocrepaldi on 28/04/18.

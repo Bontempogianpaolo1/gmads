@@ -31,7 +31,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.support.design.widget.TabLayout;
 import android.widget.TextView;
 
 
@@ -56,12 +55,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.prefs.Preferences;
 
 import gmads.it.gmads_lab1.Map.main.MapActivity;
+import gmads.it.gmads_lab1.model.Book;
+import gmads.it.gmads_lab1.model.Profile;
 import gmads.it.gmads_lab1.fragments.Home_1;
 
-public class Home extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+public class  Home extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
     private RecyclerView recyclerView;
     private BookAdapter adapter;
     private List<Book> books;
@@ -91,7 +91,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
         setSupportActionBar(toolbar);
         setNavViews();
-
+        FirebaseManagement.sendMessage("ciao","pino","s7zgS8pwOXajKcNBt4nfEzTa1903");
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
@@ -163,9 +163,15 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
             return true;
         } else if (id == R.id.nav_home) {
             //deve solo chiudersi la navbar
-            drawer.closeDrawers();
+            //drawer.closeDrawers();
+            Intent intent = new Intent(this, Home.class);
+            startActivity(intent);
             return true;
-        }else if(id == R.id.nav_logout){
+        } else if (id == R.id.nav_chat){
+            Intent intent = new Intent(this, ChatList.class);
+            startActivity(intent);
+            return true;
+        } else if(id == R.id.nav_logout){
             AuthUI.getInstance().signOut(this).addOnCompleteListener(v->{
                 startActivity(new Intent(this,Login.class));
                 finish();

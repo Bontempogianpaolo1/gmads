@@ -1,4 +1,4 @@
-package gmads.it.gmads_lab1;
+package gmads.it.gmads_lab1.model;
 
 import android.graphics.Bitmap;
 
@@ -6,6 +6,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import gmads.it.gmads_lab1.Geoloc;
 
 public class Book {
 
