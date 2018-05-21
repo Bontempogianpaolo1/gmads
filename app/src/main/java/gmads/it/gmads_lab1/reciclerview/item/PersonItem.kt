@@ -7,6 +7,7 @@ import gmads.it.gmads_lab1.model.Profile
 import gmads.it.gmads_lab1.util.StorageUtil
 import com.xwray.groupie.kotlinandroidextensions.Item
 import com.xwray.groupie.kotlinandroidextensions.ViewHolder
+import gmads.it.gmads_lab1.R.id.imageView_profile_picture
 import kotlinx.android.synthetic.main.item_person.*
 
 
@@ -21,6 +22,11 @@ private val context: Context)
         if (person.image != null)
                 GlideApp.with(context)
                 .load(person.image)
+                .placeholder(R.drawable.default_picture)
+                .into(viewHolder.imageView_profile_picture)
+        else
+                GlideApp.with(context)
+                .load(R.drawable.default_picture)
                 .placeholder(R.drawable.default_picture)
                 .into(viewHolder.imageView_profile_picture)
         }
