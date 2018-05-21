@@ -76,16 +76,6 @@ class ChatList : AppCompatActivity() {
             android.R.id.home -> {
                 drawer?.openDrawer(GravityCompat.START)
                 true
-/*
-classe per sostituire i fragment
- */
-        navigation.setOnNavigationItemSelectedListener {
-            when (it.itemId) {
-                R.id.navigation_people -> {
-                    replaceFragment(PeopleFragment())
-                    true
-                }
-                else -> false
             }
             else -> super.onOptionsItemSelected(item)
         }
