@@ -169,6 +169,7 @@ public class ShowProfile extends AppCompatActivity implements AppBarLayout.OnOff
         toolbar.setTitle("");
         appbar.addOnOffsetChangedListener(this);
         setSupportActionBar(toolbar);
+        textviewTitle.setText(profile.getName());
         startAlphaAnimation(textviewTitle, 0, View.INVISIBLE);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);

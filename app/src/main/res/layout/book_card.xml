@@ -31,9 +31,11 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/thumbnail"
                 android:layout_toStartOf="@id/overflow"
-                android:paddingLeft="@dimen/album_title_padding"
-                android:paddingRight="@dimen/album_title_padding"
-                android:paddingTop="@dimen/album_title_padding"
+                android:ellipsize="end"
+                android:maxLines="3"
+                android:paddingEnd="2dp"
+                android:paddingStart="10dp"
+                android:paddingTop="5dp"
                 android:textColor="@color/album_title"
                 android:textSize="@dimen/album_title" />
 
@@ -43,9 +45,11 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/title"
                 android:layout_toStartOf="@id/overflow"
-                android:paddingBottom="@dimen/songs_count_padding_bottom"
-                android:paddingLeft="@dimen/album_title_padding"
-                android:paddingRight="@dimen/album_title_padding"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:paddingBottom="5dp"
+                android:paddingEnd="2dp"
+                android:paddingStart="10dp"
                 android:textSize="@dimen/songs_count" />
 
             <ImageView
@@ -54,7 +58,6 @@
                 android:layout_height="@dimen/ic_album_overflow_height"
                 android:layout_alignParentEnd="true"
                 android:layout_below="@id/thumbnail"
-                android:layout_marginStart="8dp"
                 android:layout_marginTop="@dimen/ic_album_overflow_margin_top"
                 android:scaleType="centerCrop"
                 android:src="@drawable/ic_dots" />

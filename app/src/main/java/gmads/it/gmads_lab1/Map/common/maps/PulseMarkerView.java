@@ -107,7 +107,7 @@ public class PulseMarkerView extends MarkerView {
 
     private void setupBackgroundPaint(final Context context) {
         backgroundPaint = new Paint();
-        backgroundPaint.setColor(ContextCompat.getColor(context, android.R.color.holo_red_dark));
+        backgroundPaint.setColor(ContextCompat.getColor(context, R.color.colorPrimary));
         backgroundPaint.setAntiAlias(true);
     }
 

@@ -73,7 +73,7 @@
     <string name="sb_info">Info Aggiuntive</string>
     <string name="sb_main_info">Info principali</string>
     <string name="saveBook">Salva Libro</string>
-    <string name="of">di: </string>
+    <string name="of">di</string>
     <string name="showBook">Dettagli Libro</string>
 
     <!-- stringhe show profile -->
@@ -103,5 +103,6 @@
 
     <string name = "message">Messaggio</string>
     <string name = "library">Libreria</string>
+    <string name = "book_info">Altre Info</string>
     <!--end-->
 </resources>
