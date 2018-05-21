@@ -48,9 +48,6 @@ public class ShowUserProfile extends AppCompatActivity implements AppBarLayout.O
     private Toolbar toolbar;
     private TextView textviewTitle;
     private TextView uploaded;
-    TextView navName;
-    TextView navMail;
-    ImageView navImage;
     NavigationView navigationView;
     DrawerLayout drawer;
     //view della attività
@@ -100,7 +97,7 @@ public class ShowUserProfile extends AppCompatActivity implements AppBarLayout.O
             vEmail.setText(profile.getEmail());
             vBio.setText(profile.getDescription());
             //nome cognome nella toolbar
-            textviewTitle.setText(profile.getName());
+            //textviewTitle.setText(profile.getName());
             //textviewTitle.append(" "+ profile.getSurname());
 
             if (myProfileBitImage != null) {
@@ -133,6 +130,7 @@ public class ShowUserProfile extends AppCompatActivity implements AppBarLayout.O
         avatar.setImageResource(R.drawable.default_picture);
         coverImage.setImageResource(R.drawable.cover);
         toolbar.setTitle("");
+        appbar.addOnOffsetChangedListener(this);
         setSupportActionBar(toolbar);
         startAlphaAnimation(textviewTitle, 0, View.INVISIBLE);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -199,6 +197,7 @@ public class ShowUserProfile extends AppCompatActivity implements AppBarLayout.O
                                 //vName.append(" " + profile.getSurname());
                                 vEmail.setText(profile.getEmail());
                                 vBio.setText(profile.getDescription());
+                                textviewTitle.setText(profile.getName());
                                 if (profile.hasUploaded()) {
                                     uploaded.setText(String.valueOf(profile.takennBooks()));
                                     total.setText(String.valueOf(profile.takennBooks()));
@@ -241,6 +240,7 @@ public class ShowUserProfile extends AppCompatActivity implements AppBarLayout.O
                                 //vName.append(" " + getString(R.string.surname));
                                 vEmail.setText(getString(R.string.email));
                                 vBio.setText(getString(R.string.description));
+                                textviewTitle.setText(getString(R.id.name));
                             }
                         }
 
