@@ -31,7 +31,7 @@ import java.io.IOException;
 
 import gmads.it.gmads_lab1.model.Profile;
 
-public class ShowUserProfile extends AppCompatActivity {
+public class ShowUserProfile extends AppCompatActivity implements AppBarLayout.OnOffsetChangedListener {
 
     private static final float PERCENTAGE_TO_SHOW_TITLE_AT_TOOLBAR = 0.9f;
     private static final float PERCENTAGE_TO_HIDE_TITLE_DETAILS = 0.3f;
@@ -64,6 +64,7 @@ public class ShowUserProfile extends AppCompatActivity {
     TextView cap;
     private Profile profile;
     private Bitmap myProfileBitImage;
+    Tools tools;
 
     private void findViews() {
         total=findViewById(R.id.totbooks);
@@ -95,12 +96,12 @@ public class ShowUserProfile extends AppCompatActivity {
 
         if(profile!=null) {
             vName.setText(profile.getName());
-            vName.append(" " + profile.getSurname());
+            //vName.append(" " + profile.getSurname());
             vEmail.setText(profile.getEmail());
             vBio.setText(profile.getDescription());
             //nome cognome nella toolbar
             textviewTitle.setText(profile.getName());
-            textviewTitle.append(" "+ profile.getSurname());
+            //textviewTitle.append(" "+ profile.getSurname());
 
             if (myProfileBitImage != null) {
                 avatar.setImageBitmap(myProfileBitImage);
@@ -117,7 +118,6 @@ public class ShowUserProfile extends AppCompatActivity {
         super.onStart();
         String userId = getIntent().getStringExtra("userId");
         getUserInfo(userId);
-
     }
 
     @Override
@@ -137,6 +137,7 @@ public class ShowUserProfile extends AppCompatActivity {
         startAlphaAnimation(textviewTitle, 0, View.INVISIBLE);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+        tools = new Tools();
     }
 
     @Override
@@ -178,78 +179,82 @@ public class ShowUserProfile extends AppCompatActivity {
         //moveTaskToBack(true);
     }
 
-
-
-
-    private void getUserInfo(String userId){
+    private void getUserInfo(String userId) {
         //progressbar.setVisibility(View.VISIBLE);
         //avatar.setVisibility(View.GONE);
-        FirebaseManagement.getDatabase().getReference().child("users").child(userId)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
+        if (tools.isOnline(getApplicationContext())) {
+            FirebaseManagement.getDatabase().getReference().child("users").child(userId)
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
 
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        profile = dataSnapshot.getValue(Profile.class);
-                        if (profile != null) {
-                            if(profile.getCAP()==null || profile.getCAP().length()==0){
-                                Intent i=new Intent(getApplicationContext(), EditProfile.class);
-                                startActivity(i);
-                            }
-                            cap.setText(profile.getCAP());
-                            vName.setText(profile.getName());
-                            vName.append(" " + profile.getSurname());
-                            vEmail.setText(profile.getEmail());
-                            vBio.setText(profile.getDescription());
-                            if(profile.hasUploaded()) {
-                                uploaded.setText(String.valueOf(profile.takennBooks()));
-                                total.setText(String.valueOf(profile.takennBooks()));
-                            }else{
-                                uploaded.setText("0");
-                                total.setText("0");
-                            }
-                            if (profile.getImage() != null) {
-                                try {
-                                    File localFile = File.createTempFile("images", "jpg");
-                                    StorageReference profileImageRef =
-                                            FirebaseManagement
-                                                    .getStorage()
-                                                    .getReference()
-                                                    .child("users")
-                                                    .child(userId)
-                                                    .child("profileimage.jpg");
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            profile = dataSnapshot.getValue(Profile.class);
+                            if (profile != null) {
+                                if (profile.getCAP() == null || profile.getCAP().length() == 0) {
+                                    Intent i = new Intent(getApplicationContext(), EditProfile.class);
+                                    startActivity(i);
+                                }
+                                cap.setText(profile.getCAP());
+                                vName.setText(profile.getName());
+                                //vName.append(" " + profile.getSurname());
+                                vEmail.setText(profile.getEmail());
+                                vBio.setText(profile.getDescription());
+                                if (profile.hasUploaded()) {
+                                    uploaded.setText(String.valueOf(profile.takennBooks()));
+                                    total.setText(String.valueOf(profile.takennBooks()));
+                                } else {
+                                    uploaded.setText("0");
+                                    total.setText("0");
+                                }
+                                if (profile.getImage() != null) {
+                                    try {
+                                        File localFile = File.createTempFile("images", "jpg");
+                                        StorageReference profileImageRef =
+                                                FirebaseManagement
+                                                        .getStorage()
+                                                        .getReference()
+                                                        .child("users")
+                                                        .child(userId)
+                                                        .child("profileimage.jpg");
 
-                                    profileImageRef.getFile(localFile)
-                                            .addOnSuccessListener(taskSnapshot -> {
-                                                //progressbar.setVisibility(View.GONE);
-                                                avatar.setVisibility(View.VISIBLE);
-                                                avatar.setImageBitmap(BitmapFactory.decodeFile(localFile.getPath()));
-                                            }).addOnFailureListener(e -> {
-                                        //progressbar.setVisibility(View.GONE);
-                                        avatar.setVisibility(View.VISIBLE);
-                                    });
+                                        profileImageRef.getFile(localFile)
+                                                .addOnSuccessListener(taskSnapshot -> {
+                                                    //progressbar.setVisibility(View.GONE);
+                                                    avatar.setVisibility(View.VISIBLE);
+                                                    avatar.setImageBitmap(BitmapFactory.decodeFile(localFile.getPath()));
+                                                }).addOnFailureListener(e -> {
+                                            //progressbar.setVisibility(View.GONE);
+                                            avatar.setVisibility(View.VISIBLE);
+                                        });
 
-                                } catch (IOException e) {
-                                    e.printStackTrace();
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                } else {
+                                    //progressbar.setVisibility(View.GONE);
+                                    avatar.setVisibility(View.VISIBLE);
                                 }
                             } else {
-                                //progressbar.setVisibility(View.GONE);
-                                avatar.setVisibility(View.VISIBLE);
+                                Intent i = new Intent(getApplicationContext(), EditProfile.class);
+                                startActivity(i);
+                                vName.setText(getString(R.string.name));
+                                //vName.append(" " + getString(R.string.surname));
+                                vEmail.setText(getString(R.string.email));
+                                vBio.setText(getString(R.string.description));
                             }
-                        }else{
-                            Intent i=new Intent(getApplicationContext(), EditProfile.class);
-                            startActivity(i);
-                            vName.setText(getString(R.string.name));
-                            vName.append(" " + getString(R.string.surname));
-                            vEmail.setText(getString(R.string.email));
-                            vBio.setText(getString(R.string.description));
                         }
-                    }
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        // Getting Post failed, log a message
-                    }
-                });
 
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            // Getting Post failed, log a message
+                        }
+                    });
+        } else {
+            android.app.AlertDialog.Builder ad = tools.showPopup(this, getString(R.string.noInternet), "", "");
+            ad.setPositiveButton(getString(R.string.retry), (vi, w) -> onStart());
+            ad.setCancelable(false);
+            ad.show();
+        }
     }
 
     private void handleToolbarTitleVisibility(float percentage) {
@@ -293,5 +298,14 @@ public class ShowUserProfile extends AppCompatActivity {
         alphaAnimation.setDuration(duration);
         alphaAnimation.setFillAfter(true);
         v.startAnimation(alphaAnimation);
+    }
+
+    @Override
+    public void onOffsetChanged(AppBarLayout appBarLayout, int offset) {
+        int maxScroll = appBarLayout.getTotalScrollRange();
+        float percentage = (float) Math.abs(offset) / (float) maxScroll;
+
+        handleAlphaOnTitle(percentage);
+        handleToolbarTitleVisibility(percentage);
     }
 }

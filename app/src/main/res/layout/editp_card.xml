@@ -20,8 +20,7 @@
             android:layout_marginTop="5dp"
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
-            android:text="@string/name"
-            android:textSize="18sp" />
+            android:text="Username" />
 
         <EditText
             android:id="@+id/name"
@@ -33,30 +32,8 @@
             android:background="@drawable/rounded_corner"
             android:hint="@string/name"
             android:paddingLeft="5dp"
-            android:paddingRight="5dp" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginBottom="5dp"
-            android:layout_marginTop="20dp"
-            android:paddingLeft="5dp"
             android:paddingRight="5dp"
-            android:text="@string/surname"
-            android:textSize="18sp" />
-
-        <EditText
-            android:id="@+id/surname"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginBottom="5dp"
-            android:layout_marginTop="5dp"
-            android:background="@drawable/rounded_corner"
-            android:hint="@string/surname"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp" />
+            android:textSize="16sp"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -67,7 +44,7 @@
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
             android:text="Email"
-            android:textSize="18sp" />
+            />
 
         <EditText
             android:id="@+id/email"
@@ -78,7 +55,8 @@
             android:hint="Email"
             android:inputType="textEmailAddress"
             android:paddingLeft="5dp"
-            android:paddingRight="5dp" />
+            android:paddingRight="5dp"
+             android:textSize="16sp"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -89,7 +67,7 @@
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
             android:text="CAP"
-            android:textSize="18sp" />
+            />
 
         <EditText
             android:id="@+id/cap"
@@ -100,7 +78,8 @@
             android:hint="CAP"
             android:inputType="number"
             android:paddingLeft="5dp"
-            android:paddingRight="5dp" />
+            android:paddingRight="5dp"
+            android:textSize="16sp"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -111,17 +90,17 @@
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
             android:text="@string/country"
-            android:textSize="18sp" />
+            />
 
         <Spinner
             android:id="@+id/country"
             android:layout_width="match_parent"
-            android:layout_height="32dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:background="@drawable/rounded_corner"
             android:hint="@string/country"
             android:paddingRight="5dp"
-            android:textSize="12sp" />
+            />
 
         <TextView
             android:layout_width="match_parent"
@@ -132,19 +111,20 @@
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
             android:text="@string/bio"
-            android:textSize="18sp" />
+            />
 
         <EditText
             android:id="@+id/bio"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:layout_marginBottom="5dp"
             android:background="@drawable/rounded_corner"
             android:hint="@string/bio"
             android:inputType="textMultiLine"
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
 
 
     </LinearLayout>

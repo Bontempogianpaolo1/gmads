@@ -283,7 +283,7 @@ public class  Home extends AppCompatActivity implements NavigationView.OnNavigat
                     scrollRange = appBarLayout.getTotalScrollRange();
                 }
                 if (scrollRange + verticalOffset == 0) {
-                    collapsingToolbar.setTitle(getString(R.string.app_name));
+                    collapsingToolbar.setTitle("Home");
                     isShow = true;
                 } else if (isShow) {
                     collapsingToolbar.setTitle(" ");
@@ -317,7 +317,7 @@ public class  Home extends AppCompatActivity implements NavigationView.OnNavigat
 
         if(profile!=null) {
             navName.setText(profile.getName());
-            navName.append(" " + profile.getSurname());
+            //navName.append(" " + profile.getSurname());
             navMail.setText(profile.getEmail());
 
             if (myProfileBitImage != null) {
@@ -343,7 +343,7 @@ public class  Home extends AppCompatActivity implements NavigationView.OnNavigat
                                 startActivity(i);
                             }
                             navName.setText(profile.getName());
-                            navName.append(" " + profile.getSurname());
+                            //navName.append(" " + profile.getSurname());
                             navMail.setText(profile.getEmail());
                             if (profile.getImage() != null) {
                                 try {

@@ -111,8 +111,8 @@ public class MyLibrary extends AppCompatActivity implements NavigationView.OnNav
         ViewPager pager= findViewById(R.id.viewPager);
         FragmentViewPagerAdapter vpadapter= new FragmentViewPagerAdapter(getSupportFragmentManager());
         vpadapter.addFragment(tab1);
-        vpadapter.addFragment(new Home_1());
-        vpadapter.addFragment(new Home_1());
+        //vpadapter.addFragment(new Home_1());
+        //vpadapter.addFragment(new Home_1());
         pager.setAdapter(vpadapter);
 //
         //era per mettere foto libri nell appbar, ma l'abbiamo messa come sfondo per ora
@@ -228,7 +228,7 @@ public class MyLibrary extends AppCompatActivity implements NavigationView.OnNav
                     scrollRange = appBarLayout.getTotalScrollRange();
                 }
                 if (scrollRange + verticalOffset == 0) {
-                    collapsingToolbar.setTitle(getString(R.string.app_name));
+                    collapsingToolbar.setTitle(getString(R.string.library));
                     isShow = true;
                 } else if (isShow) {
                     collapsingToolbar.setTitle(" ");
@@ -262,7 +262,7 @@ public class MyLibrary extends AppCompatActivity implements NavigationView.OnNav
 
         if(profile!=null) {
             navName.setText(profile.getName());
-            navName.append(" " + profile.getSurname());
+            //navName.append(" " + profile.getSurname());
             navMail.setText(profile.getEmail());
 
             if (myProfileBitImage != null) {
@@ -294,7 +294,7 @@ public class MyLibrary extends AppCompatActivity implements NavigationView.OnNav
                                     startActivity(i);
                                 }
                                 navName.setText(profile.getName());
-                                navName.append(" " + profile.getSurname());
+                                //navName.append(" " + profile.getSurname());
                                 navMail.setText(profile.getEmail());
                                 if (profile.getImage() != null) {
                                     try {

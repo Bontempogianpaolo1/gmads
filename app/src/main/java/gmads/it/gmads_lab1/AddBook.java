@@ -115,7 +115,7 @@ public class AddBook extends AppCompatActivity
                 if (myuser !=null) {
                     //dati navbar
                     navName.setText(myuser.getName());
-                    navName.append(" " + myuser.getSurname());
+                    //navName.append(" " + myuser.getSurname());
                     navMail.setText(myuser.getEmail());
                     //setto foto
                     if (Objects.requireNonNull(myuser).getImage() != null) {
@@ -138,7 +138,7 @@ public class AddBook extends AppCompatActivity
                 }
                 else{
                     navName.setText(getString(R.string.nameExample));
-                    navName.append(" " + getString(R.string.surnameExample));
+                    //navName.append(" " + getString(R.string.surnameExample));
                     navMail.setText(getString(R.string.emailExample));
                     navImage.setImageDrawable(getDrawable(R.drawable.default_picture));
                 }

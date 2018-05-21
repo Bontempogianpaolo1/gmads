@@ -101,12 +101,12 @@ public class ShowProfile extends AppCompatActivity implements AppBarLayout.OnOff
 
         if(profile!=null) {
             vName.setText(profile.getName());
-            vName.append(" " + profile.getSurname());
+            //vName.append(" " + profile.getSurname());
             vEmail.setText(profile.getEmail());
             vBio.setText(profile.getDescription());
             //nome cognome nella toolbar
             textviewTitle.setText(profile.getName());
-            textviewTitle.append(" "+ profile.getSurname());
+            //textviewTitle.append(" "+ profile.getSurname());
 
             if (myProfileBitImage != null) {
                 avatar.setImageBitmap(myProfileBitImage);
@@ -131,7 +131,7 @@ public class ShowProfile extends AppCompatActivity implements AppBarLayout.OnOff
 
         if(profile!=null) {
             navName.setText(profile.getName());
-            navName.append(" " + profile.getSurname());
+            //navName.append(" " + profile.getSurname());
             navMail.setText(profile.getEmail());
 
             if ( profile!= null) {
@@ -269,9 +269,9 @@ public class ShowProfile extends AppCompatActivity implements AppBarLayout.OnOff
                                 cap.setText(profile.getCAP());
 
                                 vName.setText(profile.getName());
-                                vName.append(" " + profile.getSurname());
+                                //vName.append(" " + profile.getSurname());
                                 navName.setText(profile.getName());
-                                navName.append(" " + profile.getSurname());
+                                //navName.append(" " + profile.getSurname());
                                 vEmail.setText(profile.getEmail());
                                 navMail.setText(profile.getEmail());
                                 vBio.setText(profile.getDescription());
@@ -316,9 +316,9 @@ public class ShowProfile extends AppCompatActivity implements AppBarLayout.OnOff
                                 Intent i = new Intent(getApplicationContext(), EditProfile.class);
                                 startActivity(i);
                                 vName.setText(getString(R.string.name));
-                                vName.append(" " + getString(R.string.surname));
+                                //vName.append(" " + getString(R.string.surname));
                                 navName.setText(getString(R.string.name));
-                                navName.append(" " + getString(R.string.surname));
+                                //navName.append(" " + getString(R.string.surname));
                                 vEmail.setText(getString(R.string.email));
                                 navMail.setText(getString(R.string.email));
                                 vBio.setText(getString(R.string.description));
@@ -339,7 +339,6 @@ public class ShowProfile extends AppCompatActivity implements AppBarLayout.OnOff
             ad.setCancelable(false);
             ad.show();
         }
-
     }
 
     private void handleToolbarTitleVisibility(float percentage) {
@@ -358,6 +357,8 @@ public class ShowProfile extends AppCompatActivity implements AppBarLayout.OnOff
             }
         }
     }
+
+
 
     private void handleAlphaOnTitle(float percentage) {
         if (percentage >= PERCENTAGE_TO_HIDE_TITLE_DETAILS) {
