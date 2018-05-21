@@ -82,7 +82,7 @@ public class ShowUserProfile extends AppCompatActivity implements AppBarLayout.O
         cap=findViewById(R.id.cap);
         toolbar =  findViewById(R.id.toolbar);
         vName = findViewById(R.id.name_surname);
-        vEmail = findViewById(R.id.email);
+        //vEmail = findViewById(R.id.email);
         vBio = findViewById(R.id.bio);
         //progressbar = findViewById(R.id.progressBar);
         //toolbar.setTitle(getString(R.string.showProfile));
@@ -94,7 +94,7 @@ public class ShowUserProfile extends AppCompatActivity implements AppBarLayout.O
         if(profile!=null) {
             vName.setText(profile.getName());
             //vName.append(" " + profile.getSurname());
-            vEmail.setText(profile.getEmail());
+            //vEmail.setText(profile.getEmail());
             vBio.setText(profile.getDescription());
             //nome cognome nella toolbar
             //textviewTitle.setText(profile.getName());
@@ -121,7 +121,7 @@ public class ShowUserProfile extends AppCompatActivity implements AppBarLayout.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //Fresco.initialize(this);
-        setContentView(R.layout.show_user_profile);
+        setContentView(R.layout.activity_show_p_others);
         profile = Datasource.getInstance().getMyProfile();
         myProfileBitImage = Datasource.getInstance().getMyProfileBitImage();
         //set avatar and cover
@@ -195,7 +195,7 @@ public class ShowUserProfile extends AppCompatActivity implements AppBarLayout.O
                                 cap.setText(profile.getCAP());
                                 vName.setText(profile.getName());
                                 //vName.append(" " + profile.getSurname());
-                                vEmail.setText(profile.getEmail());
+                                //vEmail.setText(profile.getEmail());
                                 vBio.setText(profile.getDescription());
                                 textviewTitle.setText(profile.getName());
                                 if (profile.hasUploaded()) {
@@ -238,7 +238,7 @@ public class ShowUserProfile extends AppCompatActivity implements AppBarLayout.O
                                 startActivity(i);
                                 vName.setText(getString(R.string.name));
                                 //vName.append(" " + getString(R.string.surname));
-                                vEmail.setText(getString(R.string.email));
+                                //vEmail.setText(getString(R.string.email));
                                 vBio.setText(getString(R.string.description));
                                 textviewTitle.setText(getString(R.id.name));
                             }
