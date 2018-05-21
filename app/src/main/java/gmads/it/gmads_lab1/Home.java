@@ -234,9 +234,19 @@ public class  Home extends AppCompatActivity implements NavigationView.OnNavigat
                             SearchResultsJsonParser search= new SearchResultsJsonParser();
                             Log.d("lista",jsonObject.toString());
                             books= search.parseResults(jsonObject);
-                            for(int i = 0; i<books.size(); i++){
-                                if(books.get(i).getOwner().equals(FirebaseManagement.getUser().getUid())){
-                                    books.remove(i);
+
+                            if(books.isEmpty()) {
+                                ImageView notfound = findViewById(R.id.not_found);
+                                TextView tnf = findViewById(R.id.textnotfound);
+                                progressbar.setVisibility(View.GONE);
+                                notfound.setVisibility(View.VISIBLE);
+                                tnf.setVisibility(View.VISIBLE);
+                            }
+                            else{
+                                for (int i = 0; i < books.size(); i++) {
+                                    if (books.get(i).getOwner().equals(FirebaseManagement.getUser().getUid())) {
+                                        books.remove(i);
+                                    }
                                 }
                             }
                             tab1.getAdapter().setbooks(books);
