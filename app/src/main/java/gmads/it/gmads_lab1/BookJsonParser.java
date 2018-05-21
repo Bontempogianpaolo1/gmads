@@ -1,13 +1,11 @@
 package gmads.it.gmads_lab1;
 
-import com.google.gson.JsonArray;
-
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+
+import gmads.it.gmads_lab1.model.Book;
 
 public class BookJsonParser
 {

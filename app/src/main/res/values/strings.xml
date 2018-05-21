@@ -38,8 +38,8 @@
     <string name="title_activity_add_book">AddBook</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Android Studio</string>
-    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_title">Username</string>
+    <string name="nav_header_subtitle">example@p.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
     <string name="scan2">Or insert ISBN</string>
@@ -55,7 +55,9 @@
     <string name="publisherNotFound">Publisher: not Found</string>
     <string name="pDateNotFound">Published Date: not Found</string>
     <string name="categoryNotFound">Category/: not Found</string>
-    <string name="facebook_application_id" translatable="false">APP_ID</string>
+    <string name="facebook_application_id" translatable="false">172924670204019</string>
+    <string name="fb_login_protocol_scheme">fb172924670204019</string>
+
     <string name="isbnerror">\nISBN length must be 13</string>
     <!-- Facebook Application ID, prefixed by 'fb'. Enables Chrome Custom tabs. -->
     <string name="facebook_login_protocol_scheme" translatable="false">fbAPP_ID</string>
@@ -127,5 +129,13 @@
     <string name="bp_descr">Description</string>
     <string name="bp_condiz">Conditions</string>
     <string name="bp_notes">Others</string>
+    <string name="fui_name_hint" translation_description="Hint for last name input field">Nickname</string>
+    <!-- navbar -->
+    <string name="nav_home">Home</string>
+    <string name="nav_library">My Library</string>
+    <string name="nav_chat">Chat</string>
+
+    <string name = "message">Message</string>
+    <string name = "library">Library</string>
 
 </resources>

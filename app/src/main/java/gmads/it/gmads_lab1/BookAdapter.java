@@ -15,6 +15,8 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import java.util.List;
 
+import gmads.it.gmads_lab1.model.Book;
+
 public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> {
 
     private Context mContext;

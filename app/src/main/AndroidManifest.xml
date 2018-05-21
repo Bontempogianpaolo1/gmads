@@ -13,13 +13,13 @@
     <application
         android:allowBackup="true"
         android:fullBackupContent="true"
-        android:icon="@mipmap/ic_launcher"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:icon="@mipmap/my_launcher_overbooking"
+        android:roundIcon="@mipmap/my_launcher_overbooking_layer"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
             android:name=".Login"
-            android:label="gMADs_1"
+            android:label="Overbooking"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,7 +29,7 @@
         </activity>
         <activity
             android:name=".Home"
-            android:label="gMADs"
+            android:label="Home"
             android:screenOrientation="portrait" />
         <activity android:name=".LocationProvider"></activity>
         <activity android:name=".PermissionManager"></activity>
@@ -82,8 +82,27 @@
                   android:screenOrientation="portrait"/>
         <activity android:name=".ShowUserProfile"
             android:screenOrientation="portrait">
-
         </activity>
+        <activity android:name=".ChatList"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ChatActivity"
+            android:screenOrientation="portrait"/>
+
+        <!--FCM-->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_account_24dp" />
+        <service android:name=".service.MyFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+        <service android:name=".service.MyFirebaseInstanceIDService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
+
     </application>
 
 </manifest>

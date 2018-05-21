@@ -96,5 +96,12 @@
     <string name="bp_condiz">Condizioni</string>
     <string name="bp_notes">Altri</string>
 
+    <!-- navbar -->
+    <string name="nav_home">Home</string>
+    <string name="nav_library">La mia Libreria</string>
+    <string name="nav_chat">Chat</string>
+
+    <string name = "message">Messaggio</string>
+    <string name = "library">Libreria</string>
     <!--end-->
 </resources>

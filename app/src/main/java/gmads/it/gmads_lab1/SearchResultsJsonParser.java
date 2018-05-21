@@ -6,10 +6,12 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import gmads.it.gmads_lab1.model.Book;
+
 public class SearchResultsJsonParser
 {
     private BookJsonParser movieParser = new BookJsonParser();
-    public List<Book> parseResults( JSONObject jsonObject)
+    public List<Book> parseResults(JSONObject jsonObject)
     {
         if (jsonObject == null)
             return null;

@@ -26,7 +26,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -58,6 +57,8 @@ import android.net.Uri;
 import android.widget.Toast;
 
 import org.json.JSONObject;
+
+import gmads.it.gmads_lab1.model.Profile;
 
 import static android.graphics.Color.RED;
 
@@ -129,7 +130,7 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
         l2= findViewById(R.id.linearlayout);
         //l2= findViewById(R.id.linearlayout2);
         vName = findViewById(R.id.name);
-        vSurname = findViewById(R.id.surname);
+        //vSurname = findViewById(R.id.surname);
         vEmail = findViewById(R.id.email);
         vBio = findViewById(R.id.bio);
         vCountry = findViewById(R.id.country);
@@ -298,7 +299,6 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
                         new String[]{Manifest.permission.CAMERA}, MY_CAMERA_REQUEST_CODE);
             } else {
                 Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                takePictureIntent.putExtra("android.intent.extras.CAMERA_FACING", 1);
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             }
         });
@@ -438,27 +438,23 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
 
     public void updateUserInfo(){
         String name = vName.getText().toString();
-        String surname = vSurname.getText().toString();
+        //String surname = vSurname.getText().toString();
         String email = vEmail.getText().toString();
         String bio = vBio.getText().toString();
         String cap = vCAP.getText().toString();
 
         //String country = vCountry.getText().toString();
 
-
-
-
-
         if(name.isEmpty()){
             vName.setError(getString(R.string.name_require));
             vName.requestFocus();
             return;
         }
-        if(surname.isEmpty()){
+        /*if(surname.isEmpty()){
             vSurname.setError(getString(R.string.surname_required));
             vSurname.requestFocus();
             return;
-        }
+        }*/
         if(email.isEmpty()){
             vEmail.setError(getString(R.string.email_required));
             vEmail.requestFocus();
@@ -489,7 +485,7 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
                     .addOnSuccessListener(taskSnapshot -> {
                         profileImageUrl = Objects.requireNonNull(taskSnapshot.getDownloadUrl()).toString();
                         profile.setName(name);
-                        profile.setSurname(surname);
+                        //profile.setSurname(surname);
                         profile.setEmail(email);
                         profile.setDescription(bio);
                         profile.setImage(profileImageUrl);
@@ -503,7 +499,7 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
         }else{
             profileImageUrl = "";
             profile.setName(name);
-            profile.setSurname(surname);
+            //profile.setSurname(surname);
             profile.setEmail(email);
             profile.setDescription(bio);
             profile.setImage(profileImageUrl);
@@ -529,7 +525,7 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
                             profile = dataSnapshot.getValue(Profile.class);
                             if (profile != null) {
                                 vName.setText(profile.getName());
-                                vSurname.setText(profile.getSurname());
+                                //vSurname.setText(profile.getSurname());
                                 vEmail.setText(profile.getEmail());
                                 vBio.setText(profile.getDescription());
                                 //controllo che ci sia il CAP

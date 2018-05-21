@@ -12,6 +12,9 @@ import com.facebook.appevents.AppEventsLogger;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
+
+import gmads.it.gmads_lab1.service.MyFirebaseInstanceIDService;
 
 public class Login extends AppCompatActivity {
     private static final int RC_SIGN_IN = 123;
@@ -46,7 +49,7 @@ public class Login extends AppCompatActivity {
                             .setAvailableProviders(Arrays.asList(
                                     new AuthUI.IdpConfig.EmailBuilder().build(),
                                     new AuthUI.IdpConfig.GoogleBuilder().build()
-                                   // ,new AuthUI.IdpConfig.FacebookBuilder().build()
+                                    ,new AuthUI.IdpConfig.FacebookBuilder().build()
                             ))
                             .build(),
                     RC_SIGN_IN);
@@ -56,6 +59,7 @@ public class Login extends AppCompatActivity {
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
         //ritorno dall'attività di firebase e se si è loggato vado a home
         if (resultCode == RESULT_OK) {
             Intent intent = new Intent(this, ShowProfile.class);
@@ -69,6 +73,7 @@ public class Login extends AppCompatActivity {
                             if(dataSnapshot.getValue() == null){
                                 FirebaseManagement.createUser(getApplicationContext(), Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getEmail());
                             }
+
                             startActivity(intent);
                         }
 
