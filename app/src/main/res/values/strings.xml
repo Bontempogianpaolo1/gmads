@@ -139,4 +139,7 @@
     <string name = "library">Library</string>
     <string name = "book_info">More Info</string>
 
+    <!-- FCM -->
+    <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
+
 </resources>

@@ -17,6 +17,9 @@ class ImageMessageItem(val message: ImageMessage,
 
     override fun bind(viewHolder: ViewHolder, position: Int) {
         super.bind(viewHolder, position)
+        /*
+        inserimento dell'immagine nel messaggio
+         */
         GlideApp.with(context)
                 .load(StorageUtil.pathToReference(message.imagePath))
                 .placeholder(R.drawable.ic_image_black_24dp)

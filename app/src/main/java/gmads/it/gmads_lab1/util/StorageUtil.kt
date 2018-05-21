@@ -4,7 +4,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import java.util.*
-
+//classe per caricare e scaricare immagini da firebase
 object StorageUtil {
     private val storageInstance: FirebaseStorage by lazy { FirebaseStorage.getInstance() }
 

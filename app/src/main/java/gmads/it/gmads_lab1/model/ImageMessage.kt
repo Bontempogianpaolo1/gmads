@@ -9,3 +9,6 @@ data class ImageMessage(val imagePath: String,
     : Message {
     constructor() : this("", Date(0), "")
 }
+/*
+classe per contenere i dati dell'immagine
+ */

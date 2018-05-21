@@ -45,11 +45,11 @@
     <string name="publisherNotFound">Editore: assente</string>
     <string name="pDateNotFound">Data pubblicazione: assente</string>
     <string name="categoryNotFound">Categoria: assente</string>
-    <string name="scan2">Oppure inserisci l'ISBN</string>
+    <string name="scan2">Oppure inserisci l\'ISBN</string>
     <string name="scan1">Enter book manually</string>
     <string name="scan3">Oppure scansionalo</string>
     <string name="bookTitle">Dettagli Libro</string>
-    <string name="isbnerror">\nL'ISBN deve essere di 13 numeri</string>
+    <string name="isbnerror">\nL\'ISBN deve essere di 13 numeri</string>
     <string name="tab1">Tutti</string>
     <string name="tab2">Noleggiati</string>
     <string name="tab3">Aggiunti</string>
