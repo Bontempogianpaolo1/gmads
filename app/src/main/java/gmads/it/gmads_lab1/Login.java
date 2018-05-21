@@ -1,19 +1,24 @@
 package gmads.it.gmads_lab1;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import java.util.Arrays;
 import java.util.Objects;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 
+import gmads.it.gmads_lab1.model.Profile;
 import gmads.it.gmads_lab1.service.MyFirebaseInstanceIDService;
 
 public class Login extends AppCompatActivity {
@@ -49,7 +54,7 @@ public class Login extends AppCompatActivity {
                             .setAvailableProviders(Arrays.asList(
                                     new AuthUI.IdpConfig.EmailBuilder().build(),
                                     new AuthUI.IdpConfig.GoogleBuilder().build()
-                                   // ,new AuthUI.IdpConfig.FacebookBuilder().build()
+                                    ,new AuthUI.IdpConfig.FacebookBuilder().build()
                             ))
                             .build(),
                     RC_SIGN_IN);
@@ -71,10 +76,35 @@ public class Login extends AppCompatActivity {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             if(dataSnapshot.getValue() == null){
-                                FirebaseManagement.createUser(getApplicationContext(), Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getEmail());
+                                //FirebaseManagement.createUser(getApplicationContext(), Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getEmail());
+
+                                FirebaseUser User = FirebaseManagement.getUser();
+                                String name[] = Objects.requireNonNull(FirebaseManagement.getUser().getDisplayName()).split(" ");
+                                Profile newProfile;
+                                newProfile = new Profile(User.getUid(),
+                                        FirebaseManagement.getUser().getDisplayName(),
+                                        "surname da togliere",
+                                        Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getEmail(),
+                                        getApplicationContext().getString(R.string.bioExample));
+
+
+                                FirebaseManagement.getDatabase().getReference().child("users").child(User.getUid()).setValue(newProfile).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        MyFirebaseInstanceIDService fInstance = new MyFirebaseInstanceIDService();
+                                        fInstance.addToken(FirebaseInstanceId.getInstance().getToken());
+                                        startActivity(intent);
+                                    }
+                                });
+
+                            }
+                            else{
+                                FirebaseManagement.loginUser();
+                                startActivity(intent);
+
                             }
 
-                            startActivity(intent);
+
                         }
 
                         @Override
@@ -84,5 +114,11 @@ public class Login extends AppCompatActivity {
                     });
 
         }
+    }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+        overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out);
     }
 }

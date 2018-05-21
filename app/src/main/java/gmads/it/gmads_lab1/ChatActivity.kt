@@ -65,7 +65,7 @@ class ChatActivity : AppCompatActivity() {
             }
         }
     }
-
+//ritorno dalla selezione dell'immagine
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == RC_SELECT_IMAGE && resultCode == Activity.RESULT_OK &&
                 data != null && data.data != null) {
@@ -86,7 +86,7 @@ class ChatActivity : AppCompatActivity() {
             }
         }
     }
-
+//aggiorno il recycler
     private fun updateRecyclerView(messages: List<Item>) {
         fun init() {
             recycler_view_messages.apply {
