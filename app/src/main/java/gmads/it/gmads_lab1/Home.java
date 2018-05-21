@@ -91,7 +91,7 @@ public class  Home extends AppCompatActivity implements NavigationView.OnNavigat
 
         setSupportActionBar(toolbar);
         setNavViews();
-        FirebaseManagement.sendMessage("ciao","pino","s7zgS8pwOXajKcNBt4nfEzTa1903");
+
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
@@ -163,9 +163,9 @@ public class  Home extends AppCompatActivity implements NavigationView.OnNavigat
             return true;
         } else if (id == R.id.nav_home) {
             //deve solo chiudersi la navbar
-            //drawer.closeDrawers();
-            Intent intent = new Intent(this, Home.class);
-            startActivity(intent);
+            drawer.closeDrawers();
+            //Intent intent = new Intent(this, Home.class);
+            //startActivity(intent);
             return true;
         } else if (id == R.id.nav_chat){
             Intent intent = new Intent(this, ChatList.class);
@@ -283,7 +283,7 @@ public class  Home extends AppCompatActivity implements NavigationView.OnNavigat
                     scrollRange = appBarLayout.getTotalScrollRange();
                 }
                 if (scrollRange + verticalOffset == 0) {
-                    collapsingToolbar.setTitle(getString(R.string.app_name));
+                    collapsingToolbar.setTitle("Home");
                     isShow = true;
                 } else if (isShow) {
                     collapsingToolbar.setTitle(" ");
@@ -317,7 +317,7 @@ public class  Home extends AppCompatActivity implements NavigationView.OnNavigat
 
         if(profile!=null) {
             navName.setText(profile.getName());
-            navName.append(" " + profile.getSurname());
+            //navName.append(" " + profile.getSurname());
             navMail.setText(profile.getEmail());
 
             if (myProfileBitImage != null) {
@@ -343,7 +343,7 @@ public class  Home extends AppCompatActivity implements NavigationView.OnNavigat
                                 startActivity(i);
                             }
                             navName.setText(profile.getName());
-                            navName.append(" " + profile.getSurname());
+                            //navName.append(" " + profile.getSurname());
                             navMail.setText(profile.getEmail());
                             if (profile.getImage() != null) {
                                 try {

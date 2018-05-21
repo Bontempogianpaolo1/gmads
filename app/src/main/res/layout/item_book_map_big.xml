@@ -7,73 +7,92 @@
 
     <android.support.v7.widget.CardView
         android:id="@+id/cardview"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/item_place_details_height"
-        android:background="@color/white"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:layout_marginEnd="@dimen/default_layout_margin_halved"
         android:layout_marginStart="@dimen/default_layout_margin_halved"
-        >
+        android:background="@color/white">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
             <ImageView
                 android:id="@+id/headerImage"
-                android:layout_width="140dp"
-                android:layout_height="150dp"
-                android:layout_gravity="center"
-                android:layout_marginTop="10dp"
+                android:layout_width="128dp"
+                android:layout_height="183dp"
+                android:layout_alignParentTop="true"
+                android:layout_centerInParent="true"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="16dp"
                 android:scaleType="fitXY"
-                android:src="@drawable/default_profile" />
+                android:src="@drawable/default_book" />
 
             <TextView
                 android:id="@+id/title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/default_layout_margin"
-                android:text=""
+                android:layout_below="@id/headerImage"
+                android:layout_marginBottom="4dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="4dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:padding="4dp"
+                android:text="titolo"
                 android:textAppearance="@style/RobotoBold"
                 android:textColor="@android:color/black"
-                android:textSize="@dimen/textsize_very_huge"
-                android:textStyle="bold"
+                android:textSize="25sp"
                 android:transitionName="titleTransition" />
 
             <LinearLayout
                 android:id="@+id/descriptionLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/title"
+                android:layout_marginEnd="16dp"
                 android:layout_marginStart="@dimen/default_layout_margin"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
-                <ImageView
-                    android:id="@+id/imagelabelauthor"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_gravity="center_vertical"
-                    android:src="@drawable/ic_account_24dp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:layout_marginBottom="4dp"
+                    android:paddingBottom="4dp"
+                    android:paddingEnd="4dp"
+                    android:paddingStart="4dp"
+                    android:paddingTop="4dp"
+                    android:text="@string/bp_owner"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/description"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:layout_marginBottom="4dp"
+                    android:layout_marginStart="4dp"
                     android:ellipsize="end"
-                    android:maxLines="3"
-                    android:padding="@dimen/default_layout_margin"
-                    android:text="@string/lorem"
+                    android:maxLines="1"
+                    android:padding="4dp"
+                    android:text="descrizione"
                     android:textAppearance="@style/RobotoThin"
                     android:textColor="@color/item_place_description" />
 
             </LinearLayout>
 
-
-        </LinearLayout>
         <LinearLayout
             android:id="@+id/bottonLayout"
-            android:layout_width="wrap_content"
+            android:layout_below="@id/descriptionLayout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:gravity="center_vertical"
@@ -81,38 +100,41 @@
 
             <TextView
                 android:id="@+id/toprofile"
-                android:layout_width="167dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                android:background="@color/button_red"
+                android:layout_marginEnd="2dp"
+                android:layout_marginStart="16dp"
+                android:layout_weight="1"
+                android:background="@color/colorPrimary"
+                android:clickable="true"
                 android:drawableStart="@drawable/ic_account_24dp"
+                android:drawableTint="@color/white"
                 android:gravity="center"
-                android:padding="@dimen/default_layout_margin"
-                android:text="Show Profile"
+                android:padding="8dp"
+                android:text="@string/showProfile"
                 android:textAppearance="@style/RobotoBold"
-                android:textColor="@color/white"
-                android:clickable="true" />
-
-            <ImageView
-                android:layout_width="22dp"
-                android:layout_height="20dp"
-                android:layout_gravity="center_vertical" />
+                android:textColor="@color/white" />
 
             <TextView
                 android:id="@+id/tobook"
-                android:layout_width="178dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                android:onClick="onClicktoBook"
-                android:background="@color/button_red"
-                android:drawableStart="@drawable/ic_add_book_24dp"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="16dp"
+                android:layout_weight="1"
+                android:background="@color/colorPrimary"
+                android:drawableStart="@drawable/ic_info_black_24px"
+                android:drawableTint="@color/white"
                 android:gravity="center"
-                android:padding="@dimen/default_layout_margin"
-                android:text="More Info"
+                android:onClick="onClicktoBook"
+                android:padding="8dp"
+                android:text="@string/book_info"
                 android:textAppearance="@style/RobotoBold"
                 android:textColor="@color/white" />
         </LinearLayout>
-
+        </RelativeLayout>
     </android.support.v7.widget.CardView>
 
 

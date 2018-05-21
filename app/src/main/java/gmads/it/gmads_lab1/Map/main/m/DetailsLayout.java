@@ -49,7 +49,12 @@ public class DetailsLayout extends CoordinatorLayout {
     }
 
     private void setData(Book place) {
-        Glide.with(getContext()).load(place.getUrlimage()).into(imageViewPlaceDetails);
+        if(place.getUrlimage()!=null && place.getUrlimage().length()!=0){
+            Glide.with(getContext()).load(place.getUrlimage()).into(imageViewPlaceDetails);
+        }
+        else {
+            imageViewPlaceDetails.setImageDrawable(getContext().getDrawable(R.drawable.default_book));
+        }
         textViewTitle.setText(place.getTitle());
         bid=place.getBId();
         textViewDescription.setText(place.getNomeproprietario());

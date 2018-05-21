@@ -3,6 +3,7 @@ package gmads.it.gmads_lab1.util
 import android.content.Context
 import android.util.Log
 import com.firebase.ui.auth.data.model.User
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 
@@ -25,7 +26,6 @@ object FirebaseChat {
 
     private val chatChannelsCollectionRef = firebaseInstance.reference.child("chatChannels")
 
-
     fun addUsersListener(context: Context, onListen: (List<Item>) -> Unit): ValueEventListener {
         return firebaseInstance.reference.child("users")
                 .addValueEventListener(object : ValueEventListener {
@@ -46,8 +46,6 @@ object FirebaseChat {
                         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                         */
                     }
-
-
                 })
     }
 
@@ -122,7 +120,6 @@ in caso in cui ci fossero nuovi messaggi
                                 items.add(TextMessageItem(it.getValue<TextMessage>(TextMessage::class.java)!!, context))
                             else
                                 items.add(ImageMessageItem(it.getValue<ImageMessage>(ImageMessage::class.java)!!, context))
-
                         }
                         onListen(items)
                     }
@@ -148,6 +145,45 @@ invio messaggi al token desiderato")
                 .child("messages")
                 .child(mKey)
                 .setValue(message)
+                .addOnCompleteListener { task ->
+                    if(task.isComplete && message.type == "TEXT") {
+
+                        currentUserRef.addListenerForSingleValueEvent(object : ValueEventListener {
+
+                            override fun onDataChange(dataSnapshot: DataSnapshot?) {
+
+                                val myUser = dataSnapshot?.getValue(Profile::class.java)!!
+
+                                chatChannelsCollectionRef
+                                        .child(channelId)
+                                        .child("userIds")
+                                        .addListenerForSingleValueEvent(object : ValueEventListener {
+
+                                            override fun onDataChange(dataSnapshot: DataSnapshot?) {
+                                                message as TextMessage
+
+                                                var dataUsers = dataSnapshot!!.children
+
+                                                for (dataUser in dataUsers){
+                                                    var otherUser = dataUser.getValue(String::class.java)
+                                                    FirebaseManagement.sendMessage(message.text, myUser.name, otherUser)
+                                                }
+                                            }
+
+                                            override fun onCancelled(p0: DatabaseError?) {
+                                                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                                            }
+
+                                        })
+
+                            }
+
+                            override fun onCancelled(p0: DatabaseError?) {
+                                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                            }
+                        })
+                    }
+                }
     }
 
     //region FCM
