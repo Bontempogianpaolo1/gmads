@@ -133,7 +133,7 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
         l2= findViewById(R.id.linearlayout);
         //l2= findViewById(R.id.linearlayout2);
         vName = findViewById(R.id.name);
-        vSurname = findViewById(R.id.surname);
+        //vSurname = findViewById(R.id.surname);
         vEmail = findViewById(R.id.email);
         vBio = findViewById(R.id.bio);
         vCountry = findViewById(R.id.country);
@@ -451,7 +451,7 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
 
     public void updateUserInfo(){
         String name = vName.getText().toString();
-        String surname = vSurname.getText().toString();
+        //String surname = vSurname.getText().toString();
         String email = vEmail.getText().toString();
         String bio = vBio.getText().toString();
         String cap = vCAP.getText().toString();
@@ -463,11 +463,11 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
             vName.requestFocus();
             return;
         }
-        if(surname.isEmpty()){
+        /*if(surname.isEmpty()){
             vSurname.setError(getString(R.string.surname_required));
             vSurname.requestFocus();
             return;
-        }
+        }*/
         if(email.isEmpty()){
             vEmail.setError(getString(R.string.email_required));
             vEmail.requestFocus();
@@ -497,7 +497,7 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
                     .addOnSuccessListener(taskSnapshot -> {
                         profileImageUrl = Objects.requireNonNull(taskSnapshot.getDownloadUrl()).toString();
                         profile.setName(name);
-                        profile.setSurname(surname);
+                        //profile.setSurname(surname);
                         profile.setEmail(email);
                         profile.setDescription(bio);
                         profile.setImage(profileImageUrl);
@@ -511,7 +511,7 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
         }else{
             profileImageUrl = "";
             profile.setName(name);
-            profile.setSurname(surname);
+            //profile.setSurname(surname);
             profile.setEmail(email);
             profile.setDescription(bio);
             profile.setImage(profileImageUrl);
@@ -535,7 +535,7 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
                             profile = dataSnapshot.getValue(Profile.class);
                             if (profile != null) {
                                 vName.setText(profile.getName());
-                                vSurname.setText(profile.getSurname());
+                                //vSurname.setText(profile.getSurname());
                                 vEmail.setText(profile.getEmail());
                                 vBio.setText(profile.getDescription());
                                 //controllo che ci sia il CAP

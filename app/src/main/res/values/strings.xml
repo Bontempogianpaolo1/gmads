@@ -38,8 +38,8 @@
     <string name="title_activity_add_book">AddBook</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Android Studio</string>
-    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_title">Username</string>
+    <string name="nav_header_subtitle">example@p.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
     <string name="scan2">Or insert ISBN</string>
@@ -107,7 +107,7 @@
     <string name="sign_up_for_this">SIGN UP FOR THIS</string>
     <string name="mapPlaceholderTransition">mapPlaceholderTransition</string>
     <string name="saveBook">Save Book</string>
-    <string name="of">of: </string>
+    <string name="of">of</string>
     <string name="showBook">Book Details</string>
 
     <!-- stringhe show profile -->
@@ -134,6 +134,10 @@
     <string name="nav_home">Home</string>
     <string name="nav_library">My Library</string>
     <string name="nav_chat">Chat</string>
+
+    <string name = "message">Message</string>
+    <string name = "library">Library</string>
+    <string name = "book_info">More Info</string>
 
     <!-- FCM -->
     <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>

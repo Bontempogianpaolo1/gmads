@@ -3,11 +3,20 @@ package gmads.it.gmads_lab1
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.inputmethodservice.Keyboard
 import android.os.Bundle
 import android.provider.MediaStore
+import android.support.v4.view.GravityCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.Toolbar
+import android.view.MenuItem
+import android.view.MotionEvent
+import android.view.View
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.Section
@@ -16,11 +25,15 @@ import com.xwray.groupie.kotlinandroidextensions.ViewHolder
 import gmads.it.gmads_lab1.constants.AppConstants
 import gmads.it.gmads_lab1.model.ImageMessage
 import gmads.it.gmads_lab1.model.MessageType
+import gmads.it.gmads_lab1.model.Profile
 import gmads.it.gmads_lab1.model.TextMessage
 import gmads.it.gmads_lab1.util.FirebaseChat
 import gmads.it.gmads_lab1.util.StorageUtil
 import kotlinx.android.synthetic.main.activity_chat.*
+import kotlinx.android.synthetic.main.nav_header.*
 import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.IOException
 import java.util.*
 
 private const val RC_SELECT_IMAGE = 2
@@ -36,7 +49,7 @@ class ChatActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
-
+        setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = intent.getStringExtra(AppConstants.USER_NAME)
 
@@ -96,6 +109,7 @@ class ChatActivity : AppCompatActivity() {
                     this.add(messagesSection)
                 }
             }
+            recycler_view_messages.scrollToPosition(recycler_view_messages.adapter.itemCount - 1)
             shouldInitRecyclerView = false
         }
 
@@ -107,5 +121,15 @@ class ChatActivity : AppCompatActivity() {
             updateItems()
 
         recycler_view_messages.scrollToPosition(recycler_view_messages.adapter.itemCount - 1)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                super.onBackPressed()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 }

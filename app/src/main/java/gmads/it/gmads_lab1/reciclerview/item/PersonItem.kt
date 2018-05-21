@@ -17,12 +17,11 @@ private val context: Context)
 
         override fun bind(viewHolder: ViewHolder, position: Int) {
         viewHolder.textView_name.text = person.name
-        viewHolder.textView_bio.text = person.description
-
+        //viewHolder.textView_bio.text = person.description
         if (person.image != null)
                 GlideApp.with(context)
                 .load(person.image)
-                .placeholder(R.drawable.ic_account_circle_black_24dp)
+                .placeholder(R.drawable.default_picture)
                 .into(viewHolder.imageView_profile_picture)
         }
 
