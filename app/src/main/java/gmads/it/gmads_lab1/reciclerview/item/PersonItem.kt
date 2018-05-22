@@ -1,6 +1,7 @@
 package gmads.it.gmads_lab1.reciclerview.item;
 
 import android.content.Context
+import android.view.View
 import gmads.it.gmads_lab1.R
 import gmads.it.gmads_lab1.glide.*
 import gmads.it.gmads_lab1.model.Profile
@@ -12,12 +13,17 @@ import kotlinx.android.synthetic.main.item_person.*
 
 
 class PersonItem(val person: Profile,
-        val userId: String,
-private val context: Context)
+                 val userId: String,
+                 val notificationNumber : Int,
+                 private val context: Context)
         : Item() {
 
         override fun bind(viewHolder: ViewHolder, position: Int) {
-        viewHolder.textView_name.text = person.name
+            viewHolder.textView_name.text = person.name
+            if(notificationNumber != 0) {
+                viewHolder.number.text = notificationNumber.toString()
+                viewHolder.number.visibility = View.VISIBLE
+            }
         //viewHolder.textView_bio.text = person.description
         if (person.image != null)
                 GlideApp.with(context)

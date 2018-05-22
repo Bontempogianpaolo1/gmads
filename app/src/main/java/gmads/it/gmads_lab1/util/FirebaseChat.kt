@@ -33,12 +33,61 @@ object FirebaseChat {
                     override fun onDataChange(dataSnapshot: DataSnapshot?) {
 
                         val items = mutableListOf<Item>()
+                        var notifiedChatNumber : Int = 0
+
                         dataSnapshot!!.children.mapNotNull {
+
                             val user = it.getValue<Profile>(Profile::class.java)
-                            if (user?.id != FirebaseAuth.getInstance().currentUser?.uid)
-                                items.add(PersonItem(user!!, user.id, context))
+
+                            if (user?.id != FirebaseAuth.getInstance().currentUser?.uid) {
+                                currentUserRef
+                                        .child("engagedChatChannels")
+                                        .child(user?.id)
+                                        .child("channelId")
+                                        .addValueEventListener(object : ValueEventListener {
+                                            override fun onCancelled(p0: DatabaseError?) {
+                                                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                                            }
+
+                                            override fun onDataChange(dataSnapshot: DataSnapshot?) {
+                                                var channelId = dataSnapshot?.getValue(String::class.java)
+
+                                                if(channelId != null) {
+                                                    chatChannelsCollectionRef
+                                                            .child(channelId)
+                                                            .child("notificationNumber")
+                                                            .child(FirebaseAuth.getInstance().currentUser?.uid)
+                                                            .addValueEventListener(object : ValueEventListener {
+                                                                override fun onCancelled(p0: DatabaseError?) {
+                                                                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                                                                }
+
+                                                                override fun onDataChange(dataSnapshot: DataSnapshot?) {
+                                                                    var notificationNumber = dataSnapshot?.getValue(Int::class.java)
+                                                                    if(notificationNumber == 0){
+                                                                        items.add(notifiedChatNumber, PersonItem(user!!, user.id, notificationNumber ?: 0, context))
+                                                                    } else {
+                                                                        notifiedChatNumber++
+                                                                        items.add(0, PersonItem(user!!, user.id, notificationNumber ?: 0, context))
+                                                                    }
+                                                                    onListen(items)
+                                                                }
+
+                                                            })
+                                                } else {
+                                                    items.add(notifiedChatNumber, PersonItem(user!!, user.id, 0, context))
+                                                }
+
+                                                onListen(items)
+                                            }
+
+                                        })
+
+
+                            }
+
                         }
-                        onListen(items)
+
                    }
 
                     override fun onCancelled(p0: DatabaseError?) {
@@ -77,7 +126,8 @@ object FirebaseChat {
                         val currentUserId = FirebaseAuth.getInstance().currentUser!!.uid
 
                         val newChannelKey = chatChannelsCollectionRef.push().key
-                        val newChatChannel = ChatChannel(mutableListOf(currentUserId, otherUserId))
+                        val newChatChannel = ChatChannel(mutableListOf(currentUserId, otherUserId),
+                                mapOf(Pair(currentUserId, 0), Pair(otherUserId, 0)))
 /*
 salvataggio dati sufirebase
  */
@@ -156,17 +206,22 @@ invio messaggi al token desiderato")
 
                                 chatChannelsCollectionRef
                                         .child(channelId)
-                                        .child("userIds")
                                         .addListenerForSingleValueEvent(object : ValueEventListener {
 
                                             override fun onDataChange(dataSnapshot: DataSnapshot?) {
                                                 message as TextMessage
-
-                                                var dataUsers = dataSnapshot!!.children
+                                                var chatChannel = dataSnapshot!!.getValue(ChatChannel::class.java)
+                                                var dataUsers = chatChannel!!.userIds
 
                                                 for (dataUser in dataUsers){
-                                                    var otherUser = dataUser.getValue(String::class.java)
-                                                    FirebaseManagement.sendMessage(message.text, myUser.name, otherUser)
+                                                    if(dataUser != myUser.id){
+                                                        FirebaseManagement.sendMessage(message.text, myUser.name, dataUser)
+                                                        chatChannelsCollectionRef
+                                                                .child(channelId)
+                                                                .child("notificationNumber")
+                                                                .child(dataUser)
+                                                                .setValue(chatChannel.notificationNumber.get(dataUser)!!.toInt()+1)
+                                                    }
                                                 }
                                             }
 
