@@ -104,5 +104,6 @@
     <string name = "message">Messaggio</string>
     <string name = "library">Libreria</string>
     <string name = "book_info">Altre Info</string>
+    <string name = "book_photo">Aggiungi una foto del libro</string>
     <!--end-->
 </resources>

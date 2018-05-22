@@ -104,6 +104,7 @@ public class SaveBook extends AppCompatActivity  implements AppBarLayout.OnOffse
     static final int REQUEST_IMAGE_CAPTURE = 1888;
     static final int REQUEST_IMAGE_LIBRARY = 1889;
     private ImageView bookImage;//profile image
+    private ImageView addImage; //foto nella view in basso
     private Bitmap newBitMapBookImage; //temp for new image
     private SharedPreferences prefs;
     boolean imagechanged=false;
@@ -148,7 +149,7 @@ public class SaveBook extends AppCompatActivity  implements AppBarLayout.OnOffse
         coverImage.setImageResource(R.drawable.cover_edit);
         toolbar.setTitle("");
         appbar.addOnOffsetChangedListener(this);
-        textviewTitle.setText(getString(R.string.title_activity_save_book));
+        textviewTitle.setText(getString(R.string.bookTitle));
         setSupportActionBar(toolbar);
         startAlphaAnimation(textviewTitle, 0, View.INVISIBLE);
         //viewPager= findViewById(R.id.ViewPager);
@@ -252,7 +253,7 @@ public class SaveBook extends AppCompatActivity  implements AppBarLayout.OnOffse
         textviewTitle = (TextView) findViewById(R.id.textview_title);
         //avatar = (SimpleDraweeView) findViewById(R.id.avatar);
         avatar = findViewById(R.id.avatar);
-        avatar.setImageDrawable(getDrawable(R.drawable.default_picture));
+        avatar.setImageDrawable(getDrawable(R.drawable.default_book));
 
 
         condition=findViewById(R.id.condition);
@@ -266,6 +267,7 @@ public class SaveBook extends AppCompatActivity  implements AppBarLayout.OnOffse
         vPublisher = findViewById(R.id.editore);
         vDescription = findViewById(R.id.descrizione);
         bookImage = findViewById(R.id.avatar);
+        addImage = findViewById(R.id.bookphoto);
         //progressBar=findViewById(R.id.progressBar);
         //ll=findViewById(R.id.ll);
         //add = findViewById(R.id.addphoto);
@@ -639,7 +641,7 @@ todo rimpire stringhe
             Bundle imageUri = data.getExtras();
             newBitMapBookImage = (Bitmap) Objects.requireNonNull(imageUri).get("data");
             //bookImage.loadUrl(bitmapToUrl(newBitMapBookImage));
-            bookImage.setImageBitmap(newBitMapBookImage);
+            addImage.setImageBitmap(newBitMapBookImage);
             //adapter.addUrl(bitmapToUrl(newBitMapBookImage));
             //adapter.notifyDataSetChanged();
             // bookImage.setImageBitmap(newBitMapBookImage);
@@ -652,7 +654,7 @@ todo rimpire stringhe
                 final InputStream imageStream = getContentResolver().openInputStream(imageUri);
                 newBitMapBookImage = BitmapFactory.decodeStream(imageStream);
                 // bookImage.loadUrl(bitmapToUrl(newBitMapBookImage));
-                bookImage.setImageBitmap(newBitMapBookImage);
+                addImage.setImageBitmap(newBitMapBookImage);
                 //bookImage.setImageBitmap(newBitMapBookImage);
             } catch (IOException e) {
                 e.printStackTrace();
