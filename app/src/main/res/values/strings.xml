@@ -51,10 +51,10 @@
     <string name="notFound">Not Found</string>
     <string name="titleNotFound">Title: not Found</string>
     <string name="authorNotFound">Author: not Found</string>
-    <string name="descriptionNotFound">\nDescription: not Found</string>
+    <string name="descriptionNotFound">Description: not Found</string>
     <string name="publisherNotFound">Publisher: not Found</string>
     <string name="pDateNotFound">Published Date: not Found</string>
-    <string name="categoryNotFound">Category/: not Found</string>
+    <string name="categoryNotFound">Category/ies: not Found</string>
     <string name="facebook_application_id" translatable="false">172924670204019</string>
     <string name="fb_login_protocol_scheme">fb172924670204019</string>
 

@@ -41,10 +41,10 @@
     <string name="notFound">Non trovato</string>
     <string name="titleNotFound">Titolo: assente</string>
     <string name="authorNotFound">Autore: assente</string>
-    <string name="descriptionNotFound">\nDescrizione: assente</string>
+    <string name="descriptionNotFound">Descrizione: assente</string>
     <string name="publisherNotFound">Editore: assente</string>
     <string name="pDateNotFound">Data pubblicazione: assente</string>
-    <string name="categoryNotFound">Categoria: assente</string>
+    <string name="categoryNotFound">Categoria/e: assente/i</string>
     <string name="scan2">Oppure inserisci l\'ISBN</string>
     <string name="scan1">Enter book manually</string>
     <string name="scan3">Oppure scansionalo</string>

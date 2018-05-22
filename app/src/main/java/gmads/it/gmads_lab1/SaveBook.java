@@ -274,8 +274,8 @@ public class SaveBook extends AppCompatActivity  implements AppBarLayout.OnOffse
         toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(getString(R.string.bookTitle));
         setSupportActionBar(toolbar);
-        vDescription.setVerticalScrollBarEnabled(true);
-        vDescription.setMovementMethod(new ScrollingMovementMethod());
+        //vDescription.setVerticalScrollBarEnabled(true);
+        //vDescription.setMovementMethod(new ScrollingMovementMethod());
         //add.setOnClickListener(this::onAddPhotoClick);
     }
     public void onAddAuthor(View v){
@@ -377,7 +377,7 @@ public class SaveBook extends AppCompatActivity  implements AppBarLayout.OnOffse
                         title = volumeObject.getString("title");
                         vTitle.setText(title);
                     }catch (Exception e){
-                        vTitle.setText(getString(R.string.titleNotFound));
+                        //vTitle.setText(getString(R.string.titleNotFound));
                     }
                     try{
                         author = volumeObject.getString("authors");
@@ -393,16 +393,16 @@ public class SaveBook extends AppCompatActivity  implements AppBarLayout.OnOffse
                             publisher = volumeObject.getString("publisher");
                             vPublisher.setText(publisher);
                         }else{
-                            vPublisher.setText(getString(R.string.publisherNotFound));
+                            //vPublisher.setText(getString(R.string.publisherNotFound));
                         }
                     }catch (Exception e){
-                        vPublisher.setText(getString(R.string.publisherNotFound));
+                        //vPublisher.setText(getString(R.string.publisherNotFound));
                     }
                     try{
                         publishdate= volumeObject.getString("publishedDate");
                         vDate.setText(publishdate);
                     }catch (Exception e){
-                        vDate.setText(getString(R.string.pDateNotFound));
+                        //vDate.setText(getString(R.string.pDateNotFound));
                     }
                     try{
                         categories = volumeObject.getString("categories");
@@ -424,10 +424,10 @@ public class SaveBook extends AppCompatActivity  implements AppBarLayout.OnOffse
                             description = volumeObject.getString("description");
                             vDescription.setText(description);
                         }else{
-                            vDescription.setText(R.string.descriptionNotFound);
+                            //vDescription.setText(R.string.descriptionNotFound);
                         }
                     }catch(Exception e){
-                        vDescription.setText(R.string.descriptionNotFound);
+                        //vDescription.setText(R.string.descriptionNotFound);
                     }
                     Glide.with(this).load(urlimage).into((ImageView)findViewById(R.id.avatar));
                     //adapter.addUrl(urlimage);
@@ -486,7 +486,7 @@ todo rimpire stringhe
                     null,
                     isbn,
                     vTitle.getText().toString(),
-                    "",
+                    vDescription.getText().toString(),
                     urlimage,
                     vDate.getText().toString(),
                     authors,
