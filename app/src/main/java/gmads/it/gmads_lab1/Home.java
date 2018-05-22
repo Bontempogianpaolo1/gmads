@@ -87,6 +87,8 @@ public class  Home extends AppCompatActivity implements NavigationView.OnNavigat
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        ImageView notfound = findViewById(R.id.not_found);
+        TextView tnf = findViewById(R.id.textnotfound);
         tools = new Tools();
 
         setSupportActionBar(toolbar);
@@ -113,9 +115,7 @@ public class  Home extends AppCompatActivity implements NavigationView.OnNavigat
         FragmentViewPagerAdapter vpadapter= new FragmentViewPagerAdapter(getSupportFragmentManager());
         vpadapter.addFragment(tab1);
         pager.setAdapter(vpadapter);
-
         progressbar = findViewById(R.id.progress_bar);
-
 //
         //era per mettere foto libri nell appbar, ma l'abbiamo messa come sfondo per ora
         try {
@@ -136,9 +136,12 @@ public class  Home extends AppCompatActivity implements NavigationView.OnNavigat
 
     @Override
     protected void onResume() {
+        ImageView notfound = findViewById(R.id.not_found);
+        TextView tnf = findViewById(R.id.textnotfound);
         super.onResume();
         progressbar.setVisibility(View.GONE);
-
+        notfound.setVisibility(View.GONE);
+        tnf.setVisibility(View.GONE);
     }
 
     /*@Override
@@ -223,6 +226,8 @@ public class  Home extends AppCompatActivity implements NavigationView.OnNavigat
                 progressbar.setVisibility(View.VISIBLE);
                 books.clear();
                 tab1.getAdapter().setbooks(books);
+                ImageView notfound = findViewById(R.id.not_found);
+                TextView tnf = findViewById(R.id.textnotfound);
 
                 query = newText;
                 Query query = new Query(newText)
@@ -237,13 +242,13 @@ public class  Home extends AppCompatActivity implements NavigationView.OnNavigat
                             books= search.parseResults(jsonObject);
 
                             if(books.isEmpty()) {
-                                ImageView notfound = findViewById(R.id.not_found);
-                                TextView tnf = findViewById(R.id.textnotfound);
                                 progressbar.setVisibility(View.GONE);
                                 notfound.setVisibility(View.VISIBLE);
                                 tnf.setVisibility(View.VISIBLE);
                             }
                             else{
+                                notfound.setVisibility(View.GONE);
+                                tnf.setVisibility(View.GONE);
                                 for (int i = 0; i < books.size(); i++) {
                                     if (books.get(i).getOwner().equals(FirebaseManagement.getUser().getUid())) {
                                         books.remove(i);

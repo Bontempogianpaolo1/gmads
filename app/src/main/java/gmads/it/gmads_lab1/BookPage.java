@@ -275,7 +275,6 @@ public class BookPage extends AppCompatActivity implements AppBarLayout.OnOffset
                                 categ=categ+a+", ";
                             }
                             vCategory.setText(categ);
-
                             vdate.setText(book.getPublishDate());
                             vCondition.setText(book.getCondition());
                             String notes="";
