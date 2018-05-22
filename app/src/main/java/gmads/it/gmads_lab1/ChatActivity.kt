@@ -17,6 +17,7 @@ import android.view.View
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.Section
@@ -76,7 +77,15 @@ class ChatActivity : AppCompatActivity() {
                 }
                 startActivityForResult(Intent.createChooser(intent, "Select Image"), RC_SELECT_IMAGE)
             }
+
+            FirebaseDatabase.getInstance().reference
+                    .child("chatChannels")
+                    .child(channelId)
+                    .child("notificationNumber")
+                    .child(FirebaseAuth.getInstance().currentUser?.uid)
+                    .setValue(0)
         }
+
     }
 //ritorno dalla selezione dell'immagine
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

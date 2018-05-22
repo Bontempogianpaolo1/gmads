@@ -1,5 +1,6 @@
 package gmads.it.gmads_lab1;
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.ContextWrapper;
@@ -7,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Credentials;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -28,14 +30,16 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
-
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
@@ -79,18 +83,12 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
     private boolean mIsTheTitleContainerVisible = true;
 
     private AppBarLayout appbar;
-    private CollapsingToolbarLayout collapsing;
     private ImageView coverImage;
-    private FrameLayout framelayoutTitle;
     private LinearLayout linearlayoutTitle;
     private Toolbar toolbar;
     private TextView textviewTitle;
     //private SimpleDraweeView avatar;
     private ImageView avatar;
-
-    AlphaAnimation inAnimation;
-    AlphaAnimation outAnimation;
-
     FrameLayout progressBarHolder;
 
     private Profile profile;
@@ -106,7 +104,6 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
     LinearLayout ll;
     LinearLayout l2;
     TextView vName;
-    TextView vSurname;
     TextView vEmail;
     TextView vBio;
     TextView vCAP;
@@ -117,24 +114,24 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
     Intent pickIntent;
 
     private void findViews() {
-        appbar = (AppBarLayout) findViewById(R.id.appbar);
-        collapsing = (CollapsingToolbarLayout) findViewById(R.id.collapsing);
-        coverImage = (ImageView) findViewById(R.id.imageview_placeholder);
-        framelayoutTitle = (FrameLayout) findViewById(R.id.framelayout_title);
-        linearlayoutTitle = (LinearLayout) findViewById(R.id.linearlayout_title);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        textviewTitle = (TextView) findViewById(R.id.textview_title);
+        appbar =  findViewById(R.id.appbar);
+        CollapsingToolbarLayout collapsing = findViewById(R.id.collapsing);
+        coverImage =  findViewById(R.id.imageview_placeholder);
+        FrameLayout framelayoutTitle = findViewById(R.id.framelayout_title);
+        linearlayoutTitle =  findViewById(R.id.linearlayout_title);
+        toolbar =  findViewById(R.id.toolbar);
+        textviewTitle = findViewById(R.id.textview_title);
         //avatar = (SimpleDraweeView) findViewById(R.id.avatar);
         avatar = findViewById(R.id.avatar);
         avatar.setImageDrawable(getDrawable(R.drawable.default_picture));
-        progressBarHolder = (FrameLayout) findViewById(R.id.progressBarHolder);
+        progressBarHolder = findViewById(R.id.progressBarHolder);
 
         //progressbar = findViewById(R.id.progressBar);
         l2= findViewById(R.id.linearlayout);
         //l2= findViewById(R.id.linearlayout2);
         vName = findViewById(R.id.name);
         //vSurname = findViewById(R.id.surname);
-        vEmail = findViewById(R.id.email);
+        //vEmail = findViewById(R.id.email);
         vBio = findViewById(R.id.bio);
         vCountry = findViewById(R.id.country);
 
@@ -172,7 +169,7 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
         Collections.sort(countries, String.CASE_INSENSITIVE_ORDER);
 
         findViews();
-        adapter = new ArrayAdapter<String>(this, R.layout.spinner_layout, countries);
+        adapter = new ArrayAdapter<>(this, R.layout.spinner_layout, countries);
         adapter.setDropDownViewResource(R.layout.spinner_layout);
         vCountry.setAdapter(adapter);
         int spinnerPosition = adapter.getPosition(country_l);
@@ -223,14 +220,14 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
             assert imm != null;
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
-        Pattern pat = Pattern.compile("^([A-Za-z0-9_\\-\\.])+\\@([A-Za-z0-9_\\-\\.])+\\.([A-Za-z]{2,4})$");
+        /*Pattern pat = Pattern.compile("^([A-Za-z0-9_\\-\\.])+\\@([A-Za-z0-9_\\-\\.])+\\.([A-Za-z]{2,4})$");
         if (!pat.matcher(vEmail.getText()).matches()) {
             vEmail.setText("");
             vEmail.setHint(R.string.errorEmail);
             vEmail.setHintTextColor(RED);
             vEmail.requestFocus();
             return;
-        }
+        }*/
 
         if(vCAP.getText().toString().isEmpty()){
             vCAP.setError(getString(R.string.cap_required));
@@ -271,12 +268,6 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
 
         handleAlphaOnTitle(percentage);
         handleToolbarTitleVisibility(percentage);
-    }
-
-    private void setFocusOnClick(View v){
-        InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-        assert imm != null;
-        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
     }
 
     private void onClickImage(View v) {
@@ -452,7 +443,7 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
     public void updateUserInfo(){
         String name = vName.getText().toString();
         //String surname = vSurname.getText().toString();
-        String email = vEmail.getText().toString();
+        //String email = vEmail.getText().toString();
         String bio = vBio.getText().toString();
         String cap = vCAP.getText().toString();
 
@@ -468,11 +459,11 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
             vSurname.requestFocus();
             return;
         }*/
-        if(email.isEmpty()){
+        /*if(email.isEmpty()){
             vEmail.setError(getString(R.string.email_required));
             vEmail.requestFocus();
             return;
-        }
+        }*/
         if(cap.isEmpty()){
             vCAP.setError("@string/cap_required");
             vCAP.requestFocus();
@@ -492,18 +483,16 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
                 .child(FirebaseManagement.getUser().getUid())
                 .child("profileimage.jpg");
         if(uriProfileImage != null){
-
             profileImageRef.putFile(uriProfileImage)
                     .addOnSuccessListener(taskSnapshot -> {
                         profileImageUrl = Objects.requireNonNull(taskSnapshot.getDownloadUrl()).toString();
                         profile.setName(name);
                         //profile.setSurname(surname);
-                        profile.setEmail(email);
+                        //profile.setEmail(email);
                         profile.setDescription(bio);
                         profile.setImage(profileImageUrl);
                         profile.setCAP(cap+", "+country);
                         FirebaseManagement.updateUserData(profile);
-
                         startActivity(pickIntent);
                         //progressbar.setVisibility(View.GONE);
                     });
@@ -512,7 +501,7 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
             profileImageUrl = "";
             profile.setName(name);
             //profile.setSurname(surname);
-            profile.setEmail(email);
+            //profile.setEmail(email);
             profile.setDescription(bio);
             profile.setImage(profileImageUrl);
             String s = cap + ", " + country;
@@ -520,7 +509,6 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
             //piglio coordinate
             getCoords(s);
         }
-
     }
 
     private void getUserInfo(){
@@ -536,7 +524,7 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
                             if (profile != null) {
                                 vName.setText(profile.getName());
                                 //vSurname.setText(profile.getSurname());
-                                vEmail.setText(profile.getEmail());
+                                //vEmail.setText(profile.getEmail());
                                 vBio.setText(profile.getDescription());
                                 //controllo che ci sia il CAP
                                 if (profile.getCAP().length() != 0) {
@@ -588,7 +576,7 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
                                 }
                             } else {
                                 vName.setHint(getString(R.string.name));
-                                vSurname.setHint(getString(R.string.surname));
+                                //vSurname.setHint(getString(R.string.surname));
                                 vEmail.setHint(getString(R.string.email));
                                 vBio.setHint(getString(R.string.bioEditP));
                                 //progressbar.setVisibility(View.GONE);
@@ -622,7 +610,6 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
                 ( String response ) -> {//Display the first 500 characters of the response string.
 
                     JSONObject resultObject;
-                    String formatted_address = CAP;
                     Double lat;
                     Double lng;
 
@@ -635,7 +622,7 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
                         lat = 0.0;
                         lng = 0.0;
                     }
-                    profile.setCAP(formatted_address);
+                    profile.setCAP(CAP);
                     profile.setLat(lat);
                     profile.setLng(lng);
 
@@ -675,7 +662,7 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
         InputMethodManager inputMethodManager =
                 (InputMethodManager) activity.getSystemService(
                         Activity.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(
-                activity.getCurrentFocus().getWindowToken(), 0);
+        Objects.requireNonNull(inputMethodManager).hideSoftInputFromWindow(
+                Objects.requireNonNull(activity.getCurrentFocus()).getWindowToken(), 0);
     }
 }
