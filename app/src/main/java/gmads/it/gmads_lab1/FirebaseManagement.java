@@ -1,6 +1,7 @@
 package gmads.it.gmads_lab1;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -98,20 +99,15 @@ public class FirebaseManagement {
         return null;
     }
 
-    public static void createUser(Context context, String email){
+    public static void createUser(Context context, String email,Intent i){
         User = Auth.getCurrentUser();
         String name[] = Objects.requireNonNull(getUser().getDisplayName()).split(" ");
         Profile newProfile;
         newProfile = new Profile(User.getUid(),getUser().getDisplayName(),"surname da togliere", email, context.getString(R.string.bioExample));
-
-
-        Database.getReference().child("users").child(User.getUid()).setValue(newProfile).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                MyFirebaseInstanceIDService fInstance = new MyFirebaseInstanceIDService();
-
-                fInstance.addToken(FirebaseInstanceId.getInstance().getToken());
-            }
+        Database.getReference().child("users").child(User.getUid()).setValue(newProfile).addOnCompleteListener(task -> {
+            MyFirebaseInstanceIDService fInstance = new MyFirebaseInstanceIDService();
+            fInstance.addToken(FirebaseInstanceId.getInstance().getToken());
+            context.startActivity(i);
         });
 
         /*

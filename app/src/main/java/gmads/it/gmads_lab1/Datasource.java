@@ -87,11 +87,8 @@ public class Datasource {
                                                     .child("myProfileImage.jpg");
 
                                     profileImageRef.getFile(myProfileImage)
-                                            .addOnSuccessListener(taskSnapshot -> {
-                                                myProfileBitImage = BitmapFactory.decodeFile(myProfileImage.getPath());
-                                            }).addOnFailureListener(e -> {
-                                        Log.d("DB ERROR", "Failed to retrieve image from server");
-                                    });
+                                            .addOnSuccessListener(taskSnapshot -> myProfileBitImage = BitmapFactory.decodeFile(myProfileImage.getPath()))
+                                            .addOnFailureListener(e -> Log.d("DB ERROR", "Failed to retrieve image from server"));
 
                                 } catch (Exception e) {
                                     e.printStackTrace();

@@ -137,7 +137,7 @@ public class ShowProfile extends AppCompatActivity implements AppBarLayout.OnOff
             if ( profile!= null) {
                 navImage.setImageBitmap(myProfileBitImage);
             } else {
-                //navImage.setImageDrawable(getDrawable(R.drawable.default_picture));
+                navImage.setImageDrawable(getDrawable(R.drawable.default_picture));
             }
         }
     }
@@ -245,7 +245,6 @@ public class ShowProfile extends AppCompatActivity implements AppBarLayout.OnOff
     public void onOffsetChanged(AppBarLayout appBarLayout, int offset) {
         int maxScroll = appBarLayout.getTotalScrollRange();
         float percentage = (float) Math.abs(offset) / (float) maxScroll;
-
         handleAlphaOnTitle(percentage);
         handleToolbarTitleVisibility(percentage);
     }

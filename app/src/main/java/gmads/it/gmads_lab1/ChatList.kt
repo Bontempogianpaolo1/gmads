@@ -99,35 +99,39 @@ class ChatList : AppCompatActivity() {
 
         navigationView?.setNavigationItemSelectedListener{
             val id = it.itemId
-            if (id == R.id.nav_showProfile) {
-                val intentMod = Intent(this, ShowProfile::class.java)
-                startActivity(intentMod)
-                finish()
-                true
-            } else if (id == R.id.nav_addBook) {
-                val intentMod = Intent(this, AddBook::class.java)
-                startActivity(intentMod)
-                finish()
-                true
-            } else if (id == R.id.nav_home) {
-                //deve solo chiudersi la navbar
-                //drawer.closeDrawers();
-                val intent = Intent(this, Home::class.java)
-                startActivity(intent)
-                true
-            } else if (id == R.id.nav_chat) {
-
-                true
-            } else if (id == R.id.nav_logout) {
-                AuthUI.getInstance().signOut(this).addOnCompleteListener { v ->
-                    startActivity(Intent(this, Login::class.java))
+            when (id) {
+                R.id.nav_showProfile -> {
+                    val intentMod = Intent(this, ShowProfile::class.java)
+                    startActivity(intentMod)
                     finish()
+                    true
                 }
-                true
-            } else if (id == R.id.nav_mylibrary) {
-                startActivity(Intent(this, MyLibrary::class.java))
-                finish()
-                true
+                R.id.nav_addBook -> {
+                    val intentMod = Intent(this, AddBook::class.java)
+                    startActivity(intentMod)
+                    finish()
+                    true
+                }
+                R.id.nav_home -> {
+                    //deve solo chiudersi la navbar
+                    //drawer.closeDrawers();
+                    val intent = Intent(this, Home::class.java)
+                    startActivity(intent)
+                    true
+                }
+                R.id.nav_chat -> true
+                R.id.nav_logout -> {
+                    AuthUI.getInstance().signOut(this).addOnCompleteListener { v ->
+                        startActivity(Intent(this, Login::class.java))
+                        finish()
+                    }
+                    true
+                }
+                R.id.nav_mylibrary -> {
+                    startActivity(Intent(this, MyLibrary::class.java))
+                    finish()
+                    true
+                }
             }
             drawer_layout.closeDrawer(GravityCompat.START)
             true
@@ -163,7 +167,7 @@ class ChatList : AppCompatActivity() {
                                     .child("profileimage.jpg")
 
                             profileImageRef.getFile(localFile)
-                                    .addOnSuccessListener { taskSnapshot -> navImage?.setImageBitmap(BitmapFactory.decodeFile(localFile.path)) }
+                                    .addOnSuccessListener { _ -> navImage?.setImageBitmap(BitmapFactory.decodeFile(localFile.path)) }
                                     .addOnFailureListener { e -> Log.d("errore", e.toString()) }
                         } catch (e: IOException) {
                             e.printStackTrace()
