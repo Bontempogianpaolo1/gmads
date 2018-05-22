@@ -30,7 +30,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.algolia.search.saas.AbstractQuery;
+import com.algolia.search.saas.AlgoliaException;
 import com.algolia.search.saas.Client;
+import com.algolia.search.saas.CompletionHandler;
 import com.algolia.search.saas.Index;
 import com.algolia.search.saas.Query;
 import com.bumptech.glide.Glide;
@@ -39,6 +41,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
+
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
@@ -226,22 +230,19 @@ public class  Home extends AppCompatActivity implements NavigationView.OnNavigat
                 Query query = new Query(newText)
                         .setAroundLatLng(new AbstractQuery.LatLng(profile.getLat(), profile.getLng())).setGetRankingInfo(true);
 
-                algoIndex.searchAsync(query, new CompletionHandler() {
-                    @Override
-                    public void requestCompleted( JSONObject jsonObject, AlgoliaException e ) {
-                        if(e==null){
-                            SearchResultsJsonParser search= new SearchResultsJsonParser();
-                            Log.d("lista",jsonObject.toString());
-                            books= search.parseResults(jsonObject);
-                            for(int i = 0; i<books.size(); i++){
-                                if(books.get(i).getOwner().equals(FirebaseManagement.getUser().getUid())){
-                                    books.remove(i);
-                                }
+                algoIndex.searchAsync(query, ( jsonObject, e ) -> {
+                    if(e==null){
+                        SearchResultsJsonParser search= new SearchResultsJsonParser();
+                        Log.d("lista",jsonObject.toString());
+                        books= search.parseResults(jsonObject);
+                        for(int i = 0; i<books.size(); i++){
+                            if(books.get(i).getOwner().equals(FirebaseManagement.getUser().getUid())){
+                                books.remove(i);
                             }
                         }
-                        tab1.getAdapter().setbooks(books);
-                        progressbar.setVisibility(View.GONE);
                     }
+                    tab1.getAdapter().setbooks(books);
+                    progressbar.setVisibility(View.GONE);
                 });
                 return true;
             }
