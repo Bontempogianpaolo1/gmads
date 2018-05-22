@@ -163,9 +163,9 @@ public class  Home extends AppCompatActivity implements NavigationView.OnNavigat
             return true;
         } else if (id == R.id.nav_home) {
             //deve solo chiudersi la navbar
-            //drawer.closeDrawers();
-            Intent intent = new Intent(this, Home.class);
-            startActivity(intent);
+            drawer.closeDrawers();
+            //Intent intent = new Intent(this, Home.class);
+            //startActivity(intent);
             return true;
         } else if (id == R.id.nav_chat){
             Intent intent = new Intent(this, ChatList.class);
@@ -234,9 +234,19 @@ public class  Home extends AppCompatActivity implements NavigationView.OnNavigat
                             SearchResultsJsonParser search= new SearchResultsJsonParser();
                             Log.d("lista",jsonObject.toString());
                             books= search.parseResults(jsonObject);
-                            for(int i = 0; i<books.size(); i++){
-                                if(books.get(i).getOwner().equals(FirebaseManagement.getUser().getUid())){
-                                    books.remove(i);
+
+                            if(books.isEmpty()) {
+                                ImageView notfound = findViewById(R.id.not_found);
+                                TextView tnf = findViewById(R.id.textnotfound);
+                                progressbar.setVisibility(View.GONE);
+                                notfound.setVisibility(View.VISIBLE);
+                                tnf.setVisibility(View.VISIBLE);
+                            }
+                            else{
+                                for (int i = 0; i < books.size(); i++) {
+                                    if (books.get(i).getOwner().equals(FirebaseManagement.getUser().getUid())) {
+                                        books.remove(i);
+                                    }
                                 }
                             }
                             tab1.getAdapter().setbooks(books);
@@ -283,7 +293,7 @@ public class  Home extends AppCompatActivity implements NavigationView.OnNavigat
                     scrollRange = appBarLayout.getTotalScrollRange();
                 }
                 if (scrollRange + verticalOffset == 0) {
-                    collapsingToolbar.setTitle(getString(R.string.app_name));
+                    collapsingToolbar.setTitle("Home");
                     isShow = true;
                 } else if (isShow) {
                     collapsingToolbar.setTitle(" ");
@@ -317,7 +327,7 @@ public class  Home extends AppCompatActivity implements NavigationView.OnNavigat
 
         if(profile!=null) {
             navName.setText(profile.getName());
-            navName.append(" " + profile.getSurname());
+            //navName.append(" " + profile.getSurname());
             navMail.setText(profile.getEmail());
 
             if (myProfileBitImage != null) {
@@ -343,7 +353,7 @@ public class  Home extends AppCompatActivity implements NavigationView.OnNavigat
                                 startActivity(i);
                             }
                             navName.setText(profile.getName());
-                            navName.append(" " + profile.getSurname());
+                            //navName.append(" " + profile.getSurname());
                             navMail.setText(profile.getEmail());
                             if (profile.getImage() != null) {
                                 try {
