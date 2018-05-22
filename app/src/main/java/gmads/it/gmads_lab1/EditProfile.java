@@ -131,7 +131,7 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
         //l2= findViewById(R.id.linearlayout2);
         vName = findViewById(R.id.name);
         //vSurname = findViewById(R.id.surname);
-        vEmail = findViewById(R.id.email);
+        //vEmail = findViewById(R.id.email);
         vBio = findViewById(R.id.bio);
         vCountry = findViewById(R.id.country);
 
@@ -220,14 +220,14 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
             assert imm != null;
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
-        Pattern pat = Pattern.compile("^([A-Za-z0-9_\\-\\.])+\\@([A-Za-z0-9_\\-\\.])+\\.([A-Za-z]{2,4})$");
+        /*Pattern pat = Pattern.compile("^([A-Za-z0-9_\\-\\.])+\\@([A-Za-z0-9_\\-\\.])+\\.([A-Za-z]{2,4})$");
         if (!pat.matcher(vEmail.getText()).matches()) {
             vEmail.setText("");
             vEmail.setHint(R.string.errorEmail);
             vEmail.setHintTextColor(RED);
             vEmail.requestFocus();
             return;
-        }
+        }*/
 
         if(vCAP.getText().toString().isEmpty()){
             vCAP.setError(getString(R.string.cap_required));
@@ -443,7 +443,7 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
     public void updateUserInfo(){
         String name = vName.getText().toString();
         //String surname = vSurname.getText().toString();
-        String email = vEmail.getText().toString();
+        //String email = vEmail.getText().toString();
         String bio = vBio.getText().toString();
         String cap = vCAP.getText().toString();
 
@@ -459,11 +459,11 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
             vSurname.requestFocus();
             return;
         }*/
-        if(email.isEmpty()){
+        /*if(email.isEmpty()){
             vEmail.setError(getString(R.string.email_required));
             vEmail.requestFocus();
             return;
-        }
+        }*/
         if(cap.isEmpty()){
             vCAP.setError("@string/cap_required");
             vCAP.requestFocus();
@@ -483,18 +483,16 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
                 .child(FirebaseManagement.getUser().getUid())
                 .child("profileimage.jpg");
         if(uriProfileImage != null){
-
             profileImageRef.putFile(uriProfileImage)
                     .addOnSuccessListener(taskSnapshot -> {
                         profileImageUrl = Objects.requireNonNull(taskSnapshot.getDownloadUrl()).toString();
                         profile.setName(name);
                         //profile.setSurname(surname);
-                        profile.setEmail(email);
+                        //profile.setEmail(email);
                         profile.setDescription(bio);
                         profile.setImage(profileImageUrl);
                         profile.setCAP(cap+", "+country);
                         FirebaseManagement.updateUserData(profile);
-
                         startActivity(pickIntent);
                         //progressbar.setVisibility(View.GONE);
                     });
@@ -503,7 +501,7 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
             profileImageUrl = "";
             profile.setName(name);
             //profile.setSurname(surname);
-            profile.setEmail(email);
+            //profile.setEmail(email);
             profile.setDescription(bio);
             profile.setImage(profileImageUrl);
             String s = cap + ", " + country;
@@ -511,7 +509,6 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
             //piglio coordinate
             getCoords(s);
         }
-
     }
 
     private void getUserInfo(){
@@ -527,7 +524,7 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
                             if (profile != null) {
                                 vName.setText(profile.getName());
                                 //vSurname.setText(profile.getSurname());
-                                vEmail.setText(profile.getEmail());
+                                //vEmail.setText(profile.getEmail());
                                 vBio.setText(profile.getDescription());
                                 //controllo che ci sia il CAP
                                 if (profile.getCAP().length() != 0) {

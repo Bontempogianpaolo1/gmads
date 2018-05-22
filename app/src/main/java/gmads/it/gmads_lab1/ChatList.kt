@@ -22,6 +22,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
+import gmads.it.gmads_lab1.R.id.imageView_profile_picture
 import gmads.it.gmads_lab1.constants.AppConstants
 import gmads.it.gmads_lab1.fragments.PeopleFragment
 import gmads.it.gmads_lab1.model.Profile

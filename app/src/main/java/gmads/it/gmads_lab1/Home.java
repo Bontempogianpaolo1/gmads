@@ -75,7 +75,9 @@ public class  Home extends AppCompatActivity implements NavigationView.OnNavigat
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        ImageView notfound = findViewById(R.id.not_found);
+        TextView tnf = findViewById(R.id.textnotfound);
         tools = new Tools();
 
         setSupportActionBar(toolbar);
@@ -106,9 +108,7 @@ public class  Home extends AppCompatActivity implements NavigationView.OnNavigat
         vpadapter.addFragment(categ2);
 
         pager.setAdapter(vpadapter);
-
         progressbar = findViewById(R.id.progress_bar);
-
 //
         //era per mettere foto libri nell appbar, ma l'abbiamo messa come sfondo per ora
         try {
@@ -129,8 +129,12 @@ public class  Home extends AppCompatActivity implements NavigationView.OnNavigat
 
     @Override
     protected void onResume() {
+        ImageView notfound = findViewById(R.id.not_found);
+        TextView tnf = findViewById(R.id.textnotfound);
         super.onResume();
-
+        progressbar.setVisibility(View.GONE);
+        notfound.setVisibility(View.GONE);
+        tnf.setVisibility(View.GONE);
     }
 
     /*@Override
@@ -215,19 +219,24 @@ public class  Home extends AppCompatActivity implements NavigationView.OnNavigat
                 progressbar.setVisibility(View.VISIBLE);
                 books.clear();
                 tab1.getAdapter().setbooks(books);
+                ImageView notfound = findViewById(R.id.not_found);
+                TextView tnf = findViewById(R.id.textnotfound);
 
                 query = newText;
                 Query query = new Query(newText)
                         .setAroundLatLng(new AbstractQuery.LatLng(profile.getLat(), profile.getLng())).setGetRankingInfo(true);
 
-                algoIndex.searchAsync(query, ( jsonObject, e ) -> {
-                    if(e==null){
-                        SearchResultsJsonParser search= new SearchResultsJsonParser();
-                        Log.d("lista",jsonObject.toString());
-                        books= search.parseResults(jsonObject);
-                        for(int i = 0; i<books.size(); i++){
-                            if(books.get(i).getOwner().equals(FirebaseManagement.getUser().getUid())){
-                                books.remove(i);
+                algoIndex.searchAsync(query, new CompletionHandler() {
+                    @Override
+                    public void requestCompleted( JSONObject jsonObject, AlgoliaException e ) {
+                        if(e==null){
+                            SearchResultsJsonParser search= new SearchResultsJsonParser();
+                            Log.d("lista",jsonObject.toString());
+                            books= search.parseResults(jsonObject);
+                            for(int i = 0; i<books.size(); i++){
+                                if(books.get(i).getOwner().equals(FirebaseManagement.getUser().getUid())){
+                                    books.remove(i);
+                                }
                             }
                         }
                         tab1.getAdapter().setbooks(books);

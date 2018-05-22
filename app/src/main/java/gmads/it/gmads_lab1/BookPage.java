@@ -85,7 +85,8 @@ public class BookPage extends AppCompatActivity implements AppBarLayout.OnOffset
     TextView vCondition;
     TextView Veditor;
     Tools tools;
-
+    TextView vImageTitle;
+    ImageView vPhoto;
 
     private void findViews() {
         appbar = (AppBarLayout) findViewById(R.id.appbar);
@@ -113,7 +114,8 @@ public class BookPage extends AppCompatActivity implements AppBarLayout.OnOffset
         vOwner = findViewById(R.id.owner);
         vDescription = findViewById(R.id.descrizione);
         vNotes= findViewById(R.id.notes);
-
+        vImageTitle = findViewById(R.id.photoTitle);
+        vPhoto = findViewById(R.id.photo);
     }
 
     @Override
@@ -124,7 +126,7 @@ public class BookPage extends AppCompatActivity implements AppBarLayout.OnOffset
         findViews();
         toolbar.setTitle("");
         appbar.addOnOffsetChangedListener(this);
-        textviewTitle.setText(getString(R.string.showBook)); //CAMBIARE
+        textviewTitle.setText(getString(R.string.showBook));
         setSupportActionBar(toolbar);
         startAlphaAnimation(textviewTitle, 0, View.INVISIBLE);
 
@@ -144,7 +146,6 @@ public class BookPage extends AppCompatActivity implements AppBarLayout.OnOffset
         avatar.setImageDrawable(getDrawable(R.drawable.default_book)); //settare copertina libro default
 
         tools = new Tools();
-
     }
 
     @Override
@@ -274,13 +275,11 @@ public class BookPage extends AppCompatActivity implements AppBarLayout.OnOffset
                                 categ=categ+a+", ";
                             }
                             vCategory.setText(categ);
-
                             vdate.setText(book.getPublishDate());
                             vCondition.setText(book.getCondition());
                             String notes="";
                             for(String key : book.getNotes().keySet()){
                                 String value= book.getNotes().get(key);
-
                                 notes=notes+ key +": " +value+"\n";
                             }
                             vOwner.setText(book.getNomeproprietario());

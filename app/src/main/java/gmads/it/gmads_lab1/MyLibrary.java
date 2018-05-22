@@ -366,10 +366,18 @@ public class MyLibrary extends AppCompatActivity implements NavigationView.OnNav
                     SearchResultsJsonParser search= new SearchResultsJsonParser();
                     Log.d("lista",jsonObject.toString());
                     books= search.parseResults(jsonObject);
-                    tab1.getAdapter().setbooks(books);
-                    tab1.getAdapter().notifyDataSetChanged();
-
-                    progressbar.setVisibility(View.GONE);
+                    if(books.isEmpty()){
+                        ImageView notfound = findViewById(R.id.not_found);
+                        TextView tnf = findViewById(R.id.textnotfound);
+                        progressbar.setVisibility(View.GONE);
+                        notfound.setVisibility(View.VISIBLE);
+                        tnf.setVisibility(View.VISIBLE);
+                    }
+                    else {
+                        tab1.getAdapter().setbooks(books);
+                        tab1.getAdapter().notifyDataSetChanged();
+                        progressbar.setVisibility(View.GONE);
+                    }
                 }
             }
         });
