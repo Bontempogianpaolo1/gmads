@@ -17,6 +17,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ProgressBar;
@@ -57,6 +58,7 @@ public class  Home extends AppCompatActivity implements NavigationView.OnNavigat
     TextView navName;
     TextView navMail;
     ImageView navImage;
+    RecyclerView recyclerView;
     String query="";
     NavigationView navigationView;
     DrawerLayout drawer;
@@ -64,6 +66,8 @@ public class  Home extends AppCompatActivity implements NavigationView.OnNavigat
     private Bitmap myProfileBitImage;
     View headerView;
     Home_1 tab1= new Home_1();
+    Home_1 categ1= new Home_1();
+    Home_1 categ2= new Home_1();
     Tools tools;
     ProgressBar progressbar;
 
@@ -84,7 +88,7 @@ public class  Home extends AppCompatActivity implements NavigationView.OnNavigat
         //SearchView mSearchView = (SearchView) findViewById(R.id.searchView); // initiate a search view
         //mSearchView.attachNavigationDrawerToMenuButton(findViewById(R.id.drawer_layout));
         //mSearchView.setIconifiedByDefault(false);  // set the default or resting state of the search field
-        //recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        //RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         initCollapsingToolbar();
         /*bookList = new ArrayList<>();
         adapter = new BookAdapter(this, bookList);*/
@@ -94,9 +98,13 @@ public class  Home extends AppCompatActivity implements NavigationView.OnNavigat
         //recyclerView.setItemAnimator(new DefaultItemAnimator());
         //recyclerView.setAdapter(adapter);
 //
+
         ViewPager pager= findViewById(R.id.viewPager);
         FragmentViewPagerAdapter vpadapter= new FragmentViewPagerAdapter(getSupportFragmentManager());
         vpadapter.addFragment(tab1);
+        vpadapter.addFragment(categ1);
+        vpadapter.addFragment(categ2);
+
         pager.setAdapter(vpadapter);
 
         progressbar = findViewById(R.id.progress_bar);
