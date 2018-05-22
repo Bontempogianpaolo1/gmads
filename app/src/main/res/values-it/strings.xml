@@ -105,5 +105,6 @@
     <string name = "library">Libreria</string>
     <string name = "book_info">Altre Info</string>
     <string name = "book_photo">Aggiungi una foto del libro</string>
+    <string name = "showbookImage">Foto libro</string>
     <!--end-->
 </resources>

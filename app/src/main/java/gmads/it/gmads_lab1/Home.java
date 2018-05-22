@@ -137,6 +137,7 @@ public class  Home extends AppCompatActivity implements NavigationView.OnNavigat
     @Override
     protected void onResume() {
         super.onResume();
+        progressbar.setVisibility(View.GONE);
 
     }
 
