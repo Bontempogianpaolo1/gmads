@@ -44,9 +44,6 @@ public class Login extends AppCompatActivity {
             //finish();
         } else {
             //se non è loggato mi loggo attraverso l'attività di firebase
-            /*
-            TODO assegnare login a facebook
-            */
 
             startActivityForResult(
                     AuthUI.getInstance()
@@ -76,30 +73,11 @@ public class Login extends AppCompatActivity {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             if(dataSnapshot.getValue() == null){
-                                //FirebaseManagement.createUser(getApplicationContext(), Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getEmail());
-
-                                FirebaseUser User = FirebaseManagement.getUser();
-                                String name[] = Objects.requireNonNull(FirebaseManagement.getUser().getDisplayName()).split(" ");
-                                Profile newProfile;
-                                newProfile = new Profile(User.getUid(),
-                                        FirebaseManagement.getUser().getDisplayName(),
-                                        "surname da togliere",
-                                        Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getEmail(),
-                                        getApplicationContext().getString(R.string.bioExample));
-
-
-                                FirebaseManagement.getDatabase().getReference().child("users").child(User.getUid()).setValue(newProfile).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        MyFirebaseInstanceIDService fInstance = new MyFirebaseInstanceIDService();
-                                        fInstance.addToken(FirebaseInstanceId.getInstance().getToken());
-                                        startActivity(intent);
-                                    }
-                                });
-
+                                FirebaseManagement.createUser(getApplicationContext(), Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getEmail(),intent);
                             }
                             else{
                                 FirebaseManagement.loginUser();
+
                                 startActivity(intent);
 
                             }

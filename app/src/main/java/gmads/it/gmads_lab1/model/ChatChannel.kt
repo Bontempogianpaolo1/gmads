@@ -1,8 +1,9 @@
 package gmads.it.gmads_lab1.model
 
-data class ChatChannel(val userIds: MutableList<String>) {
+data class ChatChannel(val userIds: MutableList<String>, val notificationNumber : Map<String, Int>) {
 
-    constructor() : this(mutableListOf())
+    constructor() : this(mutableListOf(), hashMapOf())
+
 }
 /*
 e la lista dei messaggi...immagino che quando si scarica da firebase questa lista si riempa

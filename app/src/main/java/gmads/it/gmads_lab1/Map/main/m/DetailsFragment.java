@@ -85,12 +85,13 @@ public class DetailsFragment extends MvpFragment<DetailsFragmentView, DetailsFra
     }
 
     private View getSharedViewByPosition(final int childPosition) {
+        recyclerView.getAdapter().notifyDataSetChanged();
         for (int i = 0; i < recyclerView.getChildCount(); i++) {
             if (childPosition == recyclerView.getChildAdapterPosition(recyclerView.getChildAt(i))) {
                 return recyclerView.getChildAt(i);
             }
         }
-        return null;
+        return recyclerView.getChildAt(recyclerView.getChildCount()-1);
     }
 
     @Override
