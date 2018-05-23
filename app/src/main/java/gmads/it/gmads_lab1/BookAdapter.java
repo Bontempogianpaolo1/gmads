@@ -77,7 +77,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
         holder.thumbnail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mContext, BookPage.class);
+                Intent intent = new Intent(mContext, ShowBook.class);
                 intent.putExtra("book_id", book.getBId());
                 mContext.startActivity(intent);
             }
