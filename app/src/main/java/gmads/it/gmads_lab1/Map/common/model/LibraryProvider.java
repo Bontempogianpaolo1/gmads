@@ -7,6 +7,7 @@ import com.algolia.search.saas.Query;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import gmads.it.gmads_lab1.model.Book;
@@ -61,10 +62,14 @@ public class LibraryProvider {
             SearchResultsJsonParser search= new SearchResultsJsonParser();
             try {
                 List<Book> books = search.parseResults(algoIndex.searchSync(new Query(query).setAroundLatLng(new AbstractQuery.LatLng(lat,lng)).setGetRankingInfo(true)));
-                for(int i = 0; i<books.size(); i++){
-                    if(books.get(i).getOwner().equals(FirebaseManagement.getUser().getUid())){
-                        books.remove(i);
+                List<Book> books2= new ArrayList<>();
+                for (Book b : books) {
+                    if (b.getOwner().equals(FirebaseManagement.getUser().getUid())) {
+                        books2.add(b);
                     }
+                }
+                for(Book b: books2){
+                    books.remove(b);
                 }
                 mLibrary.setBookList(books);
             }catch (Exception e){

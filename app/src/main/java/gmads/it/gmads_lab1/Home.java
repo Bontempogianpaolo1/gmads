@@ -238,10 +238,14 @@ public class  Home extends AppCompatActivity implements NavigationView.OnNavigat
                         SearchResultsJsonParser search= new SearchResultsJsonParser();
                         Log.d("lista",jsonObject.toString());
                         books= search.parseResults(jsonObject);
-                        for(int i = 0; i<books.size(); i++){
-                            if(books.get(i).getOwner().equals(FirebaseManagement.getUser().getUid())){
-                                books.remove(i);
+                        List<Book> books2= new ArrayList<>();
+                        for (Book b : books) {
+                            if (b.getOwner().equals(FirebaseManagement.getUser().getUid())) {
+                                books2.add(b);
                             }
+                        }
+                        for(Book b: books2){
+                            books.remove(b);
                         }
                     }
                     tab1.getAdapter().setbooks(books);
@@ -285,13 +289,14 @@ public class  Home extends AppCompatActivity implements NavigationView.OnNavigat
     }
 
     public void mapcreate( View view ) {
-        Intent intentMod = new Intent(this, MapActivity.class);
-        intentMod.putExtra("query",query);
-        intentMod.putExtra("lat",profile.getLat());
-        intentMod.putExtra("lng",profile.getLng());
-        startActivity(intentMod);
-        overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
-
+        if(tab1.getAdapter().getItemCount()>0) {
+            Intent intentMod = new Intent(this, MapActivity.class);
+            intentMod.putExtra("query", query);
+            intentMod.putExtra("lat", profile.getLat());
+            intentMod.putExtra("lng", profile.getLng());
+            startActivity(intentMod);
+            overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
+        }
     }
 
     public void setNavViews(){
