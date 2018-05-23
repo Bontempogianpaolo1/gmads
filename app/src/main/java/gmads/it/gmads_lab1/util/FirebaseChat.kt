@@ -64,6 +64,11 @@ object FirebaseChat {
 
                                                                 override fun onDataChange(dataSnapshot: DataSnapshot?) {
                                                                     var notificationNumber = dataSnapshot?.getValue(Int::class.java)
+
+                                                                    var pToRemove = items.firstOrNull { p -> p as PersonItem ; p.userId == user?.id }
+                                                                    if(pToRemove != null)
+                                                                        items.remove(pToRemove)
+
                                                                     if(notificationNumber == 0){
                                                                         items.add(notifiedChatNumber, PersonItem(user!!, user.id, notificationNumber ?: 0, context))
                                                                     } else {
@@ -75,6 +80,9 @@ object FirebaseChat {
 
                                                             })
                                                 } else {
+                                                    var pToRemove = items.firstOrNull { p -> p as PersonItem ; p.userId == user?.id }
+                                                    if(pToRemove != null)
+                                                        items.remove(pToRemove)
                                                     items.add(notifiedChatNumber, PersonItem(user!!, user.id, 0, context))
                                                 }
 
