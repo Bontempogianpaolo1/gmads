@@ -158,7 +158,7 @@ public class ShowProfile extends AppCompatActivity implements AppBarLayout.OnOff
         super.onCreate(savedInstanceState);
         //Fresco.initialize(this);
         setContentView(R.layout.activity_show_profile);
-        profile = Datasource.getInstance().getMyProfile();
+       // profile = Datasource.getInstance().getMyProfile();
         myProfileBitImage = Datasource.getInstance().getMyProfileBitImage();
         //set avatar and cover
         findViews();
@@ -169,8 +169,8 @@ public class ShowProfile extends AppCompatActivity implements AppBarLayout.OnOff
         toolbar.setTitle("");
         appbar.addOnOffsetChangedListener(this);
         setSupportActionBar(toolbar);
-        textviewTitle.setText(profile.getName());
-        startAlphaAnimation(textviewTitle, 0, View.INVISIBLE);
+        //textviewTitle.setText(profile.getName());
+       // startAlphaAnimation(textviewTitle, 0, View.INVISIBLE);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
@@ -267,7 +267,8 @@ public class ShowProfile extends AppCompatActivity implements AppBarLayout.OnOff
                                     startActivity(i);
                                 }
                                 cap.setText(profile.getCAP());
-
+                                textviewTitle.setText(profile.getName());
+                                startAlphaAnimation(textviewTitle, 0, View.INVISIBLE);
                                 vName.setText(profile.getName());
                                 //vName.append(" " + profile.getSurname());
                                 navName.setText(profile.getName());

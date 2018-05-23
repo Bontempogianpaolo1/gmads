@@ -107,6 +107,7 @@ public class FirebaseManagement {
         Database.getReference().child("users").child(User.getUid()).setValue(newProfile).addOnCompleteListener(task -> {
             MyFirebaseInstanceIDService fInstance = new MyFirebaseInstanceIDService();
             fInstance.addToken(FirebaseInstanceId.getInstance().getToken());
+            Datasource.getInstance().sincMyProfile();
             context.startActivity(i);
         });
 
