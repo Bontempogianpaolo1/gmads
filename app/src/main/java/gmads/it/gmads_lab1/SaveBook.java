@@ -571,8 +571,8 @@ todo rimpire stringhe
                                 toastMessage("Image upload successful");
                                 progressDialog.dismiss();
                             });
-                    storageReference.putFile(Uri.fromFile(new File(path))).addOnSuccessListener(taskSnapshot -> {
-                    }).addOnFailureListener(e -> Log.d("error", e.toString()));
+                    //storageReference.putFile(Uri.fromFile(new File(path))).addOnSuccessListener(taskSnapshot -> {
+                    //}).addOnFailureListener(e -> Log.d("error", e.toString()));
                 }
                 Intent pickIntent = new Intent(this, Home.class);
                 prefs.edit().putString(EXTRA_ISBN, isbn).apply();
