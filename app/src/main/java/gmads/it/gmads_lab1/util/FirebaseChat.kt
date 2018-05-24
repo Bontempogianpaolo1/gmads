@@ -66,11 +66,16 @@ object FirebaseChat {
                                                                     var notificationNumber = dataSnapshot?.getValue(Int::class.java)
 
                                                                     var pToRemove = items.firstOrNull { p -> p as PersonItem ; p.userId == user?.id }
-                                                                    if(pToRemove != null)
+                                                                    if(pToRemove != null) {
+                                                                        pToRemove as PersonItem
+                                                                        if(pToRemove.notificationNumber > 0){
+                                                                            notifiedChatNumber--
+                                                                        }
                                                                         items.remove(pToRemove)
 
+                                                                    }
                                                                     if(notificationNumber == 0){
-                                                                        items.add(notifiedChatNumber, PersonItem(user!!, user.id, notificationNumber ?: 0, context))
+                                                                        items.add(notifiedChatNumber, PersonItem(user!!, user.id, 0, context))
                                                                     } else {
                                                                         notifiedChatNumber++
                                                                         items.add(0, PersonItem(user!!, user.id, notificationNumber ?: 0, context))
