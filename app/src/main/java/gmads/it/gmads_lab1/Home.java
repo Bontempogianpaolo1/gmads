@@ -67,6 +67,7 @@ public class  Home extends AppCompatActivity implements NavigationView.OnNavigat
     ImageView navImage;
     RecyclerView recyclerView;
     String query="";
+    String searchquery ="";
     NavigationView navigationView;
     DrawerLayout drawer;
     private Profile profile;
@@ -142,6 +143,45 @@ public class  Home extends AppCompatActivity implements NavigationView.OnNavigat
         progressbar.setVisibility(View.GONE);
         notfound.setVisibility(View.GONE);
         tnf.setVisibility(View.GONE);
+        /*
+        if(searchview != null) {
+            if(searchview.getQuery().toString().length() > 0){
+                OngoingSearch(searchview.getQuery().toString());
+            }
+        }
+        */
+    }
+
+    boolean OngoingSearch(String text) {
+        progressbar.setVisibility(View.VISIBLE);
+        books.clear();
+        tab1.getAdapter().setbooks(books);
+        ImageView notfound = findViewById(R.id.not_found);
+        TextView tnf = findViewById(R.id.textnotfound);
+
+        query = text;
+        Query query = new Query(text)
+                .setAroundLatLng(new AbstractQuery.LatLng(profile.getLat(), profile.getLng())).setGetRankingInfo(true);
+
+        algoIndex.searchAsync(query, ( jsonObject, e ) -> {
+            if(e==null){
+                SearchResultsJsonParser search= new SearchResultsJsonParser();
+                Log.d("lista",jsonObject.toString());
+                books= search.parseResults(jsonObject);
+                List<Book> books2= new ArrayList<>();
+                for (Book b : books) {
+                    if (b.getOwner().equals(FirebaseManagement.getUser().getUid())) {
+                        books2.add(b);
+                    }
+                }
+                for(Book b: books2){
+                    books.remove(b);
+                }
+            }
+            tab1.updateData(books);
+            progressbar.setVisibility(View.GONE);
+        });
+        return true;
     }
 
     /*@Override
@@ -196,6 +236,7 @@ public class  Home extends AppCompatActivity implements NavigationView.OnNavigat
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.options_menu, menu);
         MenuItem m= menu.findItem(R.id.search);
+
         searchview = (android.widget.SearchView)m.getActionView();
         searchview.setIconified(false);
         searchview.setFocusable(true);
@@ -213,7 +254,6 @@ public class  Home extends AppCompatActivity implements NavigationView.OnNavigat
                 return true;
             }
         });
-
 
         searchview.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -434,4 +474,7 @@ class FragmentViewPagerAdapter extends FragmentPagerAdapter {
     }
 
 }
+
+
+
 
