@@ -32,7 +32,7 @@ object FirebaseChat {
 
                     override fun onDataChange(dataSnapshot: DataSnapshot?) {
 
-                        val items = mutableListOf<Item>()
+                        var items = mutableListOf<Item>()
                         var notifiedChatNumber : Int = 0
 
                         dataSnapshot!!.children.mapNotNull {
@@ -218,7 +218,7 @@ invio messaggi al token desiderato")
                 .addOnCompleteListener { task ->
                     if(task.isComplete && message.type == "TEXT") {
 
-                        currentUserRef.addValueEventListener(object : ValueEventListener {
+                        currentUserRef.addListenerForSingleValueEvent(object : ValueEventListener {
 
                             override fun onDataChange(dataSnapshot: DataSnapshot?) {
 
@@ -226,7 +226,7 @@ invio messaggi al token desiderato")
 
                                 chatChannelsCollectionRef
                                         .child(channelId)
-                                        .addValueEventListener(object : ValueEventListener {
+                                        .addListenerForSingleValueEvent(object : ValueEventListener {
 
                                             override fun onDataChange(dataSnapshot: DataSnapshot?) {
                                                 message as TextMessage
