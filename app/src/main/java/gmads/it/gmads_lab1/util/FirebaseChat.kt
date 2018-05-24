@@ -65,22 +65,26 @@ object FirebaseChat {
                                                                 override fun onDataChange(dataSnapshot: DataSnapshot?) {
                                                                     var notificationNumber = dataSnapshot?.getValue(Int::class.java)
 
-                                                                    var pToRemove = items.firstOrNull { p -> p as PersonItem ; p.userId == user?.id }
-                                                                    if(pToRemove != null) {
+                                                                    var pToRemove = items.firstOrNull { p -> p as PersonItem; p.userId == user?.id }
+                                                                    if (pToRemove != null) {
                                                                         pToRemove as PersonItem
-                                                                        if(pToRemove.notificationNumber > 0){
+                                                                        if (pToRemove.notificationNumber > 0) {
                                                                             notifiedChatNumber--
                                                                         }
                                                                         items.remove(pToRemove)
 
                                                                     }
-                                                                    if(notificationNumber == 0){
-                                                                        items.add(notifiedChatNumber, PersonItem(user!!, user.id, 0, context))
-                                                                    } else {
-                                                                        notifiedChatNumber++
-                                                                        items.add(0, PersonItem(user!!, user.id, notificationNumber ?: 0, context))
+
+                                                                    user?.let {
+                                                                        if (notificationNumber == 0) {
+                                                                            items.add(notifiedChatNumber, PersonItem(user!!, user.id, 0, context))
+                                                                        } else {
+                                                                            notifiedChatNumber++
+                                                                            items.add(0, PersonItem(user!!, user.id, notificationNumber
+                                                                                    ?: 0, context))
+                                                                        }
+                                                                        onListen(items)
                                                                     }
-                                                                    onListen(items)
                                                                 }
 
                                                             })
@@ -88,10 +92,13 @@ object FirebaseChat {
                                                     var pToRemove = items.firstOrNull { p -> p as PersonItem ; p.userId == user?.id }
                                                     if(pToRemove != null)
                                                         items.remove(pToRemove)
-                                                    items.add(notifiedChatNumber, PersonItem(user!!, user.id, 0, context))
-                                                }
+                                                    user?.let {
+                                                        items.add(notifiedChatNumber, PersonItem(user!!, user.id, 0, context))
 
-                                                onListen(items)
+                                                        onListen(items)
+                                                    }
+
+                                                }
                                             }
 
                                         })
@@ -211,7 +218,7 @@ invio messaggi al token desiderato")
                 .addOnCompleteListener { task ->
                     if(task.isComplete && message.type == "TEXT") {
 
-                        currentUserRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                        currentUserRef.addValueEventListener(object : ValueEventListener {
 
                             override fun onDataChange(dataSnapshot: DataSnapshot?) {
 
@@ -219,7 +226,7 @@ invio messaggi al token desiderato")
 
                                 chatChannelsCollectionRef
                                         .child(channelId)
-                                        .addListenerForSingleValueEvent(object : ValueEventListener {
+                                        .addValueEventListener(object : ValueEventListener {
 
                                             override fun onDataChange(dataSnapshot: DataSnapshot?) {
                                                 message as TextMessage
