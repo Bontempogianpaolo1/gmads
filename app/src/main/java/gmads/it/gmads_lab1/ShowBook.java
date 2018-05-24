@@ -364,7 +364,7 @@ public class ShowBook extends AppCompatActivity implements AppBarLayout.OnOffset
                                 }else {
                                     c = 0;
                                     for (String key : book.getNotes().keySet()) {
-                                        if(c!=book.getNotes().size()) {
+                                        if(c!=book.getNotes().size()-1) {
                                             String value = book.getNotes().get(key);
                                             notes = notes + key + ": " + value + "\n";
                                         }else{
