@@ -235,12 +235,14 @@ invio messaggi al token desiderato")
 
                                                 for (dataUser in dataUsers){
                                                     if(dataUser != myUser.id){
-                                                        FirebaseManagement.sendMessage(message.text, myUser.name, dataUser)
-                                                        chatChannelsCollectionRef
-                                                                .child(channelId)
-                                                                .child("notificationNumber")
-                                                                .child(dataUser)
-                                                                .setValue(chatChannel.notificationNumber.get(dataUser)!!.toInt()+1)
+                                                        if(message.text.isNotBlank() || message.text.isNotEmpty()) {
+                                                            FirebaseManagement.sendMessage(message.text, myUser.name, dataUser)
+                                                            chatChannelsCollectionRef
+                                                                    .child(channelId)
+                                                                    .child("notificationNumber")
+                                                                    .child(dataUser)
+                                                                    .setValue(chatChannel.notificationNumber.get(dataUser)!!.toInt() + 1)
+                                                        }
                                                     }
                                                 }
                                             }
