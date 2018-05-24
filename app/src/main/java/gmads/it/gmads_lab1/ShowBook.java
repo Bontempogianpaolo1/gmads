@@ -5,13 +5,16 @@ import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -23,9 +26,14 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
 import java.io.InputStream;
@@ -66,10 +74,12 @@ public class ShowBook extends AppCompatActivity implements AppBarLayout.OnOffset
     static final int REQUEST_IMAGE_CAPTURE = 1888;
     static final int REQUEST_IMAGE_LIBRARY = 1889;
     private ProgressBar progressbar;
-    Bitmap newBitMapProfileImage; //temp for new image
+    Bitmap bookBitmap; //temp for new image
     private Uri uriProfileImage;
     private String profileImageUrl;
     boolean imagechanged=false;
+    File BookFile;
+
     File tempFile;
     ContextWrapper cw;
     File directory;
@@ -340,45 +350,70 @@ public class ShowBook extends AppCompatActivity implements AppBarLayout.OnOffset
                             }else{*/
                                 vDescription.setText(book.getDescription());
                             //}
-
-                            //CARD2
-                            if((book.getCondition().isEmpty() || book.getCondition().compareTo("") == 0) &&
-                                book.getNotes().size() == 0 /*&&
-                                book.*///ci va il controllo della presenza fotografia libro)
-                            ) {
-                                //mancano tutte quindi nascondo direttamente la card2
-                                card2.setVisibility(View.GONE);
-                            }else {
-                                //condizioni
-                                if (book.getCondition().isEmpty() || book.getCondition().compareTo("") == 0) {
-                                    titleConditions.setVisibility(View.GONE);
-                                    vCondition.setVisibility(View.GONE);
-                                } else {
-                                    vCondition.setText(book.getCondition());
-                                }
-                                //note
-                                String notes="";
-                                if(book.getNotes().size()==0){
-                                    titleNote.setVisibility(View.GONE);
-                                    vNotes.setVisibility(View.GONE);
-                                }else {
-                                    c = 0;
-                                    for (String key : book.getNotes().keySet()) {
-                                        if(c!=book.getNotes().size()) {
-                                            String value = book.getNotes().get(key);
-                                            notes = notes + key + ": " + value + "\n";
-                                        }else{
-                                            String value = book.getNotes().get(key);
-                                            notes = notes + key + ": " + value;
+                            StorageReference bookImageRef =
+                                    FirebaseManagement
+                                            .getStorage()
+                                            .getReference()
+                                            .child("books")
+                                            .child(bookId)
+                                            .child("personal_images")
+                                            .child("1.jpg");
+                            Glide.with(getApplicationContext() /* context */)
+                                .load(bookImageRef)
+                                .listener(new RequestListener<Drawable>() {
+                                    @Override
+                                    public boolean onLoadFailed( @Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource ) {
+                                        if((book.getCondition().isEmpty() || book.getCondition().compareTo("") == 0) && book.getNotes().size() == 0 /*&&
+                            book.*///ci va il controllo della presenza fotografia libro)
+                                                ) {
+                                            //mancano tutte quindi nascondo direttamente la card2
+                                            card2.setVisibility(View.GONE);
                                         }
+                                        return false;
                                     }
-                                    vNotes.setText(notes);
-                                }
 
-                                //foto libro (fare come gli altri controlli:
-                                //NON Cè: titleImg e bookPhoto vanno rese invisibili
-                                //c'è: va settata e basta direi)
+                                    @Override
+                                    public boolean onResourceReady( Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource ) {
+                                        bookPhoto.setVisibility(View.VISIBLE);
+                                        titleImg.setVisibility(View.VISIBLE);
+
+                                        return false;
+                                    }
+                                })
+                                .into(bookPhoto);
+                            //CARD2
+                            //condizioni
+                            if (book.getCondition().isEmpty() || book.getCondition().compareTo("") == 0) {
+                                titleConditions.setVisibility(View.GONE);
+                                vCondition.setVisibility(View.GONE);
+                            } else {
+                                vCondition.setText(book.getCondition());
                             }
+                            //note
+                            String notes="";
+                            if(book.getNotes().size()==0){
+                                titleNote.setVisibility(View.GONE);
+                                vNotes.setVisibility(View.GONE);
+                            }else {
+                                c = 0;
+                                for (String key : book.getNotes().keySet()) {
+                                    if(c!=book.getNotes().size()) {
+                                        String value = book.getNotes().get(key);
+                                        notes = notes + key + ": " + value + "\n";
+                                    }else{
+                                        String value = book.getNotes().get(key);
+                                        notes = notes + key + ": " + value;
+                                    }
+                                }
+                                vNotes.setText(notes);
+                            }
+
+                            //foto libro (fare come gli altri controlli:
+                            //NON Cè: titleImg e bookPhoto vanno rese invisibili
+                            //c'è: va settata e basta direi)
+
+
+
                         }
 
                         @Override
@@ -386,6 +421,23 @@ public class ShowBook extends AppCompatActivity implements AppBarLayout.OnOffset
 
                         }
                     });
+/*
+            StorageReference profileImageRef =
+                    FirebaseManagement
+                            .getStorage()
+                            .getReference()
+                            .child("users")
+                            .child(FirebaseManagement.getUser().getUid())
+                            .child("myProfileImage.jpg");
+
+            profileImageRef.getFile(BookFile)
+                    .addOnSuccessListener(taskSnapshot ->{
+                        bookBitmap = BitmapFactory.decodeFile(BookFile.getPath());
+                        bookPhoto.setImageBitmap(bookBitmap);
+                    })
+                    .addOnFailureListener(e -> Log.d("DB ERROR", "Failed to retrieve image from server"));
+                    */
+
         } else {
             android.app.AlertDialog.Builder ad = tools.showPopup(this, getString(R.string.noInternet), "", "");
             ad.setPositiveButton(getString(R.string.retry), (vi, w) -> onStart());
