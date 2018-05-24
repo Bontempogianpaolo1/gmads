@@ -108,6 +108,7 @@ public class FirebaseManagement {
             MyFirebaseInstanceIDService fInstance = new MyFirebaseInstanceIDService();
             fInstance.addToken(FirebaseInstanceId.getInstance().getToken());
             Datasource.getInstance().sincMyProfile();
+            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(i);
         });
 

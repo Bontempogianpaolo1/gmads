@@ -10,6 +10,7 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -21,7 +22,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
+import com.bumptech.glide.Glide;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
@@ -40,10 +41,11 @@ import android.widget.LinearLayout;
 import android.net.Uri;
 import android.widget.Toast;
 
+import gmads.it.gmads_lab1.glide.GlideApp;
 import gmads.it.gmads_lab1.model.Book;
 import gmads.it.gmads_lab1.model.Profile;
 
-public class BookPage extends AppCompatActivity implements AppBarLayout.OnOffsetChangedListener {
+public class ShowBook extends AppCompatActivity implements AppBarLayout.OnOffsetChangedListener{
 
     private static final float PERCENTAGE_TO_SHOW_TITLE_AT_TOOLBAR = 0.9f;
     private static final float PERCENTAGE_TO_HIDE_TITLE_DETAILS = 0.3f;
@@ -85,13 +87,17 @@ public class BookPage extends AppCompatActivity implements AppBarLayout.OnOffset
     TextView vCondition;
     TextView Veditor;
     Tools tools;
-    TextView vImageTitle;
-    ImageView vPhoto;
+    CardView card2;
+    TextView titleDescr;
+    TextView titleData;
+    TextView titleNote;
+    TextView titleImg;
+    TextView titleConditions;
+    ImageView bookPhoto;
 
     private void findViews() {
         appbar = (AppBarLayout) findViewById(R.id.appbar);
-
-
+        card2 = findViewById(R.id.card2);
         collapsing = (CollapsingToolbarLayout) findViewById(R.id.collapsing);
         coverImage = (ImageView) findViewById(R.id.imageview_placeholder);
         framelayoutTitle = (FrameLayout) findViewById(R.id.framelayout_title);
@@ -114,16 +120,24 @@ public class BookPage extends AppCompatActivity implements AppBarLayout.OnOffset
         vOwner = findViewById(R.id.owner);
         vDescription = findViewById(R.id.descrizione);
         vNotes= findViewById(R.id.notes);
-        vImageTitle = findViewById(R.id.photoTitle);
-        vPhoto = findViewById(R.id.photo);
+        titleData = findViewById(R.id.bp_data);
+        titleConditions = findViewById(R.id.tv2);
+        titleDescr = findViewById(R.id.bp_descr);
+        titleNote = findViewById(R.id.tv4);
+        titleImg = findViewById(R.id.photoTitle);
+        bookPhoto = findViewById(R.id.photoBook);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //Fresco.initialize(this);
-        setContentView(R.layout.activity_book_page);
+        setContentView(R.layout.activity_showbook);
         findViews();
+        GlideApp.with(getApplicationContext())
+                .load(R.drawable.default_book)
+                .fitCenter()
+                .into(avatar);
         toolbar.setTitle("");
         appbar.addOnOffsetChangedListener(this);
         textviewTitle.setText(getString(R.string.showBook));
@@ -143,8 +157,7 @@ public class BookPage extends AppCompatActivity implements AppBarLayout.OnOffset
         //inizialize  user data
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         //set image
-        avatar.setImageDrawable(getDrawable(R.drawable.default_book)); //settare copertina libro default
-
+        //avatar.setImageDrawable(getDrawable(R.drawable.default_book)); //settare copertina libro default
         tools = new Tools();
     }
 
@@ -259,37 +272,113 @@ public class BookPage extends AppCompatActivity implements AppBarLayout.OnOffset
                     .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
-                            book = dataSnapshot.getValue(Book.class);
-                            vTitle.setText(book.getTitle());
                             String authors="";
-                            Veditor.setText(book.getPublisher());
-
-                            for(String a : book.getAuthor()){
-                                authors= authors + a + ", ";
-
-                            }
-                            vAuthor.setText(authors);
                             String categ="";
+                            int c = 0;
 
-                            for(String a : book.getCategories()){
-                                categ=categ+a+", ";
+                            book = dataSnapshot.getValue(Book.class);
+                            //foto ufficiale libro
+                            if(book.getUrlimage() == null || book.getUrlimage().compareTo("") == 0) {
+                                avatar.setImageDrawable(getDrawable(R.drawable.default_book));
+                            }else{
+                                GlideApp.with(getApplicationContext())
+                                        .load(book.getUrlimage())
+                                        .circleCrop()
+                                        .into(avatar);
+                                //avatar.setImageDrawable(loadImageFromURL(book.getUrlimage(), "bookImage"));
                             }
-                            vCategory.setText(categ);
-                            vdate.setText(book.getPublishDate());
-                            vCondition.setText(book.getCondition());
-                            String notes="";
-                            for(String key : book.getNotes().keySet()){
-                                String value= book.getNotes().get(key);
-                                notes=notes+ key +": " +value+"\n";
-                            }
+                            //titolo Cé SEMPRE
+                            vTitle.setText(book.getTitle());
+                            //editore Cé SEMPRE
+                            /*if(book.getPublisher().isEmpty() || book.getPublisher().compareTo("") == 0){
+                                Veditor.setVisibility(View.GONE);
+                            }else{*/
+                                Veditor.setText(book.getPublisher());
+                            //}
+                            //autore Cé SEMPRE
+                            /*if(book.getAuthor().size() == 0)
+                                vAuthor.setVisibility(View.GONE);
+                            else {*/
+                                for (String a : book.getAuthor()) {
+                                    if (c < book.getAuthor().size()-1) {
+                                        c++;
+                                        authors = authors + a + ", ";
+                                    } else {
+                                        authors = authors + a;
+                                    }
+                                }
+                                vAuthor.setText(authors);
+                            //}
+                            //owner
                             vOwner.setText(book.getNomeproprietario());
-                            vDescription.setText(book.getDescription());
-                            vCondition.setText(book.getCondition());
+                            //categorie Cé SEMPRE
+                            c = 0;
+                            /*if(book.getCategories().size() == 0)
+                                vCategory.setVisibility(View.GONE);
+                            else {*/
+                                for (String a : book.getCategories()) {
+                                    if (c < book.getCategories().size()-1) {
+                                        c++;
+                                        categ = categ + a + ", ";
+                                    } else {
+                                        categ = categ + a;
+                                    }
+                                }
+                                vCategory.setText(categ);
+                            //}
+                            //data può non esserci
+                            /*if(book.getPublishDate().isEmpty() || book.getPublishDate().compareTo("") == 0){
+                                titleData.setVisibility(View.GONE);
+                                vdate.setVisibility(View.GONE);
+                            }else{*/
+                                vdate.setText(book.getPublishDate());
+                            //}
+                            //descrizione può non esserci
+                            /*if(book.getDescription().isEmpty() || book.getDescription().compareTo("") == 0){
+                                titleDescr.setVisibility(View.GONE);
+                                vDescription.setVisibility(View.GONE);
+                            }else{*/
+                                vDescription.setText(book.getDescription());
+                            //}
 
-                            vNotes.setText(notes);
-                            avatar.setImageDrawable(loadImageFromURL(book.getUrlimage(), "bookImage"));
-                            avatar.setImageDrawable(getDrawable(R.drawable.default_book));
+                            //CARD2
+                            if((book.getCondition().isEmpty() || book.getCondition().compareTo("") == 0) &&
+                                book.getNotes().size() == 0 /*&&
+                                book.*///ci va il controllo della presenza fotografia libro)
+                            ) {
+                                //mancano tutte quindi nascondo direttamente la card2
+                                card2.setVisibility(View.GONE);
+                            }else {
+                                //condizioni
+                                if (book.getCondition().isEmpty() || book.getCondition().compareTo("") == 0) {
+                                    titleConditions.setVisibility(View.GONE);
+                                    vCondition.setVisibility(View.GONE);
+                                } else {
+                                    vCondition.setText(book.getCondition());
+                                }
+                                //note
+                                String notes="";
+                                if(book.getNotes().size()==0){
+                                    titleNote.setVisibility(View.GONE);
+                                    vNotes.setVisibility(View.GONE);
+                                }else {
+                                    c = 0;
+                                    for (String key : book.getNotes().keySet()) {
+                                        if(c!=book.getNotes().size()) {
+                                            String value = book.getNotes().get(key);
+                                            notes = notes + key + ": " + value + "\n";
+                                        }else{
+                                            String value = book.getNotes().get(key);
+                                            notes = notes + key + ": " + value;
+                                        }
+                                    }
+                                    vNotes.setText(notes);
+                                }
 
+                                //foto libro (fare come gli altri controlli:
+                                //NON Cè: titleImg e bookPhoto vanno rese invisibili
+                                //c'è: va settata e basta direi)
+                            }
                         }
 
                         @Override
@@ -321,7 +410,7 @@ public class BookPage extends AppCompatActivity implements AppBarLayout.OnOffset
         if (!(view instanceof EditText)) {
             view.setOnTouchListener(new View.OnTouchListener() {
                 public boolean onTouch(View v, MotionEvent event) {
-                    hideSoftKeyboard(BookPage.this);
+                    hideSoftKeyboard(ShowBook.this);
                     return false;
                 }
             });
