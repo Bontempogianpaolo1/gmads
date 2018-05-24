@@ -46,7 +46,8 @@ object FirebaseChat {
                                         .child("channelId")
                                         .addValueEventListener(object : ValueEventListener {
                                             override fun onCancelled(p0: DatabaseError?) {
-                                                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                                                //To change body of created functions use File | Settings | File Templates.
+                                                return
                                             }
 
                                             override fun onDataChange(dataSnapshot: DataSnapshot?) {
@@ -59,7 +60,9 @@ object FirebaseChat {
                                                             .child(FirebaseAuth.getInstance().currentUser?.uid)
                                                             .addValueEventListener(object : ValueEventListener {
                                                                 override fun onCancelled(p0: DatabaseError?) {
-                                                                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                                                                    //To change body of created functions use File | Settings | File Templates.
+                                                                    items.clear()
+                                                                    onListen(items)
                                                                 }
 
                                                                 override fun onDataChange(dataSnapshot: DataSnapshot?) {

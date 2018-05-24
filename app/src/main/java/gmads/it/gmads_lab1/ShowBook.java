@@ -403,7 +403,7 @@ public class ShowBook extends AppCompatActivity implements AppBarLayout.OnOffset
                                     vCondition.setText(book.getCondition());
                                 }
                                 //note
-                                String notes="";
+                                notes="";
                                 if(book.getNotes().size()==0){
                                     titleNote.setVisibility(View.GONE);
                                     vNotes.setVisibility(View.GONE);
