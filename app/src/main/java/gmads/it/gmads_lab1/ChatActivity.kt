@@ -66,7 +66,11 @@ class ChatActivity : AppCompatActivity() {
                         TextMessage(editText_message.text.toString(), Calendar.getInstance().time,
                                 FirebaseAuth.getInstance().currentUser!!.uid, MessageType.TEXT)
                 editText_message.setText("")
-                FirebaseChat.sendMessage(messageToSend, channelId)
+                if(messageToSend.text.isNotEmpty()) {
+                    if (messageToSend.text.isNotBlank()) {
+                        FirebaseChat.sendMessage(messageToSend, channelId)
+                    }
+                }
             }
 
             fab_send_image.setOnClickListener {
