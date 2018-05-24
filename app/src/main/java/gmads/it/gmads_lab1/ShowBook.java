@@ -395,14 +395,28 @@ public class ShowBook extends AppCompatActivity implements AppBarLayout.OnOffset
                                 titleNote.setVisibility(View.GONE);
                                 vNotes.setVisibility(View.GONE);
                             }else {
-                                c = 0;
-                                for (String key : book.getNotes().keySet()) {
-                                    if(c!=book.getNotes().size()) {
-                                        String value = book.getNotes().get(key);
-                                        notes = notes + key + ": " + value + "\n";
-                                    }else{
-                                        String value = book.getNotes().get(key);
-                                        notes = notes + key + ": " + value;
+                                //condizioni
+                                if (book.getCondition().isEmpty() || book.getCondition().compareTo("") == 0) {
+                                    titleConditions.setVisibility(View.GONE);
+                                    vCondition.setVisibility(View.GONE);
+                                } else {
+                                    vCondition.setText(book.getCondition());
+                                }
+                                //note
+                                String notes="";
+                                if(book.getNotes().size()==0){
+                                    titleNote.setVisibility(View.GONE);
+                                    vNotes.setVisibility(View.GONE);
+                                }else {
+                                    c = 0;
+                                    for (String key : book.getNotes().keySet()) {
+                                        if(c!=book.getNotes().size()-1) {
+                                            String value = book.getNotes().get(key);
+                                            notes = notes + key + ": " + value + "\n";
+                                        }else{
+                                            String value = book.getNotes().get(key);
+                                            notes = notes + key + ": " + value;
+                                        }
                                     }
                                 }
                                 vNotes.setText(notes);
