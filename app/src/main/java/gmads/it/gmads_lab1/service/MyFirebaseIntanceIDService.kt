@@ -13,11 +13,11 @@ class MyFirebaseInstanceIDService : FirebaseInstanceIdService() {
         val newRegistrationToken = FirebaseInstanceId.getInstance().token
         Log.d("refresh",newRegistrationToken)
         if (FirebaseAuth.getInstance().currentUser != null)
-            addTokenToFirestore(newRegistrationToken)
+            addTokenToFirebase(newRegistrationToken)
     }
 //sotto classe di myFirebaseInstance
     companion object {
-        fun addTokenToFirestore(newRegistrationToken: String?) {
+        fun addTokenToFirebase(newRegistrationToken: String?) {
             /*
             funzione richiamata sia se si iaggiorne sia che si crea il token
              */
@@ -37,6 +37,6 @@ arriva qua appena e solo dopo essersi registrato
  */
     fun addToken(newRegistrationToken: String?){
         Log.d("add",newRegistrationToken)
-        addTokenToFirestore(newRegistrationToken);
+        addTokenToFirebase(newRegistrationToken);
     }
 }
