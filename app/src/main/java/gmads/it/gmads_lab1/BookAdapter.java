@@ -13,6 +13,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+
 import java.util.List;
 
 import gmads.it.gmads_lab1.model.Book;
@@ -70,14 +72,17 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
         holder.distance.append(" Km");
         //rating
         // loading album cover using Glide library
-        if(book.getUrlimage()!=null && book.getUrlimage().length()!=0){
-            Glide.with(mContext).load(book.getUrlimage()).into(holder.thumbnail);
-        }
+        RequestOptions requestOptions = new RequestOptions();
+        requestOptions.placeholder(R.drawable.default_book);
+        requestOptions.error(R.drawable.default_book);
+        //if(book.getUrlimage()!=null && book.getUrlimage().length()!=0){
+            Glide.with(mContext).setDefaultRequestOptions(requestOptions).load(book.getUrlimage()).into(holder.thumbnail);
+       // }
 
         holder.thumbnail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mContext, BookPage.class);
+                Intent intent = new Intent(mContext, ShowBook.class);
                 intent.putExtra("book_id", book.getBId());
                 mContext.startActivity(intent);
             }

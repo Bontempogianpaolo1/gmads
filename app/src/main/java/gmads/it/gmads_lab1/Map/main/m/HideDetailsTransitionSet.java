@@ -36,8 +36,13 @@ class HideDetailsTransitionSet extends TransitionSet {
     }
 
     private Transition textResize() {
+        if(from!=null){
         return new TransitionBuilder(new TextResizeTransition())
                 .link(from.findViewById(R.id.title), to.textViewTitle, titleTransitionName())
+                .build();
+        }
+        else return new TransitionBuilder(new TextResizeTransition())
+                .link(null, to.textViewTitle, titleTransitionName())
                 .build();
     }
 

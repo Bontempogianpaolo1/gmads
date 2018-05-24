@@ -19,7 +19,7 @@ import com.bumptech.glide.Glide;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import gmads.it.gmads_lab1.model.Book;
-import gmads.it.gmads_lab1.BookPage;
+import gmads.it.gmads_lab1.ShowBook;
 import gmads.it.gmads_lab1.R;
 import gmads.it.gmads_lab1.ShowUserProfile;
 
@@ -59,7 +59,7 @@ public class DetailsLayout extends CoordinatorLayout {
         bid=place.getBId();
         textViewDescription.setText(place.getNomeproprietario());
         toBook.setOnClickListener(v->{
-            Intent i=new Intent(getContext(), BookPage.class);
+            Intent i=new Intent(getContext(), ShowBook.class);
             i.putExtra("book_id",bid);
             getContext().startActivity(i);
         });

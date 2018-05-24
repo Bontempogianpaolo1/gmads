@@ -41,9 +41,7 @@ public class ShowUserProfile extends AppCompatActivity implements AppBarLayout.O
     private boolean mIsTheTitleContainerVisible = true;
 
     private AppBarLayout appbar;
-    private CollapsingToolbarLayout collapsing;
     private ImageView coverImage;
-    private FrameLayout framelayoutTitle;
     private LinearLayout linearlayoutTitle;
     private Toolbar toolbar;
     private TextView textviewTitle;
@@ -66,13 +64,13 @@ public class ShowUserProfile extends AppCompatActivity implements AppBarLayout.O
     private void findViews() {
         total=findViewById(R.id.totbooks);
         uploaded= findViewById(R.id.uploaded);
-        appbar = (AppBarLayout) findViewById(R.id.appbar);
-        collapsing = (CollapsingToolbarLayout) findViewById(R.id.collapsing);
-        coverImage = (ImageView) findViewById(R.id.imageview_placeholder);
-        framelayoutTitle = (FrameLayout) findViewById(R.id.framelayout_title);
-        linearlayoutTitle = (LinearLayout) findViewById(R.id.linearlayout_title);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        textviewTitle = (TextView) findViewById(R.id.name_surname_tbar);
+        appbar =  findViewById(R.id.appbar);
+        CollapsingToolbarLayout collapsing = findViewById(R.id.collapsing);
+        coverImage = findViewById(R.id.imageview_placeholder);
+        FrameLayout framelayoutTitle = findViewById(R.id.framelayout_title);
+        linearlayoutTitle = findViewById(R.id.linearlayout_title);
+        toolbar = findViewById(R.id.toolbar);
+        textviewTitle = findViewById(R.id.name_surname_tbar);
         //avatar = (SimpleDraweeView) findViewById(R.id.avatar);
         //avatar.setImageDrawable(getDrawable(R.drawable.default_picture));
         avatar = findViewById(R.id.avatar);
@@ -82,19 +80,11 @@ public class ShowUserProfile extends AppCompatActivity implements AppBarLayout.O
         cap=findViewById(R.id.cap);
         toolbar =  findViewById(R.id.toolbar);
         vName = findViewById(R.id.name_surname);
-        //vEmail = findViewById(R.id.email);
         vBio = findViewById(R.id.bio);
-        //progressbar = findViewById(R.id.progressBar);
-        //toolbar.setTitle(getString(R.string.showProfile));
         setSupportActionBar(toolbar);
-        //vBio.setMovementMethod(new ScrollingMovementMethod());
-        //avatar.setVisibility(View.GONE);
-        //progressbar.setVisibility(View.VISIBLE);
 
         if(profile!=null) {
             vName.setText(profile.getName());
-            //vName.append(" " + profile.getSurname());
-            //vEmail.setText(profile.getEmail());
             vBio.setText(profile.getDescription());
             //nome cognome nella toolbar
             //textviewTitle.setText(profile.getName());
@@ -188,14 +178,8 @@ public class ShowUserProfile extends AppCompatActivity implements AppBarLayout.O
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             profile = dataSnapshot.getValue(Profile.class);
                             if (profile != null) {
-                                if (profile.getCAP() == null || profile.getCAP().length() == 0) {
-                                    Intent i = new Intent(getApplicationContext(), EditProfile.class);
-                                    startActivity(i);
-                                }
                                 cap.setText(profile.getCAP());
                                 vName.setText(profile.getName());
-                                //vName.append(" " + profile.getSurname());
-                                //vEmail.setText(profile.getEmail());
                                 vBio.setText(profile.getDescription());
                                 textviewTitle.setText(profile.getName());
                                 if (profile.hasUploaded()) {
@@ -237,10 +221,8 @@ public class ShowUserProfile extends AppCompatActivity implements AppBarLayout.O
                                 Intent i = new Intent(getApplicationContext(), EditProfile.class);
                                 startActivity(i);
                                 vName.setText(getString(R.string.name));
-                                //vName.append(" " + getString(R.string.surname));
-                                //vEmail.setText(getString(R.string.email));
                                 vBio.setText(getString(R.string.description));
-                                textviewTitle.setText(getString(R.id.name));
+                                textviewTitle.setText(getString(R.string.name));
                             }
                         }
 
@@ -264,7 +246,6 @@ public class ShowUserProfile extends AppCompatActivity implements AppBarLayout.O
                 startAlphaAnimation(textviewTitle, ALPHA_ANIMATIONS_DURATION, View.VISIBLE);
                 mIsTheTitleVisible = true;
             }
-
         } else {
 
             if (mIsTheTitleVisible) {
