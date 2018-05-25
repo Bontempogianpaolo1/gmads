@@ -80,10 +80,10 @@ object FirebaseChat {
 
                                                                     user?.let {
                                                                         if (notificationNumber == 0) {
-                                                                            items.add(notifiedChatNumber, PersonItem(user!!, user.id, 0, context))
+                                                                            items.add(notifiedChatNumber, PersonItem(user, user.id, 0, context))
                                                                         } else {
                                                                             notifiedChatNumber++
-                                                                            items.add(0, PersonItem(user!!, user.id, notificationNumber
+                                                                            items.add(0, PersonItem(user, user.id, notificationNumber
                                                                                     ?: 0, context))
                                                                         }
                                                                         onListen(items)
@@ -96,7 +96,7 @@ object FirebaseChat {
                                                     if(pToRemove != null)
                                                         items.remove(pToRemove)
                                                     user?.let {
-                                                        items.add(notifiedChatNumber, PersonItem(user!!, user.id, 0, context))
+                                                        items.add(notifiedChatNumber, PersonItem(user, user.id, 0, context))
 
                                                         onListen(items)
                                                     }
