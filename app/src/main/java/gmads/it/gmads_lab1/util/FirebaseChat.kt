@@ -243,7 +243,7 @@ invio messaggi al token desiderato")
                                                                 .child(channelId)
                                                                 .child("notificationNumber")
                                                                 .child(dataUser)
-                                                                .setValue(chatChannel.notificationNumber.get(dataUser)!!.toInt()+1)
+                                                                .setValue(chatChannel.notificationNumber.get(dataUser)!!.toInt() + 1)
                                                     }
                                                 }
                                             }
