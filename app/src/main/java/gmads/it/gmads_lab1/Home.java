@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -67,6 +68,7 @@ public class  Home extends AppCompatActivity implements NavigationView.OnNavigat
     ImageView navImage;
     RecyclerView recyclerView;
     String query="";
+    String searchquery ="";
     NavigationView navigationView;
     DrawerLayout drawer;
     private Profile profile;
@@ -97,7 +99,7 @@ public class  Home extends AppCompatActivity implements NavigationView.OnNavigat
         //SearchView mSearchView = (SearchView) findViewById(R.id.searchView); // initiate a search view
         //mSearchView.attachNavigationDrawerToMenuButton(findViewById(R.id.drawer_layout));
         //mSearchView.setIconifiedByDefault(false);  // set the default or resting state of the search field
-        //RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         initCollapsingToolbar();
         /*bookList = new ArrayList<>();
         adapter = new BookAdapter(this, bookList);*/
@@ -111,10 +113,24 @@ public class  Home extends AppCompatActivity implements NavigationView.OnNavigat
         ViewPager pager= findViewById(R.id.viewPager);
         FragmentViewPagerAdapter vpadapter= new FragmentViewPagerAdapter(getSupportFragmentManager());
         vpadapter.addFragment(tab1);
-        vpadapter.addFragment(categ1);
-        vpadapter.addFragment(categ2);
-
+       // vpadapter.addFragment(categ1);
+        /*
+        TODO riempire frammenti
+         */
+       // vpadapter.addFragment(categ2);
+        //vpadapter.addFragment(categ2);
+       // vpadapter.addFragment(categ2);
         pager.setAdapter(vpadapter);
+        TabLayout tableLayout= findViewById(R.id.tabs);
+        tableLayout.setupWithViewPager(pager);
+        tableLayout.getTabAt(0).setText(getString(R.string.tab1));
+        /*
+        todo settare titoli
+         */
+        //tableLayout.getTabAt(1).setText(getString(R.string.tab2));
+        //tableLayout.getTabAt(2).setText(getString(R.string.tab3));
+        //tableLayout.getTabAt(3).setText("thriller");
+        //tableLayout.getTabAt(4).setText("drama");
         progressbar = findViewById(R.id.progress_bar);
 //
         //era per mettere foto libri nell appbar, ma l'abbiamo messa come sfondo per ora
@@ -142,6 +158,45 @@ public class  Home extends AppCompatActivity implements NavigationView.OnNavigat
         progressbar.setVisibility(View.GONE);
         notfound.setVisibility(View.GONE);
         tnf.setVisibility(View.GONE);
+        /*
+        if(searchview != null) {
+            if(searchview.getQuery().toString().length() > 0){
+                OngoingSearch(searchview.getQuery().toString());
+            }
+        }
+        */
+    }
+
+    boolean OngoingSearch(String text) {
+        progressbar.setVisibility(View.VISIBLE);
+        books.clear();
+        tab1.getAdapter().setbooks(books);
+        ImageView notfound = findViewById(R.id.not_found);
+        TextView tnf = findViewById(R.id.textnotfound);
+
+        query = text;
+        Query query = new Query(text)
+                .setAroundLatLng(new AbstractQuery.LatLng(profile.getLat(), profile.getLng())).setGetRankingInfo(true);
+
+        algoIndex.searchAsync(query, ( jsonObject, e ) -> {
+            if(e==null){
+                SearchResultsJsonParser search= new SearchResultsJsonParser();
+                Log.d("lista",jsonObject.toString());
+                books= search.parseResults(jsonObject);
+                List<Book> books2= new ArrayList<>();
+                for (Book b : books) {
+                    if (b.getOwner().equals(FirebaseManagement.getUser().getUid())) {
+                        books2.add(b);
+                    }
+                }
+                for(Book b: books2){
+                    books.remove(b);
+                }
+            }
+            tab1.updateData(books);
+            progressbar.setVisibility(View.GONE);
+        });
+        return true;
     }
 
     /*@Override
@@ -196,6 +251,7 @@ public class  Home extends AppCompatActivity implements NavigationView.OnNavigat
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.options_menu, menu);
         MenuItem m= menu.findItem(R.id.search);
+
         searchview = (android.widget.SearchView)m.getActionView();
         searchview.setIconified(false);
         searchview.setFocusable(true);
@@ -213,7 +269,6 @@ public class  Home extends AppCompatActivity implements NavigationView.OnNavigat
                 return true;
             }
         });
-
 
         searchview.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -434,4 +489,7 @@ class FragmentViewPagerAdapter extends FragmentPagerAdapter {
     }
 
 }
+
+
+
 

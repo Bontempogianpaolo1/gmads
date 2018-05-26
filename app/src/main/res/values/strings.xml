@@ -90,9 +90,9 @@
     <string name="email_required">Email required</string>
     <string name="Failed_to_load_profile">Failed to load profile.</string>
     <string name="failed_book_upload">Upload failed</string>
-    <string name="tab1">My Books</string>
-    <string name="tab2">Rented</string>
-    <string name="tab3">Added</string>
+    <string name="tab1">All</string>
+    <string name="tab2">Fiction</string>
+    <string name="tab3">Fantasy</string>
     <string name="title_activity_map_search">Map</string>
     <string name="country">Country</string>
     <string name="country_required">Country required</string>

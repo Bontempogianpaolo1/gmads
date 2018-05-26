@@ -67,6 +67,9 @@ public class LibraryProvider {
                     if (b.getOwner().equals(FirebaseManagement.getUser().getUid())) {
                         books2.add(b);
                     }
+                    else{
+                        b.setfinder(lat,lng);
+                    }
                 }
                 for(Book b: books2){
                     books.remove(b);
