@@ -2,6 +2,7 @@ package gmads.it.gmads_lab1.model;
 
 import android.graphics.Bitmap;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -34,6 +35,17 @@ public class Book {
     private Double finderLat;
     private String nomeproprietario;
 
+
+
+    private List<String> linkrequest;
+
+    public List<String> getLinkrequest() {
+        return linkrequest;
+    }
+
+    public void setLinkrequest( List<String> linkrequest ) {
+        this.linkrequest = linkrequest;
+    }
     public String getNomeproprietario() {
         return nomeproprietario;
     }
@@ -128,6 +140,7 @@ public class Book {
         comments= Collections.emptyList();
         images=Collections.emptyList();
         notes= Collections.emptyMap();
+        linkrequest= new ArrayList<>();
         avgRating=0;
         nRates=0;
         sumRates=0;
