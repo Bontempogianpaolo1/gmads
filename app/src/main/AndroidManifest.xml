@@ -76,7 +76,7 @@
             android:name=".Map.main.MapActivity"
             android:label="@string/title_activity_map_search"
             android:screenOrientation="portrait"></activity>
-        <activity android:name=".BookPage"
+        <activity android:name=".ShowBook"
             android:screenOrientation="portrait"/>
         <activity android:name=".MyLibrary"
                   android:screenOrientation="portrait"/>
