@@ -11,7 +11,7 @@ import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import gmads.it.gmads_lab1.R
 import gmads.it.gmads_lab1.Home
-import gmads.it.gmads_lab1.util.MyNotificationManager
+import gmads.it.gmads_lab1.Chat.util.MyNotificationManager
 
 
 class MyFirebaseMessagingService : FirebaseMessagingService() {

@@ -1,4 +1,4 @@
-package gmads.it.gmads_lab1.util
+package gmads.it.gmads_lab1.Chat.util
 
 import android.app.Notification
 import android.app.NotificationManager
@@ -9,7 +9,6 @@ import android.graphics.BitmapFactory
 import android.support.v4.app.NotificationCompat
 import gmads.it.gmads_lab1.R
 import android.media.RingtoneManager
-import android.provider.Settings.Global.getString
 
 
 /**

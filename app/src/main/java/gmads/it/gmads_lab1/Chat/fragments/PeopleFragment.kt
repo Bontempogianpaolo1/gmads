@@ -16,7 +16,7 @@ import gmads.it.gmads_lab1.Chat.ChatActivity
 import gmads.it.gmads_lab1.R
 import gmads.it.gmads_lab1.Chat.constants.AppConstants
 import gmads.it.gmads_lab1.Chat.item.PersonItem
-import gmads.it.gmads_lab1.util.FirebaseChat
+import gmads.it.gmads_lab1.Chat.util.FirebaseChat
 import kotlinx.android.synthetic.main.fragment_people.*
 import org.jetbrains.anko.support.v4.startActivity
 

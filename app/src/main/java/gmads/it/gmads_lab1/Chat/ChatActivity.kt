@@ -20,8 +20,8 @@ import gmads.it.gmads_lab1.Chat.model.ImageMessage
 import gmads.it.gmads_lab1.Chat.model.MessageType
 import gmads.it.gmads_lab1.Chat.model.TextMessage
 import gmads.it.gmads_lab1.R
-import gmads.it.gmads_lab1.util.FirebaseChat
-import gmads.it.gmads_lab1.util.StorageUtil
+import gmads.it.gmads_lab1.Chat.util.FirebaseChat
+import gmads.it.gmads_lab1.Chat.util.StorageUtil
 import kotlinx.android.synthetic.main.activity_chat.*
 import java.io.ByteArrayOutputStream
 import java.util.*

@@ -1,4 +1,4 @@
-package gmads.it.gmads_lab1.util
+package gmads.it.gmads_lab1.Chat.util
 
 import android.content.Context
 import android.util.Log

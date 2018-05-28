@@ -4,7 +4,7 @@ import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.iid.FirebaseInstanceIdService
-import gmads.it.gmads_lab1.util.FirebaseChat
+import gmads.it.gmads_lab1.Chat.util.FirebaseChat
 
 
 class MyFirebaseInstanceIDService : FirebaseInstanceIdService() {
