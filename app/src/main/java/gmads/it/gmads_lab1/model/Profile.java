@@ -26,6 +26,16 @@ public class Profile implements Serializable{
     private String CAP; //"CAP, ITA"
     private double lat;
     private double lng;
+    private List<String> linkrequest;
+
+
+    public List<String> getLinkrequest() {
+        return linkrequest;
+    }
+
+    public void setLinkrequest( List<String> linkrequest ) {
+        this.linkrequest = linkrequest;
+    }
 
     public List<String> getRegistrationTokens() {
         return registrationTokens;
@@ -83,6 +93,7 @@ public class Profile implements Serializable{
         nrates=0;
         lat = 0;
         lng = 0;
+        linkrequest=new ArrayList<>();
         this.registrationTokens.add(FirebaseInstanceId.getInstance().getToken());
 
     }
