@@ -1,9 +1,9 @@
-package gmads.it.gmads_lab1.reciclerview.item
+package gmads.it.gmads_lab1.Chat.item
 
 import android.content.Context
 import gmads.it.gmads_lab1.R
 import com.xwray.groupie.kotlinandroidextensions.ViewHolder
-import gmads.it.gmads_lab1.model.TextMessage
+import gmads.it.gmads_lab1.Chat.model.TextMessage
 import kotlinx.android.synthetic.main.item_text_message.*
 
 class TextMessageItem(val message: TextMessage,

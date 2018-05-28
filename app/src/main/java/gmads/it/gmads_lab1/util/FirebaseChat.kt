@@ -2,18 +2,16 @@ package gmads.it.gmads_lab1.util
 
 import android.content.Context
 import android.util.Log
-import com.firebase.ui.auth.data.model.User
-import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 
 import com.xwray.groupie.kotlinandroidextensions.Item
+import gmads.it.gmads_lab1.Chat.model.*
 import gmads.it.gmads_lab1.FirebaseManagement
 import gmads.it.gmads_lab1.model.*
-import gmads.it.gmads_lab1.reciclerview.item.ImageMessageItem
-import gmads.it.gmads_lab1.reciclerview.item.PersonItem
-import gmads.it.gmads_lab1.reciclerview.item.TextMessageItem
-import org.w3c.dom.Text
+import gmads.it.gmads_lab1.Chat.item.ImageMessageItem
+import gmads.it.gmads_lab1.Chat.item.PersonItem
+import gmads.it.gmads_lab1.Chat.item.TextMessageItem
 
 
 object FirebaseChat {

@@ -1,4 +1,4 @@
-package gmads.it.gmads_lab1.service;
+package gmads.it.gmads_lab1.Chat.service;
 
 import android.app.NotificationManager
 import android.app.PendingIntent

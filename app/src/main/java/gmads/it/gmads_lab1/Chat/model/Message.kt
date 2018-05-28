@@ -1,4 +1,4 @@
-package gmads.it.gmads_lab1.model
+package gmads.it.gmads_lab1.Chat.model
 
 import java.util.*
 

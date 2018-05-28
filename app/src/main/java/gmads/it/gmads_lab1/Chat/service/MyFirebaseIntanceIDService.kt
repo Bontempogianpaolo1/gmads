@@ -1,4 +1,4 @@
-package gmads.it.gmads_lab1.service
+package gmads.it.gmads_lab1.Chat.service
 
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth

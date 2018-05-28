@@ -1,14 +1,12 @@
-package gmads.it.gmads_lab1.reciclerview.item;
+package gmads.it.gmads_lab1.Chat.item;
 
 import android.content.Context
 import android.view.View
 import gmads.it.gmads_lab1.R
-import gmads.it.gmads_lab1.glide.*
+import gmads.it.gmads_lab1.Chat.glide.*
 import gmads.it.gmads_lab1.model.Profile
-import gmads.it.gmads_lab1.util.StorageUtil
 import com.xwray.groupie.kotlinandroidextensions.Item
 import com.xwray.groupie.kotlinandroidextensions.ViewHolder
-import gmads.it.gmads_lab1.R.id.imageView_profile_picture
 import kotlinx.android.synthetic.main.item_person.*
 
 
