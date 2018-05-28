@@ -53,7 +53,7 @@ import gmads.it.gmads_lab1.glide.GlideApp;
 import gmads.it.gmads_lab1.model.Book;
 import gmads.it.gmads_lab1.model.Profile;
 
-public class ShowBook extends AppCompatActivity implements AppBarLayout.OnOffsetChangedListener{
+public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffsetChangedListener*/{
 
     private static final float PERCENTAGE_TO_SHOW_TITLE_AT_TOOLBAR = 0.9f;
     private static final float PERCENTAGE_TO_HIDE_TITLE_DETAILS = 0.3f;
@@ -109,11 +109,11 @@ public class ShowBook extends AppCompatActivity implements AppBarLayout.OnOffset
         appbar = (AppBarLayout) findViewById(R.id.appbar);
         card2 = findViewById(R.id.card2);
         collapsing = (CollapsingToolbarLayout) findViewById(R.id.collapsing);
-        coverImage = (ImageView) findViewById(R.id.imageview_placeholder);
-        framelayoutTitle = (FrameLayout) findViewById(R.id.framelayout_title);
-        linearlayoutTitle = (LinearLayout) findViewById(R.id.linearlayout_title);
+        //coverImage = (ImageView) findViewById(R.id.imageview_placeholder);
+        //framelayoutTitle = (FrameLayout) findViewById(R.id.framelayout_title);
+        //linearlayoutTitle = (LinearLayout) findViewById(R.id.linearlayout_title);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        textviewTitle = (TextView) findViewById(R.id.name_surname_tbar);
+        //textviewTitle = (TextView) findViewById(R.id.name_surname_tbar);
         //avatar = (SimpleDraweeView) findViewById(R.id.avatar);
         avatar = findViewById(R.id.avatar);
         avatar.setImageDrawable(getDrawable(R.drawable.default_book));
@@ -146,17 +146,16 @@ public class ShowBook extends AppCompatActivity implements AppBarLayout.OnOffset
         findViews();
         GlideApp.with(getApplicationContext())
                 .load(R.drawable.default_book)
-                .fitCenter()
                 .into(avatar);
-        toolbar.setTitle("");
-        appbar.addOnOffsetChangedListener(this);
-        textviewTitle.setText(getString(R.string.showBook));
+        toolbar.setTitle(R.string.showBook);
+        //appbar.addOnOffsetChangedListener(this);
+        //textviewTitle.setText(getString(R.string.showBook));
         setSupportActionBar(toolbar);
-        startAlphaAnimation(textviewTitle, 0, View.INVISIBLE);
+        //startAlphaAnimation(textviewTitle, 0, View.INVISIBLE);
 
         //set avatar and cover
         avatar.setImageResource(R.drawable.default_book);
-        coverImage.setImageResource(R.drawable.cover_edit);
+        //coverImage.setImageResource(R.drawable.cover_edit);
 
         cw = new ContextWrapper(getApplicationContext());
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
@@ -178,14 +177,14 @@ public class ShowBook extends AppCompatActivity implements AppBarLayout.OnOffset
         getBookInfo();
     }
 
-    @Override
+    /*@Override
     public void onOffsetChanged(AppBarLayout appBarLayout, int offset) {
         int maxScroll = appBarLayout.getTotalScrollRange();
         float percentage = (float) Math.abs(offset) / (float) maxScroll;
 
         handleAlphaOnTitle(percentage);
         handleToolbarTitleVisibility(percentage);
-    }
+    }*/
 
     private void setFocusOnClick(View v){
         InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -293,7 +292,6 @@ public class ShowBook extends AppCompatActivity implements AppBarLayout.OnOffset
                             }else{
                                 GlideApp.with(getApplicationContext())
                                         .load(book.getUrlimage())
-                                        .circleCrop()
                                         .into(avatar);
                                 //avatar.setImageDrawable(loadImageFromURL(book.getUrlimage(), "bookImage"));
                             }
