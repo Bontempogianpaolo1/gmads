@@ -1,4 +1,4 @@
-package gmads.it.gmads_lab1.constants
+package gmads.it.gmads_lab1.Chat.constants
 
 
 object AppConstants {

@@ -1,4 +1,4 @@
-package gmads.it.gmads_lab1.glide
+package gmads.it.gmads_lab1.Chat.glide
 
 import android.content.Context
 import com.bumptech.glide.Glide

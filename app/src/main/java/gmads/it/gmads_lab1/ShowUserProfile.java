@@ -140,6 +140,9 @@ public class ShowUserProfile extends AppCompatActivity implements AppBarLayout.O
             case android.R.id.home:
                 finish();
                 break;
+            case android.R.id.message:
+
+                break;
         }
         //Intent intentMod = new Intent(this, Home.class);
         //startActivity(intentMod);

@@ -1,13 +1,13 @@
-package gmads.it.gmads_lab1.reciclerview.item
+package gmads.it.gmads_lab1.Chat.item
 
 
 import android.content.Context
 import com.xwray.groupie.kotlinandroidextensions.ViewHolder
-import gmads.it.gmads_lab1.model.ImageMessage
+import gmads.it.gmads_lab1.Chat.model.ImageMessage
 import gmads.it.gmads_lab1.R
-import gmads.it.gmads_lab1.glide.GlideApp
+import gmads.it.gmads_lab1.Chat.glide.GlideApp
 
-import gmads.it.gmads_lab1.util.StorageUtil
+import gmads.it.gmads_lab1.Chat.util.StorageUtil
 import kotlinx.android.synthetic.main.item_image_message.*
 
 

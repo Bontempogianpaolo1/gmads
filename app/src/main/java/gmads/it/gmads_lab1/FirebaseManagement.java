@@ -2,23 +2,20 @@ package gmads.it.gmads_lab1;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.FirebaseInstanceIdService;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.functions.FirebaseFunctions;
 
 import java.util.Objects;
 
 import gmads.it.gmads_lab1.model.Profile;
-import gmads.it.gmads_lab1.service.MyFirebaseInstanceIDService;
+import gmads.it.gmads_lab1.Chat.service.MyFirebaseInstanceIDService;
 import com.google.firebase.functions.FirebaseFunctionsException;
 
 

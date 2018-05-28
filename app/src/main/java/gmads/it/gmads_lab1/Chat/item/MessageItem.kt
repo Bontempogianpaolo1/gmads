@@ -1,4 +1,4 @@
-package gmads.it.gmads_lab1.reciclerview.item
+package gmads.it.gmads_lab1.Chat.item
 
 import android.view.Gravity
 import android.widget.FrameLayout
@@ -6,11 +6,10 @@ import com.google.firebase.auth.FirebaseAuth
 import gmads.it.gmads_lab1.R
 import com.xwray.groupie.kotlinandroidextensions.Item
 import com.xwray.groupie.kotlinandroidextensions.ViewHolder
-import gmads.it.gmads_lab1.model.Message
+import gmads.it.gmads_lab1.Chat.model.Message
 import org.jetbrains.anko.backgroundResource
 import org.jetbrains.anko.wrapContent
 import java.text.SimpleDateFormat
-import android.support.v7.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_image_message.*
 
 

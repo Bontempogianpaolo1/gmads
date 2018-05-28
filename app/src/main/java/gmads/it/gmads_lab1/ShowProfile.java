@@ -33,6 +33,7 @@ import com.google.firebase.storage.StorageReference;
 import java.io.File;
 import java.io.IOException;
 
+import gmads.it.gmads_lab1.Chat.ChatList;
 import gmads.it.gmads_lab1.model.Profile;
 
 public class ShowProfile extends AppCompatActivity implements AppBarLayout.OnOffsetChangedListener {

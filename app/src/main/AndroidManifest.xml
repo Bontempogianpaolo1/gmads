@@ -83,21 +83,21 @@
         <activity android:name=".ShowUserProfile"
             android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".ChatList"
+        <activity android:name=".Chat.ChatList"
             android:screenOrientation="portrait"/>
-        <activity android:name=".ChatActivity"
+        <activity android:name=".Chat.ChatActivity"
             android:screenOrientation="portrait"/>
 
         <!--FCM-->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/ic_add_book_24dp" />
-        <service android:name=".service.MyFirebaseMessagingService">
+        <service android:name="gmads.it.gmads_lab1.Chat.service.MyFirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        <service android:name=".service.MyFirebaseInstanceIDService">
+        <service android:name="gmads.it.gmads_lab1.Chat.service.MyFirebaseInstanceIDService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
