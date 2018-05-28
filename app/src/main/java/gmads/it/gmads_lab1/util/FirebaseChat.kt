@@ -32,7 +32,7 @@ object FirebaseChat {
 
                     override fun onDataChange(dataSnapshot: DataSnapshot?) {
 
-                        val items = mutableListOf<Item>()
+                        var items = mutableListOf<Item>()
                         var notifiedChatNumber : Int = 0
 
                         dataSnapshot!!.children.mapNotNull {
@@ -64,21 +64,41 @@ object FirebaseChat {
 
                                                                 override fun onDataChange(dataSnapshot: DataSnapshot?) {
                                                                     var notificationNumber = dataSnapshot?.getValue(Int::class.java)
-                                                                    if(notificationNumber == 0){
-                                                                        items.add(notifiedChatNumber, PersonItem(user!!, user.id, notificationNumber ?: 0, context))
-                                                                    } else {
-                                                                        notifiedChatNumber++
-                                                                        items.add(0, PersonItem(user!!, user.id, notificationNumber ?: 0, context))
+
+                                                                    var pToRemove = items.firstOrNull { p -> p as PersonItem; p.userId == user?.id }
+                                                                    if (pToRemove != null) {
+                                                                        pToRemove as PersonItem
+                                                                        if (pToRemove.notificationNumber > 0) {
+                                                                            notifiedChatNumber--
+                                                                        }
+                                                                        items.remove(pToRemove)
+
                                                                     }
-                                                                    onListen(items)
+
+                                                                    user?.let {
+                                                                        if (notificationNumber == 0) {
+                                                                            items.add(notifiedChatNumber, PersonItem(user!!, user.id, 0, context))
+                                                                        } else {
+                                                                            notifiedChatNumber++
+                                                                            items.add(0, PersonItem(user!!, user.id, notificationNumber
+                                                                                    ?: 0, context))
+                                                                        }
+                                                                        onListen(items)
+                                                                    }
                                                                 }
 
                                                             })
                                                 } else {
-                                                    items.add(notifiedChatNumber, PersonItem(user!!, user.id, 0, context))
-                                                }
+                                                    var pToRemove = items.firstOrNull { p -> p as PersonItem ; p.userId == user?.id }
+                                                    if(pToRemove != null)
+                                                        items.remove(pToRemove)
+                                                    user?.let {
+                                                        items.add(notifiedChatNumber, PersonItem(user!!, user.id, 0, context))
 
-                                                onListen(items)
+                                                        onListen(items)
+                                                    }
+
+                                                }
                                             }
 
                                         })
@@ -220,7 +240,7 @@ invio messaggi al token desiderato")
                                                                 .child(channelId)
                                                                 .child("notificationNumber")
                                                                 .child(dataUser)
-                                                                .setValue(chatChannel.notificationNumber.get(dataUser)!!.toInt()+1)
+                                                                .setValue(chatChannel.notificationNumber.get(dataUser)!!.toInt() + 1)
                                                     }
                                                 }
                                             }
