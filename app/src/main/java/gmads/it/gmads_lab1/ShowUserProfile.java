@@ -130,7 +130,7 @@ public class ShowUserProfile extends AppCompatActivity implements AppBarLayout.O
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.add_book, menu);
+        getMenuInflater().inflate(R.menu.actionbar_showp_others, menu);
         return true;
     }
 
@@ -139,6 +139,10 @@ public class ShowUserProfile extends AppCompatActivity implements AppBarLayout.O
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
+                break;
+
+            case android.R.id.message:
+                //bla bla;
                 break;
         }
         //Intent intentMod = new Intent(this, Home.class);
