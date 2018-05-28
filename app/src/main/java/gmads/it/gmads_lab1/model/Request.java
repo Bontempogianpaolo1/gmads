@@ -1,9 +1,11 @@
 package gmads.it.gmads_lab1.model;
 
+
+
 public class Request {
     private String owner;
     private String renter;
-    private String state;
+    private int state;
 
 
     public String getOwner() {
@@ -22,15 +24,15 @@ public class Request {
         this.renter = renter;
     }
 
-    public String getState() {
+    public int getState() {
         return state;
     }
 
-    public void setState( String state ) {
+    public void setState( int state ) {
         this.state = state;
     }
 
-    public Request( String owner, String renter, String state ) {
+    public Request( String owner, String renter, int state) {
         this.owner = owner;
         this.renter = renter;
         this.state = state;

@@ -17,7 +17,9 @@ import com.bumptech.glide.request.RequestOptions;
 
 import java.util.List;
 
+import gmads.it.gmads_lab1.constants.AppConstants;
 import gmads.it.gmads_lab1.model.Book;
+import gmads.it.gmads_lab1.model.Request;
 
 public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> {
 
@@ -123,6 +125,10 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
         public boolean onMenuItemClick(MenuItem menuItem) {
             switch (menuItem.getItemId()) {
                 case R.id.action_prenota:
+                    if(bookList.get(position).getStato() == AppConstants.AVAILABLE) {
+                        Request request = new Request(bookList.get(position).getOwner(), FirebaseManagement.getUser().getUid(), AppConstants.PENDING);
+
+                    }
                     Toast.makeText(mContext, "Book added", Toast.LENGTH_SHORT).show();
                     return true;
                 case R.id.action_viewP:
