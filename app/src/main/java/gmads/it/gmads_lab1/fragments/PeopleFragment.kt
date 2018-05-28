@@ -31,6 +31,7 @@ class PeopleFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
 
+
         userListenerRegistration =
                 FirebaseChat.addUsersListener(this.activity!!, this::updateRecyclerView)
 

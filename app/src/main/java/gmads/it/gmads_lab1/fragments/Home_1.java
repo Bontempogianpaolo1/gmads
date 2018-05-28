@@ -55,6 +55,12 @@ public class Home_1 extends Fragment {
         return root;
     }
 
+    public void updateData(List<Book> books){
+        bookList.clear();
+        bookList = books;
+        adapter.notifyDataSetChanged();
+    }
+
     public BookAdapter getAdapter() {
         return adapter;
     }

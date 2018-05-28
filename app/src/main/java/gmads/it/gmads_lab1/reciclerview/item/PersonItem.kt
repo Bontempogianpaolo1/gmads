@@ -24,6 +24,9 @@ class PersonItem(val person: Profile,
                 viewHolder.number.text = notificationNumber.toString()
                 viewHolder.number.visibility = View.VISIBLE
             }
+            if(notificationNumber == 0){
+                viewHolder.number.visibility = View.GONE
+            }
         //viewHolder.textView_bio.text = person.description
         if (person.image != null)
                 GlideApp.with(context)
