@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -98,7 +99,7 @@ public class  Home extends AppCompatActivity implements NavigationView.OnNavigat
         //SearchView mSearchView = (SearchView) findViewById(R.id.searchView); // initiate a search view
         //mSearchView.attachNavigationDrawerToMenuButton(findViewById(R.id.drawer_layout));
         //mSearchView.setIconifiedByDefault(false);  // set the default or resting state of the search field
-        //RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         initCollapsingToolbar();
         /*bookList = new ArrayList<>();
         adapter = new BookAdapter(this, bookList);*/
@@ -112,10 +113,24 @@ public class  Home extends AppCompatActivity implements NavigationView.OnNavigat
         ViewPager pager= findViewById(R.id.viewPager);
         FragmentViewPagerAdapter vpadapter= new FragmentViewPagerAdapter(getSupportFragmentManager());
         vpadapter.addFragment(tab1);
-        vpadapter.addFragment(categ1);
-        vpadapter.addFragment(categ2);
-
+       // vpadapter.addFragment(categ1);
+        /*
+        TODO riempire frammenti
+         */
+       // vpadapter.addFragment(categ2);
+        //vpadapter.addFragment(categ2);
+       // vpadapter.addFragment(categ2);
         pager.setAdapter(vpadapter);
+        TabLayout tableLayout= findViewById(R.id.tabs);
+        tableLayout.setupWithViewPager(pager);
+        tableLayout.getTabAt(0).setText(getString(R.string.tab1));
+        /*
+        todo settare titoli
+         */
+        //tableLayout.getTabAt(1).setText(getString(R.string.tab2));
+        //tableLayout.getTabAt(2).setText(getString(R.string.tab3));
+        //tableLayout.getTabAt(3).setText("thriller");
+        //tableLayout.getTabAt(4).setText("drama");
         progressbar = findViewById(R.id.progress_bar);
 //
         //era per mettere foto libri nell appbar, ma l'abbiamo messa come sfondo per ora

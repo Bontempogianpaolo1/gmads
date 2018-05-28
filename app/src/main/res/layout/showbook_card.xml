@@ -121,6 +121,7 @@
             android:textSize="16sp" />
 
         <TextView
+            android:id="@+id/bp_data"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -143,6 +144,7 @@
             android:textSize="16sp" />
 
         <TextView
+            android:id="@+id/bp_descr"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -159,6 +161,7 @@
             android:layout_marginBottom="15dp"
             android:background="@drawable/rounded_photo"
             android:padding="5dp"
+            android:paddingEnd="10dp"
             android:paddingStart="10dp"
             android:text="@string/notFound"
             android:textSize="16sp" />
