@@ -15,7 +15,7 @@
             android:layout_centerVertical="true"
             android:layout_marginStart="16dp"
             android:text="Nome tizio"
-            android:textSize="18sp" />
+            android:textSize="20sp" />
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/yes"
