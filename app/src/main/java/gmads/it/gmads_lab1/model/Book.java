@@ -2,6 +2,7 @@ package gmads.it.gmads_lab1.model;
 
 import android.graphics.Bitmap;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -9,9 +10,9 @@ import java.util.List;
 import java.util.Map;
 
 import gmads.it.gmads_lab1.Geoloc;
-import gmads.it.gmads_lab1.constants.AppConstants;
+import gmads.it.gmads_lab1.Chat.constants.AppConstants;
 
-public class Book {
+public class Book implements Serializable{
 
 
     private String bId;
@@ -37,7 +38,7 @@ public class Book {
     private String nomeproprietario;
     private List<String> linkrequest;
     private int stato;
-
+    private static final long serialVersionUID = 1L;
 
     public int getStato() {
         return stato;

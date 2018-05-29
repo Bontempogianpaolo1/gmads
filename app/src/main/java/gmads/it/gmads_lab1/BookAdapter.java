@@ -14,10 +14,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-
 import java.util.List;
-
-import gmads.it.gmads_lab1.constants.AppConstants;
+import gmads.it.gmads_lab1.Chat.constants.AppConstants;
 import gmads.it.gmads_lab1.model.Book;
 import gmads.it.gmads_lab1.model.Request;
 
