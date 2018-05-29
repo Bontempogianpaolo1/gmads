@@ -132,7 +132,7 @@ public class ShowUserProfile extends AppCompatActivity implements AppBarLayout.O
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.add_book, menu);
+        getMenuInflater().inflate(R.menu.actionbar_showp_others, menu);
         return true;
     }
 
@@ -142,7 +142,8 @@ public class ShowUserProfile extends AppCompatActivity implements AppBarLayout.O
             case android.R.id.home:
                 finish();
                 break;
-            case android.R.id.message:
+
+            default:
                 Intent intent = new Intent(this, ChatActivity.class);
                 intent.putExtra(AppConstants.USER_NAME, profile.name);
                 intent.putExtra(AppConstants.USER_ID, profile.id);

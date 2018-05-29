@@ -2,12 +2,14 @@ package gmads.it.gmads_lab1.model;
 
 import android.graphics.Bitmap;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import gmads.it.gmads_lab1.Geoloc;
+import gmads.it.gmads_lab1.Chat.constants.AppConstants;
 
 public class Book {
 
@@ -33,7 +35,25 @@ public class Book {
     private Geoloc _geoloc;
     private Double finderLat;
     private String nomeproprietario;
+    private List<String> linkrequest;
+    private int stato;
 
+
+    public int getStato() {
+        return stato;
+    }
+
+    public void setStato(int stato) {
+        this.stato = stato;
+    }
+
+    public List<String> getLinkrequest() {
+        return linkrequest;
+    }
+
+    public void setLinkrequest( List<String> linkrequest ) {
+        this.linkrequest = linkrequest;
+    }
     public String getNomeproprietario() {
         return nomeproprietario;
     }
@@ -128,7 +148,9 @@ public class Book {
         comments= Collections.emptyList();
         images=Collections.emptyList();
         notes= Collections.emptyMap();
+        linkrequest= new ArrayList<>();
         avgRating=0;
+        stato = AppConstants.AVAILABLE;
         nRates=0;
         sumRates=0;
 
