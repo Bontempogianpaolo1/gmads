@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -36,6 +37,9 @@ import com.google.firebase.storage.StorageReference;
 import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Objects;
 
 import android.support.design.widget.AppBarLayout;
@@ -47,6 +51,9 @@ import android.widget.LinearLayout;
 import android.net.Uri;
 import android.widget.Toast;
 
+import org.apache.http.entity.StringEntityHC4;
+
+import gmads.it.gmads_lab1.Chat.constants.AppConstants;
 import gmads.it.gmads_lab1.Chat.glide.GlideApp;
 import gmads.it.gmads_lab1.model.Book;
 import gmads.it.gmads_lab1.model.Profile;
@@ -77,6 +84,7 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
     private String profileImageUrl;
     boolean imagechanged=false;
     File BookFile;
+    private boolean isMyBook;
 
     File tempFile;
     ContextWrapper cw;
@@ -102,6 +110,7 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
     TextView titleImg;
     TextView titleConditions;
     ImageView bookPhoto;
+    Button bReserveOrReturn;
 
     private void findViews() {
         appbar = (AppBarLayout) findViewById(R.id.appbar);
@@ -134,6 +143,7 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
         titleNote = findViewById(R.id.tv4);
         titleImg = findViewById(R.id.photoTitle);
         bookPhoto = findViewById(R.id.photoBook);
+        bReserveOrReturn = findViewById(R.id.reserveOrReturn);
     }
 
     @Override
@@ -165,6 +175,9 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         //set image
         //avatar.setImageDrawable(getDrawable(R.drawable.default_book)); //settare copertina libro default
+
+        bReserveOrReturn.setOnClickListener(v -> onReserveOrReturnClick(v));
+
         tools = new Tools();
     }
 
@@ -267,6 +280,56 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
     public void onBackPressed() {
         super.onBackPressed();
         overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out);
+    }
+
+    private void getIsMyBook(){
+        if(book.getOwner().equals(FirebaseManagement.getUser().getUid())){
+            isMyBook = true;
+            bReserveOrReturn.setText(R.string.returnBook);
+            if(book.getStato() == AppConstants.RENTED){
+                bReserveOrReturn.setVisibility(View.VISIBLE);
+                bReserveOrReturn.setEnabled(true);
+            } else {
+                bReserveOrReturn.setVisibility(View.GONE);
+                bReserveOrReturn.setEnabled(false);
+            }
+
+        } else {
+            isMyBook = false;
+            bReserveOrReturn.setText(R.string.reserve);
+            bReserveOrReturn.setVisibility(View.VISIBLE);
+            getIsReservedByMe();
+        }
+    }
+
+    private void getIsReservedByMe(){
+        List<String> booksRequested = new LinkedList<>();
+
+        FirebaseManagement.getDatabase().getReference()
+                .child("users")
+                .child(FirebaseManagement.getUser().getUid())
+                .child("myRequests")
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Iterable<DataSnapshot> dataList = dataSnapshot.getChildren();
+
+                        for(Iterator<DataSnapshot> iterator = dataList.iterator(); iterator.hasNext(); ){
+                            booksRequested.add(iterator.next().getValue(ReferenceRequest.class).getBookid());
+                        }
+
+                        if( booksRequested.contains(book.getBId()) ){
+                            bReserveOrReturn.setEnabled(false);
+                        } else {
+                            bReserveOrReturn.setEnabled(true);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
     }
 
     public void getBookInfo(){
@@ -419,6 +482,8 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
                                 vNotes.setText(notes);
                             }
 
+                            getIsMyBook();
+
                             //foto libro (fare come gli altri controlli:
                             //NON Cè: titleImg e bookPhoto vanno rese invisibili
                             //c'è: va settata e basta direi)
@@ -455,6 +520,22 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
             ad.setCancelable(false);
             ad.show();
         }
+    }
+
+    public void onReserveOrReturnClick(View v){
+        if(isMyBook){
+            receiveBook();
+        } else {
+            reserveBook();
+        }
+    }
+
+    public void receiveBook(){
+
+    }
+
+    public void reserveBook(){
+
     }
 
     public Drawable loadImageFromURL(String url, String name) {

@@ -55,4 +55,8 @@ public class ReferenceRequest {
         this.requestid = requestid;
         this.bookid = bookid;
     }
+
+    public ReferenceRequest(){
+
+    }
 }
