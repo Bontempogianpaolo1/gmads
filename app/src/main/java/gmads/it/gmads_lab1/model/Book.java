@@ -38,6 +38,16 @@ public class Book implements Serializable{
     private String nomeproprietario;
     private List<String> linkrequest;
     private int stato;
+    private Long algoliaid;
+
+    public Long getAlgoliaid() {
+        return algoliaid;
+    }
+
+    public void setAlgoliaid( Long algoliaid ) {
+        this.algoliaid = algoliaid;
+    }
+
     private static final long serialVersionUID = 1L;
 
     public int getStato() {
