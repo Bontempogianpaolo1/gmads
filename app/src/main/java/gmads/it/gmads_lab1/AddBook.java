@@ -36,6 +36,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
 
+import gmads.it.gmads_lab1.Chat.ChatList;
 import gmads.it.gmads_lab1.model.Profile;
 
 /*

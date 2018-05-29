@@ -1,4 +1,4 @@
-package gmads.it.gmads_lab1.model
+package gmads.it.gmads_lab1.Chat.model
 
 data class ChatChannel(val userIds: MutableList<String>, val notificationNumber : Map<String, Int>) {
 

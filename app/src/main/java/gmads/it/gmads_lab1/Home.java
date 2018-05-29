@@ -31,9 +31,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.algolia.search.saas.AbstractQuery;
-import com.algolia.search.saas.AlgoliaException;
 import com.algolia.search.saas.Client;
-import com.algolia.search.saas.CompletionHandler;
 import com.algolia.search.saas.Index;
 import com.algolia.search.saas.Query;
 import com.bumptech.glide.Glide;
@@ -43,16 +41,13 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 
-import org.json.JSONObject;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
+import gmads.it.gmads_lab1.Chat.ChatList;
 import gmads.it.gmads_lab1.Map.main.MapActivity;
 import gmads.it.gmads_lab1.model.Book;
 import gmads.it.gmads_lab1.model.Profile;
