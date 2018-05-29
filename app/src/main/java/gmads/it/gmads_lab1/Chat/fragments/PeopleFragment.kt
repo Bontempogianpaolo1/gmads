@@ -44,7 +44,7 @@ class PeopleFragment : Fragment() {
         shouldInitRecyclerView = true
     }
 
-    private fun updateRecyclerView(items: List<Item>) {
+    private fun updateRecyclerView(items: List<PersonItem>) {
 
         fun init() {
             recycler_view_people.apply {
@@ -58,7 +58,13 @@ class PeopleFragment : Fragment() {
             shouldInitRecyclerView = false
         }
 
-        fun updateItems() = peopleSection.update(items)
+        fun updateItems() {
+
+            items.sortedWith(compareBy(PersonItem::notificationNumber) )
+            items as List<Item>
+            peopleSection.update(items)
+        }
+
 
         if (shouldInitRecyclerView)
             init()
