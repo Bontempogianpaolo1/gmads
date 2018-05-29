@@ -143,7 +143,7 @@ public class ShowUserProfile extends AppCompatActivity implements AppBarLayout.O
                 finish();
                 break;
 
-            case android.R.id.message:
+            default:
                 Intent intent = new Intent(this, ChatActivity.class);
                 intent.putExtra(AppConstants.USER_NAME, profile.name);
                 intent.putExtra(AppConstants.USER_ID, profile.id);
