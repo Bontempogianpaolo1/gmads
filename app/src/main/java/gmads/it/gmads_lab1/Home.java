@@ -49,9 +49,11 @@ import java.util.Objects;
 
 import gmads.it.gmads_lab1.Chat.ChatList;
 import gmads.it.gmads_lab1.Map.main.MapActivity;
+import gmads.it.gmads_lab1.fragments.FragmentViewPagerAdapter;
 import gmads.it.gmads_lab1.model.Book;
 import gmads.it.gmads_lab1.model.Profile;
 import gmads.it.gmads_lab1.fragments.Home_1;
+
 
 public class  Home extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
     private List<Book> books;
@@ -466,25 +468,6 @@ public class  Home extends AppCompatActivity implements NavigationView.OnNavigat
     }
 
 }
-class FragmentViewPagerAdapter extends FragmentPagerAdapter {
-    private final List<Fragment> mFragmentList = new ArrayList<>();
-    FragmentViewPagerAdapter( FragmentManager manager ) {
-        super(manager);
-    }
-    @Override
-    public Fragment getItem(int position) {
-        return mFragmentList.get(position);
-    }
-    @Override
-    public int getCount() {
-        return mFragmentList.size();
-    }
-    public void addFragment(Fragment fragment) {
-        mFragmentList.add(fragment);
-    }
-
-}
-
 
 
 
