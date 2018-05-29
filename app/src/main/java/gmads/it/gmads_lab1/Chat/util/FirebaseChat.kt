@@ -142,56 +142,61 @@ object FirebaseChat {
                             var fireChat = it.getValue(chatClass::class.java)
 
                             var channelId = fireChat?.channelId
-                            firebaseInstance.reference
-                                    .child("users")
-                                    .child(it.key)
-                                    .addValueEventListener(object : ValueEventListener {
-                                        override fun onCancelled(p0: DatabaseError?) {
-                                            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                                        }
 
-                                        override fun onDataChange(dataSnapshot: DataSnapshot?) {
-                                            val otherUser = dataSnapshot?.getValue<Profile>(Profile::class.java)
+                            if(channelId != null) {
+                                firebaseInstance.reference
+                                        .child("users")
+                                        .child(it.key)
+                                        .addValueEventListener(object : ValueEventListener {
+                                            override fun onCancelled(p0: DatabaseError?) {
+                                                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                                            }
 
-                                            chatChannelsCollectionRef
-                                                    .child(channelId)
-                                                    .child("notificationNumber")
-                                                    .child(FirebaseAuth.getInstance().currentUser?.uid)
-                                                    .addValueEventListener(object : ValueEventListener {
-                                                        override fun onCancelled(p0: DatabaseError?) {
-                                                            //To change body of created functions use File | Settings | File Templates.
-                                                            items.clear()
-                                                            onListen(items)
-                                                        }
+                                            override fun onDataChange(dataSnapshot: DataSnapshot?) {
+                                                val otherUser = dataSnapshot?.getValue<Profile>(Profile::class.java)
 
-                                                        override fun onDataChange(dataSnapshot: DataSnapshot?) {
-                                                            var notificationNumber = dataSnapshot?.getValue(Int::class.java)
-
-                                                            var pToRemove = items.firstOrNull { p -> p ; p.userId == otherUser?.id }
-                                                            if (pToRemove != null) {
-                                                                if (pToRemove.notificationNumber > 0) {
-                                                                    //notifiedChatNumber--
-                                                                }
-                                                                items.remove(pToRemove)
-
-                                                            }
-
-                                                            otherUser?.let {
-                                                                //if (notificationNumber == 0) {
-                                                                //    items.add(notifiedChatNumber, PersonItem(otherUser, otherUser.id, 0, context))
-                                                                //} else {
-                                                                //    notifiedChatNumber++
-                                                                    items.add(0, PersonItem(otherUser, otherUser.id, notificationNumber
-                                                                            ?: 0, context))
-                                                                //}
+                                                chatChannelsCollectionRef
+                                                        .child(channelId)
+                                                        .child("notificationNumber")
+                                                        .child(FirebaseAuth.getInstance().currentUser?.uid)
+                                                        .addValueEventListener(object : ValueEventListener {
+                                                            override fun onCancelled(p0: DatabaseError?) {
+                                                                //To change body of created functions use File | Settings | File Templates.
+                                                                items.clear()
                                                                 onListen(items)
                                                             }
-                                                        }
 
-                                                    })
-                                        }
+                                                            override fun onDataChange(dataSnapshot: DataSnapshot?) {
+                                                                var notificationNumber = dataSnapshot?.getValue(Int::class.java)
 
-                                    })
+                                                                var pToRemove = items.firstOrNull { p -> p; p.userId == otherUser?.id }
+                                                                if (pToRemove != null) {
+                                                                    if (pToRemove.notificationNumber > 0) {
+                                                                        //notifiedChatNumber--
+                                                                    }
+                                                                    items.remove(pToRemove)
+
+                                                                }
+
+                                                                otherUser?.let {
+                                                                    //if (notificationNumber == 0) {
+                                                                    //    items.add(notifiedChatNumber, PersonItem(otherUser, otherUser.id, 0, context))
+                                                                    //} else {
+                                                                    //    notifiedChatNumber++
+                                                                    items.add(0, PersonItem(otherUser, otherUser.id, notificationNumber
+                                                                            ?: 0, context))
+                                                                    //}
+                                                                    onListen(items)
+                                                                }
+                                                            }
+
+                                                        })
+                                            }
+
+                                        })
+                            } else {
+                                //non fare niente
+                            }
                         }
                     }
 
