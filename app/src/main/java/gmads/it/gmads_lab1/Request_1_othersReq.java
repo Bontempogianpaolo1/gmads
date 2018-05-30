@@ -1,30 +1,27 @@
 
 package gmads.it.gmads_lab1;
 
-import android.content.res.Resources;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
-
+import com.algolia.search.saas.Client;
+import com.algolia.search.saas.Index;
+import com.algolia.search.saas.Query;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import gmads.it.gmads_lab1.model.Book;
 
 public class Request_1_othersReq extends Fragment {
     ExpandableListAdapter listAdapter;
     ExpandableListView expListView;
     List<String> listDataHeader;
     HashMap<String, List<String>> listDataChild;
+    Client algoClient = new Client("L6B7L7WXZW", "9d2de9e724fa9289953e6b2d5ec978a5");
+    Index algoIndex = algoClient.getIndex("requests");
+
 
     public Request_1_othersReq() {
 
@@ -49,7 +46,6 @@ public class Request_1_othersReq extends Fragment {
 
         // setting list adapter
         expListView.setAdapter(listAdapter);
-
         // Listview Group click listener
         expListView.setOnGroupClickListener(( parent, v, groupPosition, id ) -> {
             //Toast.makeText(getApplicationContext(),"Group Clicked " + listDataHeader.get(groupPosition),Toast.LENGTH_SHORT).show();
@@ -89,8 +85,35 @@ public class Request_1_othersReq extends Fragment {
     }
 
     private void prepareListData() {
+
+
+
+       // Query query = new Query("")
+        //        .setHitsPerPage(100);
+/*
+        algoIndex.searchAsync(query, ( jsonObject, e ) -> {
+            if(e==null){
+                SearchRequestsJsonParser parser=new  SearchRequestsJsonParser();
+                List<ReferenceRequest> listrequest=parser.parseResults(jsonObject);
+                listDataChild = new HashMap<String, List<String>>();
+                for(ReferenceRequest rr : listrequest){
+                    if(!listDataChild.containsKey(rr.getBookname())){
+                        List<String> request= new ArrayList<>();
+                        request.add(rr.getNomerichiedente());
+                        listDataChild.put(rr.getBookname(),request);
+                    }
+                    else{
+                        listDataChild.put(rr.getBookname(),listDataChild.get(rr.getBookname()));
+                    }
+                }
+            }else{
+
+            }
+
+        });
+*/
         listDataHeader = new ArrayList<String>();
-        listDataChild = new HashMap<String, List<String>>();
+
 
         // Adding child data
         listDataHeader.add("Top 250");
@@ -125,6 +148,7 @@ public class Request_1_othersReq extends Fragment {
         listDataChild.put(listDataHeader.get(0), top250); // Header, Child data
         listDataChild.put(listDataHeader.get(1), nowShowing);
         listDataChild.put(listDataHeader.get(2), comingSoon);
+
     }
 
 }
