@@ -12,7 +12,6 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.NavigationView;
 
-import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -53,7 +52,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
+import gmads.it.gmads_lab1.Chat.ChatList;
 import gmads.it.gmads_lab1.Map.main.MapActivity;
+import gmads.it.gmads_lab1.fragments.FragmentViewPagerAdapter;
 import gmads.it.gmads_lab1.model.Book;
 import gmads.it.gmads_lab1.model.Profile;
 import gmads.it.gmads_lab1.fragments.Home_1;

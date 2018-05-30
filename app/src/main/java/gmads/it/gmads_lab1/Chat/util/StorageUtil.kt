@@ -1,4 +1,4 @@
-package gmads.it.gmads_lab1.util
+package gmads.it.gmads_lab1.Chat.util
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.storage.FirebaseStorage

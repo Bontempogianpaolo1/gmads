@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import gmads.it.gmads_lab1.Geoloc;
-import gmads.it.gmads_lab1.constants.AppConstants;
+import gmads.it.gmads_lab1.Chat.constants.AppConstants;
 
 public class Book {
 

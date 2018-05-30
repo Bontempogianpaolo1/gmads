@@ -95,6 +95,7 @@
     <string name="bp_descr">Descrizione</string>
     <string name="bp_condiz">Condizioni</string>
     <string name="bp_notes">Altri</string>
+    <string name="returnBook">Ricevi libro</string>
 
     <!-- navbar -->
     <string name="nav_home">Home</string>
