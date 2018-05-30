@@ -118,6 +118,7 @@ class ChatList : AppCompatActivity() {
                     //drawer.closeDrawers();
                     val intent = Intent(this, Home::class.java)
                     startActivity(intent)
+                    finish()
                     true
                 }
                 R.id.nav_chat -> true
