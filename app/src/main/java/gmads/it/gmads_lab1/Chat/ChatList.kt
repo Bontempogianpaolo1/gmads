@@ -199,4 +199,10 @@ attivita per vedere la lista delle chat
         super.onStart()
         getUserInfo()
     }
+
+    fun onClickNotify(view: View) {
+        val intentMod = Intent(applicationContext, RequestActivity::class.java)
+        startActivity(intentMod)
+        //finish();
+    }
 }

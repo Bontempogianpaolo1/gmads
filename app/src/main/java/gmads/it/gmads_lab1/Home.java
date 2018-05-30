@@ -303,11 +303,16 @@ public class  Home extends AppCompatActivity implements NavigationView.OnNavigat
         }else if(id == R.id.nav_mylibrary){
             startActivity(new Intent(this,MyLibrary.class));
             finish();
-
             return true;
         }
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public void onClickNotify(View view){
+        Intent intentMod = new Intent(getApplicationContext(), RequestActivity.class);
+        startActivity(intentMod);
+        //finish();
     }
 
     @Override
