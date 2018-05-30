@@ -17,7 +17,9 @@ import com.bumptech.glide.request.RequestOptions;
 
 import java.util.List;
 
+import gmads.it.gmads_lab1.constants.AppConstants;
 import gmads.it.gmads_lab1.model.Book;
+import gmads.it.gmads_lab1.model.Request;
 
 public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> {
 
@@ -123,8 +125,44 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
         public boolean onMenuItemClick(MenuItem menuItem) {
             switch (menuItem.getItemId()) {
                 case R.id.action_prenota:
-                    Toast.makeText(mContext, "Book added", Toast.LENGTH_SHORT).show();
-                    return true;
+                    if(bookList.get(position).getStato() == AppConstants.AVAILABLE) {
+                        try {
+                            Request request = new Request(AppConstants.NOT_REVIEWED, AppConstants.NOT_REVIEWED,
+                                    AppConstants.PENDING, bookList.get(position).getOwner(),
+                                    FirebaseManagement.getUser().getUid());
+
+                            String rId = FirebaseManagement.getDatabase().getReference().child("requests").push().getKey();
+                            FirebaseManagement.getDatabase().getReference().child("requests").child(rId).setValue(request);
+
+                            ReferenceRequest referenceRequest = new ReferenceRequest(bookList.get(position).getTitle(),
+                                    bookList.get(position).getUrlimage(),
+                                    FirebaseManagement.getUser().getDisplayName(),
+                                    rId, bookList.get(position).getBId());
+
+                            FirebaseManagement.getDatabase().getReference().
+                                    child("users").
+                                    child(FirebaseManagement.getUser().getUid()).
+                                    child("myRequests").
+                                    child(rId).setValue(referenceRequest);
+
+                            FirebaseManagement.getDatabase().getReference().
+                                    child("users").
+                                    child(bookList.get(position).getOwner()).
+                                    child("othersRequests").
+                                    child(bookList.get(position).getBId()).setValue(referenceRequest);
+
+                            bookList.get(position).setStato(AppConstants.NOT_AVAILABLE);
+                            Toast.makeText(mContext, "Book added", Toast.LENGTH_SHORT).show();
+                        }catch (Exception e){
+                            Toast.makeText(mContext, "Exception Occurred", Toast.LENGTH_SHORT).show();
+                            e.getMessage();
+                        }
+                        return true;
+                    }
+                    else{
+                        Toast.makeText(mContext, "Book not available", Toast.LENGTH_SHORT).show();
+                        return false;
+                    }
                 case R.id.action_viewP:
                     Intent intent = new Intent(mContext, ShowUserProfile.class);
                     intent.putExtra("userId", bookList.get(position).getOwner());
