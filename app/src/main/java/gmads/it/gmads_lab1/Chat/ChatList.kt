@@ -194,4 +194,10 @@ class ChatList : AppCompatActivity() {
         super.onStart()
         getUserInfo()
     }
+
+    fun onClickNotify(view: View) {
+        val intentMod = Intent(applicationContext, RequestActivity::class.java)
+        startActivity(intentMod)
+        //finish();
+    }
 }

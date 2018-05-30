@@ -54,6 +54,7 @@ import java.util.Objects;
 
 import gmads.it.gmads_lab1.Chat.ChatList;
 import gmads.it.gmads_lab1.Map.main.MapActivity;
+import gmads.it.gmads_lab1.fragments.FragmentViewPagerAdapter;
 import gmads.it.gmads_lab1.model.Book;
 import gmads.it.gmads_lab1.model.Profile;
 import gmads.it.gmads_lab1.fragments.Home_1;
@@ -77,7 +78,6 @@ public class MyLibrary extends AppCompatActivity implements NavigationView.OnNav
     View headerView;
     Home_1 tab1= new Home_1();
     Tools tools;
-
     ProgressBar progressbar;
 
     @Override
@@ -382,6 +382,12 @@ public class MyLibrary extends AppCompatActivity implements NavigationView.OnNav
                 }
             }
         });
+    }
+
+    public void onClickNotify(View view){
+        Intent intentMod = new Intent(getApplicationContext(), RequestActivity.class);
+        startActivity(intentMod);
+        //finish();
     }
 
 }

@@ -106,7 +106,6 @@ public class  Home extends AppCompatActivity implements NavigationView.OnNavigat
         //recyclerView.setItemAnimator(new DefaultItemAnimator());
         //recyclerView.setAdapter(adapter);
 //
-
         ViewPager pager= findViewById(R.id.viewPager);
         FragmentViewPagerAdapter vpadapter= new FragmentViewPagerAdapter(getSupportFragmentManager());
         vpadapter.addFragment(tab1);
@@ -236,11 +235,16 @@ public class  Home extends AppCompatActivity implements NavigationView.OnNavigat
         }else if(id == R.id.nav_mylibrary){
             startActivity(new Intent(this,MyLibrary.class));
             finish();
-
             return true;
         }
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public void onClickNotify(View view){
+        Intent intentMod = new Intent(getApplicationContext(), RequestActivity.class);
+        startActivity(intentMod);
+        //finish();
     }
 
     @Override

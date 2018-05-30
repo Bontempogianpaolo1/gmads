@@ -87,6 +87,8 @@
             android:screenOrientation="portrait"/>
         <activity android:name=".Chat.ChatActivity"
             android:screenOrientation="portrait"/>
+        <activity android:name=".RequestActivity"
+            android:screenOrientation="portrait"/>
 
         <!--FCM-->
         <meta-data
