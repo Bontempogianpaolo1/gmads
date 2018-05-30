@@ -29,6 +29,8 @@ import com.google.firebase.storage.StorageReference;
 import java.io.File;
 import java.io.IOException;
 
+import gmads.it.gmads_lab1.Chat.ChatActivity;
+import gmads.it.gmads_lab1.Chat.constants.AppConstants;
 import gmads.it.gmads_lab1.model.Profile;
 
 public class ShowUserProfile extends AppCompatActivity implements AppBarLayout.OnOffsetChangedListener {
@@ -130,7 +132,7 @@ public class ShowUserProfile extends AppCompatActivity implements AppBarLayout.O
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.add_book, menu);
+        getMenuInflater().inflate(R.menu.actionbar_showp_others, menu);
         return true;
     }
 
@@ -140,8 +142,14 @@ public class ShowUserProfile extends AppCompatActivity implements AppBarLayout.O
             case android.R.id.home:
                 finish();
                 break;
-            case android.R.id.message:
 
+            default:
+                Intent intent = new Intent(this, ChatActivity.class);
+                intent.putExtra(AppConstants.USER_NAME, profile.name);
+                intent.putExtra(AppConstants.USER_ID, profile.id);
+                startActivity(intent);
+                overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
+                //FINISH???
                 break;
         }
         //Intent intentMod = new Intent(this, Home.class);

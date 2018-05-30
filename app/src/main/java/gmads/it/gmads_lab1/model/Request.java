@@ -3,38 +3,58 @@ package gmads.it.gmads_lab1.model;
 
 
 public class Request {
-    private String owner;
-    private String renter;
-    private int state;
 
+    private int reviewStatusOwner;
+    private int reviewStatusRenter;
+    private int requestStatus;
+    private String ownerId;
+    private String renterId;
 
-    public String getOwner() {
-        return owner;
+    public Request(int reviewStatusOwner, int reviewStatusRenter, int requestStatus, String ownerId, String renterId) {
+        this.reviewStatusOwner = reviewStatusOwner;
+        this.reviewStatusRenter = reviewStatusRenter;
+        this.requestStatus = requestStatus;
+        this.ownerId = ownerId;
+        this.renterId = renterId;
     }
 
-    public void setOwner( String owner ) {
-        this.owner = owner;
+    public int getReviewStatusOwner() {
+        return reviewStatusOwner;
     }
 
-    public String getRenter() {
-        return renter;
+    public void setReviewStatusOwner(int reviewStatusOwner) {
+        this.reviewStatusOwner = reviewStatusOwner;
     }
 
-    public void setRenter( String renter ) {
-        this.renter = renter;
+    public int getReviewStatusRenter() {
+        return reviewStatusRenter;
     }
 
-    public int getState() {
-        return state;
+    public void setReviewStatusRenter(int reviewStatusRenter) {
+        this.reviewStatusRenter = reviewStatusRenter;
     }
 
-    public void setState( int state ) {
-        this.state = state;
+    public int getRequestStatus() {
+        return requestStatus;
     }
 
-    public Request( String owner, String renter, int state) {
-        this.owner = owner;
-        this.renter = renter;
-        this.state = state;
+    public void setRequestStatus(int requestStatus) {
+        this.requestStatus = requestStatus;
+    }
+
+    public String getOwnerId() {
+        return ownerId;
+    }
+
+    public void setOwnerId(String ownerId) {
+        this.ownerId = ownerId;
+    }
+
+    public String getRenterId() {
+        return renterId;
+    }
+
+    public void setRenterId(String renterId) {
+        this.renterId = renterId;
     }
 }

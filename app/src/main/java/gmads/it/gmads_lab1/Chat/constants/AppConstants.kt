@@ -9,4 +9,6 @@ object AppConstants {
     const val PENDING = 2
     const val RETURNED = 3
     const val RENTED = 4
+    const val REVIEWED = 5
+    const val NOT_REVIEWED = 6
 }

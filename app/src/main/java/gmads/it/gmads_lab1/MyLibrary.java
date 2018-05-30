@@ -55,6 +55,7 @@ import java.util.Objects;
 import gmads.it.gmads_lab1.Chat.ChatList;
 import gmads.it.gmads_lab1.Map.main.MapActivity;
 import gmads.it.gmads_lab1.fragments.AllHome;
+import gmads.it.gmads_lab1.fragments.FragmentViewPagerAdapter;
 import gmads.it.gmads_lab1.model.Book;
 import gmads.it.gmads_lab1.model.Profile;
 
