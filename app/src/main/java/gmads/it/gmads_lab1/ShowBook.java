@@ -57,6 +57,7 @@ import gmads.it.gmads_lab1.Chat.constants.AppConstants;
 import gmads.it.gmads_lab1.Chat.glide.GlideApp;
 import gmads.it.gmads_lab1.model.Book;
 import gmads.it.gmads_lab1.model.Profile;
+import gmads.it.gmads_lab1.model.Request;
 
 public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffsetChangedListener*/{
 
@@ -85,6 +86,7 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
     boolean imagechanged=false;
     File BookFile;
     private boolean isMyBook;
+    private List<String> booksRequested;
 
     File tempFile;
     ContextWrapper cw;
@@ -303,7 +305,7 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
     }
 
     private void getIsReservedByMe(){
-        List<String> booksRequested = new LinkedList<>();
+        booksRequested = new LinkedList<>();
 
         FirebaseManagement.getDatabase().getReference()
                 .child("users")
@@ -526,17 +528,56 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
 
     public void onReserveOrReturnClick(View v){
         if(isMyBook){
-            receiveBook();
+            returnBook();
         } else {
             reserveBook();
         }
     }
 
-    public void receiveBook(){
+    public void returnBook(){
 
     }
 
     public void reserveBook(){
+        if(book.getStato() == AppConstants.AVAILABLE &&
+                !booksRequested.contains(book.getBId()) ) {
+            try {
+                Request request = new Request(AppConstants.NOT_REVIEWED, AppConstants.NOT_REVIEWED,
+                        AppConstants.PENDING, book.getOwner(),
+                        FirebaseManagement.getUser().getUid());
+
+                String rId = FirebaseManagement.getDatabase().getReference().child("requests").push().getKey();
+                FirebaseManagement.getDatabase().getReference().child("requests").child(rId).setValue(request);
+
+                ReferenceRequest referenceRequest = new ReferenceRequest(book.getTitle(),
+                        book.getUrlimage(),
+                        FirebaseManagement.getUser().getDisplayName(),
+                        rId, book.getBId());
+
+                FirebaseManagement.getDatabase().getReference().
+                        child("users").
+                        child(FirebaseManagement.getUser().getUid()).
+                        child("myRequests").
+                        child(rId).setValue(referenceRequest);
+
+                FirebaseManagement.getDatabase().getReference().
+                        child("users").
+                        child(book.getOwner()).
+                        child("othersRequests").
+                        child(book.getBId()).setValue(referenceRequest);
+
+                //bookList.get(position).setStato(AppConstants.NOT_AVAILABLE);
+                Toast.makeText(this, "Book added", Toast.LENGTH_SHORT).show();
+            }catch (Exception e){
+                Toast.makeText(this, "Exception Occurred", Toast.LENGTH_SHORT).show();
+                e.getMessage();
+            }
+            return;
+        }
+        else{
+            Toast.makeText(this, "Book not available or already requested.", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
     }
 

@@ -48,14 +48,16 @@ class PeopleFragment : Fragment() {
 
         fun init() {
             recycler_view_people.apply {
-                layoutManager = LinearLayoutManager(this@PeopleFragment.context)
-                adapter = GroupAdapter<ViewHolder>().apply {
-                    peopleSection = Section(items)
-                    add(peopleSection)
-                    setOnItemClickListener(onItemClick)
+                if (this@PeopleFragment.context != null) {
+                    layoutManager = LinearLayoutManager(this@PeopleFragment.context)
+                    adapter = GroupAdapter<ViewHolder>().apply {
+                        peopleSection = Section(items)
+                        add(peopleSection)
+                        setOnItemClickListener(onItemClick)
+                    }
                 }
+                shouldInitRecyclerView = false
             }
-            shouldInitRecyclerView = false
         }
 
         fun updateItems() {
