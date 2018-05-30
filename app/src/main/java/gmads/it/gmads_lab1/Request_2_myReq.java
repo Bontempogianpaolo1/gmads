@@ -34,8 +34,7 @@ public class Request_2_myReq extends Fragment {
         //recyclerView.setAdapter(adapter);
     }
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState ) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState ) {
         View root = inflater.inflate(R.layout.fragment_home_1, container, false);
         recycle = (RecyclerView) root.findViewById(R.id.recycler_view);
         bookList = new ArrayList<>();
