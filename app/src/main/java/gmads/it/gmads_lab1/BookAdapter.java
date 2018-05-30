@@ -23,7 +23,6 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-
 import gmads.it.gmads_lab1.Chat.constants.AppConstants;
 import gmads.it.gmads_lab1.model.Book;
 import gmads.it.gmads_lab1.model.Request;

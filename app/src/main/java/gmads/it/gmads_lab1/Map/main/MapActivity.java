@@ -35,7 +35,8 @@ public class MapActivity extends MvpActivity<MainView, MainPresenter> implements
         Double lat= getIntent().getDoubleExtra("lat",0.0);
         Double lng=getIntent().getDoubleExtra("lng",0.0);
         String query=getIntent().getStringExtra("query");
-        LibraryProvider.instance().initialize(query,lat,lng);
+        int num=getIntent().getIntExtra("numpages",0);
+        LibraryProvider.instance().initialize(query,lat,lng,num);
 
         presenter.provideMapLatLngBounds();
         getSupportFragmentManager()
