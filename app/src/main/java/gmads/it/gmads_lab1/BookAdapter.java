@@ -158,6 +158,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
     class MyMenuItemClickListener implements PopupMenu.OnMenuItemClickListener {
 
         private int position = 0;
+        private boolean alreadyRequester = false;
 
         public MyMenuItemClickListener(int position) {
             this.position = position;
@@ -174,26 +175,28 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
 
                     algoIndex.searchAsync(query, ( jsonObject, e ) -> {
                         if(e == null){
-                            SearchRequestsJsonParser search= new SearchResultsJsonParser();
+                            SearchRequestsJsonParser search= new SearchRequestsJsonParser();
                             Log.d("lista",jsonObject.toString());
                             requestList.addAll(search.parseResults(jsonObject));
 
                             if(bookList.size() != 0){
-                                return false;
+                                alreadyRequester = true;
                             }
-
                         }
                         //TODO maybe use loading bar
                     });
 
-                    if(bookList.get(position).getStato() == AppConstants.AVAILABLE) {
+                    if(bookList.get(position).getStato() == AppConstants.AVAILABLE && !alreadyRequester) {
                         try {
 
                             // aggiungo i dati su firebase
-                            Request request = new Request(AppConstants.NOT_REVIEWED, AppConstants.NOT_REVIEWED,
+                            Request request = new Request("0", AppConstants.NOT_REVIEWED, AppConstants.NOT_REVIEWED,
                                     AppConstants.PENDING, bookList.get(position).getOwner(),
-                                    bookList.get(position).getBId(), FirebaseManagement.getUser().getUid(), bookList.get(position).getNomeproprietario(),
+                                    bookList.get(position).getBId(), bookList.get(position).getTitle(), FirebaseManagement.getUser().getUid(), bookList.get(position).getNomeproprietario(),
                                     FirebaseManagement.getUser().getDisplayName(), bookList.get(position).getUrlimage(), new Long(-1));
+
+                            String rId = FirebaseManagement.getDatabase().getReference().child("requests").push().getKey();
+                            request.setrId(rId);
 
                             algoIndex.addObjectAsync(new JSONObject(gson.toJson(request)), new CompletionHandler() {
                                 @Override
@@ -206,7 +209,6 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
                                         }catch (Exception e){
                                             request.setAlgoliaId(new Long(AppConstants.ERROR_ID));
                                         }
-                                        String rId = FirebaseManagement.getDatabase().getReference().child("requests").push().getKey();
                                         FirebaseManagement.getDatabase().getReference().child("requests").child(rId).setValue(request);
                                     }
                                     else{

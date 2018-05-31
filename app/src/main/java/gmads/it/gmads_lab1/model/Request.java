@@ -17,7 +17,6 @@ public class Request {
     private String urlBookImage;
     private Long algoliaId;
 
-    private Long algoliaId;
 
     public Request(String rId, int reviewStatusOwner, int reviewStatusRenter, int requestStatus, String ownerId, String bId, String bName, String renterId, String ownerName, String renterName, String urlBookImage, Long algoliaId) {
         this.rId = rId;
@@ -128,21 +127,5 @@ public class Request {
 
     public void setUrlBookImage(String urlBookImage) {
         this.urlBookImage = urlBookImage;
-    }
-
-    public Long getAlgoliaId() {
-        return algoliaId;
-    }
-
-    public void setAlgoliaId(Long algoliaId) {
-        this.algoliaId = algoliaId;
-    }
-
-    public String getbId() {
-        return bId;
-    }
-
-    public void setbId(String bId) {
-        this.bId = bId;
     }
 }
