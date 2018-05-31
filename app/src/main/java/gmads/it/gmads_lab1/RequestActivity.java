@@ -59,13 +59,10 @@ public class RequestActivity extends AppCompatActivity{
         vadapter.addFragment(r2);
         pager.setAdapter(vadapter);
         tab.setupWithViewPager(pager);
-<<<<<<<<< Temporary merge branch 1
-        tab.getTabAt(0).setText("my request");
-       // tab.getTabAt(1).setText("other request");
-=========
+
         tab.getTabAt(0).setText(getText(R.string.others_req));
         tab.getTabAt(1).setText(getText(R.string.my_req));
->>>>>>>>> Temporary merge branch 2
+
 
         pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override

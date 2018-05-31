@@ -63,7 +63,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         txtListChild.setText(childText);
 
         Button bYes = convertView.findViewById(R.id.yes);
-        bYes.setOnClickListener( v -> onClickYes(childPosition));
+        //bYes.setOnClickListener( v -> onClickYes(childPosition));
 
         return convertView;
     }
