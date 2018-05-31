@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -17,23 +18,25 @@ import com.google.android.gms.maps.model.Circle;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import gmads.it.gmads_lab1.Chat.glide.GlideApp;
+import gmads.it.gmads_lab1.model.Book;
+import gmads.it.gmads_lab1.model.Request;
 
 public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
     private Context context;
-    private List<String> listHeader; // header titles
+    private List<Book> listHeader; // header titles
     // child data in format of header title, child title
-    private HashMap<String, List<String>> listChild;
+    private HashMap<String, List<Request>> listChild;
 
-    public ExpandableListAdapter(Context context, List<String> listDataHeader,
-                                 HashMap<String, List<String>> listChildData) {
+    public ExpandableListAdapter(Context context, List<Book> listDataHeader,
+                                 HashMap<String, List<Request>> listChildData) {
         this.context = context;
         this.listHeader = listDataHeader;
         this.listChild = listChildData;
     }
 
     @Override
-    public Object getChild(int groupPosition, int childPosititon) {
+    public Request getChild(int groupPosition, int childPosititon) {
         return this.listChild.get(this.listHeader.get(groupPosition))
                 .get(childPosititon);
     }
@@ -46,7 +49,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     @Override
     public View getChildView(int groupPosition, final int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
 
-        final String childText = (String) getChild(groupPosition, childPosition);
+        final Request child = getChild(groupPosition, childPosition);
+        final String childText =  child.getRenterName();
 
         if (convertView == null) {
             LayoutInflater infalInflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -62,8 +66,11 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 .into(civ);*/
         txtListChild.setText(childText);
 
-        Button bYes = convertView.findViewById(R.id.yes);
-        //bYes.setOnClickListener( v -> onClickYes(childPosition));
+        ImageView bYes = convertView.findViewById(R.id.yes);
+        bYes.setOnClickListener( v -> onClickYes(child));
+
+        ImageView bNo = convertView.findViewById(R.id.no);
+        bYes.setOnClickListener( v -> onClickNo(child));
 
         return convertView;
     }
@@ -123,7 +130,11 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         return true;
     }
 
-    public void onClickYes(View v){
+    public void onClickYes(Request request){
+
+    }
+
+    public void onClickNo(Request request){
 
     }
 
