@@ -85,6 +85,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.MyViewHo
             @Override
             public void onClick( View v ) {
                 Intent i= new Intent(mContext,AddReview.class);
+                i.putExtra("userid",reqList.get(position).getOwnerId());
                 mContext.startActivity(i);
             }
         });

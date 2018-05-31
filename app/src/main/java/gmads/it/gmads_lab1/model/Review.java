@@ -3,12 +3,16 @@ package gmads.it.gmads_lab1.model;
 public class Review {
     private String user;
     private String comment;
-    private Double rate;
+    private float rate;
 
-    public Review( String user, String comment, Double rate ) {
+    public Review( String user, String comment, float rate ) {
         this.user = user;
         this.comment = comment;
         this.rate = rate;
+    }
+
+    public Review() {
+
     }
 
     public String getUser() {
@@ -27,11 +31,11 @@ public class Review {
         this.comment = comment;
     }
 
-    public Double getRate() {
+    public float getRate() {
         return rate;
     }
 
-    public void setRate( Double rate ) {
+    public void setRate( float rate ) {
         this.rate = rate;
     }
 }

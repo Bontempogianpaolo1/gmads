@@ -28,7 +28,7 @@ public class Profile implements Serializable{
     private double lng;
     private List<String> linkrequestreceived;
     private List<String> linkrequestdone;
-    private List<Review> reviews;
+    private List<Review> reviews= new ArrayList<>();
 
     public List<Review> getReviews() {
         return reviews;
@@ -112,6 +112,7 @@ public class Profile implements Serializable{
         lng = 0;
         linkrequestreceived=new ArrayList<>();
         linkrequestdone= new ArrayList<>();
+
         this.registrationTokens.add(FirebaseInstanceId.getInstance().getToken());
 
     }

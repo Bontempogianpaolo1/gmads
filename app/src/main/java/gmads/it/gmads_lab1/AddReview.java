@@ -10,8 +10,19 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import gmads.it.gmads_lab1.model.Profile;
+import gmads.it.gmads_lab1.model.Request;
+import gmads.it.gmads_lab1.model.Review;
 
 public class AddReview extends AppCompatActivity {
 
@@ -33,10 +44,35 @@ public class AddReview extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_recensione);
         findviews();
+        String id= getIntent().getStringExtra("userid");
         invia.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick( View v ) {
-                
+                Review r= new Review(FirebaseManagement.getUser().getDisplayName(),recensione.getText().toString(),rating.getRating());
+                FirebaseManagement.getDatabase().getReference().child("users").child(id)
+                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange( DataSnapshot dataSnapshot ) {
+                                Profile profile = dataSnapshot.getValue(Profile.class);
+                                if(profile!=null){
+                                    List<Review> reviews=profile.getReviews();
+                                    reviews.add(r);
+                                    profile.setReviews(reviews);
+                                    FirebaseManagement.getDatabase().getReference().child("users").child(id).setValue(profile).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess( Void aVoid ) {
+                                            Toast.makeText(getApplicationContext(),R.string.messenger_send_button_text,Toast.LENGTH_LONG).show();
+                                        }
+                                    });
+
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled( DatabaseError databaseError ) {
+
+                            }
+                        });
             }
         });
     }
