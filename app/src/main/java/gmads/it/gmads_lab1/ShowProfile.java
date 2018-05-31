@@ -1,5 +1,6 @@
 package gmads.it.gmads_lab1;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -11,11 +12,14 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import android.support.design.widget.AppBarLayout;
@@ -30,11 +34,17 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 
+import org.w3c.dom.Text;
+
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import gmads.it.gmads_lab1.Chat.ChatList;
 import gmads.it.gmads_lab1.model.Profile;
+import gmads.it.gmads_lab1.model.Request;
+import gmads.it.gmads_lab1.model.Review;
 
 public class ShowProfile extends AppCompatActivity implements AppBarLayout.OnOffsetChangedListener {
 
@@ -69,8 +79,11 @@ public class ShowProfile extends AppCompatActivity implements AppBarLayout.OnOff
     TextView vBio;
     TextView total;
     TextView cap;
+    List<Review> reviews = new ArrayList<>();
     private Profile profile;
     private Bitmap myProfileBitImage;
+    LinearLayout ll_parent;
+
 
     private void findViews() {
         total=findViewById(R.id.totbooks);
@@ -85,6 +98,7 @@ public class ShowProfile extends AppCompatActivity implements AppBarLayout.OnOff
         //avatar = (SimpleDraweeView) findViewById(R.id.avatar);
         //avatar.setImageDrawable(getDrawable(R.drawable.default_picture));
         avatar = findViewById(R.id.avatar);
+        ll_parent = findViewById(R.id.parent);
     }
 
     public void setActViews(){
@@ -175,8 +189,9 @@ public class ShowProfile extends AppCompatActivity implements AppBarLayout.OnOff
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-
         tools = new Tools();
+
+
     }
 
     @Override
@@ -277,6 +292,20 @@ public class ShowProfile extends AppCompatActivity implements AppBarLayout.OnOff
                                 vEmail.setText(profile.getEmail());
                                 navMail.setText(profile.getEmail());
                                 vBio.setText(profile.getDescription());
+                                //commenti in card2
+                                LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                                final View rowView = inflater.inflate(R.layout.card_recensioni, null);
+                                // Add the new row before the add field button.
+                                for(Review r: profile.getReviews()){
+                                    ll_parent.addView(rowView, ll_parent.getChildCount());
+                                    RelativeLayout rl;
+                                    rl = (RelativeLayout) ll_parent.getChildAt(ll_parent.getChildCount()-1);
+                                    TextView name = (TextView) rl.getChildAt(0);
+                                    TextView comment = (TextView) rl.getChildAt(1);
+                                    name.setText(r.getUser());
+                                    comment.setText(r.getComment());
+                                }
+                                //
                                 if (profile.hasUploaded()) {
                                     uploaded.setText(String.valueOf(profile.takennBooks()));
                                     total.setText(String.valueOf(profile.takennBooks()));
@@ -360,8 +389,6 @@ public class ShowProfile extends AppCompatActivity implements AppBarLayout.OnOff
         }
     }
 
-
-
     private void handleAlphaOnTitle(float percentage) {
         if (percentage >= PERCENTAGE_TO_HIDE_TITLE_DETAILS) {
             if (mIsTheTitleContainerVisible) {
@@ -393,4 +420,5 @@ public class ShowProfile extends AppCompatActivity implements AppBarLayout.OnOff
         startActivity(intentMod);
         //finish();
     }
+
 }
