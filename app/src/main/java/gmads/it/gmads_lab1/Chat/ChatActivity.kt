@@ -35,7 +35,13 @@ class ChatActivity : AppCompatActivity() {
     private lateinit var messagesListenerRegistration: ValueEventListener
     private var shouldInitRecyclerView = true
     private lateinit var messagesSection: Section
-
+/*
+attività usata per aprire la chat tra i due utenti
+i due utenti vengono presi dall'intento
+si crea il canale su cui entrambi fanno riferimento
+si aggiunge un listener alla chat in caso si ricevano nuovi messaggi..in quel caso si aggiorna la recycle
+image_view?
+ */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
@@ -129,6 +135,7 @@ class ChatActivity : AppCompatActivity() {
         return when (item.itemId) {
             android.R.id.home -> {
                 super.onBackPressed()
+                finish()
                 true
             }
             else -> super.onOptionsItemSelected(item)

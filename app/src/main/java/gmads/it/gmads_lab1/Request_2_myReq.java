@@ -15,7 +15,6 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
-import gmads.it.gmads_lab1.fragments.Home_1;
 import gmads.it.gmads_lab1.model.Book;
 
 public class Request_2_myReq extends Fragment {

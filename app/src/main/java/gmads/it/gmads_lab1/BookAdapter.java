@@ -1,9 +1,11 @@
 package gmads.it.gmads_lab1;
 
+import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -12,11 +14,22 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.algolia.search.saas.Client;
+import com.algolia.search.saas.Index;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
 
+import org.json.JSONObject;
+
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
-
 import gmads.it.gmads_lab1.Chat.constants.AppConstants;
 import gmads.it.gmads_lab1.model.Book;
 import gmads.it.gmads_lab1.model.Request;
@@ -25,7 +38,10 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
 
     private Context mContext;
     private List<Book> bookList;
-
+    private List<String> booksRequested = new LinkedList<String>();
+    Client algoClient = new Client("L6B7L7WXZW", "9d2de9e724fa9289953e6b2d5ec978a5");
+    Index algoIndex = algoClient.getIndex("requests");
+    Gson gson = new Gson();
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView title, owner, rating, distance;
         public ImageView thumbnail, overflow;
@@ -57,6 +73,25 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.book_card, parent, false);
+        FirebaseManagement.getDatabase().getReference()
+                .child("users")
+                .child(FirebaseManagement.getUser().getUid())
+                .child("myRequests")
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Iterable<DataSnapshot> dataList = dataSnapshot.getChildren();
+
+                        for(Iterator<DataSnapshot> iterator = dataList.iterator(); iterator.hasNext(); ){
+                            booksRequested.add(iterator.next().getValue(ReferenceRequest.class).getBookid());
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
 
         return new MyViewHolder(itemView);
     }
@@ -125,7 +160,8 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
         public boolean onMenuItemClick(MenuItem menuItem) {
             switch (menuItem.getItemId()) {
                 case R.id.action_prenota:
-                    if(bookList.get(position).getStato() == AppConstants.AVAILABLE) {
+                    if(bookList.get(position).getStato() == AppConstants.AVAILABLE &&
+                            !booksRequested.contains(bookList.get(position).getBId()) ) {
                         try {
                             Request request = new Request(AppConstants.NOT_REVIEWED, AppConstants.NOT_REVIEWED,
                                     AppConstants.PENDING, bookList.get(position).getOwner(),
@@ -151,16 +187,18 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
                                     child("othersRequests").
                                     child(bookList.get(position).getBId()).setValue(referenceRequest);
 
-                            bookList.get(position).setStato(AppConstants.NOT_AVAILABLE);
+                            algoIndex.addObjectAsync(new JSONObject(gson.toJson(referenceRequest)),null);
+                            //bookList.get(position).setStato(AppConstants.NOT_AVAILABLE);
                             Toast.makeText(mContext, "Book added", Toast.LENGTH_SHORT).show();
                         }catch (Exception e){
                             Toast.makeText(mContext, "Exception Occurred", Toast.LENGTH_SHORT).show();
                             e.getMessage();
+                            Log.d("error",e.toString());
                         }
                         return true;
                     }
                     else{
-                        Toast.makeText(mContext, "Book not available", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext, "Book not available or already requested.", Toast.LENGTH_SHORT).show();
                         return false;
                     }
                 case R.id.action_viewP:

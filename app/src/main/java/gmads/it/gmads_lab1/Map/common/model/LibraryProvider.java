@@ -34,7 +34,7 @@ public class LibraryProvider {
         return sInstance;
     }
 
-    public void initialize(String query,Double lat,Double lng) {
+    public void initialize(String query,Double lat,Double lng,int num) {
         algoClient = new Client("L6B7L7WXZW", "9d2de9e724fa9289953e6b2d5ec978a5");
         algoIndex = algoClient.getIndex("BookIndex");
 
@@ -61,7 +61,7 @@ public class LibraryProvider {
             });*/
             SearchResultsJsonParser search= new SearchResultsJsonParser();
             try {
-                List<Book> books = search.parseResults(algoIndex.searchSync(new Query(query).setAroundLatLng(new AbstractQuery.LatLng(lat,lng)).setGetRankingInfo(true)));
+                List<Book> books = search.parseResults(algoIndex.searchSync(new Query(query).setAroundLatLng(new AbstractQuery.LatLng(lat,lng)).setGetRankingInfo(true).setHitsPerPage(20*num)));
                 List<Book> books2= new ArrayList<>();
                 for (Book b : books) {
                     if (b.getOwner().equals(FirebaseManagement.getUser().getUid())) {

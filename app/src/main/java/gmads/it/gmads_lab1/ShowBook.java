@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -36,6 +37,9 @@ import com.google.firebase.storage.StorageReference;
 import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Objects;
 
 import android.support.design.widget.AppBarLayout;
@@ -47,9 +51,13 @@ import android.widget.LinearLayout;
 import android.net.Uri;
 import android.widget.Toast;
 
+import org.apache.http.entity.StringEntityHC4;
+
+import gmads.it.gmads_lab1.Chat.constants.AppConstants;
 import gmads.it.gmads_lab1.Chat.glide.GlideApp;
 import gmads.it.gmads_lab1.model.Book;
 import gmads.it.gmads_lab1.model.Profile;
+import gmads.it.gmads_lab1.model.Request;
 
 public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffsetChangedListener*/{
 
@@ -77,6 +85,8 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
     private String profileImageUrl;
     boolean imagechanged=false;
     File BookFile;
+    private boolean isMyBook;
+    private List<String> booksRequested;
 
     File tempFile;
     ContextWrapper cw;
@@ -102,6 +112,7 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
     TextView titleImg;
     TextView titleConditions;
     ImageView bookPhoto;
+    Button bReserveOrReturn;
 
     private void findViews() {
         appbar = (AppBarLayout) findViewById(R.id.appbar);
@@ -134,6 +145,7 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
         titleNote = findViewById(R.id.tv4);
         titleImg = findViewById(R.id.photoTitle);
         bookPhoto = findViewById(R.id.photoBook);
+        bReserveOrReturn = findViewById(R.id.reserveOrReturn);
     }
 
     @Override
@@ -165,6 +177,9 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         //set image
         //avatar.setImageDrawable(getDrawable(R.drawable.default_book)); //settare copertina libro default
+
+        bReserveOrReturn.setOnClickListener(v -> onReserveOrReturnClick(v));
+
         tools = new Tools();
     }
 
@@ -269,6 +284,56 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
         overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out);
     }
 
+    private void getIsMyBook(){
+        if(book.getOwner().equals(FirebaseManagement.getUser().getUid())){
+            isMyBook = true;
+            bReserveOrReturn.setText(R.string.returnBook);
+            if(book.getStato() == AppConstants.RENTED){
+                bReserveOrReturn.setVisibility(View.VISIBLE);
+                bReserveOrReturn.setEnabled(true);
+            } else {
+                bReserveOrReturn.setVisibility(View.GONE);
+                bReserveOrReturn.setEnabled(false);
+            }
+
+        } else {
+            isMyBook = false;
+            bReserveOrReturn.setText(R.string.reserve);
+            bReserveOrReturn.setVisibility(View.VISIBLE);
+            getIsReservedByMe();
+        }
+    }
+
+    private void getIsReservedByMe(){
+        booksRequested = new LinkedList<>();
+
+        FirebaseManagement.getDatabase().getReference()
+                .child("users")
+                .child(FirebaseManagement.getUser().getUid())
+                .child("myRequests")
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Iterable<DataSnapshot> dataList = dataSnapshot.getChildren();
+
+                        for(Iterator<DataSnapshot> iterator = dataList.iterator(); iterator.hasNext(); ){
+                            booksRequested.add(iterator.next().getValue(ReferenceRequest.class).getBookid());
+                        }
+
+                        if( booksRequested.contains(book.getBId()) ){
+                            bReserveOrReturn.setEnabled(false);
+                        } else {
+                            bReserveOrReturn.setEnabled(true);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+    }
+
     public void getBookInfo(){
 
         if(tools.isOnline(getApplicationContext())) {
@@ -285,28 +350,29 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
 
                             book = dataSnapshot.getValue(Book.class);
                             //foto ufficiale libro
-                            if(book.getUrlimage() == null || book.getUrlimage().compareTo("") == 0) {
-                                avatar.setImageDrawable(getDrawable(R.drawable.default_book));
-                            }else{
-                                GlideApp.with(getApplicationContext())
-                                        .load(book.getUrlimage())
-                                        .into(avatar);
-                                //avatar.setImageDrawable(loadImageFromURL(book.getUrlimage(), "bookImage"));
-                            }
-                            //titolo Cé SEMPRE
-                            vTitle.setText(book.getTitle());
-                            //editore Cé SEMPRE
+                            if(book!=null) {
+                                if (book.getUrlimage() == null || book.getUrlimage().compareTo("") == 0) {
+                                    avatar.setImageDrawable(getDrawable(R.drawable.default_book));
+                                } else {
+                                    GlideApp.with(getApplicationContext())
+                                            .load(book.getUrlimage())
+                                            .into(avatar);
+                                    //avatar.setImageDrawable(loadImageFromURL(book.getUrlimage(), "bookImage"));
+                                }
+                                //titolo Cé SEMPRE
+                                vTitle.setText(book.getTitle());
+                                //editore Cé SEMPRE
                             /*if(book.getPublisher().isEmpty() || book.getPublisher().compareTo("") == 0){
                                 Veditor.setVisibility(View.GONE);
                             }else{*/
                                 Veditor.setText(book.getPublisher());
-                            //}
-                            //autore Cé SEMPRE
+                                //}
+                                //autore Cé SEMPRE
                             /*if(book.getAuthor().size() == 0)
                                 vAuthor.setVisibility(View.GONE);
                             else {*/
                                 for (String a : book.getAuthor()) {
-                                    if (c < book.getAuthor().size()-1) {
+                                    if (c < book.getAuthor().size() - 1) {
                                         c++;
                                         authors = authors + a + ", ";
                                     } else {
@@ -314,16 +380,16 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
                                     }
                                 }
                                 vAuthor.setText(authors);
-                            //}
-                            //owner
-                            vOwner.setText(book.getNomeproprietario());
-                            //categorie Cé SEMPRE
-                            c = 0;
+                                //}
+                                //owner
+                                vOwner.setText(book.getNomeproprietario());
+                                //categorie Cé SEMPRE
+                                c = 0;
                             /*if(book.getCategories().size() == 0)
                                 vCategory.setVisibility(View.GONE);
                             else {*/
                                 for (String a : book.getCategories()) {
-                                    if (c < book.getCategories().size()-1) {
+                                    if (c < book.getCategories().size() - 1) {
                                         c++;
                                         categ = categ + a + ", ";
                                     } else {
@@ -331,66 +397,53 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
                                     }
                                 }
                                 vCategory.setText(categ);
-                            //}
-                            //data può non esserci
+                                //}
+                                //data può non esserci
                             /*if(book.getPublishDate().isEmpty() || book.getPublishDate().compareTo("") == 0){
                                 titleData.setVisibility(View.GONE);
                                 vdate.setVisibility(View.GONE);
                             }else{*/
                                 vdate.setText(book.getPublishDate());
-                            //}
-                            //descrizione può non esserci
+                                //}
+                                //descrizione può non esserci
                             /*if(book.getDescription().isEmpty() || book.getDescription().compareTo("") == 0){
                                 titleDescr.setVisibility(View.GONE);
                                 vDescription.setVisibility(View.GONE);
                             }else{*/
                                 vDescription.setText(book.getDescription());
-                            //}
-                            StorageReference bookImageRef =
-                                    FirebaseManagement
-                                            .getStorage()
-                                            .getReference()
-                                            .child("books")
-                                            .child(bookId)
-                                            .child("personal_images")
-                                            .child("1.jpg");
-                            Glide.with(getApplicationContext() /* context */)
-                                .load(bookImageRef)
-                                .listener(new RequestListener<Drawable>() {
-                                    @Override
-                                    public boolean onLoadFailed( @Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource ) {
-                                        if((book.getCondition().isEmpty() || book.getCondition().compareTo("") == 0) && book.getNotes().size() == 0 /*&&
+                                //}
+                                StorageReference bookImageRef =
+                                        FirebaseManagement
+                                                .getStorage()
+                                                .getReference()
+                                                .child("books")
+                                                .child(bookId)
+                                                .child("personal_images")
+                                                .child("1.jpg");
+                                Glide.with(getApplicationContext() /* context */)
+                                        .load(bookImageRef)
+                                        .listener(new RequestListener<Drawable>() {
+                                            @Override
+                                            public boolean onLoadFailed( @Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource ) {
+                                                if ((book.getCondition().isEmpty() || book.getCondition().compareTo("") == 0) && book.getNotes().size() == 0 /*&&
                             book.*///ci va il controllo della presenza fotografia libro)
-                                                ) {
-                                            //mancano tutte quindi nascondo direttamente la card2
-                                            card2.setVisibility(View.GONE);
-                                        }
-                                        return false;
-                                    }
+                                                        ) {
+                                                    //mancano tutte quindi nascondo direttamente la card2
+                                                    card2.setVisibility(View.GONE);
+                                                }
+                                                return false;
+                                            }
 
-                                    @Override
-                                    public boolean onResourceReady( Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource ) {
-                                        bookPhoto.setVisibility(View.VISIBLE);
-                                        titleImg.setVisibility(View.VISIBLE);
+                                            @Override
+                                            public boolean onResourceReady( Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource ) {
+                                                bookPhoto.setVisibility(View.VISIBLE);
+                                                titleImg.setVisibility(View.VISIBLE);
 
-                                        return false;
-                                    }
-                                })
-                                .into(bookPhoto);
-                            //CARD2
-                            //condizioni
-                            if (book.getCondition().isEmpty() || book.getCondition().compareTo("") == 0) {
-                                titleConditions.setVisibility(View.GONE);
-                                vCondition.setVisibility(View.GONE);
-                            } else {
-                                vCondition.setText(book.getCondition());
-                            }
-                            //note
-                            String notes="";
-                            if(book.getNotes().size()==0){
-                                titleNote.setVisibility(View.GONE);
-                                vNotes.setVisibility(View.GONE);
-                            }else {
+                                                return false;
+                                            }
+                                        })
+                                        .into(bookPhoto);
+                                //CARD2
                                 //condizioni
                                 if (book.getCondition().isEmpty() || book.getCondition().compareTo("") == 0) {
                                     titleConditions.setVisibility(View.GONE);
@@ -399,25 +452,41 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
                                     vCondition.setText(book.getCondition());
                                 }
                                 //note
-                                notes="";
-                                if(book.getNotes().size()==0){
+                                String notes = "";
+                                if (book.getNotes().size() == 0) {
                                     titleNote.setVisibility(View.GONE);
                                     vNotes.setVisibility(View.GONE);
-                                }else {
-                                    c = 0;
-                                    for (String key : book.getNotes().keySet()) {
-                                        if(c!=book.getNotes().size()-1) {
-                                            String value = book.getNotes().get(key);
-                                            notes = notes + key + ": " + value + "\n";
-                                            c++;
-                                        }else{
-                                            String value = book.getNotes().get(key);
-                                            notes = notes + key + ": " + value;
+                                } else {
+                                    //condizioni
+                                    if (book.getCondition().isEmpty() || book.getCondition().compareTo("") == 0) {
+                                        titleConditions.setVisibility(View.GONE);
+                                        vCondition.setVisibility(View.GONE);
+                                    } else {
+                                        vCondition.setText(book.getCondition());
+                                    }
+                                    //note
+                                    notes = "";
+                                    if (book.getNotes().size() == 0) {
+                                        titleNote.setVisibility(View.GONE);
+                                        vNotes.setVisibility(View.GONE);
+                                    } else {
+                                        c = 0;
+                                        for (String key : book.getNotes().keySet()) {
+                                            if (c != book.getNotes().size() - 1) {
+                                                String value = book.getNotes().get(key);
+                                                notes = notes + key + ": " + value + "\n";
+                                                c++;
+                                            } else {
+                                                String value = book.getNotes().get(key);
+                                                notes = notes + key + ": " + value;
+                                            }
                                         }
                                     }
+                                    vNotes.setText(notes);
                                 }
-                                vNotes.setText(notes);
                             }
+
+                            getIsMyBook();
 
                             //foto libro (fare come gli altri controlli:
                             //NON Cè: titleImg e bookPhoto vanno rese invisibili
@@ -455,6 +524,61 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
             ad.setCancelable(false);
             ad.show();
         }
+    }
+
+    public void onReserveOrReturnClick(View v){
+        if(isMyBook){
+            returnBook();
+        } else {
+            reserveBook();
+        }
+    }
+
+    public void returnBook(){
+
+    }
+
+    public void reserveBook(){
+        if(book.getStato() == AppConstants.AVAILABLE &&
+                !booksRequested.contains(book.getBId()) ) {
+            try {
+                Request request = new Request(AppConstants.NOT_REVIEWED, AppConstants.NOT_REVIEWED,
+                        AppConstants.PENDING, book.getOwner(),
+                        FirebaseManagement.getUser().getUid());
+
+                String rId = FirebaseManagement.getDatabase().getReference().child("requests").push().getKey();
+                FirebaseManagement.getDatabase().getReference().child("requests").child(rId).setValue(request);
+
+                ReferenceRequest referenceRequest = new ReferenceRequest(book.getTitle(),
+                        book.getUrlimage(),
+                        FirebaseManagement.getUser().getDisplayName(),
+                        rId, book.getBId());
+
+                FirebaseManagement.getDatabase().getReference().
+                        child("users").
+                        child(FirebaseManagement.getUser().getUid()).
+                        child("myRequests").
+                        child(rId).setValue(referenceRequest);
+
+                FirebaseManagement.getDatabase().getReference().
+                        child("users").
+                        child(book.getOwner()).
+                        child("othersRequests").
+                        child(book.getBId()).setValue(referenceRequest);
+
+                //bookList.get(position).setStato(AppConstants.NOT_AVAILABLE);
+                Toast.makeText(this, "Book added", Toast.LENGTH_SHORT).show();
+            }catch (Exception e){
+                Toast.makeText(this, "Exception Occurred", Toast.LENGTH_SHORT).show();
+                e.getMessage();
+            }
+            return;
+        }
+        else{
+            Toast.makeText(this, "Book not available or already requested.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
     }
 
     public Drawable loadImageFromURL(String url, String name) {

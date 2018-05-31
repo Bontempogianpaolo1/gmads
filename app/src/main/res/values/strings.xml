@@ -130,6 +130,7 @@
     <string name="bp_condiz">Conditions</string>
     <string name="bp_notes">Others</string>
     <string name="fui_name_hint" translation_description="Hint for last name input field">Nickname</string>
+    <string name="returnBook">Check in book</string>
     <!-- navbar -->
     <string name="nav_home">Home</string>
     <string name="nav_library">My Library</string>
