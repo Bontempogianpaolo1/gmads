@@ -28,6 +28,7 @@ import java.util.LinkedList;
 import java.util.List;
 import gmads.it.gmads_lab1.Chat.constants.AppConstants;
 import gmads.it.gmads_lab1.model.Book;
+import gmads.it.gmads_lab1.model.ReferenceRequest;
 import gmads.it.gmads_lab1.model.Request;
 
 public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> {
