@@ -161,7 +161,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
 
                             String rId = FirebaseManagement.getDatabase().getReference().child("requests").push().getKey();
                             FirebaseManagement.getDatabase().getReference().child("requests").child(rId).setValue(request);
-
+                            /*
                             ReferenceRequest referenceRequest = new ReferenceRequest(bookList.get(position).getTitle(),
                                     bookList.get(position).getUrlimage(),
                                     FirebaseManagement.getUser().getDisplayName(),
@@ -180,6 +180,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
                                     child(bookList.get(position).getBId()).setValue(referenceRequest);
 
                             //bookList.get(position).setStato(AppConstants.NOT_AVAILABLE);
+                            */
                             Toast.makeText(mContext, "Book added", Toast.LENGTH_SHORT).show();
                         }catch (Exception e){
                             Toast.makeText(mContext, "Exception Occurred", Toast.LENGTH_SHORT).show();
