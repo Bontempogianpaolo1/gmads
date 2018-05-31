@@ -105,7 +105,7 @@
                 android:numStars="5"
                 android:progressBackgroundTint="@color/light_gray"
                 android:progressTint="@color/yellow"
-                android:rating="1.5"
+                android:rating="0"
                 android:secondaryProgressTint="@color/colorPrimary"
                 android:stepSize="0.5" />
 
@@ -130,8 +130,9 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
                 android:background="@drawable/rounded_photo"
-                android:minLines="4"
+                android:gravity="top|start"
                 android:maxLines="6"
+                android:minLines="4"
                 android:padding="8dp"
                 android:textSize="16sp" />
 

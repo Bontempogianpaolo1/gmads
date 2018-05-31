@@ -42,7 +42,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
 
     private Context mContext;
     private List<Book> bookList;
-    private List<Request> requestList;
+    private List<Request> requestList=new ArrayList<>();
     private List<String> booksRequested = new LinkedList<String>();
     private Client algoClient = new Client("L6B7L7WXZW", "9d2de9e724fa9289953e6b2d5ec978a5");
     private Index algoIndex = algoClient.getIndex("requests");
@@ -178,6 +178,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
 
                     algoIndex.searchAsync(query, ( jsonObject, e ) -> {
                         if(e == null){
+
                             SearchRequestsJsonParser search= new SearchRequestsJsonParser();
                             Log.d("lista",jsonObject.toString());
                             requestList.addAll(search.parseResults(jsonObject));

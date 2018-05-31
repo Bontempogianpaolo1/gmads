@@ -89,6 +89,7 @@
             android:screenOrientation="portrait"/>
         <activity android:name=".RequestActivity"
             android:screenOrientation="portrait"/>
+        <activity android:name=".AddReview" />
 
         <!--FCM-->
         <meta-data

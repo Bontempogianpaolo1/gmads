@@ -1,28 +1,28 @@
 package gmads.it.gmads_lab1;
 
-import android.content.res.Resources;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.algolia.search.saas.Client;
+import com.algolia.search.saas.Index;
+import com.algolia.search.saas.Query;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import gmads.it.gmads_lab1.model.Book;
+import gmads.it.gmads_lab1.model.Request;
 
 public class Request_2_myReq extends Fragment {
     RecyclerView recycle;
-    private BookAdapter adapter;
-    private List<Book> bookList;
-
+    private RequestAdapter adapter;
+    private List<Request> requests;
+    Client algoClient = new Client("L6B7L7WXZW", "9d2de9e724fa9289953e6b2d5ec978a5");
+    Index algoIndex = algoClient.getIndex("requests");
     public Request_2_myReq() {
 
         //Required empty public constructor
@@ -37,37 +37,51 @@ public class Request_2_myReq extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState ) {
         View root = inflater.inflate(R.layout.fragment_home_1, container, false);
         recycle = (RecyclerView) root.findViewById(R.id.recycler_view);
-        bookList = new ArrayList<>();
-        adapter = new BookAdapter(getContext(), bookList);
+        requests = new ArrayList<>();
+
+        adapter = new RequestAdapter(getContext(),requests);
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
 
         recycle.setLayoutManager(mLayoutManager);
         //recycle.addItemDecoration(new Home_1.GridSpacingItemDecoration(2, dpToPx(10), true));
-        recycle.setItemAnimator(new DefaultItemAnimator());
-        prepareBooks();
+        //recycle.setItemAnimator(new DefaultItemAnimator());
+        prepareRequest();
         recycle.setAdapter(adapter);
 
         // Inflate the layout for this fragment
         return root;
     }
 
-    public void updateData(List<Book> books){
-        bookList.clear();
-        bookList = books;
+    public void updateData(List<Request> list){
+        requests.clear();
+        requests = list;
         adapter.notifyDataSetChanged();
     }
 
-    public BookAdapter getAdapter() {
+    public RequestAdapter getAdapter() {
         return adapter;
     }
 
     /**
      * Adding few albums for testing
      */
-    private void prepareBooks() {
+    private void prepareRequest() {
 
-        adapter.notifyDataSetChanged();
+        Query query = new Query("")
+                .setHitsPerPage(100);
+
+        algoIndex.searchAsync(query, ( jsonObject, e ) -> {
+            if(e==null) {
+                SearchRequestsJsonParser parser = new SearchRequestsJsonParser();
+                List<Request> listrequest = parser.parseResults(jsonObject);
+                adapter.setbooks(listrequest);
+                adapter.notifyDataSetChanged();
+            }
+        });
+
+
+
     }
 }
 

@@ -45,13 +45,14 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.MyViewHo
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView title, owner, bookname,stato;
-        public ImageView thumbnail, overflow;
+        public ImageView button;
 
         public MyViewHolder(View view) {
             super(view);
             bookname = (TextView) view.findViewById(R.id.bookname);
             owner = (TextView) view.findViewById(R.id.ownername);
             stato = view.findViewById(R.id.stato);
+            button= view.findViewById(R.id.addComment);
         }
     }
 
@@ -78,10 +79,17 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.MyViewHo
     public void onBindViewHolder(final MyViewHolder holder, int position) {
         Request request = reqList.get(position);
         //titolo libro
-        holder.title.setText(request.getbName());
+        holder.bookname.setText(request.getbName());
         //owner
+        holder.button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick( View v ) {
+                Intent i= new Intent(mContext,AddReview.class);
+                mContext.startActivity(i);
+            }
+        });
         holder.owner.setText(request.getOwnerName());
-        holder.stato.setText(request.getRequestStatus());
+        //holder.stato.setText(request.getRequestStatus());
 
     }
 
