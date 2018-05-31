@@ -147,6 +147,7 @@
     <string name = "write_review">Write review:</string>
     <string name = "book">Book: </string>
     <string name = "review">Review</string>
+    <string name = "reviews">Review/s</string>
 
     <!-- FCM -->
     <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>

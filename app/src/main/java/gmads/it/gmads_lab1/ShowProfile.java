@@ -19,6 +19,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -79,11 +80,12 @@ public class ShowProfile extends AppCompatActivity implements AppBarLayout.OnOff
     TextView vBio;
     TextView total;
     TextView cap;
+    TextView count;
     List<Review> reviews = new ArrayList<>();
     private Profile profile;
     private Bitmap myProfileBitImage;
     LinearLayout ll_parent;
-
+    RatingBar rating;
 
     private void findViews() {
         total=findViewById(R.id.totbooks);
@@ -95,6 +97,7 @@ public class ShowProfile extends AppCompatActivity implements AppBarLayout.OnOff
         linearlayoutTitle = (LinearLayout) findViewById(R.id.linearlayout_title);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         textviewTitle = (TextView) findViewById(R.id.name_surname_tbar);
+        rating= findViewById(R.id.rating);
         //avatar = (SimpleDraweeView) findViewById(R.id.avatar);
         //avatar.setImageDrawable(getDrawable(R.drawable.default_picture));
         avatar = findViewById(R.id.avatar);
@@ -107,6 +110,7 @@ public class ShowProfile extends AppCompatActivity implements AppBarLayout.OnOff
         vName = findViewById(R.id.name_surname);
         vEmail = findViewById(R.id.email);
         vBio = findViewById(R.id.bio);
+        count = findViewById(R.id.count);
         //progressbar = findViewById(R.id.progressBar);
         //toolbar.setTitle(getString(R.string.showProfile));
         setSupportActionBar(toolbar);
@@ -190,8 +194,6 @@ public class ShowProfile extends AppCompatActivity implements AppBarLayout.OnOff
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         tools = new Tools();
-
-
     }
 
     @Override
@@ -293,16 +295,24 @@ public class ShowProfile extends AppCompatActivity implements AppBarLayout.OnOff
                                 navMail.setText(profile.getEmail());
                                 vBio.setText(profile.getDescription());
                                 //commenti in card2
-                                LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                                final View rowView = inflater.inflate(R.layout.card_recensioni, null);
+
                                 // Add the new row before the add field button.
+                                ll_parent.removeAllViews();
+                                String s = "( " + profile.getReviews().size() + " )";
+                                count.setText(s);
+                                float average= averagereviews(profile.getReviews());
+                                rating.setRating(average);
                                 for(Review r: profile.getReviews()){
+                                    LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                                    final View rowView = inflater.inflate(R.layout.card_recensioni, null);
                                     ll_parent.addView(rowView, ll_parent.getChildCount());
                                     RelativeLayout rl;
                                     rl = (RelativeLayout) ll_parent.getChildAt(ll_parent.getChildCount()-1);
                                     TextView name = (TextView) rl.getChildAt(0);
-                                    TextView comment = (TextView) rl.getChildAt(1);
+                                    TextView rate = (TextView) rl.getChildAt(1);
+                                    TextView comment = (TextView) rl.getChildAt(2);
                                     name.setText(r.getUser());
+                                    rate.setText(String.valueOf(r.getRate()));
                                     comment.setText(r.getComment());
                                 }
                                 //
@@ -371,7 +381,17 @@ public class ShowProfile extends AppCompatActivity implements AppBarLayout.OnOff
             ad.show();
         }
     }
-
+public float averagereviews(List<Review> reviews){
+        float result;
+        int n=0;
+        float tot=0;
+        for(Review r : reviews){
+            n++;
+            tot=tot+r.getRate();
+        }
+        result=tot/n;
+        return result;
+}
     private void handleToolbarTitleVisibility(float percentage) {
         if (percentage >= PERCENTAGE_TO_SHOW_TITLE_AT_TOOLBAR) {
 
