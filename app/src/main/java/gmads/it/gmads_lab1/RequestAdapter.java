@@ -31,6 +31,7 @@ import java.util.List;
 
 import gmads.it.gmads_lab1.Chat.constants.AppConstants;
 import gmads.it.gmads_lab1.model.Book;
+import gmads.it.gmads_lab1.model.ReferenceRequest;
 import gmads.it.gmads_lab1.model.Request;
 
 public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.MyViewHolder> {
@@ -69,25 +70,6 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.MyViewHo
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_my_request, parent, false);
-        FirebaseManagement.getDatabase().getReference()
-                .child("users")
-                .child(FirebaseManagement.getUser().getUid())
-                .child("myRequests")
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        Iterable<DataSnapshot> dataList = dataSnapshot.getChildren();
-
-                        for(Iterator<DataSnapshot> iterator = dataList.iterator(); iterator.hasNext(); ){
-                            booksRequested.add(iterator.next().getValue(ReferenceRequest.class).getBookid());
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
 
         return new MyViewHolder(itemView);
     }
@@ -96,120 +78,16 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.MyViewHo
     public void onBindViewHolder(final MyViewHolder holder, int position) {
         Request request = reqList.get(position);
         //titolo libro
-        holder.title.setText(request.getOwnerId());
+        holder.title.setText(request.getbName());
         //owner
-        holder.owner.setText(R.string.of);
-        holder.owner.append(": " +request.getOwnerId());
-        //distanza
+        holder.owner.setText(request.getOwnerName());
+        holder.stato.setText(request.getRequestStatus());
 
-        //rating
-        // loading album cover using Glide library
-        RequestOptions requestOptions = new RequestOptions();
-        requestOptions.placeholder(R.drawable.default_book);
-        requestOptions.error(R.drawable.default_book);
-        //if(book.getUrlimage()!=null && book.getUrlimage().length()!=0){
-            Glide.with(mContext).setDefaultRequestOptions(requestOptions).load(book.getUrlimage()).into(holder.thumbnail);
-       // }
-
-        holder.thumbnail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(mContext, ShowBook.class);
-                intent.putExtra("book_id", book.getBId());
-                mContext.startActivity(intent);
-            }
-        });
-
-        holder.overflow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showPopupMenu(holder.overflow, position);
-            }
-        });
-    }
-
-    /**
-     * Showing popup menu when tapping on 3 dots
-     */
-    private void showPopupMenu(View view, int position) {
-        // inflate menu
-        PopupMenu popup = new PopupMenu(mContext, view);
-        MenuInflater inflater = popup.getMenuInflater();
-        inflater.inflate(R.menu.menu_book, popup.getMenu());
-        popup.setOnMenuItemClickListener(new MyMenuItemClickListener(position));
-        popup.show();
-    }
-
-    /**
-     * Click listener for popup menu items
-     */
-    class MyMenuItemClickListener implements PopupMenu.OnMenuItemClickListener {
-
-        private int position = 0;
-
-        public MyMenuItemClickListener(int position) {
-            this.position = position;
-        }
-
-        @Override
-        public boolean onMenuItemClick(MenuItem menuItem) {
-            switch (menuItem.getItemId()) {
-                case R.id.action_prenota:
-                    if(bookList.get(position).getStato() == AppConstants.AVAILABLE &&
-                            !booksRequested.contains(bookList.get(position).getBId()) ) {
-                        try {
-                            Request request = new Request(AppConstants.NOT_REVIEWED, AppConstants.NOT_REVIEWED,
-                                    AppConstants.PENDING, bookList.get(position).getOwner(),
-                                    FirebaseManagement.getUser().getUid());
-
-                            String rId = FirebaseManagement.getDatabase().getReference().child("requests").push().getKey();
-                            FirebaseManagement.getDatabase().getReference().child("requests").child(rId).setValue(request);
-
-                            ReferenceRequest referenceRequest = new ReferenceRequest(bookList.get(position).getTitle(),
-                                    bookList.get(position).getUrlimage(),
-                                    FirebaseManagement.getUser().getDisplayName(),
-                                    rId, bookList.get(position).getBId());
-
-                            FirebaseManagement.getDatabase().getReference().
-                                    child("users").
-                                    child(FirebaseManagement.getUser().getUid()).
-                                    child("myRequests").
-                                    child(rId).setValue(referenceRequest);
-
-                            FirebaseManagement.getDatabase().getReference().
-                                    child("users").
-                                    child(bookList.get(position).getOwner()).
-                                    child("othersRequests").
-                                    child(bookList.get(position).getBId()).setValue(referenceRequest);
-
-                            algoIndex.addObjectAsync(new JSONObject(gson.toJson(referenceRequest)),null);
-                            //bookList.get(position).setStato(AppConstants.NOT_AVAILABLE);
-                            Toast.makeText(mContext, "Book added", Toast.LENGTH_SHORT).show();
-                        }catch (Exception e){
-                            Toast.makeText(mContext, "Exception Occurred", Toast.LENGTH_SHORT).show();
-                            e.getMessage();
-                            Log.d("error",e.toString());
-                        }
-                        return true;
-                    }
-                    else{
-                        Toast.makeText(mContext, "Book not available or already requested.", Toast.LENGTH_SHORT).show();
-                        return false;
-                    }
-                case R.id.action_viewP:
-                    Intent intent = new Intent(mContext, ShowUserProfile.class);
-                    intent.putExtra("userId", bookList.get(position).getOwner());
-                    mContext.startActivity(intent);
-                    return true;
-                default:
-            }
-            return false;
-        }
     }
 
     @Override
     public int getItemCount() {
-        return bookList.size();
+        return reqList.size();
     }
 
 }
