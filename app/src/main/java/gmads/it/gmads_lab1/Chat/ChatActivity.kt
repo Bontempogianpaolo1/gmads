@@ -135,6 +135,7 @@ image_view?
         return when (item.itemId) {
             android.R.id.home -> {
                 super.onBackPressed()
+                finish()
                 true
             }
             else -> super.onOptionsItemSelected(item)

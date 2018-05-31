@@ -78,7 +78,6 @@ public class MyLibrary extends AppCompatActivity implements NavigationView.OnNav
     View headerView;
     AllHome tab1= new AllHome();
     Tools tools;
-
     ProgressBar progressbar;
 
     @Override
@@ -383,6 +382,12 @@ public class MyLibrary extends AppCompatActivity implements NavigationView.OnNav
                 }
             }
         });
+    }
+
+    public void onClickNotify(View view){
+        Intent intentMod = new Intent(getApplicationContext(), RequestActivity.class);
+        startActivity(intentMod);
+        //finish();
     }
 
 }

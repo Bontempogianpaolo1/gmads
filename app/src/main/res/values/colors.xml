@@ -24,13 +24,13 @@
     <color name="item_place_subtitle">#7f8c8d</color>
     <color name="place_details_background">#1e000000</color>
     <color name="item_place_details_subtitle">#227eba</color>
-    <color name="button_red">#e74c3c</color>
     <color name="item_place_description">#7f8c8d</color>
-    <color name="yellow">#f9dd69</color>
     <color name="background_schedule_start">#5fbdc6</color>
-    <color name="green">#3ab781</color>
     <color name="background_weather_end">#faefc5</color>
     <color name="background_schedule_end">#bcebef</color>
     <color name="background_next_trip_end">#b5fcbc</color>
     <color name="transparent">#00000000</color>
+    <color name="red">#8e0000</color>
+    <color name="green">#009100</color>
+    <color name="yellow">#ff7400</color>
 </resources>
