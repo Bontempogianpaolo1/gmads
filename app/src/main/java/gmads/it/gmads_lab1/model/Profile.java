@@ -28,7 +28,15 @@ public class Profile implements Serializable{
     private double lng;
     private List<String> linkrequestreceived;
     private List<String> linkrequestdone;
+    private List<Review> reviews;
 
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews( List<Review> reviews ) {
+        this.reviews = reviews;
+    }
 
     public List<String> getLinkrequestdone() {
         return linkrequestdone;
