@@ -141,6 +141,9 @@
     <string name = "book_info">More Info</string>
     <string name = "book_photo">Add a book photo</string>
     <string name = "showbookImage">Book photo</string>
+    <string name = "my_req">Sent</string>
+    <string name = "others_req">Received</string>
+    <string name = "request">Requests</string>
 
     <!-- FCM -->
     <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
