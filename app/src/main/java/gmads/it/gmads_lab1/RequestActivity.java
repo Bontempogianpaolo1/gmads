@@ -34,6 +34,7 @@ public class RequestActivity extends AppCompatActivity{
     ViewPager pager;
     Request_1_othersReq r1=new Request_1_othersReq();
     Request_2_myReq r2=new Request_2_myReq();
+
     private void setViews() {
         expListView = (ExpandableListView) findViewById(R.id.explv);
         tab=findViewById(R.id.tabs);
@@ -58,8 +59,13 @@ public class RequestActivity extends AppCompatActivity{
         vadapter.addFragment(r2);
         pager.setAdapter(vadapter);
         tab.setupWithViewPager(pager);
-        Objects.requireNonNull(tab.getTabAt(0)).setText(getText(R.string.others_req));
-        Objects.requireNonNull(tab.getTabAt(1)).setText(getText(R.string.my_req));
+<<<<<<<<< Temporary merge branch 1
+        tab.getTabAt(0).setText("my request");
+       // tab.getTabAt(1).setText("other request");
+=========
+        tab.getTabAt(0).setText(getText(R.string.others_req));
+        tab.getTabAt(1).setText(getText(R.string.my_req));
+>>>>>>>>> Temporary merge branch 2
 
         pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override

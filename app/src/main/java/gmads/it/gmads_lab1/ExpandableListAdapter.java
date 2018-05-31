@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -60,6 +61,9 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 .centerCrop()
                 .into(civ);*/
         txtListChild.setText(childText);
+
+        Button bYes = convertView.findViewById(R.id.yes);
+        bYes.setOnClickListener( v -> onClickYes(childPosition));
 
         return convertView;
     }
@@ -117,6 +121,10 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     @Override
     public boolean isChildSelectable(int groupPosition, int childPosition) {
         return true;
+    }
+
+    public void onClickYes(View v){
+
     }
 
 }

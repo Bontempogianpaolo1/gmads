@@ -7,15 +7,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import gmads.it.gmads_lab1.model.Book;
+import gmads.it.gmads_lab1.model.Request;
 
 public class SearchRequestsJsonParser
 {
     private RequestJsonParser movieParser = new RequestJsonParser();
-    public List<ReferenceRequest> parseResults(JSONObject jsonObject)
+    public List<Request> parseResults(JSONObject jsonObject)
     {
         if (jsonObject == null)
             return null;
-        List<ReferenceRequest> results = new ArrayList<>();
+        List<Request> results = new ArrayList<>();
         JSONArray hits = jsonObject.optJSONArray("hits");
         if (hits == null)
             return null;
@@ -23,7 +24,7 @@ public class SearchRequestsJsonParser
             JSONObject hit = hits.optJSONObject(i);
             if (hit == null)
                 continue;
-            ReferenceRequest movie = movieParser.parse(hit);
+            Request movie = movieParser.parse(hit);
             if (movie == null)
                 continue;
             results.add(movie);

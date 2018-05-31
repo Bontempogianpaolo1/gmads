@@ -51,12 +51,11 @@ import android.widget.LinearLayout;
 import android.net.Uri;
 import android.widget.Toast;
 
-import org.apache.http.entity.StringEntityHC4;
-
 import gmads.it.gmads_lab1.Chat.constants.AppConstants;
 import gmads.it.gmads_lab1.Chat.glide.GlideApp;
 import gmads.it.gmads_lab1.model.Book;
 import gmads.it.gmads_lab1.model.Profile;
+import gmads.it.gmads_lab1.model.ReferenceRequest;
 import gmads.it.gmads_lab1.model.Request;
 
 public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffsetChangedListener*/{
@@ -288,7 +287,7 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
         if(book.getOwner().equals(FirebaseManagement.getUser().getUid())){
             isMyBook = true;
             bReserveOrReturn.setText(R.string.returnBook);
-            if(book.getStato() == AppConstants.RENTED){
+            if(book.getStato() == AppConstants.NOT_AVAILABLE){
                 bReserveOrReturn.setVisibility(View.VISIBLE);
                 bReserveOrReturn.setEnabled(true);
             } else {
@@ -544,12 +543,12 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
             try {
                 Request request = new Request(AppConstants.NOT_REVIEWED, AppConstants.NOT_REVIEWED,
                         AppConstants.PENDING, book.getOwner(),
-                        FirebaseManagement.getUser().getUid());
+                        FirebaseManagement.getUser().getUid(), ownerName, renterName, urlBookImage);
 
                 String rId = FirebaseManagement.getDatabase().getReference().child("requests").push().getKey();
                 FirebaseManagement.getDatabase().getReference().child("requests").child(rId).setValue(request);
 
-                ReferenceRequest referenceRequest = new ReferenceRequest(book.getTitle(),
+                /*ReferenceRequest referenceRequest = new ReferenceRequest(book.getTitle(),
                         book.getUrlimage(),
                         FirebaseManagement.getUser().getDisplayName(),
                         rId, book.getBId());
@@ -564,7 +563,7 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
                         child("users").
                         child(book.getOwner()).
                         child("othersRequests").
-                        child(book.getBId()).setValue(referenceRequest);
+                        child(book.getBId()).setValue(referenceRequest);*/
 
                 //bookList.get(position).setStato(AppConstants.NOT_AVAILABLE);
                 Toast.makeText(this, "Book added", Toast.LENGTH_SHORT).show();

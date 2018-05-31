@@ -1,6 +1,5 @@
 package gmads.it.gmads_lab1;
 
-import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.PopupMenu;
@@ -19,19 +18,17 @@ import com.algolia.search.saas.Client;
 import com.algolia.search.saas.Index;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
-
-import org.json.JSONObject;
 
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import gmads.it.gmads_lab1.Chat.constants.AppConstants;
 import gmads.it.gmads_lab1.model.Book;
+import gmads.it.gmads_lab1.model.ReferenceRequest;
 import gmads.it.gmads_lab1.model.Request;
 
 public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> {
@@ -165,11 +162,11 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
                         try {
                             Request request = new Request(AppConstants.NOT_REVIEWED, AppConstants.NOT_REVIEWED,
                                     AppConstants.PENDING, bookList.get(position).getOwner(),
-                                    FirebaseManagement.getUser().getUid());
+                                    FirebaseManagement.getUser().getUid(), ownerName, renterName, urlBookImage);
 
                             String rId = FirebaseManagement.getDatabase().getReference().child("requests").push().getKey();
                             FirebaseManagement.getDatabase().getReference().child("requests").child(rId).setValue(request);
-
+                            /*
                             ReferenceRequest referenceRequest = new ReferenceRequest(bookList.get(position).getTitle(),
                                     bookList.get(position).getUrlimage(),
                                     FirebaseManagement.getUser().getDisplayName(),
@@ -189,6 +186,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
 
                             algoIndex.addObjectAsync(new JSONObject(gson.toJson(referenceRequest)),null);
                             //bookList.get(position).setStato(AppConstants.NOT_AVAILABLE);
+                            */
                             Toast.makeText(mContext, "Book added", Toast.LENGTH_SHORT).show();
                         }catch (Exception e){
                             Toast.makeText(mContext, "Exception Occurred", Toast.LENGTH_SHORT).show();

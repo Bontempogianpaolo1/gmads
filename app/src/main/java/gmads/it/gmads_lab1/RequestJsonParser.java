@@ -2,18 +2,27 @@ package gmads.it.gmads_lab1;
 
 import org.json.JSONObject;
 
+import gmads.it.gmads_lab1.model.Request;
+
 public class RequestJsonParser
 {
-    public ReferenceRequest parse(JSONObject jsonObject)
+    public Request parse(JSONObject jsonObject)
     {
         if (jsonObject == null)
             return null;
-        String bId=jsonObject.optString("bookid");
-        String title = jsonObject.optString("bookname");
-        String urlimage= jsonObject.optString("imgurl");
-        String nomerichiedente= jsonObject.optString("nomerichiedente");
-        String requestid=jsonObject.optString("requestid");
-        String objectID= jsonObject.optString("objectID");
+
+        String rId = jsonObject.optString("rId");
+        int reviewStatusOwner = jsonObject.optInt("reviewStatusOwner");
+        int reviewStatusRenter = jsonObject.optInt("reviewStatusRenter");
+        int requestStatus = jsonObject.optInt("requestStatus");
+        String ownerId = jsonObject.optString("ownerId");
+        String bId = jsonObject.optString("bId");
+        String bName = jsonObject.optString("bName");
+        String renterId = jsonObject.optString("renterId");
+        String ownerName = jsonObject.optString("ownerName");
+        String renterName = jsonObject.optString("renterName");
+        String urlBookImage = jsonObject.optString("urlBookImage");
+        Long algoliaId = jsonObject.optLong("algoliaId");
 
         // JSONArray categories=jsonObject.optJSONArray("categories");
         //for(int i=0;i<categories.length();i++){
@@ -22,14 +31,21 @@ public class RequestJsonParser
              */
         //}
 
-            if (title != null ){
-            ReferenceRequest b= new ReferenceRequest(
-                    title,
-                    urlimage,
-                    title,
-                    requestid,
-                    bId);
-            return b;
+            if (rId != null ){
+                Request r= new Request(
+                    rId,
+                    reviewStatusOwner,
+                    reviewStatusRenter,
+                    requestStatus,
+                    ownerId,
+                    bId,
+                    bName,
+                    renterId,
+                    ownerName,
+                    renterName,
+                    urlBookImage,
+                    algoliaId);
+            return r;
         }
         return null;
     }
