@@ -1,4 +1,4 @@
-package gmads.it.gmads_lab1
+package gmads.it.gmads_lab1.Chat
 
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
@@ -22,9 +22,9 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
-import gmads.it.gmads_lab1.R.id.imageView_profile_picture
-import gmads.it.gmads_lab1.constants.AppConstants
-import gmads.it.gmads_lab1.fragments.PeopleFragment
+import gmads.it.gmads_lab1.*
+import gmads.it.gmads_lab1.Chat.constants.AppConstants
+import gmads.it.gmads_lab1.Chat.fragments.PeopleFragment
 import gmads.it.gmads_lab1.model.Profile
 import kotlinx.android.synthetic.main.activity_chat.*
 import kotlinx.android.synthetic.main.activity_chat_list.*
@@ -118,6 +118,7 @@ class ChatList : AppCompatActivity() {
                     //drawer.closeDrawers();
                     val intent = Intent(this, Home::class.java)
                     startActivity(intent)
+                    finish()
                     true
                 }
                 R.id.nav_chat -> true

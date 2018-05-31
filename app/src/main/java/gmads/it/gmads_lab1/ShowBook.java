@@ -5,7 +5,6 @@ import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -14,13 +13,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -38,6 +37,9 @@ import com.google.firebase.storage.StorageReference;
 import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Objects;
 
 import android.support.design.widget.AppBarLayout;
@@ -49,9 +51,13 @@ import android.widget.LinearLayout;
 import android.net.Uri;
 import android.widget.Toast;
 
-import gmads.it.gmads_lab1.glide.GlideApp;
+import org.apache.http.entity.StringEntityHC4;
+
+import gmads.it.gmads_lab1.Chat.constants.AppConstants;
+import gmads.it.gmads_lab1.Chat.glide.GlideApp;
 import gmads.it.gmads_lab1.model.Book;
 import gmads.it.gmads_lab1.model.Profile;
+import gmads.it.gmads_lab1.model.Request;
 
 public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffsetChangedListener*/{
 
@@ -79,6 +85,8 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
     private String profileImageUrl;
     boolean imagechanged=false;
     File BookFile;
+    private boolean isMyBook;
+    private List<String> booksRequested;
 
     File tempFile;
     ContextWrapper cw;
@@ -104,6 +112,7 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
     TextView titleImg;
     TextView titleConditions;
     ImageView bookPhoto;
+    Button bReserveOrReturn;
 
     private void findViews() {
         appbar = (AppBarLayout) findViewById(R.id.appbar);
@@ -136,6 +145,7 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
         titleNote = findViewById(R.id.tv4);
         titleImg = findViewById(R.id.photoTitle);
         bookPhoto = findViewById(R.id.photoBook);
+        bReserveOrReturn = findViewById(R.id.reserveOrReturn);
     }
 
     @Override
@@ -167,6 +177,9 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         //set image
         //avatar.setImageDrawable(getDrawable(R.drawable.default_book)); //settare copertina libro default
+
+        bReserveOrReturn.setOnClickListener(v -> onReserveOrReturnClick(v));
+
         tools = new Tools();
     }
 
@@ -269,6 +282,56 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
     public void onBackPressed() {
         super.onBackPressed();
         overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out);
+    }
+
+    private void getIsMyBook(){
+        if(book.getOwner().equals(FirebaseManagement.getUser().getUid())){
+            isMyBook = true;
+            bReserveOrReturn.setText(R.string.returnBook);
+            if(book.getStato() == AppConstants.RENTED){
+                bReserveOrReturn.setVisibility(View.VISIBLE);
+                bReserveOrReturn.setEnabled(true);
+            } else {
+                bReserveOrReturn.setVisibility(View.GONE);
+                bReserveOrReturn.setEnabled(false);
+            }
+
+        } else {
+            isMyBook = false;
+            bReserveOrReturn.setText(R.string.reserve);
+            bReserveOrReturn.setVisibility(View.VISIBLE);
+            getIsReservedByMe();
+        }
+    }
+
+    private void getIsReservedByMe(){
+        booksRequested = new LinkedList<>();
+
+        FirebaseManagement.getDatabase().getReference()
+                .child("users")
+                .child(FirebaseManagement.getUser().getUid())
+                .child("myRequests")
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Iterable<DataSnapshot> dataList = dataSnapshot.getChildren();
+
+                        for(Iterator<DataSnapshot> iterator = dataList.iterator(); iterator.hasNext(); ){
+                            booksRequested.add(iterator.next().getValue(ReferenceRequest.class).getBookid());
+                        }
+
+                        if( booksRequested.contains(book.getBId()) ){
+                            bReserveOrReturn.setEnabled(false);
+                        } else {
+                            bReserveOrReturn.setEnabled(true);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
     }
 
     public void getBookInfo(){
@@ -421,6 +484,8 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
                                 vNotes.setText(notes);
                             }
 
+                            getIsMyBook();
+
                             //foto libro (fare come gli altri controlli:
                             //NON Cè: titleImg e bookPhoto vanno rese invisibili
                             //c'è: va settata e basta direi)
@@ -457,6 +522,61 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
             ad.setCancelable(false);
             ad.show();
         }
+    }
+
+    public void onReserveOrReturnClick(View v){
+        if(isMyBook){
+            returnBook();
+        } else {
+            reserveBook();
+        }
+    }
+
+    public void returnBook(){
+
+    }
+
+    public void reserveBook(){
+        if(book.getStato() == AppConstants.AVAILABLE &&
+                !booksRequested.contains(book.getBId()) ) {
+            try {
+                Request request = new Request(AppConstants.NOT_REVIEWED, AppConstants.NOT_REVIEWED,
+                        AppConstants.PENDING, book.getOwner(),
+                        FirebaseManagement.getUser().getUid());
+
+                String rId = FirebaseManagement.getDatabase().getReference().child("requests").push().getKey();
+                FirebaseManagement.getDatabase().getReference().child("requests").child(rId).setValue(request);
+
+                ReferenceRequest referenceRequest = new ReferenceRequest(book.getTitle(),
+                        book.getUrlimage(),
+                        FirebaseManagement.getUser().getDisplayName(),
+                        rId, book.getBId());
+
+                FirebaseManagement.getDatabase().getReference().
+                        child("users").
+                        child(FirebaseManagement.getUser().getUid()).
+                        child("myRequests").
+                        child(rId).setValue(referenceRequest);
+
+                FirebaseManagement.getDatabase().getReference().
+                        child("users").
+                        child(book.getOwner()).
+                        child("othersRequests").
+                        child(book.getBId()).setValue(referenceRequest);
+
+                //bookList.get(position).setStato(AppConstants.NOT_AVAILABLE);
+                Toast.makeText(this, "Book added", Toast.LENGTH_SHORT).show();
+            }catch (Exception e){
+                Toast.makeText(this, "Exception Occurred", Toast.LENGTH_SHORT).show();
+                e.getMessage();
+            }
+            return;
+        }
+        else{
+            Toast.makeText(this, "Book not available or already requested.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
     }
 
     public Drawable loadImageFromURL(String url, String name) {

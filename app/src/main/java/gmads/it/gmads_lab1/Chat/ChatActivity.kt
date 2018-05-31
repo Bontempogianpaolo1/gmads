@@ -1,40 +1,29 @@
-package gmads.it.gmads_lab1
+package gmads.it.gmads_lab1.Chat
 
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.inputmethodservice.Keyboard
 import android.os.Bundle
 import android.provider.MediaStore
-import android.support.v4.view.GravityCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.Toolbar
 import android.view.MenuItem
-import android.view.MotionEvent
-import android.view.View
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.Section
 import com.xwray.groupie.kotlinandroidextensions.Item
 import com.xwray.groupie.kotlinandroidextensions.ViewHolder
-import gmads.it.gmads_lab1.constants.AppConstants
-import gmads.it.gmads_lab1.model.ImageMessage
-import gmads.it.gmads_lab1.model.MessageType
-import gmads.it.gmads_lab1.model.Profile
-import gmads.it.gmads_lab1.model.TextMessage
-import gmads.it.gmads_lab1.util.FirebaseChat
-import gmads.it.gmads_lab1.util.StorageUtil
+import gmads.it.gmads_lab1.Chat.constants.AppConstants
+import gmads.it.gmads_lab1.Chat.model.ImageMessage
+import gmads.it.gmads_lab1.Chat.model.MessageType
+import gmads.it.gmads_lab1.Chat.model.TextMessage
+import gmads.it.gmads_lab1.R
+import gmads.it.gmads_lab1.Chat.util.FirebaseChat
+import gmads.it.gmads_lab1.Chat.util.StorageUtil
 import kotlinx.android.synthetic.main.activity_chat.*
-import kotlinx.android.synthetic.main.nav_header.*
 import java.io.ByteArrayOutputStream
-import java.io.File
-import java.io.IOException
 import java.util.*
 
 private const val RC_SELECT_IMAGE = 2
@@ -140,6 +129,7 @@ class ChatActivity : AppCompatActivity() {
         return when (item.itemId) {
             android.R.id.home -> {
                 super.onBackPressed()
+                finish()
                 true
             }
             else -> super.onOptionsItemSelected(item)

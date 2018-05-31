@@ -1,4 +1,4 @@
-package gmads.it.gmads_lab1.fragments
+package gmads.it.gmads_lab1.Chat.fragments
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -12,11 +12,11 @@ import com.xwray.groupie.OnItemClickListener
 import com.xwray.groupie.Section
 import com.xwray.groupie.kotlinandroidextensions.Item
 import com.xwray.groupie.kotlinandroidextensions.ViewHolder
-import gmads.it.gmads_lab1.ChatActivity
+import gmads.it.gmads_lab1.Chat.ChatActivity
 import gmads.it.gmads_lab1.R
-import gmads.it.gmads_lab1.constants.AppConstants
-import gmads.it.gmads_lab1.reciclerview.item.PersonItem
-import gmads.it.gmads_lab1.util.FirebaseChat
+import gmads.it.gmads_lab1.Chat.constants.AppConstants
+import gmads.it.gmads_lab1.Chat.item.PersonItem
+import gmads.it.gmads_lab1.Chat.util.FirebaseChat
 import kotlinx.android.synthetic.main.fragment_people.*
 import org.jetbrains.anko.support.v4.startActivity
 
@@ -44,21 +44,29 @@ class PeopleFragment : Fragment() {
         shouldInitRecyclerView = true
     }
 
-    private fun updateRecyclerView(items: List<Item>) {
+    private fun updateRecyclerView(items: List<PersonItem>) {
 
         fun init() {
             recycler_view_people.apply {
-                layoutManager = LinearLayoutManager(this@PeopleFragment.context)
-                adapter = GroupAdapter<ViewHolder>().apply {
-                    peopleSection = Section(items)
-                    add(peopleSection)
-                    setOnItemClickListener(onItemClick)
+                if (this@PeopleFragment.context != null) {
+                    layoutManager = LinearLayoutManager(this@PeopleFragment.context)
+                    adapter = GroupAdapter<ViewHolder>().apply {
+                        peopleSection = Section(items)
+                        add(peopleSection)
+                        setOnItemClickListener(onItemClick)
+                    }
                 }
+                shouldInitRecyclerView = false
             }
-            shouldInitRecyclerView = false
         }
 
-        fun updateItems() = peopleSection.update(items)
+        fun updateItems() {
+
+            items.sortedWith(compareBy(PersonItem::notificationNumber) )
+            items as List<Item>
+            peopleSection.update(items)
+        }
+
 
         if (shouldInitRecyclerView)
             init()

@@ -1,25 +1,16 @@
 package gmads.it.gmads_lab1;
 
 import android.content.Intent;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import com.firebase.ui.auth.AuthUI;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import java.util.Arrays;
 import java.util.Objects;
-import com.facebook.FacebookSdk;
-import com.facebook.appevents.AppEventsLogger;
-import com.google.firebase.auth.FirebaseUser;
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.iid.FirebaseInstanceId;
-
-import gmads.it.gmads_lab1.model.Profile;
-import gmads.it.gmads_lab1.service.MyFirebaseInstanceIDService;
 
 public class Login extends AppCompatActivity {
     private static final int RC_SIGN_IN = 123;
