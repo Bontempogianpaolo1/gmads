@@ -6,7 +6,7 @@ object AppConstants {
     const val USER_ID = "USER_ID"
 
     //STATO LIBRO
-    const val NOT_AVAILABLE = 0
+    const val NOT_AVAILABLE = 9
     const val AVAILABLE = 1
 
     //STATO RICHIESTE
@@ -18,4 +18,7 @@ object AppConstants {
     //STATO RECENSIONI
     const val REVIEWED = 5
     const val NOT_REVIEWED = 6
+
+    //ALGOLIA
+    const val ERROR_ID = 0
 }
