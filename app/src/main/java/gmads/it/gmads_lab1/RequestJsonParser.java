@@ -22,6 +22,7 @@ public class RequestJsonParser
         String ownerName = jsonObject.optString("ownerName");
         String renterName = jsonObject.optString("renterName");
         String urlBookImage = jsonObject.optString("urlBookImage");
+        Long algoliaId = jsonObject.optLong("algoliaId");
 
         // JSONArray categories=jsonObject.optJSONArray("categories");
         //for(int i=0;i<categories.length();i++){
@@ -32,17 +33,18 @@ public class RequestJsonParser
 
             if (rId != null ){
                 Request r= new Request(
-                     rId,
-                     reviewStatusOwner,
-                     reviewStatusRenter,
-                     requestStatus,
-                     ownerId,
-                     bId,
-                     bName,
-                     renterId,
-                     ownerName,
-                     renterName,
-                     urlBookImage);
+                    rId,
+                    reviewStatusOwner,
+                    reviewStatusRenter,
+                    requestStatus,
+                    ownerId,
+                    bId,
+                    bName,
+                    renterId,
+                    ownerName,
+                    renterName,
+                    urlBookImage,
+                    algoliaId);
             return r;
         }
         return null;
