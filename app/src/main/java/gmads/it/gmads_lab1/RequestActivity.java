@@ -58,7 +58,7 @@ public class RequestActivity extends AppCompatActivity{
         pager.setAdapter(vadapter);
         tab.setupWithViewPager(pager);
         tab.getTabAt(0).setText(getText(R.string.others_req));
-        tab.getTabAt(1).setText(getText(R.string.my_req));
+        //tab.getTabAt(1).setText(getText(R.string.my_req));
 
         pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
