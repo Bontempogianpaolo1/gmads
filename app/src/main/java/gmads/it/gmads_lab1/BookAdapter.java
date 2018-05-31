@@ -158,7 +158,8 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
     class MyMenuItemClickListener implements PopupMenu.OnMenuItemClickListener {
 
         private int position = 0;
-        private boolean alreadyRequester = false;
+        private boolean alreadyRequested = false;
+        private boolean completed = true;
 
         public MyMenuItemClickListener(int position) {
             this.position = position;
@@ -168,6 +169,8 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
         public boolean onMenuItemClick(MenuItem menuItem) {
             switch (menuItem.getItemId()) {
                 case R.id.action_prenota:
+
+                    // query per controlla se io ho gia mandato una richiesta per quel libro
 
                     Query query = new Query().setFilters("ownerId:" + bookList.get(position).getOwner() + " AND "
                                     + "renterId:" + FirebaseManagement.getUser().getUid() + " AND "
@@ -179,16 +182,15 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
                             Log.d("lista",jsonObject.toString());
                             requestList.addAll(search.parseResults(jsonObject));
 
-                            if(bookList.size() != 0){
-                                alreadyRequester = true;
+                            if(requestList.size() != 0){
+                                alreadyRequested = true;
                             }
                         }
                         //TODO maybe use loading bar
                     });
 
-                    if(bookList.get(position).getStato() == AppConstants.AVAILABLE && !alreadyRequester) {
+                    if(bookList.get(position).getStato() == AppConstants.AVAILABLE && !alreadyRequested) {
                         try {
-
                             // aggiungo i dati su firebase
                             Request request = new Request("0", AppConstants.NOT_REVIEWED, AppConstants.NOT_REVIEWED,
                                     AppConstants.PENDING, bookList.get(position).getOwner(),
@@ -208,13 +210,17 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
 
                                         }catch (Exception e){
                                             request.setAlgoliaId(new Long(AppConstants.ERROR_ID));
+                                            completed = false;
                                         }
-                                        FirebaseManagement.getDatabase().getReference().child("requests").child(rId).setValue(request);
+                                        if(completed) {
+                                            FirebaseManagement.getDatabase().getReference().child("requests").child(rId).setValue(request);
+                                        }
                                     }
                                     else{
                                         Toast.makeText(mContext, "Error in algolia occurred", Toast.LENGTH_SHORT).show();
                                         exception.getMessage();
                                         Log.d("error",exception.toString());
+                                        completed = false;
                                         return;
                                     }
                                 }
@@ -241,7 +247,9 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
                             algoIndex.addObjectAsync(new JSONObject(gson.toJson(referenceRequest)),null);
                             //bookList.get(position).setStato(AppConstants.NOT_AVAILABLE);
                             */
-                            Toast.makeText(mContext, "Book added", Toast.LENGTH_SHORT).show();
+                            if(completed) {
+                                Toast.makeText(mContext, "Book added", Toast.LENGTH_SHORT).show();
+                            }
                         }catch (Exception e){
                             Toast.makeText(mContext, "Exception Occurred", Toast.LENGTH_SHORT).show();
                             e.getMessage();
