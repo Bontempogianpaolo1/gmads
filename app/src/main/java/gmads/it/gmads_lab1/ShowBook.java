@@ -51,8 +51,6 @@ import android.widget.LinearLayout;
 import android.net.Uri;
 import android.widget.Toast;
 
-import org.apache.http.entity.StringEntityHC4;
-
 import gmads.it.gmads_lab1.Chat.constants.AppConstants;
 import gmads.it.gmads_lab1.Chat.glide.GlideApp;
 import gmads.it.gmads_lab1.model.Book;
@@ -544,7 +542,7 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
             try {
                 Request request = new Request(AppConstants.NOT_REVIEWED, AppConstants.NOT_REVIEWED,
                         AppConstants.PENDING, book.getOwner(),
-                        FirebaseManagement.getUser().getUid());
+                        FirebaseManagement.getUser().getUid(), ownerName, renterName, urlBookImage);
 
                 String rId = FirebaseManagement.getDatabase().getReference().child("requests").push().getKey();
                 FirebaseManagement.getDatabase().getReference().child("requests").child(rId).setValue(request);
