@@ -21,6 +21,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
+            android:layout_marginEnd="8dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="5dp"
             android:layout_toStartOf="@+id/stato"
@@ -48,6 +49,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/bookname"
             android:layout_marginBottom="5dp"
+            android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="5dp"
             android:layout_toEndOf="@id/tv1"
@@ -67,9 +69,10 @@
             android:id="@+id/stato"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_alignParentEnd="true"
+            android:layout_alignParentEnd="false"
             android:layout_centerInParent="true"
+            android:layout_marginEnd="16dp"
+            android:layout_toStartOf="@+id/addComment"
             android:text="Rifiutata"
             android:textSize="18sp" />
 
@@ -80,7 +83,7 @@
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_marginEnd="16dp"
-            android:visibility="gone"
+            android:visibility="visible"
             android:src="@drawable/pencil_mod"
             android:tint="@color/colorPrimary" />
 

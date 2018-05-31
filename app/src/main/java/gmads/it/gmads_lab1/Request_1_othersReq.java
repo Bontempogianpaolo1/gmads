@@ -14,11 +14,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import gmads.it.gmads_lab1.model.Book;
+import gmads.it.gmads_lab1.model.Request;
+
 public class Request_1_othersReq extends Fragment {
     ExpandableListAdapter listAdapter;
     ExpandableListView expListView;
-    List<String> listDataHeader;
-    HashMap<String, List<String>> listDataChild;
+    List<Book> listDataHeader;
+    HashMap<String, List<Request>> listDataChild;
     Client algoClient = new Client("L6B7L7WXZW", "9d2de9e724fa9289953e6b2d5ec978a5");
     Index algoIndex = algoClient.getIndex("requests");
 
@@ -95,19 +98,21 @@ public class Request_1_othersReq extends Fragment {
         algoIndex.searchAsync(query, ( jsonObject, e ) -> {
             if(e==null){
                 SearchRequestsJsonParser parser=new  SearchRequestsJsonParser();
-                List<ReferenceRequest> listrequest=parser.parseResults(jsonObject);
+                List<Request> listrequest=parser.parseResults(jsonObject);
                 listDataChild = new HashMap<>();
                 listDataHeader= new ArrayList<>();
-                for(ReferenceRequest rr : listrequest){
-                    if(!listDataChild.containsKey(rr.getBookname())){
-                        List<String> request= new ArrayList<>();
-                        listDataHeader.add(rr.getBookname());
-                        request.add(rr.getNomerichiedente());
-                        listDataChild.put(rr.getBookname(),request);
+                Book tempBook;
+
+                for(Request rr : listrequest){
+                    if(!listDataChild.containsKey(rr.getbId())){
+                        tempBook = new Book();
+                        tempBook.setBId(rr.getbId());
+                        tempBook.setTitle(rr.getbName());
+                        listDataHeader.add(tempBook);
+                        listDataChild.put(rr.getbId(), new ArrayList<Request>());
                     }
-                    else{
-                        listDataChild.put(rr.getBookname(),listDataChild.get(rr.getBookname()));
-                    }
+
+                    listDataChild.get(rr.getbId()).add(rr);
                 }
 
                 listAdapter = new ExpandableListAdapter(getContext(), listDataHeader, listDataChild);

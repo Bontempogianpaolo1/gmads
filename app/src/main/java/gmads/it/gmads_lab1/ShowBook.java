@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -24,6 +25,12 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.algolia.search.saas.AlgoliaException;
+import com.algolia.search.saas.Client;
+import com.algolia.search.saas.CompletionHandler;
+import com.algolia.search.saas.Index;
+import com.algolia.search.saas.Query;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
@@ -33,6 +40,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
+import com.google.gson.Gson;
 
 import java.io.File;
 import java.io.InputStream;
@@ -51,12 +59,13 @@ import android.widget.LinearLayout;
 import android.net.Uri;
 import android.widget.Toast;
 
-import org.apache.http.entity.StringEntityHC4;
+import org.json.JSONObject;
 
 import gmads.it.gmads_lab1.Chat.constants.AppConstants;
 import gmads.it.gmads_lab1.Chat.glide.GlideApp;
 import gmads.it.gmads_lab1.model.Book;
 import gmads.it.gmads_lab1.model.Profile;
+import gmads.it.gmads_lab1.model.ReferenceRequest;
 import gmads.it.gmads_lab1.model.Request;
 
 public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffsetChangedListener*/{
@@ -87,6 +96,10 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
     File BookFile;
     private boolean isMyBook;
     private List<String> booksRequested;
+    // roba di algolia
+    private Client algoClient = new Client("L6B7L7WXZW", "9d2de9e724fa9289953e6b2d5ec978a5");
+    private Index algoIndex = algoClient.getIndex("requests");
+    private Gson gson = new Gson();
 
     File tempFile;
     ContextWrapper cw;
@@ -288,7 +301,7 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
         if(book.getOwner().equals(FirebaseManagement.getUser().getUid())){
             isMyBook = true;
             bReserveOrReturn.setText(R.string.returnBook);
-            if(book.getStato() == AppConstants.RENTED){
+            if(book.getStato() == AppConstants.NOT_AVAILABLE){
                 bReserveOrReturn.setVisibility(View.VISIBLE);
                 bReserveOrReturn.setEnabled(true);
             } else {
@@ -539,17 +552,71 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
     }
 
     public void reserveBook(){
+
+        final boolean[] completed = {true};
+        final boolean[] alreadyRequested = new boolean[1];
+        List<Request> requestList = new LinkedList<>();
+
+        // query per controlla se io ho gia mandato una richiesta per quel libro
+
+        Query query = new Query().setFilters("ownerId:" + book.getOwner() + " AND "
+                + "renterId:" + FirebaseManagement.getUser().getUid() + " AND "
+                + "bId:" + book.getBId()).setFilters("requestStatus:" + AppConstants.PENDING);
+
+        algoIndex.searchAsync(query, ( jsonObject, e ) -> {
+            if(e == null){
+                SearchRequestsJsonParser search= new SearchRequestsJsonParser();
+                Log.d("lista",jsonObject.toString());
+                requestList.addAll(search.parseResults(jsonObject));
+
+                if(requestList.size() != 0){
+                    alreadyRequested[0] = true;
+                }
+            }
+            //TODO maybe use loading bar
+        });
         if(book.getStato() == AppConstants.AVAILABLE &&
                 !booksRequested.contains(book.getBId()) ) {
             try {
-                Request request = new Request(AppConstants.NOT_REVIEWED, AppConstants.NOT_REVIEWED,
-                        AppConstants.PENDING, book.getOwner(),
-                        FirebaseManagement.getUser().getUid());
 
                 String rId = FirebaseManagement.getDatabase().getReference().child("requests").push().getKey();
-                FirebaseManagement.getDatabase().getReference().child("requests").child(rId).setValue(request);
+                Request request = new Request("0", AppConstants.NOT_REVIEWED, AppConstants.NOT_REVIEWED,
+                        AppConstants.PENDING, book.getOwner(), book.getBId(), book.getTitle(),
+                        FirebaseManagement.getUser().getUid(), book.getNomeproprietario(), FirebaseManagement.getUser()
+                        .getDisplayName(), book.getUrlimage(), new Long(-1));
 
-                ReferenceRequest referenceRequest = new ReferenceRequest(book.getTitle(),
+                FirebaseManagement.getDatabase().getReference().child("requests").child(rId).setValue(request);
+                request.setrId(rId);
+
+                algoIndex.addObjectAsync(new JSONObject(gson.toJson(request)), new CompletionHandler() {
+                    @Override
+                    public void requestCompleted( JSONObject jsonObject, AlgoliaException exception ) {
+                        if(exception == null){
+                            try{
+                                Long id= jsonObject.getLong("objectID");
+                                request.setAlgoliaId(id);
+
+                            }catch (Exception e){
+                                request.setAlgoliaId(new Long(AppConstants.ERROR_ID));
+                                completed[0] = false;
+                            }
+                            if(completed[0]) {
+                                FirebaseManagement.getDatabase().getReference().child("requests").child(rId).setValue(request);
+                            }
+                        }
+                        else{
+                            Toast.makeText(getApplicationContext(), "Error in algolia occurred", Toast.LENGTH_SHORT).show();
+                            exception.getMessage();
+                            Log.d("error",exception.toString());
+                            completed[0] = false;
+                            return;
+                        }
+                    }
+                });
+
+
+
+                /*ReferenceRequest referenceRequest = new ReferenceRequest(book.getTitle(),
                         book.getUrlimage(),
                         FirebaseManagement.getUser().getDisplayName(),
                         rId, book.getBId());
@@ -564,10 +631,13 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
                         child("users").
                         child(book.getOwner()).
                         child("othersRequests").
-                        child(book.getBId()).setValue(referenceRequest);
+                        child(book.getBId()).setValue(referenceRequest);*/
 
                 //bookList.get(position).setStato(AppConstants.NOT_AVAILABLE);
-                Toast.makeText(this, "Book added", Toast.LENGTH_SHORT).show();
+                if(completed[0]) {
+                    Toast.makeText(this, "Book added", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Book added", Toast.LENGTH_SHORT).show();
+                }
             }catch (Exception e){
                 Toast.makeText(this, "Exception Occurred", Toast.LENGTH_SHORT).show();
                 e.getMessage();

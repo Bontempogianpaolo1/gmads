@@ -17,6 +17,8 @@ import android.widget.ExpandableListView;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
+
 import android.app.Activity;
 
 
@@ -31,7 +33,8 @@ public class RequestActivity extends AppCompatActivity{
     TabLayout tab;
     ViewPager pager;
     Request_1_othersReq r1=new Request_1_othersReq();
-   // Request_2_myReq r2=new Request_2_myReq();
+    Request_2_myReq r2=new Request_2_myReq();
+
     private void setViews() {
         expListView = (ExpandableListView) findViewById(R.id.explv);
         tab=findViewById(R.id.tabs);
@@ -52,12 +55,14 @@ public class RequestActivity extends AppCompatActivity{
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         FragmentViewPagerAdapter vadapter = new FragmentViewPagerAdapter(getSupportFragmentManager());
-        vadapter.addFragment(r1);
-        //vadapter.addFragment(r2);
+        //vadapter.addFragment(r1);
+        vadapter.addFragment(r2);
         pager.setAdapter(vadapter);
         tab.setupWithViewPager(pager);
-        tab.getTabAt(0).setText("my request");
-        tab.getTabAt(1).setText("other request");
+
+        //tab.getTabAt(0).setText(getText(R.string.others_req));
+        tab.getTabAt(0).setText(getText(R.string.my_req));
+
 
         pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
