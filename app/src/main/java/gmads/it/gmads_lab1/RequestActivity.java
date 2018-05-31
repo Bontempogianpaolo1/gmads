@@ -8,6 +8,7 @@ import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ExpandableListView;
@@ -31,26 +32,33 @@ public class RequestActivity extends AppCompatActivity{
     ViewPager pager;
     Request_1_othersReq r1=new Request_1_othersReq();
     Request_2_myReq r2=new Request_2_myReq();
+
     private void setViews() {
         expListView = (ExpandableListView) findViewById(R.id.explv);
         tab=findViewById(R.id.tabs);
         pager= findViewById(R.id.viewPager);
+
     }
+
     @Override
     protected void onCreate( @Nullable Bundle savedInstanceState ) {
         super.onCreate(savedInstanceState);
         // setContentView(R.layout.activity_home);
         setContentView(R.layout.activity_request);
         setViews();
-        // get the listview
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle(getString(R.string.request));
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         FragmentViewPagerAdapter vadapter = new FragmentViewPagerAdapter(getSupportFragmentManager());
         vadapter.addFragment(r1);
         vadapter.addFragment(r2);
         pager.setAdapter(vadapter);
         tab.setupWithViewPager(pager);
-        tab.getTabAt(0).setText("my request");
-        tab.getTabAt(1).setText("other request");
+        tab.getTabAt(0).setText(getText(R.string.others_req));
+        tab.getTabAt(1).setText(getText(R.string.my_req));
 
         pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -106,5 +114,21 @@ public class RequestActivity extends AppCompatActivity{
     public void onClickNo(View v){
 
         Toast.makeText(getApplicationContext(), "Richiesta rifiutata",Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        if (getFragmentManager().getBackStackEntryCount() != 0) {
+            getFragmentManager().popBackStack();
+        } else {
+            super.onBackPressed();
+        }
+        /*
+        Intent intentMod = new Intent(this, Home.class);
+        startActivity(intentMod);
+        finish();
+        */
+        //moveTaskToBack(true);
     }
 }
