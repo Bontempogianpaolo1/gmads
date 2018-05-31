@@ -16,6 +16,7 @@ public class Request {
         this.requestStatus = requestStatus;
         this.ownerId = ownerId;
         this.renterId = renterId;
+
     }
 
     public int getReviewStatusOwner() {
