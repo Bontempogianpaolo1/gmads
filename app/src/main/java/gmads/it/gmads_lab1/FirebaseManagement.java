@@ -3,21 +3,31 @@ package gmads.it.gmads_lab1;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+import android.widget.NumberPicker;
 
+import com.algolia.search.saas.AlgoliaException;
+import com.algolia.search.saas.Client;
+import com.algolia.search.saas.Index;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.functions.FirebaseFunctions;
 
 import java.util.Objects;
 
+import gmads.it.gmads_lab1.model.Book;
 import gmads.it.gmads_lab1.model.Profile;
 import gmads.it.gmads_lab1.Chat.service.MyFirebaseInstanceIDService;
 import com.google.firebase.functions.FirebaseFunctionsException;
 
+import org.json.JSONObject;
+import com.google.gson.Gson;
 
 public class FirebaseManagement {
 
@@ -131,5 +141,56 @@ public class FirebaseManagement {
         if (User != null)
             MyFirebaseInstanceIDService.Companion.addTokenToFirebase(newRegistrationToken);
         //ProfileInfoSync.pISInstance.loadProfileInfo();
+    }
+
+    public void removebook(String bid){
+        Client algoClient = new Client("L6B7L7WXZW", "9d2de9e724fa9289953e6b2d5ec978a5");
+        Index algoIndex = algoClient.getIndex("BookIndex");
+        FirebaseManagement.getDatabase().getReference().child("books").child(bid)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange( DataSnapshot dataSnapshot ) {
+                       Book book = dataSnapshot.getValue(Book.class);
+                       if(book!= null){
+                            try {
+                                algoIndex.deleteObject(String.valueOf(Objects.requireNonNull(book).getAlgoliaid()),null);
+                                FirebaseManagement.getDatabase().getReference().child("books").child(bid).removeValue();
+                            } catch (AlgoliaException e) {
+                                e.printStackTrace();
+                            }
+                       }
+                    }
+
+                    @Override
+                    public void onCancelled( DatabaseError databaseError ) {
+
+                    }
+                });
+
+    }
+    public void updatebook(String bid){
+        Client algoClient = new Client("L6B7L7WXZW", "9d2de9e724fa9289953e6b2d5ec978a5");
+        Index algoIndex = algoClient.getIndex("BookIndex");
+        FirebaseManagement.getDatabase().getReference().child("books").child(bid)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange( DataSnapshot dataSnapshot ) {
+                        Book book = dataSnapshot.getValue(Book.class);
+                        if(book!= null){
+                            try {
+                                Gson gson = new Gson();
+                                algoIndex.saveObject(new JSONObject(gson.toJson(book)), String.valueOf(book.getAlgoliaid()),null);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled( DatabaseError databaseError ) {
+
+                    }
+                });
+
     }
 }

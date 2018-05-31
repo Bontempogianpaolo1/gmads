@@ -27,7 +27,8 @@ public class BookJsonParser
         Long distance=jsonObject.optJSONObject("_rankingInfo").optLong("geoDistance");
         Double finderlat=jsonObject.optJSONObject("_rankingInfo").optJSONObject("matchedGeoLocation").optDouble("lat");
         Double finderlng=jsonObject.optJSONObject("_rankingInfo").optJSONObject("matchedGeoLocation").optDouble("lng");
-       // JSONArray categories=jsonObject.optJSONArray("categories");
+        Long id=jsonObject.optLong("objectID");
+        // JSONArray categories=jsonObject.optJSONArray("categories");
         //for(int i=0;i<categories.length();i++){
             /*
             todo:riempire liste di category e author e settare la mappa
@@ -57,6 +58,7 @@ public class BookJsonParser
                     lat,
                     lng);
             b.setBId(bId);
+            b.setAlgoliaid(id);
             b.setNomeproprietario(name);
             b.setDistance(distance);
             b.setfinder(finderlat,finderlng);

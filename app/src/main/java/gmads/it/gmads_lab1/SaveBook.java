@@ -47,7 +47,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.algolia.search.saas.AlgoliaException;
 import com.algolia.search.saas.Client;
+import com.algolia.search.saas.CompletionHandler;
 import com.algolia.search.saas.Index;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -540,15 +542,32 @@ todo rimpire stringhe
                 book.setCategories(categories);
                 book.setNotes(notes);
                 book.setBId(bookKey);
+                /*
                 mBooksReference.child(bookKey).setValue(book);
                 //fine inserimento nelle liste
                 mProfileReference = FirebaseManagement.getDatabase().getReference();
                 mProfileReference.child("users").child(book.getOwner()).child("myBooks").child(bookKey).setValue(book.getIsbn())
                         .addOnFailureListener(e ->{
-                            Log.v("ERR", e.getMessage());});
+                            Log.v("ERR", e.getMessage());});*/
 
                 try {
-                    algoIndex.addObjectAsync(new JSONObject(gson.toJson(book)), null);
+                    algoIndex.addObjectAsync(new JSONObject(gson.toJson(book)), new CompletionHandler() {
+                        @Override
+                        public void requestCompleted( JSONObject jsonObject, AlgoliaException e ) {
+                            if(e==null){
+                                try{
+                                Long id= jsonObject.getLong("objectID");
+                                book.setAlgoliaid(id);
+                                }catch (Exception e2){
+                                    book.setAlgoliaid(Long.getLong("0"));
+                                }
+                                mBooksReference.child(bookKey).setValue(book);
+                                //fine inserimento nelle liste
+                                mProfileReference = FirebaseManagement.getDatabase().getReference();
+                                mProfileReference.child("users").child(book.getOwner()).child("myBooks").child(bookKey).setValue(book.getIsbn());
+                            }
+                        }
+                    });
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
