@@ -543,7 +543,8 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
             try {
                 Request request = new Request(AppConstants.NOT_REVIEWED, AppConstants.NOT_REVIEWED,
                         AppConstants.PENDING, book.getOwner(),
-                        FirebaseManagement.getUser().getUid(), ownerName, renterName, urlBookImage);
+                        bId, FirebaseManagement.getUser().getUid(), book.getNomeproprietario(), FirebaseManagement.getUser()
+                        .getDisplayName(), book.getUrlimage());
 
                 String rId = FirebaseManagement.getDatabase().getReference().child("requests").push().getKey();
                 FirebaseManagement.getDatabase().getReference().child("requests").child(rId).setValue(request);
