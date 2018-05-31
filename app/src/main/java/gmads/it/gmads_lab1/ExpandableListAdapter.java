@@ -60,7 +60,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 .centerCrop()
                 .into(civ);*/
         txtListChild.setText(childText);
-*/
+
         return convertView;
     }
 

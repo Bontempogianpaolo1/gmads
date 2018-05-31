@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -39,7 +40,7 @@ public class Request_2_myReq extends Fragment {
         bookList = new ArrayList<>();
         adapter = new BookAdapter(getContext(), bookList);
 
-        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getContext(), 2);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
 
         recycle.setLayoutManager(mLayoutManager);
         //recycle.addItemDecoration(new Home_1.GridSpacingItemDecoration(2, dpToPx(10), true));
