@@ -1,37 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="60dp"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_marginEnd="16dp"
     android:layout_marginStart="16dp"
     android:padding="4dp">
 
+        <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/ownerphoto"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_centerVertical="true"
+            android:layout_marginBottom="5dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="5dp"
+            android:onClick="onClickUsername"
+            tools:src="@drawable/default_picture" />
+
         <TextView
             android:id="@+id/name"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
+            android:layout_marginEnd="8dp"
             android:layout_marginStart="16dp"
+            android:layout_marginTop="5dp"
+            android:layout_toEndOf="@id/ownerphoto"
+            android:layout_toStartOf="@+id/yes"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:onClick="onClickUsername"
             android:text="Nome tizio"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
 
-        <de.hdodenhof.circleimageview.CircleImageView
+        <TextView
+            android:id="@+id/rate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/name"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_toEndOf="@id/ownerphoto"
+            android:layout_toStartOf="@+id/yes"
+            android:drawableStart="@drawable/ic_star_black_24dp"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:onClick="onClickUsername"
+            android:text="4.5"
+            android:textSize="16sp" />
+
+        <ImageView
             android:id="@+id/yes"
-            android:layout_width="50dp"
+            android:layout_width="40dp"
             android:layout_height="50dp"
             android:layout_marginEnd="8dp"
             android:layout_toStartOf="@+id/no"
+            android:onClick="onClickYes"
             android:src="@drawable/ic_done_white_24px"
-            app:civ_fill_color="@color/green" />
+            android:tint="@color/green" />
 
-        <de.hdodenhof.circleimageview.CircleImageView
+        <ImageView
             android:id="@+id/no"
-            android:layout_width="50dp"
+            android:layout_width="40dp"
             android:layout_height="50dp"
             android:layout_alignParentEnd="true"
-            android:src="@drawable/ic_baseline_clear_24px"
-            app:civ_fill_color="@color/button_red" />
+            android:layout_marginEnd="10dp"
+            android:onClick="onClickNo"
+            android:src="@drawable/ic_baseline_clear_24px" />
 
 </RelativeLayout>

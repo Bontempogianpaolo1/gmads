@@ -44,20 +44,23 @@ class ChatList : AppCompatActivity() {
     private var drawer: DrawerLayout? = null
     private var mProfileReference: DatabaseReference? = null
     private var mProfileListener: ValueEventListener? = null
-
+/*
+attivita per vedere la lista delle chat
+ */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat_list)
-        //--
+        //prendo riferimento firebase dell'utente
         mProfileReference = FirebaseManagement.getDatabase()
                 .reference
                 .child("users")
                 .child(FirebaseManagement.getUser().uid)
         mProfileReference?.keepSynced(true)
-        //--
+        //
         val pref = PreferenceManager.getDefaultSharedPreferences(this)
         setSupportActionBar(toolbarList)
         //supportActionBar?.title = "Chat"
+    //setto la toobar
         supportActionBar?.title= "Chat"
         val toggle = ActionBarDrawerToggle(
                 this, drawer_layout, toolbar, R.string.navigation_drawer_open,
@@ -83,6 +86,7 @@ class ChatList : AppCompatActivity() {
     }
 
     private fun replaceFragment(fragment: Fragment) {
+        //inserisco nel posto dedicato al fragment peoplefragment
         supportFragmentManager.beginTransaction()
                 .replace(R.id.fragment_layout, fragment)
                 .commit()
@@ -194,5 +198,11 @@ class ChatList : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         getUserInfo()
+    }
+
+    fun onClickNotify(view: View) {
+        val intentMod = Intent(applicationContext, RequestActivity::class.java)
+        startActivity(intentMod)
+        //finish();
     }
 }

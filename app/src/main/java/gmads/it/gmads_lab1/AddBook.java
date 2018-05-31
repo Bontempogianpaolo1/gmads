@@ -270,4 +270,10 @@ public class AddBook extends AppCompatActivity
         intent.putExtra("rawData", true);
         startActivity(intent);
     }
+
+    public void onClickNotify(View view){
+        Intent intentMod = new Intent(getApplicationContext(), RequestActivity.class);
+        startActivity(intentMod);
+        //finish();
+    }
 }

@@ -54,10 +54,10 @@ import java.util.Objects;
 
 import gmads.it.gmads_lab1.Chat.ChatList;
 import gmads.it.gmads_lab1.Map.main.MapActivity;
+import gmads.it.gmads_lab1.fragments.AllHome;
 import gmads.it.gmads_lab1.fragments.FragmentViewPagerAdapter;
 import gmads.it.gmads_lab1.model.Book;
 import gmads.it.gmads_lab1.model.Profile;
-import gmads.it.gmads_lab1.fragments.Home_1;
 
 public class MyLibrary extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
     private RecyclerView recyclerView;
@@ -76,9 +76,8 @@ public class MyLibrary extends AppCompatActivity implements NavigationView.OnNav
     private Profile profile;
     private Bitmap myProfileBitImage;
     View headerView;
-    Home_1 tab1= new Home_1();
+    AllHome tab1= new AllHome();
     Tools tools;
-
     ProgressBar progressbar;
 
     @Override
@@ -113,8 +112,8 @@ public class MyLibrary extends AppCompatActivity implements NavigationView.OnNav
         ViewPager pager= findViewById(R.id.viewPager);
         FragmentViewPagerAdapter vpadapter= new FragmentViewPagerAdapter(getSupportFragmentManager());
         vpadapter.addFragment(tab1);
-        //vpadapter.addFragment(new Home_1());
-        //vpadapter.addFragment(new Home_1());
+        //vpadapter.addFragment(new AllHome());
+        //vpadapter.addFragment(new AllHome());
         pager.setAdapter(vpadapter);
 //
         //era per mettere foto libri nell appbar, ma l'abbiamo messa come sfondo per ora
@@ -383,6 +382,12 @@ public class MyLibrary extends AppCompatActivity implements NavigationView.OnNav
                 }
             }
         });
+    }
+
+    public void onClickNotify(View view){
+        Intent intentMod = new Intent(getApplicationContext(), RequestActivity.class);
+        startActivity(intentMod);
+        //finish();
     }
 
 }

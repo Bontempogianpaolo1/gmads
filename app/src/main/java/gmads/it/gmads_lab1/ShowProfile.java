@@ -387,4 +387,10 @@ public class ShowProfile extends AppCompatActivity implements AppBarLayout.OnOff
         alphaAnimation.setFillAfter(true);
         v.startAnimation(alphaAnimation);
     }
+
+    public void onClickNotify(View view){
+        Intent intentMod = new Intent(getApplicationContext(), RequestActivity.class);
+        startActivity(intentMod);
+        //finish();
+    }
 }

@@ -30,10 +30,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.algolia.search.saas.AbstractQuery;
+
 import com.algolia.search.saas.Client;
 import com.algolia.search.saas.Index;
-import com.algolia.search.saas.Query;
 import com.bumptech.glide.Glide;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.database.DataSnapshot;
@@ -52,10 +51,14 @@ import java.util.Objects;
 import gmads.it.gmads_lab1.Chat.ChatList;
 import gmads.it.gmads_lab1.Chat.constants.AppConstants;
 import gmads.it.gmads_lab1.Map.main.MapActivity;
+import gmads.it.gmads_lab1.fragments.ActionHome;
+import gmads.it.gmads_lab1.fragments.ComedyHome;
+import gmads.it.gmads_lab1.fragments.FictionHome;
+import gmads.it.gmads_lab1.fragments.ThrillerHome;
 import gmads.it.gmads_lab1.fragments.FragmentViewPagerAdapter;
 import gmads.it.gmads_lab1.model.Book;
 import gmads.it.gmads_lab1.model.Profile;
-import gmads.it.gmads_lab1.fragments.Home_1;
+import gmads.it.gmads_lab1.fragments.AllHome;
 
 
 public class  Home extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
@@ -74,12 +77,14 @@ public class  Home extends AppCompatActivity implements NavigationView.OnNavigat
     private Profile profile;
     private Bitmap myProfileBitImage;
     View headerView;
-    Home_1 tab1= new Home_1();
-    Home_1 categ1= new Home_1();
-    Home_1 categ2= new Home_1();
+    AllHome tab1= new AllHome();
+    ActionHome action= new ActionHome();
+    ComedyHome comedy= new ComedyHome();
+    FictionHome fiction= new FictionHome();
+    ThrillerHome thrillerHome= new ThrillerHome();
     Tools tools;
     ProgressBar progressbar;
-
+    ViewPager pager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -110,16 +115,15 @@ public class  Home extends AppCompatActivity implements NavigationView.OnNavigat
         //recyclerView.setAdapter(adapter);
 //
 
-        ViewPager pager= findViewById(R.id.viewPager);
+        pager= findViewById(R.id.viewPager);
+
         FragmentViewPagerAdapter vpadapter= new FragmentViewPagerAdapter(getSupportFragmentManager());
         vpadapter.addFragment(tab1);
-       // vpadapter.addFragment(categ1);
-        /*
-        TODO riempire frammenti
-         */
-       // vpadapter.addFragment(categ2);
-        //vpadapter.addFragment(categ2);
-       // vpadapter.addFragment(categ2);
+        vpadapter.addFragment(action);
+
+        vpadapter.addFragment(comedy);
+        vpadapter.addFragment(thrillerHome);
+        vpadapter.addFragment(fiction);
         pager.setAdapter(vpadapter);
         TabLayout tableLayout= findViewById(R.id.tabs);
         tableLayout.setupWithViewPager(pager);
@@ -127,10 +131,65 @@ public class  Home extends AppCompatActivity implements NavigationView.OnNavigat
         /*
         todo settare titoli
          */
-        //tableLayout.getTabAt(1).setText(getString(R.string.tab2));
-        //tableLayout.getTabAt(2).setText(getString(R.string.tab3));
-        //tableLayout.getTabAt(3).setText("thriller");
-        //tableLayout.getTabAt(4).setText("drama");
+        tableLayout.getTabAt(1).setText("action");
+        tableLayout.getTabAt(2).setText("comedy");
+        tableLayout.getTabAt(3).setText("thriller");
+        tableLayout.getTabAt(4).setText("fiction");
+        pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled( int position, float positionOffset, int positionOffsetPixels ) {
+
+            }
+
+            @Override
+            public void onPageSelected( int position ) {
+                    switch (position){
+                        case 0:
+                            tab1.clearlist();
+                            tab1.setText(searchview.getQuery().toString());
+                            tab1.setProfile(profile);
+                            tab1.fetchdata();
+                            tab1.setNpage(tab1.getNpage()+1);
+                            break;
+                        case 1:
+                            action.clearlist();
+                            action.setText(searchview.getQuery().toString());
+                            action.setProfile(profile);
+                            action.fetchdata();
+                            action.setNpage(action.getNpage()+1);
+                            break;
+                        case 2:
+                            comedy.clearlist();
+                            comedy.setText(searchview.getQuery().toString());
+                            comedy.setProfile(profile);
+                            comedy.fetchdata();
+                            comedy.setNpage(action.getNpage()+1);
+                            break;
+                        case 3:
+                            thrillerHome.clearlist();
+                            thrillerHome.setText(searchview.getQuery().toString());
+                            thrillerHome.setProfile(profile);
+                            thrillerHome.fetchdata();
+                            thrillerHome.setNpage(thrillerHome.getNpage()+1);
+                            break;
+                        case 4:
+                            fiction.clearlist();
+                            fiction.setText(searchview.getQuery().toString());
+                            fiction.setProfile(profile);
+                            fiction.fetchdata();
+                            fiction.setNpage(fiction.getNpage()+1);
+                            break;
+                        default:
+                            break;
+
+                    }
+            }
+
+            @Override
+            public void onPageScrollStateChanged( int state ) {
+
+            }
+        });
         progressbar = findViewById(R.id.progress_bar);
 //
         //era per mettere foto libri nell appbar, ma l'abbiamo messa come sfondo per ora
@@ -158,6 +217,14 @@ public class  Home extends AppCompatActivity implements NavigationView.OnNavigat
         progressbar.setVisibility(View.GONE);
         notfound.setVisibility(View.GONE);
         tnf.setVisibility(View.GONE);
+        if(searchview!=null){
+        tab1.setText(searchview.getQuery().toString());
+        }
+        else{
+            tab1.setText("");
+        }
+        getUserInfo();
+
         /*
         if(searchview != null) {
             if(searchview.getQuery().toString().length() > 0){
@@ -166,7 +233,7 @@ public class  Home extends AppCompatActivity implements NavigationView.OnNavigat
         }
         */
     }
-
+/*
     boolean OngoingSearch(String text) {
         progressbar.setVisibility(View.VISIBLE);
         books.clear();
@@ -198,7 +265,7 @@ public class  Home extends AppCompatActivity implements NavigationView.OnNavigat
         });
         return true;
     }
-
+*/
     /*@Override
     public boolean onQueryTextSubmit(String query) {
         // do something on text submit
@@ -239,11 +306,16 @@ public class  Home extends AppCompatActivity implements NavigationView.OnNavigat
         }else if(id == R.id.nav_mylibrary){
             startActivity(new Intent(this,MyLibrary.class));
             finish();
-
             return true;
         }
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public void onClickNotify(View view){
+        Intent intentMod = new Intent(getApplicationContext(), RequestActivity.class);
+        startActivity(intentMod);
+        //finish();
     }
 
     @Override
@@ -273,39 +345,91 @@ public class  Home extends AppCompatActivity implements NavigationView.OnNavigat
         searchview.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit( String text ) {
+                switch (pager.getCurrentItem()){
+                    case 0:
+                        tab1.clearlist();
+                        tab1.setText(searchview.getQuery().toString());
+                        tab1.setProfile(profile);
+                        tab1.fetchdata();
+                        tab1.setNpage(tab1.getNpage()+1);
+                        break;
+                    case 1:
+                        action.clearlist();
+                        action.setText(searchview.getQuery().toString());
+                        action.setProfile(profile);
+                        action.fetchdata();
+                        action.setNpage(action.getNpage()+1);
+                        break;
+                    case 2:
+                        comedy.clearlist();
+                        comedy.setText(searchview.getQuery().toString());
+                        comedy.setProfile(profile);
+                        comedy.fetchdata();
+                        comedy.setNpage(action.getNpage()+1);
+                        break;
+                    case 3:
+                        thrillerHome.clearlist();
+                        thrillerHome.setText(searchview.getQuery().toString());
+                        thrillerHome.setProfile(profile);
+                        thrillerHome.fetchdata();
+                        thrillerHome.setNpage(thrillerHome.getNpage()+1);
+                        break;
+                    case 4:
+                        fiction.clearlist();
+                        fiction.setText(searchview.getQuery().toString());
+                        fiction.setProfile(profile);
+                        fiction.fetchdata();
+                        fiction.setNpage(fiction.getNpage()+1);
+                        break;
+                    default:
+                        break;
+
+                }
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange( String newText ) {
-                progressbar.setVisibility(View.VISIBLE);
-                books.clear();
-                tab1.getAdapter().setbooks(books);
-                ImageView notfound = findViewById(R.id.not_found);
-                TextView tnf = findViewById(R.id.textnotfound);
+                switch (pager.getCurrentItem()){
+                    case 0:
+                        tab1.clearlist();
+                        tab1.setText(searchview.getQuery().toString());
+                        tab1.setProfile(profile);
+                        tab1.fetchdata();
+                        tab1.setNpage(tab1.getNpage()+1);
+                        break;
+                    case 1:
+                        action.clearlist();
+                        action.setText(searchview.getQuery().toString());
+                        action.setProfile(profile);
+                        action.fetchdata();
+                        action.setNpage(action.getNpage()+1);
+                        break;
+                    case 2:
+                        comedy.clearlist();
+                        comedy.setText(searchview.getQuery().toString());
+                        comedy.setProfile(profile);
+                        comedy.fetchdata();
+                        comedy.setNpage(action.getNpage()+1);
+                        break;
+                    case 3:
+                        thrillerHome.clearlist();
+                        thrillerHome.setText(searchview.getQuery().toString());
+                        thrillerHome.setProfile(profile);
+                        thrillerHome.fetchdata();
+                        thrillerHome.setNpage(thrillerHome.getNpage()+1);
+                        break;
+                    case 4:
+                        fiction.clearlist();
+                        fiction.setText(searchview.getQuery().toString());
+                        fiction.setProfile(profile);
+                        fiction.fetchdata();
+                        fiction.setNpage(fiction.getNpage()+1);
+                        break;
+                    default:
+                        break;
 
-                query = newText;
-                Query query = new Query(newText)
-                        .setAroundLatLng(new AbstractQuery.LatLng(profile.getLat(), profile.getLng())).setGetRankingInfo(true);
-
-                algoIndex.searchAsync(query, ( jsonObject, e ) -> {
-                    if(e==null){
-                        SearchResultsJsonParser search= new SearchResultsJsonParser();
-                        Log.d("lista",jsonObject.toString());
-                        books= search.parseResults(jsonObject);
-                        List<Book> books2= new ArrayList<>();
-                        for (Book b : books) {
-                            if (b.getOwner().equals(FirebaseManagement.getUser().getUid())) {
-                                books2.add(b);
-                            }
-                        }
-                        for(Book b: books2){
-                            books.remove(b);
-                        }
-                    }
-                    tab1.getAdapter().setbooks(books);
-                    progressbar.setVisibility(View.GONE);
-                });
+                }
                 return true;
             }
         });
@@ -346,9 +470,10 @@ public class  Home extends AppCompatActivity implements NavigationView.OnNavigat
     public void mapcreate( View view ) {
         if(tab1.getAdapter().getItemCount()>0) {
             Intent intentMod = new Intent(this, MapActivity.class);
-            intentMod.putExtra("query", query);
+            intentMod.putExtra("query", tab1.getText());
             intentMod.putExtra("lat", profile.getLat());
             intentMod.putExtra("lng", profile.getLng());
+            intentMod.putExtra("numpages", tab1.getNpage());
             startActivity(intentMod);
             overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
         }
@@ -393,6 +518,7 @@ public class  Home extends AppCompatActivity implements NavigationView.OnNavigat
                             }
                             navName.setText(profile.getName());
                             navMail.setText(profile.getEmail());
+
                             if (profile.getImage() != null) {
                                 try {
                                     File localFile = File.createTempFile("images", "jpg");
@@ -433,35 +559,15 @@ public class  Home extends AppCompatActivity implements NavigationView.OnNavigat
 
         progressbar.setVisibility(View.VISIBLE);
         if(tools.isOnline(getApplicationContext())) {
+            if(searchview!= null){
+            tab1.setText(searchview.getQuery().toString());
+            }else{
+                tab1.setText("");
 
-            algoClient = new Client("L6B7L7WXZW", "9d2de9e724fa9289953e6b2d5ec978a5");
-            algoIndex = algoClient.getIndex("BookIndex");
-
-            Query query = new Query()
-                    .setAroundLatLng(new AbstractQuery.LatLng(profile.getLat(), profile.getLng())).setGetRankingInfo(true);
-            //.setAroundLatLngViaIP(true).setGetRankingInfo(true);
-            algoIndex.searchAsync(query, ( jsonObject, e ) -> {
-                if (e == null) {
-                    InputMethodManager imm = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    assert imm != null;
-                    imm.hideSoftInputFromWindow(Objects.requireNonNull(getCurrentFocus()).getWindowToken(), 0);
-                    SearchResultsJsonParser search = new SearchResultsJsonParser();
-                    Log.d("lista", jsonObject.toString());
-                    books = search.parseResults(jsonObject);
-                    List<Book> books2= new ArrayList<>();
-                    for (Book b : books) {
-                        if (b.getOwner().equals(FirebaseManagement.getUser().getUid())) {
-                            books2.add(b);
-                        }
-                    }
-                    for(Book b: books2){
-                        books.remove(b);
-                    }
-                    tab1.getAdapter().setbooks(books);
-                    tab1.getAdapter().notifyDataSetChanged();
-                    progressbar.setVisibility(View.GONE);
-                }
-            });
+            }
+            tab1.setProfile(profile);
+            tab1.fetchdata();
+            tab1.setNpage(tab1.getNpage()+1);
         } else {
             android.app.AlertDialog.Builder ad = tools.showPopup(this, getString(R.string.noInternet), "", "");
             ad.setPositiveButton(getString(R.string.retry), (vi, w) -> onStart());
