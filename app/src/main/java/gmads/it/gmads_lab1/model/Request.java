@@ -4,28 +4,66 @@ package gmads.it.gmads_lab1.model;
 
 public class Request {
 
+    private String rId;
     private int reviewStatusOwner;
     private int reviewStatusRenter;
     private int requestStatus;
     private String ownerId;
     private String bId;
+    private String bName;
     private String renterId;
     private String ownerName;
     private String renterName;
     private String urlBookImage;
     private Long algoliaId;
 
-    public Request(int reviewStatusOwner, int reviewStatusRenter, int requestStatus, String ownerId, String bId, String renterId, String ownerName, String renterName, String urlBookImage, Long algoliaId) {
+    private Long algoliaId;
+
+    public Request(String rId, int reviewStatusOwner, int reviewStatusRenter, int requestStatus, String ownerId, String bId, String bName, String renterId, String ownerName, String renterName, String urlBookImage, Long algoliaId) {
+        this.rId = rId;
         this.reviewStatusOwner = reviewStatusOwner;
         this.reviewStatusRenter = reviewStatusRenter;
         this.requestStatus = requestStatus;
         this.ownerId = ownerId;
         this.bId = bId;
+        this.bName = bName;
         this.renterId = renterId;
         this.ownerName = ownerName;
         this.renterName = renterName;
         this.urlBookImage = urlBookImage;
         this.algoliaId = algoliaId;
+    }
+
+    public Long getAlgoliaId() {
+        return algoliaId;
+    }
+
+    public void setAlgoliaId(Long algoliaId) {
+        this.algoliaId = algoliaId;
+    }
+
+    public String getbName() {
+        return bName;
+    }
+
+    public void setbName(String bName) {
+        this.bName = bName;
+    }
+
+    public String getrId() {
+        return rId;
+    }
+
+    public void setrId(String rId) {
+        this.rId = rId;
+    }
+
+    public String getbId() {
+        return bId;
+    }
+
+    public void setbId(String bId) {
+        this.bId = bId;
     }
 
     public int getReviewStatusOwner() {

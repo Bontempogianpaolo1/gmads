@@ -38,7 +38,7 @@
             android:layout_toStartOf="@id/number"
             android:ellipsize="end"
             android:gravity="center_vertical"
-            android:maxLines="@integer/anim_duration_200"
+            android:maxLines="2"
             android:textSize="20sp"
             tools:text="Book Title" />
 

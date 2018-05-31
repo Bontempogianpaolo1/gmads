@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -53,13 +54,16 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         }
 
         TextView txtListChild = (TextView) convertView.findViewById(R.id.name);
-        CircleImageView civ = (CircleImageView) convertView.findViewById(R.id.ownerphoto);
+        //CircleImageView civ = (CircleImageView) convertView.findViewById(R.id.ownerphoto);
         //settare foto libro se c'è DOPO AVER SETTATO QUELLA DI DEFAULT
-        GlideApp.with(context)
+        /*GlideApp.with(context)
                 .load(R.drawable.default_picture)
                 .centerCrop()
-                .into(civ);
+                .into(civ);*/
         txtListChild.setText(childText);
+
+        Button bYes = convertView.findViewById(R.id.yes);
+        bYes.setOnClickListener( v -> onClickYes(childPosition));
 
         return convertView;
     }
@@ -117,6 +121,10 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     @Override
     public boolean isChildSelectable(int groupPosition, int childPosition) {
         return true;
+    }
+
+    public void onClickYes(View v){
+
     }
 
 }
