@@ -53,12 +53,12 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         }
 
         TextView txtListChild = (TextView) convertView.findViewById(R.id.name);
-        CircleImageView civ = (CircleImageView) convertView.findViewById(R.id.ownerphoto);
+        //CircleImageView civ = (CircleImageView) convertView.findViewById(R.id.ownerphoto);
         //settare foto libro se c'è DOPO AVER SETTATO QUELLA DI DEFAULT
         /*GlideApp.with(context)
                 .load(R.drawable.default_picture)
                 .centerCrop()
-                .into(civ);
+                .into(civ);*/
         txtListChild.setText(childText);
 */
         return convertView;

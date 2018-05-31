@@ -107,5 +107,10 @@
     <string name = "book_info">Altre Info</string>
     <string name = "book_photo">Aggiungi una foto del libro</string>
     <string name = "showbookImage">Foto libro</string>
+
+    <string name = "my_req">Fatte</string>
+    <string name = "others_req">Ricevute</string>
+    <string name = "request">Richieste</string>
+
     <!--end-->
 </resources>
