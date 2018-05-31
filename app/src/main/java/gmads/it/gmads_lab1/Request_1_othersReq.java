@@ -96,38 +96,42 @@ public class Request_1_othersReq extends Fragment {
             if(e==null){
                 SearchRequestsJsonParser parser=new  SearchRequestsJsonParser();
                 List<ReferenceRequest> listrequest=parser.parseResults(jsonObject);
-                listDataChild = new HashMap<String, List<String>>();
+                listDataChild = new HashMap<>();
+                listDataHeader= new ArrayList<>();
                 for(ReferenceRequest rr : listrequest){
                     if(!listDataChild.containsKey(rr.getBookname())){
                         List<String> request= new ArrayList<>();
+                        listDataHeader.add(rr.getBookname());
                         request.add(rr.getNomerichiedente());
                         listDataChild.put(rr.getBookname(),request);
                     }
                     else{
                         listDataChild.put(rr.getBookname(),listDataChild.get(rr.getBookname()));
                     }
-                    listAdapter = new ExpandableListAdapter(getContext(), listDataHeader, listDataChild);
+                }
 
-                    // setting list adapter
-                    expListView.setAdapter(listAdapter);
-                    // Listview Group click listener
-                    expListView.setOnGroupClickListener(( parent, v, groupPosition, id ) -> {
-                        //Toast.makeText(getApplicationContext(),"Group Clicked " + listDataHeader.get(groupPosition),Toast.LENGTH_SHORT).show();
-                        //parent.expandGroup(groupPosition);
-                        return false;
-                    });
+                listAdapter = new ExpandableListAdapter(getContext(), listDataHeader, listDataChild);
 
-                    // Listview Group expanded listener
-                    expListView.setOnGroupExpandListener(groupPosition -> {
-                        //Toast.makeText(getApplicationContext(), listDataHeader.get(groupPosition) + " Expanded", Toast.LENGTH_SHORT).show();
-                    });
+                // setting list adapter
+                expListView.setAdapter(listAdapter);
+                // Listview Group click listener
+                expListView.setOnGroupClickListener(( parent, v, groupPosition, id ) -> {
+                    //Toast.makeText(getApplicationContext(),"Group Clicked " + listDataHeader.get(groupPosition),Toast.LENGTH_SHORT).show();
+                    //parent.expandGroup(groupPosition);
+                    return false;
+                });
 
-                    // Listview Group collapsed listener
-                    expListView.setOnGroupCollapseListener(groupPosition -> {
-                        //Toast.makeText(getApplicationContext(),listDataHeader.get(groupPosition) + " Collapsed",Toast.LENGTH_SHORT).show();
-                    });
+                // Listview Group expanded listener
+                expListView.setOnGroupExpandListener(groupPosition -> {
+                    //Toast.makeText(getApplicationContext(), listDataHeader.get(groupPosition) + " Expanded", Toast.LENGTH_SHORT).show();
+                });
 
-                    // Listview on child click listener
+                // Listview Group collapsed listener
+                expListView.setOnGroupCollapseListener(groupPosition -> {
+                    //Toast.makeText(getApplicationContext(),listDataHeader.get(groupPosition) + " Collapsed",Toast.LENGTH_SHORT).show();
+                });
+
+                // Listview on child click listener
         /*expListView.setOnChildClickListener(new OnChildClickListener() {
 
             @Override
@@ -145,7 +149,7 @@ public class Request_1_othersReq extends Fragment {
                 return false;
             }
         });*/
-                }
+
             }else{
 
             }
