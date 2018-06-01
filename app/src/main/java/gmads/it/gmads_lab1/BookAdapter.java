@@ -196,7 +196,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
                             Request request = new Request("0", AppConstants.NOT_REVIEWED, AppConstants.NOT_REVIEWED,
                                     AppConstants.PENDING, bookList.get(position).getOwner(),
                                     bookList.get(position).getBId(), bookList.get(position).getTitle(), FirebaseManagement.getUser().getUid(), bookList.get(position).getNomeproprietario(),
-                                    FirebaseManagement.getUser().getDisplayName(), bookList.get(position).getUrlimage(), new Long(-1));
+                                    FirebaseManagement.getUser().getDisplayName(), bookList.get(position).getUrlimage(), null);
 
                             String rId = FirebaseManagement.getDatabase().getReference().child("requests").push().getKey();
                             request.setrId(rId);
@@ -207,10 +207,10 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
                                     if(exception == null){
                                         try{
                                             Long id= jsonObject.getLong("objectID");
-                                            request.setAlgoliaId(id);
+                                            request.setObjectID(id);
 
                                         }catch (Exception e){
-                                            request.setAlgoliaId(new Long(AppConstants.ERROR_ID));
+                                            request.setObjectID(new Long(AppConstants.ERROR_ID));
                                             completed = false;
                                         }
                                         if(completed) {

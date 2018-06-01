@@ -45,6 +45,7 @@ import com.google.gson.Gson;
 import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -320,31 +321,27 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
     private void getIsReservedByMe(){
         booksRequested = new LinkedList<>();
 
-        FirebaseManagement.getDatabase().getReference()
-                .child("users")
-                .child(FirebaseManagement.getUser().getUid())
-                .child("myRequests")
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        Iterable<DataSnapshot> dataList = dataSnapshot.getChildren();
+        Query query = new Query().setFilters("renterId:" + FirebaseManagement.getUser().getUid());
+        algoIndex.searchAsync(query, ( jsonObject, e ) -> {
+            if(e == null){
 
-                        for(Iterator<DataSnapshot> iterator = dataList.iterator(); iterator.hasNext(); ){
-                            booksRequested.add(iterator.next().getValue(ReferenceRequest.class).getBookid());
-                        }
+                SearchRequestsJsonParser search= new SearchRequestsJsonParser();
+                Log.d("lista",jsonObject.toString());
+                List<Request> tempReqList = new ArrayList<Request>();
+                tempReqList.addAll(search.parseResults(jsonObject));
+                for(Request tempReq : tempReqList){
+                    booksRequested.add(tempReq.getbId());
+                }
 
-                        if( booksRequested.contains(book.getBId()) ){
-                            bReserveOrReturn.setEnabled(false);
-                        } else {
-                            bReserveOrReturn.setEnabled(true);
-                        }
-                    }
+                if(booksRequested.contains(book.getBId())){
+                    bReserveOrReturn.setEnabled(false);
+                } else {
+                    bReserveOrReturn.setEnabled(true);
+                }
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
+            }
+            //TODO maybe use loading bar
+        });
     }
 
     public void getBookInfo(){
@@ -583,7 +580,7 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
                 Request request = new Request("0", AppConstants.NOT_REVIEWED, AppConstants.NOT_REVIEWED,
                         AppConstants.PENDING, book.getOwner(), book.getBId(), book.getTitle(),
                         FirebaseManagement.getUser().getUid(), book.getNomeproprietario(), FirebaseManagement.getUser()
-                        .getDisplayName(), book.getUrlimage(), new Long(-1));
+                        .getDisplayName(), book.getUrlimage(), null);
 
                 FirebaseManagement.getDatabase().getReference().child("requests").child(rId).setValue(request);
                 request.setrId(rId);
@@ -594,10 +591,10 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
                         if(exception == null){
                             try{
                                 Long id= jsonObject.getLong("objectID");
-                                request.setAlgoliaId(id);
+                                request.setObjectID(id);
 
                             }catch (Exception e){
-                                request.setAlgoliaId(new Long(AppConstants.ERROR_ID));
+                                request.setObjectID(new Long(AppConstants.ERROR_ID));
                                 completed[0] = false;
                             }
                             if(completed[0]) {
@@ -636,7 +633,7 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
                 //bookList.get(position).setStato(AppConstants.NOT_AVAILABLE);
                 if(completed[0]) {
                     Toast.makeText(this, "Book added", Toast.LENGTH_SHORT).show();
-                    Toast.makeText(this, "Book added", Toast.LENGTH_SHORT).show();
+                    bReserveOrReturn.setEnabled(false);
                 }
             }catch (Exception e){
                 Toast.makeText(this, "Exception Occurred", Toast.LENGTH_SHORT).show();
