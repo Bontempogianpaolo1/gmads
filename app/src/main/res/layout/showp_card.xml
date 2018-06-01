@@ -133,7 +133,7 @@
             android:numStars="5"
             android:progressBackgroundTint="@color/light_gray"
             android:progressTint="@color/yellow"
-            android:rating="1.75"
+            android:rating="0"
             android:secondaryProgressTint="@color/colorPrimary"
             android:stepSize="0.5" />
 

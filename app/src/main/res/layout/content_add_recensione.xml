@@ -14,7 +14,7 @@
         android:theme="@style/AppTheme.AppBarOverlay">
 
         <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbarList"
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
@@ -37,44 +37,40 @@
             android:layout_gravity="center_vertical"
             android:layout_margin="16dp">
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/photo"
-                android:layout_width="65dp"
-                android:layout_height="65dp"
-                android:layout_below="@id/title"
-                android:layout_marginEnd="16dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="32dp"
-                android:layout_toStartOf="@+id/owner"
-                android:src="@drawable/default_picture" />
-
-            <TextView
-                android:id="@+id/title"
+            <RelativeLayout
+                android:id="@+id/relative"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="16dp"
-                android:text="@string/review"
-                android:textColor="@color/colorPrimary"
-                android:textSize="28sp"
-                android:textStyle="bold" />
+                android:layout_marginTop="16dp">
 
-            <TextView
-                android:id="@+id/owner"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/title"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="32dp"
-                android:text="Nome utente"
-                android:textSize="25sp" />
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/photo"
+                    android:layout_width="65dp"
+                    android:layout_height="65dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginEnd="8dp"
+                    android:src="@drawable/default_picture" />
 
-            <LinearLayout
+                <TextView
+                    android:id="@+id/owner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="16dp"
+                    android:layout_toEndOf="@+id/photo"
+                    android:text="Nome utente"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="25sp" />
+            </RelativeLayout>
+
+            <RelativeLayout
                 android:id="@+id/ll_book"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/owner"
+                android:layout_below="@id/relative"
                 android:layout_centerHorizontal="true"
+                android:layout_marginEnd="16dp"
                 android:layout_marginTop="8dp">
 
                 <TextView
@@ -88,16 +84,20 @@
                     android:id="@+id/bookname"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_toEndOf="@id/tv1"
+                    android:ellipsize="end"
+                    android:maxLines="1"
                     android:text="Nome Libro"
                     android:textSize="18sp" />
 
-            </LinearLayout>
+            </RelativeLayout>
 
             <RatingBar
                 android:id="@+id/rating"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/ll_book"
+                android:layout_below="@+id/ll_book"
                 android:layout_centerHorizontal="true"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="16dp"
