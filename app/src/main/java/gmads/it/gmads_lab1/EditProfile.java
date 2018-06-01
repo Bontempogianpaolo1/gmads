@@ -577,7 +577,7 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
                             } else {
                                 vName.setHint(getString(R.string.name));
                                 //vSurname.setHint(getString(R.string.surname));
-                                vEmail.setHint(getString(R.string.email));
+                                //vEmail.setHint(getString(R.string.email));
                                 vBio.setHint(getString(R.string.bioEditP));
                                 //progressbar.setVisibility(View.GONE);
                                 //avatar.setVisibility(View.VISIBLE);
