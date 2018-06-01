@@ -548,7 +548,35 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
     }
 
     public void returnBook(){
+        final boolean[] alreadyRequested = new boolean[1];
+        List<Request> requestList = new LinkedList<>();
 
+        algoIndex.partialUpdateObjectAsync()
+        algoIndex.addObjectAsync(new JSONObject(gson.toJson(request)), new CompletionHandler() {
+            @Override
+            public void requestCompleted( JSONObject jsonObject, AlgoliaException exception ) {
+                if(exception == null){
+                    try{
+                        Long id= jsonObject.getLong("objectID");
+                        request.setAlgoliaId(id);
+
+                    }catch (Exception e){
+                        request.setAlgoliaId(new Long(AppConstants.ERROR_ID));
+                        completed[0] = false;
+                    }
+                    if(completed[0]) {
+                        FirebaseManagement.getDatabase().getReference().child("requests").child(rId).setValue(request);
+                    }
+                }
+                else{
+                    Toast.makeText(getApplicationContext(), "Error in algolia occurred", Toast.LENGTH_SHORT).show();
+                    exception.getMessage();
+                    Log.d("error",exception.toString());
+                    completed[0] = false;
+                    return;
+                }
+            }
+        });
     }
 
     public void reserveBook(){
@@ -557,6 +585,7 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
         final boolean[] alreadyRequested = new boolean[1];
         List<Request> requestList = new LinkedList<>();
 
+        alreadyRequested[0] = false;
         // query per controlla se io ho gia mandato una richiesta per quel libro
 
         Query query = new Query().setFilters("ownerId:" + book.getOwner() + " AND "
