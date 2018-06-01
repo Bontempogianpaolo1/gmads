@@ -66,7 +66,6 @@ public class Request_2_myReq extends Fragment {
      */
     private void prepareRequest() {
 
-
         Query query = new Query("").setFilters("renterId:" +FirebaseManagement.getUser().getUid())
                 .setHitsPerPage(100);
 
