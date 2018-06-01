@@ -65,8 +65,8 @@ public class AddReview extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_recensione);
         findviews();
-        setSupportActionBar(toolbar);
         toolbar.setTitle(R.string.review);
+        setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         id= getIntent().getStringExtra("userid");
