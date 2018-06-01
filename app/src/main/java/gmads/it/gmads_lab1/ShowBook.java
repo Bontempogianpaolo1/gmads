@@ -62,6 +62,7 @@ import android.widget.LinearLayout;
 import android.net.Uri;
 import android.widget.Toast;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import gmads.it.gmads_lab1.Chat.constants.AppConstants;
@@ -143,10 +144,6 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
         //avatar = (SimpleDraweeView) findViewById(R.id.avatar);
         avatar = findViewById(R.id.avatar);
         avatar.setImageDrawable(getDrawable(R.drawable.default_book));
-
-        //progressbar = findViewById(R.id.progressBar);
-        //l2= findViewById(R.id.linearlayout);
-        //l2= findViewById(R.id.linearlayout2);
         vTitle = findViewById(R.id.title);
         Veditor=findViewById(R.id.editore);
         vAuthor = findViewById(R.id.autore);
@@ -188,15 +185,12 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
         cw = new ContextWrapper(getApplicationContext());
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-
-        //inizialize  layout
-        //l2.setOnClickListener(this::setFocusOnClick);
         //inizialize  user data
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         //set image
         //avatar.setImageDrawable(getDrawable(R.drawable.default_book)); //settare copertina libro default
 
-        bReserveOrReturn.setOnClickListener(v -> onReserveOrReturnClick(v));
+        bReserveOrReturn.setOnClickListener(this::onReserveOrReturnClick);
 
         tools = new Tools();
     }
@@ -551,109 +545,72 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
     public void returnBook(){
 
         List<Request> requestList = new ArrayList<>();
-        Request request;
+
         final boolean[] outcome = {false};
 
         // prendo riD
         //progressbar.setVisibility(View.VISIBLE);
 
-        Query query = new Query();
+        Query query = new Query("").setFilters("ownerId:" +FirebaseManagement.getUser().getUid());
 
         algoIndex.searchAsync(query, ( jsonObject, e ) -> {
             if(e == null){
+                Request req;
                 SearchRequestsJsonParser search= new SearchRequestsJsonParser();
                 Log.d("lista",jsonObject.toString());
                 requestList.addAll(search.parseResults(jsonObject));
+                if( !requestList.isEmpty()){
+                    req = requestList.get(0);
+                }
+                else{
+                    Toast.makeText(this, "No book found", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                FirebaseManagement.getDatabase().getReference()
+                        .child("requests")
+                        .child(req.getrId())
+                        .child("requestStatus")
+                        .setValue(AppConstants.COMPLETED)
+                        .addOnCompleteListener(task -> {
+                            Gson gson = new Gson();
+                            try {
+                                req.setRequestStatus(AppConstants.COMPLETED);
+                                algoIndex.saveObjectAsync(new JSONObject(gson.toJson(req)),
+                                        req.getObjectID().toString(),
+                                        null);
+                            } catch (Exception e1) {
+                                e1.printStackTrace();
+                            }
+                        });
+
+
+                        book.setStato(AppConstants.AVAILABLE);
+                        book.setHolder(req.getOwnerId());
+                try {
+                    algoIndex.saveObjectAsync(new JSONObject(gson.toJson(book)),
+                            book.getObjectID().toString(),
+                            null);
+                } catch (JSONException e1) {
+                    e1.printStackTrace();
+                }
+
+                FirebaseManagement.getDatabase().getReference()
+                                .child("books")
+                                .child(req.getbId())
+                                .child("holder")
+                                .setValue(req.getOwnerId());
+                        outcome[0] = true;
+
+                //progressbar.setVisibility(View.GONE);
+                if(outcome[0]){
+                    Toast.makeText(this, "Book returned successfully", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    Toast.makeText(this, "Error returning book", Toast.LENGTH_SHORT).show();
+                }
             }
         });
-
-        if(requestList != null && !requestList.isEmpty()){
-            request = requestList.get(0);
-        }
-        else{
-            Toast.makeText(this, "No book found", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        FirebaseManagement.getDatabase().getReference()
-                .child("requests")
-                .child(request.getrId())
-                .child("requestStatus")
-                .setValue(AppConstants.COMPLETED)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        Gson gson = new Gson();
-                        try {
-                            request.setRequestStatus(AppConstants.COMPLETED);
-                            algoIndex.saveObjectAsync(new JSONObject(gson.toJson(request)),
-                                    request.getObjectID().toString(),
-                                    new CompletionHandler() {
-                                        @Override
-                                        public void requestCompleted(JSONObject jsonObject, AlgoliaException e) {
-
-                                        }
-                                    });
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-
-        FirebaseManagement.getDatabase().getReference()
-                .child("books")
-                .child(request.getbId())
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-
-                        Book book = dataSnapshot.getValue(Book.class);
-
-                        if(book != null) {
-
-                            FirebaseManagement.getDatabase().getReference()
-                                    .child("books")
-                                    .child(request.getbId())
-                                    .child("stato")
-                                    .setValue(AppConstants.AVAILABLE)
-                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
-                                            Gson gson = new Gson();
-                                            try {
-                                                book.setStato(AppConstants.AVAILABLE);
-                                                book.setHolder(request.getOwnerId());
-                                                algoIndex.saveObjectAsync(new JSONObject(gson.toJson(book)),
-                                                        book.getObjectID().toString(),
-                                                        null);
-
-                                                FirebaseManagement.getDatabase().getReference()
-                                                        .child("books")
-                                                        .child(request.getbId())
-                                                        .child("holder")
-                                                        .setValue(request.getOwnerId());
-                                                outcome[0] = true;
-
-                                            } catch (Exception e) {
-                                                e.printStackTrace();
-                                            }
-                                        }
-                                    });
-                        }
-
-                    }
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
-        //progressbar.setVisibility(View.GONE);
-        if(outcome[0]){
-            Toast.makeText(this, "Book returned successfully", Toast.LENGTH_SHORT).show();
-        }
-        else {
-            Toast.makeText(this, "Error returning book", Toast.LENGTH_SHORT).show();
-        }
     }
 
     public void reserveBook(){
