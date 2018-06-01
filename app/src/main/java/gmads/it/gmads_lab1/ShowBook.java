@@ -36,6 +36,8 @@ import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
@@ -127,6 +129,7 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
     TextView titleConditions;
     ImageView bookPhoto;
     Button bReserveOrReturn;
+    ProgressBar progressBar;
 
     private void findViews() {
         appbar = (AppBarLayout) findViewById(R.id.appbar);
@@ -160,6 +163,7 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
         titleImg = findViewById(R.id.photoTitle);
         bookPhoto = findViewById(R.id.photoBook);
         bReserveOrReturn = findViewById(R.id.reserveOrReturn);
+        progressBar = findViewById(R.id.progress_bar);
     }
 
     @Override
@@ -546,6 +550,111 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
 
     public void returnBook(){
 
+        List<Request> requestList = new LinkedList<>();
+        Request request;
+        final boolean[] outcome = {false};
+
+        // prendo riD
+        progressbar.setVisibility(View.VISIBLE);
+
+        Query query = new Query().setFilters("ownerId:" + book.getOwner() + " AND "
+                + "renterId:" + FirebaseManagement.getUser().getUid() + " AND "
+                + "bId:" + book.getBId()).setFilters("requestStatus:" + AppConstants.ACCEPTED);
+
+        algoIndex.searchAsync(query, ( jsonObject, e ) -> {
+            if(e == null){
+                SearchRequestsJsonParser search= new SearchRequestsJsonParser();
+                Log.d("lista",jsonObject.toString());
+                requestList.addAll(search.parseResults(jsonObject));
+            }
+        });
+
+        if(requestList != null && !requestList.isEmpty()){
+            request = requestList.get(0);
+        }
+        else{
+            return;
+        }
+
+        FirebaseManagement.getDatabase().getReference()
+                .child("requests")
+                .child(request.getrId())
+                .child("requestStatus")
+                .setValue(AppConstants.COMPLETED)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Gson gson = new Gson();
+                        try {
+                            request.setRequestStatus(AppConstants.COMPLETED);
+                            algoIndex.saveObjectAsync(new JSONObject(gson.toJson(request)),
+                                    request.getObjectID().toString(),
+                                    new CompletionHandler() {
+                                        @Override
+                                        public void requestCompleted(JSONObject jsonObject, AlgoliaException e) {
+
+                                        }
+                                    });
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+
+        FirebaseManagement.getDatabase().getReference()
+                .child("books")
+                .child(request.getbId())
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+
+                        Book book = dataSnapshot.getValue(Book.class);
+
+                        if(book != null) {
+
+                            FirebaseManagement.getDatabase().getReference()
+                                    .child("books")
+                                    .child(request.getbId())
+                                    .child("stato")
+                                    .setValue(AppConstants.AVAILABLE)
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            Gson gson = new Gson();
+                                            try {
+                                                book.setStato(AppConstants.AVAILABLE);
+                                                book.setHolder(request.getOwnerId());
+                                                algoIndex.saveObjectAsync(new JSONObject(gson.toJson(book)),
+                                                        book.getObjectID().toString(),
+                                                        null);
+
+                                                FirebaseManagement.getDatabase().getReference()
+                                                        .child("books")
+                                                        .child(request.getbId())
+                                                        .child("holder")
+                                                        .setValue(request.getOwnerId());
+                                                outcome[0] = true;
+
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    });
+                        }
+
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+        progressbar.setVisibility(View.GONE);
+        if(outcome[0]){
+            Toast.makeText(this, "Book returned successfully", Toast.LENGTH_SHORT);
+        }
+        else {
+            Toast.makeText(this, "Error returning book", Toast.LENGTH_SHORT);
+        }
     }
 
     public void reserveBook(){
@@ -553,7 +662,9 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
         final boolean[] completed = {true};
         final boolean[] alreadyRequested = new boolean[1];
         List<Request> requestList = new LinkedList<>();
+        progressbar.setVisibility(View.VISIBLE);
 
+        alreadyRequested[0] = false;
         // query per controlla se io ho gia mandato una richiesta per quel libro
 
         Query query = new Query().setFilters("ownerId:" + book.getOwner() + " AND "
@@ -631,6 +742,8 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
                         child(book.getBId()).setValue(referenceRequest);*/
 
                 //bookList.get(position).setStato(AppConstants.NOT_AVAILABLE);
+                progressbar.setVisibility(View.GONE);
+
                 if(completed[0]) {
                     Toast.makeText(this, "Book added", Toast.LENGTH_SHORT).show();
                     bReserveOrReturn.setEnabled(false);

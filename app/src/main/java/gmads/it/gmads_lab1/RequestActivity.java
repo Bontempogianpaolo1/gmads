@@ -39,7 +39,6 @@ public class RequestActivity extends AppCompatActivity{
         expListView = (ExpandableListView) findViewById(R.id.explv);
         tab=findViewById(R.id.tabs);
         pager= findViewById(R.id.viewPager);
-
     }
 
     @Override
@@ -55,14 +54,13 @@ public class RequestActivity extends AppCompatActivity{
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         FragmentViewPagerAdapter vadapter = new FragmentViewPagerAdapter(getSupportFragmentManager());
-        //vadapter.addFragment(r1);
+        vadapter.addFragment(r1);
         vadapter.addFragment(r2);
         pager.setAdapter(vadapter);
         tab.setupWithViewPager(pager);
 
-        //tab.getTabAt(0).setText(getText(R.string.others_req));
-        tab.getTabAt(0).setText(getText(R.string.my_req));
-
+        tab.getTabAt(0).setText(getText(R.string.others_req));
+        tab.getTabAt(1).setText(getText(R.string.my_req));
 
         pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -134,5 +132,18 @@ public class RequestActivity extends AppCompatActivity{
         finish();
         */
         //moveTaskToBack(true);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here.
+        int id = item.getItemId();
+        switch(id) {
+            case android.R.id.home:
+                finish();
+                overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

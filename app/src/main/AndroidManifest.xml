@@ -75,7 +75,7 @@
         <activity
             android:name=".Map.main.MapActivity"
             android:label="@string/title_activity_map_search"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"/>
         <activity android:name=".ShowBook"
             android:screenOrientation="portrait"/>
         <activity android:name=".MyLibrary"
@@ -89,7 +89,8 @@
             android:screenOrientation="portrait"/>
         <activity android:name=".RequestActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".AddReview" />
+        <activity android:name=".AddReview"
+            android:parentActivityName=".RequestActivity"/>
 
         <!--FCM-->
         <meta-data

@@ -81,11 +81,31 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.MyViewHo
         //titolo libro
         holder.bookname.setText(request.getbName());
         //owner
+
+        switch (reqList.get(position).getRequestStatus()){
+            case AppConstants.ACCEPTED:
+              holder.stato.setText(R.string.accepted);
+
+              break;
+            case AppConstants.REFUSED:
+                holder.stato.setText(R.string.refused);
+                break;
+            case AppConstants.PENDING:
+                holder.stato.setText(R.string.pending);
+                break;
+            case AppConstants.COMPLETED:
+                  holder.stato.setText(R.string.completed);
+                  break;
+          default:
+              break;
+
+        }
         holder.button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick( View v ) {
                 Intent i= new Intent(mContext,AddReview.class);
                 i.putExtra("userid",reqList.get(position).getOwnerId());
+                i.putExtra("bookname",reqList.get(position).getbName());
                 mContext.startActivity(i);
             }
         });
