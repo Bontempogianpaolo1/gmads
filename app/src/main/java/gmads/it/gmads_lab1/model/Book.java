@@ -38,14 +38,14 @@ public class Book implements Serializable{
     private String nomeproprietario;
     private List<String> linkrequest;
     private int stato;
-    private Long algoliaid;
+    private Long objectID;
 
-    public Long getAlgoliaid() {
-        return algoliaid;
+    public Long getObjectID() {
+        return objectID;
     }
 
-    public void setAlgoliaid( Long algoliaid ) {
-        this.algoliaid = algoliaid;
+    public void setObjectID(Long objectID) {
+        this.objectID = objectID;
     }
 
     private static final long serialVersionUID = 1L;
@@ -143,7 +143,7 @@ public class Book implements Serializable{
         this.indirizzo = indirizzo;
     }
 
-    public Book( String BId, String isbn, String title, String description, String urlimage, String publishDate, List<String> author, List<String> categories, String publisher, String owner, Double lat, Double lng) {
+    public Book( String BId, String isbn, String title, String description, String urlimage, String publishDate, List<String> author, List<String> categories, String publisher, String owner, Double lat, Double lng, int stato) {
 
         this.bId = bId;
         this.isbn = isbn;
@@ -161,7 +161,7 @@ public class Book implements Serializable{
         notes= Collections.emptyMap();
         linkrequest= new ArrayList<>();
         avgRating=0;
-        stato = AppConstants.AVAILABLE;
+        stato = stato;
         nRates=0;
         sumRates=0;
 

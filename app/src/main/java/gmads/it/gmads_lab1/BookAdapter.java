@@ -207,10 +207,10 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
                                     if(exception == null){
                                         try{
                                             Long id= jsonObject.getLong("objectID");
-                                            request.setAlgoliaId(id);
+                                            request.setObjectID(id);
 
                                         }catch (Exception e){
-                                            request.setAlgoliaId(new Long(AppConstants.ERROR_ID));
+                                            request.setObjectID(new Long(AppConstants.ERROR_ID));
                                             completed = false;
                                         }
                                         if(completed) {

@@ -77,6 +77,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import gmads.it.gmads_lab1.Chat.constants.AppConstants;
 import gmads.it.gmads_lab1.model.Book;
 import gmads.it.gmads_lab1.model.Profile;
 
@@ -496,7 +497,8 @@ todo rimpire stringhe
                     vPublisher.getText().toString(),
                     FirebaseManagement.getUser().getUid(),
                     profile.getLat(), //da prendere dal profilo utente da firebase
-                    profile.getLng()
+                    profile.getLng(),
+                    AppConstants.AVAILABLE
             );
             //set popup
             android.app.AlertDialog.Builder ad = t.showPopup(this, getString(R.string.saveQuestion), "", getString(R.string.cancel));
@@ -557,9 +559,9 @@ todo rimpire stringhe
                             if(e==null){
                                 try{
                                 Long id= jsonObject.getLong("objectID");
-                                book.setAlgoliaid(id);
+                                book.setObjectID(id);
                                 }catch (Exception e2){
-                                    book.setAlgoliaid(Long.getLong("0"));
+                                    book.setObjectID(Long.getLong("0"));
                                 }
                                 mBooksReference.child(bookKey).setValue(book);
                                 //fine inserimento nelle liste
