@@ -1,5 +1,6 @@
 package gmads.it.gmads_lab1;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -8,11 +9,14 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RatingBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import android.support.design.widget.AppBarLayout;
@@ -28,10 +32,12 @@ import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import gmads.it.gmads_lab1.Chat.ChatActivity;
 import gmads.it.gmads_lab1.Chat.constants.AppConstants;
 import gmads.it.gmads_lab1.model.Profile;
+import gmads.it.gmads_lab1.model.Review;
 
 public class ShowUserProfile extends AppCompatActivity implements AppBarLayout.OnOffsetChangedListener {
 
@@ -62,6 +68,9 @@ public class ShowUserProfile extends AppCompatActivity implements AppBarLayout.O
     private Profile profile;
     private Bitmap myProfileBitImage;
     Tools tools;
+    LinearLayout ll_parent;
+    RatingBar rating;
+    TextView count;
 
     private void findViews() {
         total=findViewById(R.id.totbooks);
@@ -76,6 +85,9 @@ public class ShowUserProfile extends AppCompatActivity implements AppBarLayout.O
         //avatar = (SimpleDraweeView) findViewById(R.id.avatar);
         //avatar.setImageDrawable(getDrawable(R.drawable.default_picture));
         avatar = findViewById(R.id.avatar);
+        ll_parent = findViewById(R.id.parent);
+        rating= findViewById(R.id.rating);
+        count = findViewById(R.id.count);
     }
 
     public void setActViews(){
@@ -105,6 +117,13 @@ public class ShowUserProfile extends AppCompatActivity implements AppBarLayout.O
 
     protected void onStart(){
         super.onStart();
+        String userId = getIntent().getStringExtra("userId");
+        getUserInfo(userId);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         String userId = getIntent().getStringExtra("userId");
         getUserInfo(userId);
     }
@@ -220,6 +239,25 @@ public class ShowUserProfile extends AppCompatActivity implements AppBarLayout.O
                                             //progressbar.setVisibility(View.GONE);
                                             avatar.setVisibility(View.VISIBLE);
                                         });
+                                        ll_parent.removeAllViews();
+                                        String s = "( " + profile.getReviews().size() + " )";
+                                        count.setText(s);
+                                        float average= averageReviews(profile.getReviews());
+                                        rating.setRating(average);
+                                        for(Review r: profile.getReviews()){
+                                            LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                                            final View rowView = inflater.inflate(R.layout.card_recensioni, null);
+                                            ll_parent.addView(rowView, ll_parent.getChildCount());
+                                            RelativeLayout rl;
+                                            rl = (RelativeLayout) ll_parent.getChildAt(ll_parent.getChildCount()-1);
+                                            TextView name = (TextView) rl.getChildAt(0);
+                                            TextView rate = (TextView) rl.getChildAt(1);
+                                            TextView comment = (TextView) rl.getChildAt(2);
+                                            name.setText(r.getUser());
+                                            rate.setText(String.valueOf(r.getRate()));
+                                            comment.setText(r.getComment());
+                                        }
+                                        //
 
                                     } catch (IOException e) {
                                         e.printStackTrace();
@@ -299,5 +337,17 @@ public class ShowUserProfile extends AppCompatActivity implements AppBarLayout.O
 
         handleAlphaOnTitle(percentage);
         handleToolbarTitleVisibility(percentage);
+    }
+
+    public float averageReviews(List<Review> reviews){
+        float result;
+        int n=0;
+        float tot=0;
+        for(Review r : reviews){
+            n++;
+            tot=tot+r.getRate();
+        }
+        result=tot/n;
+        return result;
     }
 }
