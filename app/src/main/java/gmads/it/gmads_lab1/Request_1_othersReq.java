@@ -28,13 +28,6 @@ public class Request_1_othersReq extends Fragment {
 
     public Request_1_othersReq() {
 
-        //Required empty public constructor
-        //RecyclerView recyclerView = (RecyclerView)container.getChildAt((int)R.id.recycler_view);
-        //RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getContext(), 2);
-        //recyclerView.setLayoutManager(mLayoutManager);
-        //recyclerView.addItemDecoration(new gmads.it.gmads_lab1.Home.GridSpacingItemDecoration(2, dpToPx(10), true));
-        //recyclerView.setItemAnimator(new DefaultItemAnimator());
-        //recyclerView.setAdapter(adapter);
     }
 
     @Override
@@ -96,8 +89,6 @@ public class Request_1_othersReq extends Fragment {
                 expListView.setOnGroupCollapseListener(groupPosition -> {
                     //Toast.makeText(getApplicationContext(),listDataHeader.get(groupPosition) + " Collapsed",Toast.LENGTH_SHORT).show();
                 });
-
-
 
             }else{
 
