@@ -548,6 +548,7 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
     }
 
     public void returnBook(){
+        /*
         final boolean[] alreadyRequested = new boolean[1];
         List<Request> requestList = new LinkedList<>();
 
@@ -577,6 +578,7 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
                 }
             }
         });
+        */
     }
 
     public void reserveBook(){
