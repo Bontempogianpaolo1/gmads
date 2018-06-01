@@ -17,6 +17,8 @@ public class Request {
     private String urlBookImage;
     private Long objectID;
 
+    public Request(){}
+
     public Request(String rId,
                    int reviewStatusOwner,
                    int reviewStatusRenter,

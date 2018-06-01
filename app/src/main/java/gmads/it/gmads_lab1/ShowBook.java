@@ -550,16 +550,14 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
 
     public void returnBook(){
 
-        List<Request> requestList = new LinkedList<>();
+        List<Request> requestList = new ArrayList<>();
         Request request;
         final boolean[] outcome = {false};
 
         // prendo riD
-        progressbar.setVisibility(View.VISIBLE);
+        //progressbar.setVisibility(View.VISIBLE);
 
-        Query query = new Query().setFilters("ownerId:" + book.getOwner() + " AND "
-                + "renterId:" + FirebaseManagement.getUser().getUid() + " AND "
-                + "bId:" + book.getBId()).setFilters("requestStatus:" + AppConstants.ACCEPTED);
+        Query query = new Query();
 
         algoIndex.searchAsync(query, ( jsonObject, e ) -> {
             if(e == null){
@@ -573,6 +571,7 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
             request = requestList.get(0);
         }
         else{
+            Toast.makeText(this, "No book found", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -648,12 +647,12 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
 
                     }
                 });
-        progressbar.setVisibility(View.GONE);
+        //progressbar.setVisibility(View.GONE);
         if(outcome[0]){
-            Toast.makeText(this, "Book returned successfully", Toast.LENGTH_SHORT);
+            Toast.makeText(this, "Book returned successfully", Toast.LENGTH_SHORT).show();
         }
         else {
-            Toast.makeText(this, "Error returning book", Toast.LENGTH_SHORT);
+            Toast.makeText(this, "Error returning book", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -662,7 +661,7 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
         final boolean[] completed = {true};
         final boolean[] alreadyRequested = new boolean[1];
         List<Request> requestList = new LinkedList<>();
-        progressbar.setVisibility(View.VISIBLE);
+        //progressbar.setVisibility(View.VISIBLE);
 
         alreadyRequested[0] = false;
         // query per controlla se io ho gia mandato una richiesta per quel libro
@@ -742,7 +741,7 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
                         child(book.getBId()).setValue(referenceRequest);*/
 
                 //bookList.get(position).setStato(AppConstants.NOT_AVAILABLE);
-                progressbar.setVisibility(View.GONE);
+                //progressbar.setVisibility(View.GONE);
 
                 if(completed[0]) {
                     Toast.makeText(this, "Book added", Toast.LENGTH_SHORT).show();

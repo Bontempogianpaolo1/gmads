@@ -92,7 +92,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         bYes.setOnClickListener( v -> onClickYes(child));
 
         ImageView bNo = convertView.findViewById(R.id.no);
-        bYes.setOnClickListener( v -> onClickNo(child));
+        bNo.setOnClickListener( v -> onClickNo(child));
 
         return convertView;
     }
@@ -261,6 +261,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         FirebaseManagement.getDatabase().getReference()
                 .child("requests")
                 .child(request.getrId())
+                .child("requestStatus")
                 .setValue(AppConstants.REFUSED)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
