@@ -15,10 +15,21 @@ public class Request {
     private String ownerName;
     private String renterName;
     private String urlBookImage;
-    private Long algoliaId;
+    private Long objectID;
 
+    public Request(String rId,
+                   int reviewStatusOwner,
+                   int reviewStatusRenter,
+                   int requestStatus,
+                   String ownerId,
+                   String bId,
+                   String bName,
+                   String renterId,
+                   String ownerName,
+                   String renterName,
+                   String urlBookImage,
+                   Long objectID) {
 
-    public Request(String rId, int reviewStatusOwner, int reviewStatusRenter, int requestStatus, String ownerId, String bId, String bName, String renterId, String ownerName, String renterName, String urlBookImage, Long algoliaId) {
         this.rId = rId;
         this.reviewStatusOwner = reviewStatusOwner;
         this.reviewStatusRenter = reviewStatusRenter;
@@ -30,15 +41,15 @@ public class Request {
         this.ownerName = ownerName;
         this.renterName = renterName;
         this.urlBookImage = urlBookImage;
-        this.algoliaId = algoliaId;
+        this.objectID = objectID;
     }
 
-    public Long getAlgoliaId() {
-        return algoliaId;
+    public Long getObjectID() {
+        return objectID;
     }
 
-    public void setAlgoliaId(Long algoliaId) {
-        this.algoliaId = algoliaId;
+    public void setObjectID(Long objectID) {
+        this.objectID = objectID;
     }
 
     public String getbName() {

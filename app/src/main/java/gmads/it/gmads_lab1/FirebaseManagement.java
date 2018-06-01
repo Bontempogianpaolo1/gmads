@@ -153,7 +153,7 @@ public class FirebaseManagement {
                        Book book = dataSnapshot.getValue(Book.class);
                        if(book!= null){
                             try {
-                                algoIndex.deleteObject(String.valueOf(Objects.requireNonNull(book).getAlgoliaid()),null);
+                                algoIndex.deleteObject(String.valueOf(Objects.requireNonNull(book).getObjectID()),null);
                                 FirebaseManagement.getDatabase().getReference().child("books").child(bid).removeValue();
                             } catch (AlgoliaException e) {
                                 e.printStackTrace();
@@ -179,7 +179,7 @@ public class FirebaseManagement {
                         if(book!= null){
                             try {
                                 Gson gson = new Gson();
-                                algoIndex.saveObject(new JSONObject(gson.toJson(book)), String.valueOf(book.getAlgoliaid()),null);
+                                algoIndex.saveObject(new JSONObject(gson.toJson(book)), String.valueOf(book.getObjectID()),null);
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
