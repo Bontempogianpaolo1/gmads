@@ -183,6 +183,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         FirebaseManagement.getDatabase().getReference()
                 .child("requests")
                 .child(request.getrId())
+                .child("requestStatus")
                 .setValue(AppConstants.ACCEPTED)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
