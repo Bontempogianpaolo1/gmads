@@ -1,10 +1,13 @@
 package gmads.it.gmads_lab1;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,10 +16,25 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.algolia.search.saas.AlgoliaException;
+import com.algolia.search.saas.Client;
+import com.algolia.search.saas.CompletionHandler;
+import com.algolia.search.saas.Index;
+import com.algolia.search.saas.Query;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import gmads.it.gmads_lab1.Chat.constants.AppConstants;
 import gmads.it.gmads_lab1.Chat.glide.GlideApp;
 import gmads.it.gmads_lab1.model.Book;
 import gmads.it.gmads_lab1.model.Request;
@@ -27,6 +45,10 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     private List<Book> listHeader; // header titles
     // child data in format of header title, child title
     private HashMap<String, List<Request>> listChild;
+
+    private Client algoClient = new Client("L6B7L7WXZW", "9d2de9e724fa9289953e6b2d5ec978a5");
+    private Index algoReqIndex = algoClient.getIndex("requests");
+    private Index algoBookIndex = algoClient.getIndex("BookIndex");
 
     public ExpandableListAdapter(Context context, List<Book> listDataHeader,
                                  HashMap<String, List<Request>> listChildData) {
@@ -132,10 +154,131 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
     public void onClickYes(Request request){
 
+        /*List<Request> algoliaRequests = new ArrayList<>();
+        Request algoliaReq;
+        Query query = new Query().setFilters("rId:" + request.getrId());
+
+        algoReqIndex.searchAsync(query, ( jsonObject, e ) -> {
+            if(e == null){
+
+                SearchRequestsJsonParser search= new SearchRequestsJsonParser();
+                algoliaRequests.addAll(search.parseResults(jsonObject));
+
+            }
+            //TODO maybe use loading bar
+        });
+        algoliaReq = algoliaRequests.get(0);
+
+        algoReqIndex.searchAsync(query, ( jsonObject, e ) -> {
+            if(e == null){
+
+                SearchRequestsJsonParser search= new SearchRequestsJsonParser();
+                algoliaRequests.addAll(search.parseResults(jsonObject));
+
+            }
+            //TODO maybe use loading bar
+        });
+        algoliaReq = algoliaRequests.get(0);*/
+
+        FirebaseManagement.getDatabase().getReference()
+                .child("requests")
+                .child(request.getrId())
+                .setValue(AppConstants.ACCEPTED)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Gson gson = new Gson();
+                        try {
+                            request.setRequestStatus(AppConstants.ACCEPTED);
+                            algoReqIndex.saveObjectAsync(new JSONObject(gson.toJson(request)),
+                                    request.getObjectID().toString(),
+                                    new CompletionHandler() {
+                                        @Override
+                                        public void requestCompleted(JSONObject jsonObject, AlgoliaException e) {
+
+                                        }
+                                    });
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+
+        FirebaseManagement.getDatabase().getReference()
+                .child("books")
+                .child(request.getbId())
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+
+                        Book book = dataSnapshot.getValue(Book.class);
+
+                        if(book != null) {
+
+                            FirebaseManagement.getDatabase().getReference()
+                                    .child("books")
+                                    .child(request.getbId())
+                                    .child("stato")
+                                    .setValue(AppConstants.NOT_AVAILABLE)
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            Gson gson = new Gson();
+                                            try {
+                                                book.setStato(AppConstants.NOT_AVAILABLE);
+                                                book.setOwner(request.getOwnerId());
+                                                algoBookIndex.saveObjectAsync(new JSONObject(gson.toJson(book)),
+                                                        book.getObjectID().toString(),
+                                                        null);
+
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    });
+
+                            FirebaseManagement.getDatabase().getReference()
+                                    .child("books")
+                                    .child(request.getbId())
+                                    .child("owner")
+                                    .setValue(request.getRenterId());
+                        }
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
     }
 
     public void onClickNo(Request request){
 
+        FirebaseManagement.getDatabase().getReference()
+                .child("requests")
+                .child(request.getrId())
+                .setValue(AppConstants.REFUSED)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Gson gson = new Gson();
+                        try {
+                            request.setRequestStatus(AppConstants.REFUSED);
+                            algoReqIndex.saveObjectAsync(new JSONObject(gson.toJson(request)),
+                                    request.getObjectID().toString(),
+                                    new CompletionHandler() {
+                                        @Override
+                                        public void requestCompleted(JSONObject jsonObject, AlgoliaException e) {
+
+                                        }
+                                    });
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
     }
 
 }

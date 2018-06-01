@@ -15,7 +15,7 @@ public class Request {
     private String ownerName;
     private String renterName;
     private String urlBookImage;
-    private Long algoliaId;
+    private Long objectID;
 
     public Request(String rId,
                    int reviewStatusOwner,
@@ -28,7 +28,7 @@ public class Request {
                    String ownerName,
                    String renterName,
                    String urlBookImage,
-                   Long algoliaId) {
+                   Long objectID) {
 
         this.rId = rId;
         this.reviewStatusOwner = reviewStatusOwner;
@@ -41,15 +41,15 @@ public class Request {
         this.ownerName = ownerName;
         this.renterName = renterName;
         this.urlBookImage = urlBookImage;
-        this.algoliaId = algoliaId;
+        this.objectID = objectID;
     }
 
-    public Long getAlgoliaId() {
-        return algoliaId;
+    public Long getObjectID() {
+        return objectID;
     }
 
-    public void setAlgoliaId(Long algoliaId) {
-        this.algoliaId = algoliaId;
+    public void setObjectID(Long objectID) {
+        this.objectID = objectID;
     }
 
     public String getbName() {
