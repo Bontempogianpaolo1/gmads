@@ -183,6 +183,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         FirebaseManagement.getDatabase().getReference()
                 .child("requests")
                 .child(request.getrId())
+                .child("requestStatus")
                 .setValue(AppConstants.ACCEPTED)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
@@ -226,7 +227,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                                             Gson gson = new Gson();
                                             try {
                                                 book.setStato(AppConstants.NOT_AVAILABLE);
-                                                book.setOwner(request.getOwnerId());
+                                                book.setHolder(request.getRenterId());
                                                 algoBookIndex.saveObjectAsync(new JSONObject(gson.toJson(book)),
                                                         book.getObjectID().toString(),
                                                         null);
@@ -240,7 +241,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                             FirebaseManagement.getDatabase().getReference()
                                     .child("books")
                                     .child(request.getbId())
-                                    .child("owner")
+                                    .child("holder")
                                     .setValue(request.getRenterId());
                         }
 
