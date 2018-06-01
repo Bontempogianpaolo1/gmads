@@ -66,7 +66,9 @@ public class Request_2_myReq extends Fragment {
      */
     private void prepareRequest() {
 
-        Query query = new Query("").setHitsPerPage(100);
+
+        Query query = new Query("").setFilters("renterId:" +FirebaseManagement.getUser().getUid())
+                .setHitsPerPage(100);
 
         algoIndex.searchAsync(query, ( jsonObject, e ) -> {
             if(e==null) {

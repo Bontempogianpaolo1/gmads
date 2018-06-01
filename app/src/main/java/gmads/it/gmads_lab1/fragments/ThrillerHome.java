@@ -24,6 +24,8 @@ import com.algolia.search.saas.Index;
 import com.algolia.search.saas.Query;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import gmads.it.gmads_lab1.BookAdapter;
@@ -142,6 +144,13 @@ public class ThrillerHome extends Fragment {
                 SearchResultsJsonParser search= new SearchResultsJsonParser();
                 Log.d("lista",jsonObject.toString());
                 bookList.addAll(search.parseResults(jsonObject));
+                Collections.sort(bookList, new Comparator<Book>() {
+                    @Override
+                    public int compare( Book o1, Book o2 ) {
+
+                        return (int)o1.getDistance()-(int)o2.getDistance();
+                    }
+                });
                 List<Book> books2= new ArrayList<>();
                 for (Book b : bookList) {
                     if (b.getOwner().equals(FirebaseManagement.getUser().getUid())) {
