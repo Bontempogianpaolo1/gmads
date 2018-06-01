@@ -53,7 +53,7 @@ public class Request_1_othersReq extends Fragment {
 
 
 
-        Query query = new Query("")
+        Query query = new Query("").setFilters("ownerId:" +FirebaseManagement.getUser().getUid())
                 .setHitsPerPage(100);
 
         algoIndex.searchAsync(query, ( jsonObject, e ) -> {
