@@ -151,5 +151,9 @@
 
     <!-- FCM -->
     <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
+    <string name="accepted">Accepted</string>
+    <string name="refused">Refused</string>
+    <string name="pending">Pending</string>
+    <string name="completed">Completed</string>
 
 </resources>
