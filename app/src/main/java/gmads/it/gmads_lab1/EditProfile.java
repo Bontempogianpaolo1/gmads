@@ -498,8 +498,11 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
                     });
                    // .addOnFailureListener(e -> //progressbar.setVisibility(View.GONE)// );
         }else{
+            profile= new Profile("","","","","");
             profileImageUrl = "";
             profile.setName(name);
+            profile.setId(FirebaseManagement.getUser().getUid());
+            profile.setEmail(FirebaseManagement.getUser().getEmail());
             //profile.setSurname(surname);
             //profile.setEmail(email);
             profile.setDescription(bio);

@@ -59,7 +59,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public Request getChild(int groupPosition, int childPosititon) {
-        return this.listChild.get(this.listHeader.get(groupPosition))
+        return this.listChild.get(this.listHeader.get(groupPosition).getBId())
                 .get(childPosititon);
     }
 
@@ -99,7 +99,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public int getChildrenCount(int groupPosition) {
-        return this.listChild.get(this.listHeader.get(groupPosition)).size();
+        return this.listChild.get(this.listHeader.get(groupPosition).getBId()).size();
     }
 
     @Override
@@ -119,7 +119,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
-        String headerTitle = (String) getGroup(groupPosition);
+        Book b=(Book) getGroup(groupPosition);
+        String headerTitle =  b.getTitle();
         if (convertView == null) {
             LayoutInflater linflater = (LayoutInflater) this.context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
