@@ -746,6 +746,7 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
 
                 if(completed[0]) {
                     Toast.makeText(this, "Book added", Toast.LENGTH_SHORT).show();
+                    bReserveOrReturn.setEnabled(false);
                 }
             }catch (Exception e){
                 Toast.makeText(this, "Exception Occurred", Toast.LENGTH_SHORT).show();

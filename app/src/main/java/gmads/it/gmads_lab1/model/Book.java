@@ -156,12 +156,12 @@ public class Book implements Serializable{
         this.publisher = publisher;
         this.owner = owner;
         this._geoloc = new Geoloc(lat, lng);
+        this.stato = stato;
         comments= Collections.emptyList();
         images=Collections.emptyList();
         notes= Collections.emptyMap();
         linkrequest= new ArrayList<>();
         avgRating=0;
-        stato = stato;
         nRates=0;
         sumRates=0;
 
