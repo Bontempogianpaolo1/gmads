@@ -353,8 +353,10 @@ invio messaggi al token desiderato")
         currentUserRef.addValueEventListener(object : ValueEventListener {
 
             override fun onDataChange(dataSnapshot: DataSnapshot?) {
-                val user = dataSnapshot?.getValue(Profile::class.java)!!
-                onComplete(user.registrationTokens)
+                if (dataSnapshot?.getValue(Profile::class.java) != null) {
+                    val user = dataSnapshot?.getValue(Profile::class.java)!!
+                    onComplete(user.registrationTokens)
+                }
             }
 
             override fun onCancelled(p0: DatabaseError?) {
