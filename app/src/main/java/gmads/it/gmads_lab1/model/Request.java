@@ -15,7 +15,6 @@ public class Request {
     private String ownerName;
     private String renterName;
     private String urlBookImage;
-
     private Long algoliaId;
 
     public Request(String rId,

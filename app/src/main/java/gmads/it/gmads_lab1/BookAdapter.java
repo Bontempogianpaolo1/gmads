@@ -11,11 +11,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.algolia.search.saas.AlgoliaException;
 import com.algolia.search.saas.Client;
+import com.algolia.search.saas.CompletionHandler;
 import com.algolia.search.saas.Index;
+import com.algolia.search.saas.Query;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.database.DataSnapshot;
@@ -23,6 +27,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -35,10 +42,13 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
 
     private Context mContext;
     private List<Book> bookList;
+    private List<Request> requestList;
     private List<String> booksRequested = new LinkedList<String>();
-    Client algoClient = new Client("L6B7L7WXZW", "9d2de9e724fa9289953e6b2d5ec978a5");
-    Index algoIndex = algoClient.getIndex("requests");
-    Gson gson = new Gson();
+    private Client algoClient = new Client("L6B7L7WXZW", "9d2de9e724fa9289953e6b2d5ec978a5");
+    private Index algoIndex = algoClient.getIndex("requests");
+    private Gson gson = new Gson();
+
+
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView title, owner, rating, distance;
         public ImageView thumbnail, overflow;
@@ -148,6 +158,8 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
     class MyMenuItemClickListener implements PopupMenu.OnMenuItemClickListener {
 
         private int position = 0;
+        private boolean alreadyRequested = false;
+        private boolean completed = true;
 
         public MyMenuItemClickListener(int position) {
             this.position = position;
@@ -157,23 +169,63 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
         public boolean onMenuItemClick(MenuItem menuItem) {
             switch (menuItem.getItemId()) {
                 case R.id.action_prenota:
-                    if(bookList.get(position).getStato() == AppConstants.AVAILABLE &&
-                            !booksRequested.contains(bookList.get(position).getBId()) ) {
+
+                    // query per controlla se io ho gia mandato una richiesta per quel libro
+
+                    Query query = new Query().setFilters("ownerId:" + bookList.get(position).getOwner() + " AND "
+                                    + "renterId:" + FirebaseManagement.getUser().getUid() + " AND "
+                                    + "bId:" + bookList.get(position).getBId()).setFilters("requestStatus:" + AppConstants.PENDING);
+
+                    algoIndex.searchAsync(query, ( jsonObject, e ) -> {
+                        if(e == null){
+                            SearchRequestsJsonParser search= new SearchRequestsJsonParser();
+                            Log.d("lista",jsonObject.toString());
+                            requestList.addAll(search.parseResults(jsonObject));
+
+                            if(requestList.size() != 0){
+                                alreadyRequested = true;
+                            }
+                        }
+                        //TODO maybe use loading bar
+                    });
+
+                    if(bookList.get(position).getStato() == AppConstants.AVAILABLE && !alreadyRequested) {
                         try {
-                            Request request = new Request(AppConstants.NOT_REVIEWED,
-                                    AppConstants.NOT_REVIEWED,
-                                    AppConstants.PENDING,
-                                    bookList.get(position).getOwner(),
-                                    bookList.get(position).getBId(),
-                                    bookList.get(position).getTitle(),
-                                    FirebaseManagement.getUser().getUid(),
-                                    ownerName,
-                                    renterName,
-                                    urlBookImage,
-                                    0);
+                            // aggiungo i dati su firebase
+                            Request request = new Request("0", AppConstants.NOT_REVIEWED, AppConstants.NOT_REVIEWED,
+                                    AppConstants.PENDING, bookList.get(position).getOwner(),
+                                    bookList.get(position).getBId(), bookList.get(position).getTitle(), FirebaseManagement.getUser().getUid(), bookList.get(position).getNomeproprietario(),
+                                    FirebaseManagement.getUser().getDisplayName(), bookList.get(position).getUrlimage(), new Long(-1));
 
                             String rId = FirebaseManagement.getDatabase().getReference().child("requests").push().getKey();
-                            FirebaseManagement.getDatabase().getReference().child("requests").child(rId).setValue(request);
+                            request.setrId(rId);
+
+                            algoIndex.addObjectAsync(new JSONObject(gson.toJson(request)), new CompletionHandler() {
+                                @Override
+                                public void requestCompleted( JSONObject jsonObject, AlgoliaException exception ) {
+                                    if(exception == null){
+                                        try{
+                                            Long id= jsonObject.getLong("objectID");
+                                            request.setAlgoliaId(id);
+
+                                        }catch (Exception e){
+                                            request.setAlgoliaId(new Long(AppConstants.ERROR_ID));
+                                            completed = false;
+                                        }
+                                        if(completed) {
+                                            FirebaseManagement.getDatabase().getReference().child("requests").child(rId).setValue(request);
+                                        }
+                                    }
+                                    else{
+                                        Toast.makeText(mContext, "Error in algolia occurred", Toast.LENGTH_SHORT).show();
+                                        exception.getMessage();
+                                        Log.d("error",exception.toString());
+                                        completed = false;
+                                        return;
+                                    }
+                                }
+                            });
+
                             /*
                             ReferenceRequest referenceRequest = new ReferenceRequest(bookList.get(position).getTitle(),
                                     bookList.get(position).getUrlimage(),
@@ -195,7 +247,9 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
                             algoIndex.addObjectAsync(new JSONObject(gson.toJson(referenceRequest)),null);
                             //bookList.get(position).setStato(AppConstants.NOT_AVAILABLE);
                             */
-                            Toast.makeText(mContext, "Book added", Toast.LENGTH_SHORT).show();
+                            if(completed) {
+                                Toast.makeText(mContext, "Book added", Toast.LENGTH_SHORT).show();
+                            }
                         }catch (Exception e){
                             Toast.makeText(mContext, "Exception Occurred", Toast.LENGTH_SHORT).show();
                             e.getMessage();
