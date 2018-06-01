@@ -18,7 +18,19 @@ public class Request {
 
     private Long algoliaId;
 
-    public Request(String rId, int reviewStatusOwner, int reviewStatusRenter, int requestStatus, String ownerId, String bId, String bName, String renterId, String ownerName, String renterName, String urlBookImage, Long algoliaId) {
+    public Request(String rId,
+                   int reviewStatusOwner,
+                   int reviewStatusRenter,
+                   int requestStatus,
+                   String ownerId,
+                   String bId,
+                   String bName,
+                   String renterId,
+                   String ownerName,
+                   String renterName,
+                   String urlBookImage,
+                   Long algoliaId) {
+
         this.rId = rId;
         this.reviewStatusOwner = reviewStatusOwner;
         this.reviewStatusRenter = reviewStatusRenter;

@@ -160,9 +160,17 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
                     if(bookList.get(position).getStato() == AppConstants.AVAILABLE &&
                             !booksRequested.contains(bookList.get(position).getBId()) ) {
                         try {
-                            Request request = new Request(AppConstants.NOT_REVIEWED, AppConstants.NOT_REVIEWED,
-                                    AppConstants.PENDING, bookList.get(position).getOwner(),
-                                    FirebaseManagement.getUser().getUid(), ownerName, renterName, urlBookImage);
+                            Request request = new Request(AppConstants.NOT_REVIEWED,
+                                    AppConstants.NOT_REVIEWED,
+                                    AppConstants.PENDING,
+                                    bookList.get(position).getOwner(),
+                                    bookList.get(position).getBId(),
+                                    bookList.get(position).getTitle(),
+                                    FirebaseManagement.getUser().getUid(),
+                                    ownerName,
+                                    renterName,
+                                    urlBookImage,
+                                    0);
 
                             String rId = FirebaseManagement.getDatabase().getReference().child("requests").push().getKey();
                             FirebaseManagement.getDatabase().getReference().child("requests").child(rId).setValue(request);
