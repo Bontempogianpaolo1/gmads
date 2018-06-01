@@ -19,6 +19,12 @@ public class Login extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_home);//prima di aprire il login di firebase immagine di home come sfondo
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
         login();
     }
 
