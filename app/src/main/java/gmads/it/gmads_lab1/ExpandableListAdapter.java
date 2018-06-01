@@ -253,7 +253,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
                     }
                 });
-
+        RequestActivity.refresh(context);
     }
 
     public void onClickNo(Request request){
@@ -282,6 +282,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                         }
                     }
                 });
+        RequestActivity.refresh(context);
     }
 
 }

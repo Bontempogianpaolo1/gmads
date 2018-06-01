@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import gmads.it.gmads_lab1.Chat.constants.AppConstants;
 import gmads.it.gmads_lab1.model.Book;
 import gmads.it.gmads_lab1.model.Request;
 
@@ -46,11 +47,14 @@ public class Request_1_othersReq extends Fragment {
 
 
 
-        Query query = new Query("").setFilters("ownerId:" +FirebaseManagement.getUser().getUid())
+        Query query = new Query("").setFilters("ownerId:" +FirebaseManagement.getUser().getUid() + " AND requestStatus:"
+                + AppConstants.PENDING + " AND requestStatus:" + AppConstants.ACCEPTED)
                 .setHitsPerPage(100);
 
         algoIndex.searchAsync(query, ( jsonObject, e ) -> {
             if(e==null){
+                boolean ifAccepted = false;
+
                 SearchRequestsJsonParser parser=new  SearchRequestsJsonParser();
                 List<Request> listrequest=parser.parseResults(jsonObject);
                 listDataChild = new HashMap<>();
@@ -58,15 +62,30 @@ public class Request_1_othersReq extends Fragment {
                 Book tempBook;
 
                 for(Request rr : listrequest){
+
                     if(!listDataChild.containsKey(rr.getbId())){
                         tempBook = new Book();
                         tempBook.setBId(rr.getbId());
                         tempBook.setTitle(rr.getbName());
                         listDataHeader.add(tempBook);
                         listDataChild.put(rr.getbId(), new ArrayList<Request>());
+
                     }
 
                     listDataChild.get(rr.getbId()).add(rr);
+                }
+                
+                for(String key : listDataChild.keySet()){
+                    List<Request> list2 = listDataChild.get(key);
+                    ifAccepted = false;
+                    for (Request request : list2){
+                        if(request.getRequestStatus() == AppConstants.ACCEPTED){
+                            ifAccepted = true;
+                        }
+                    }
+                    if(ifAccepted){
+                        listDataChild.remove(key);
+                    }
                 }
 
                 listAdapter = new ExpandableListAdapter(getContext(), listDataHeader, listDataChild);
