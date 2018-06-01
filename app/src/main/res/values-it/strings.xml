@@ -111,6 +111,10 @@
     <string name = "my_req">Fatte</string>
     <string name = "others_req">Ricevute</string>
     <string name = "request">Richieste</string>
+    <string name = "write_review">Scrivi recensione:</string>
+    <string name = "book">Libro: </string>
+    <string name = "review">Recensione</string>
+    <string name = "reviews">Recensione/i</string>
 
     <!--end-->
 </resources>

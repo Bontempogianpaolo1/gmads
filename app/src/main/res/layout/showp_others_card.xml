@@ -122,9 +122,9 @@
             android:layout_marginBottom="16dp"
             android:isIndicator="true"
             android:numStars="5"
-            android:rating="3.5"
-            android:progressTint="@color/yellow"
             android:progressBackgroundTint="@color/light_gray"
+            android:progressTint="@color/yellow"
+            android:rating="0"
             android:secondaryProgressTint="@color/colorPrimary"
             android:stepSize="0.5" />
 
