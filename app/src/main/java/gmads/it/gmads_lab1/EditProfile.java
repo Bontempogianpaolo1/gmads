@@ -498,6 +498,7 @@ public class EditProfile extends AppCompatActivity implements AppBarLayout.OnOff
                     });
                    // .addOnFailureListener(e -> //progressbar.setVisibility(View.GONE)// );
         }else{
+            profile= new Profile("","","","","");
             profileImageUrl = "";
             profile.setName(name);
             //profile.setSurname(surname);
