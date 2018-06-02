@@ -85,19 +85,22 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.MyViewHo
         switch (reqList.get(position).getRequestStatus()){
             case AppConstants.ACCEPTED:
               holder.stato.setText(R.string.accepted);
-
+              holder.button.setVisibility(View.VISIBLE);
               break;
             case AppConstants.REFUSED:
                 holder.stato.setText(R.string.refused);
+                holder.button.setVisibility(View.GONE);
                 break;
             case AppConstants.PENDING:
                 holder.stato.setText(R.string.pending);
+                holder.button.setVisibility(View.GONE);
                 break;
             case AppConstants.COMPLETED:
-                  holder.stato.setText(R.string.completed);
-                  break;
-          default:
+              holder.stato.setText(R.string.completed);
+              holder.button.setVisibility(View.VISIBLE);
               break;
+            default:
+                  break;
 
         }
         holder.button.setOnClickListener(new View.OnClickListener() {
@@ -111,7 +114,6 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.MyViewHo
         });
         holder.owner.setText(request.getOwnerName());
         //holder.stato.setText(request.getRequestStatus());
-
     }
 
     @Override

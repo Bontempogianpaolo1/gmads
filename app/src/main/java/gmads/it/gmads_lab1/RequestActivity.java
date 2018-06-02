@@ -1,5 +1,6 @@
 package gmads.it.gmads_lab1;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -103,6 +104,12 @@ public class RequestActivity extends AppCompatActivity{
         super.onDestroy();
     }
 */
+
+    public static void refresh(Context context){
+        Intent intent = new Intent(context, RequestActivity.class);
+        context.startActivity(intent);
+    }
+
     public void onClickUsername(View v){
 
         Toast.makeText(getApplicationContext(), "Link al profilo del tizio",Toast.LENGTH_LONG).show();

@@ -23,6 +23,7 @@ public class Request_2_myReq extends Fragment {
     private List<Request> requests;
     Client algoClient = new Client("L6B7L7WXZW", "9d2de9e724fa9289953e6b2d5ec978a5");
     Index algoIndex = algoClient.getIndex("requests");
+
     public Request_2_myReq() {
 
         //Required empty public constructor
@@ -38,17 +39,14 @@ public class Request_2_myReq extends Fragment {
         View root = inflater.inflate(R.layout.fragment_home_1, container, false);
         recycle = (RecyclerView) root.findViewById(R.id.recycler_view);
         requests = new ArrayList<>();
-
         adapter = new RequestAdapter(getContext(),requests);
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
-
         recycle.setLayoutManager(mLayoutManager);
         //recycle.addItemDecoration(new Home_1.GridSpacingItemDecoration(2, dpToPx(10), true));
         //recycle.setItemAnimator(new DefaultItemAnimator());
         prepareRequest();
         recycle.setAdapter(adapter);
-
         // Inflate the layout for this fragment
         return root;
     }
