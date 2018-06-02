@@ -310,16 +310,27 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
 
         } else {
             isMyBook = false;
+            booksRequested = new LinkedList<>();
+            //booksRequested.add(book.getBId());
             bReserveOrReturn.setText(R.string.reserve);
             bReserveOrReturn.setVisibility(View.VISIBLE);
             getIsReservedByMe();
+            /*
+            if(book.getStato() == AppConstants.AVAILABLE){
+                bReserveOrReturn.setVisibility(View.VISIBLE);
+                bReserveOrReturn.setEnabled(true);
+            } else {
+                bReserveOrReturn.setVisibility(View.GONE);
+                bReserveOrReturn.setEnabled(false);
+
+            }*/
         }
     }
 
     private void getIsReservedByMe(){
         booksRequested = new LinkedList<>();
 
-        Query query = new Query().setFilters("renterId:" + FirebaseManagement.getUser().getUid());
+        Query query = new Query().setFilters("renterId:" + FirebaseManagement.getUser().getUid() + " AND ( bId:"+book.getBId()+" )");
         algoIndex.searchAsync(query, ( jsonObject, e ) -> {
             if(e == null){
 
@@ -327,8 +338,10 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
                 Log.d("lista",jsonObject.toString());
                 List<Request> tempReqList = new ArrayList<Request>();
                 tempReqList.addAll(search.parseResults(jsonObject));
+
                 for(Request tempReq : tempReqList){
-                    booksRequested.add(tempReq.getbId());
+                    if(tempReq.getRequestStatus()== AppConstants.PENDING)
+                        booksRequested.add(tempReq.getbId());
                 }
 
                 if(booksRequested.contains(book.getBId())){
@@ -396,6 +409,7 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
                             /*if(book.getCategories().size() == 0)
                                 vCategory.setVisibility(View.GONE);
                             else {*/
+
                                 for (String a : book.getCategories()) {
                                     if (c < book.getCategories().size() - 1) {
                                         c++;
@@ -551,7 +565,7 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
         // prendo riD
         //progressbar.setVisibility(View.VISIBLE);
 
-        Query query = new Query("").setFilters("ownerId:" +FirebaseManagement.getUser().getUid());
+        Query query = new Query("").setFilters("bId:"+book.getBId());
 
         algoIndex.searchAsync(query, ( jsonObject, e ) -> {
             if(e == null){
@@ -598,13 +612,13 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
                 FirebaseManagement.getDatabase().getReference()
                                 .child("books")
                                 .child(req.getbId())
-                                .child("holder")
-                                .setValue(req.getOwnerId());
+                                .setValue(book);
                         outcome[0] = true;
 
                 //progressbar.setVisibility(View.GONE);
                 if(outcome[0]){
                     Toast.makeText(this, "Book returned successfully", Toast.LENGTH_SHORT).show();
+                    bReserveOrReturn.setVisibility(View.GONE);
                 }
                 else {
                     Toast.makeText(this, "Error returning book", Toast.LENGTH_SHORT).show();
@@ -623,9 +637,8 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
         alreadyRequested[0] = false;
         // query per controlla se io ho gia mandato una richiesta per quel libro
 
-        Query query = new Query().setFilters("ownerId:" + book.getOwner() + " AND "
-                + "renterId:" + FirebaseManagement.getUser().getUid() + " AND "
-                + "bId:" + book.getBId()).setFilters("requestStatus:" + AppConstants.PENDING);
+        Query query = new Query().setFilters("renterId:" + FirebaseManagement.getUser().getUid() + " AND ("
+                + "bId:" + book.getBId()+" AND  requestStatus:" + AppConstants.PENDING+")");
 
         algoIndex.searchAsync(query, ( jsonObject, e ) -> {
             if(e == null){
@@ -636,85 +649,57 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
                 if(requestList.size() != 0){
                     alreadyRequested[0] = true;
                 }
+
+                if(book.getStato() == AppConstants.AVAILABLE && !alreadyRequested[0]) {
+                    try {
+
+                        String rId = FirebaseManagement.getDatabase().getReference().child("requests").push().getKey();
+                        Request request = new Request("0", AppConstants.NOT_REVIEWED, AppConstants.NOT_REVIEWED,
+                                AppConstants.PENDING, book.getOwner(), book.getBId(), book.getTitle(),
+                                FirebaseManagement.getUser().getUid(), book.getNomeproprietario(), FirebaseManagement.getUser()
+                                .getDisplayName(), book.getUrlimage(), null);
+
+                        FirebaseManagement.getDatabase().getReference().child("requests").child(rId).setValue(request);
+                        request.setrId(rId);
+
+                        algoIndex.addObjectAsync(new JSONObject(gson.toJson(request)), ( jsonObject1, exception ) -> {
+                            if(exception == null){
+                                try{
+                                    Long id= jsonObject1.getLong("objectID");
+                                    request.setObjectID(id);
+                                }catch (Exception e1){
+                                    completed[0] = false;
+                                }
+                                if(completed[0]) {
+                                    FirebaseManagement.getDatabase().getReference().child("requests").child(rId).setValue(request);
+                                }
+                            }
+                            else{
+                                Toast.makeText(getApplicationContext(), "Error in algolia occurred", Toast.LENGTH_SHORT).show();
+                                exception.getMessage();
+                                Log.d("error",exception.toString());
+                                completed[0] = false;
+                                return;
+                            }
+                            if(completed[0]) {
+                                Toast.makeText(getApplicationContext(), "Book added", Toast.LENGTH_SHORT).show();
+                                bReserveOrReturn.setEnabled(false);
+                            }
+                        });
+
+                    }catch (Exception e2){
+                        Toast.makeText(this, "Exception Occurred", Toast.LENGTH_SHORT).show();
+                        e2.getMessage();
+                    }
+                    return;
+                }
+                else{
+                    Toast.makeText(this, "Book not available or already requested from you", Toast.LENGTH_SHORT).show();
+                    return;
+                }
             }
             //TODO maybe use loading bar
         });
-        if(book.getStato() == AppConstants.AVAILABLE &&
-                !booksRequested.contains(book.getBId()) ) {
-            try {
-
-                String rId = FirebaseManagement.getDatabase().getReference().child("requests").push().getKey();
-                Request request = new Request("0", AppConstants.NOT_REVIEWED, AppConstants.NOT_REVIEWED,
-                        AppConstants.PENDING, book.getOwner(), book.getBId(), book.getTitle(),
-                        FirebaseManagement.getUser().getUid(), book.getNomeproprietario(), FirebaseManagement.getUser()
-                        .getDisplayName(), book.getUrlimage(), null);
-
-                FirebaseManagement.getDatabase().getReference().child("requests").child(rId).setValue(request);
-                request.setrId(rId);
-
-                algoIndex.addObjectAsync(new JSONObject(gson.toJson(request)), new CompletionHandler() {
-                    @Override
-                    public void requestCompleted( JSONObject jsonObject, AlgoliaException exception ) {
-                        if(exception == null){
-                            try{
-                                Long id= jsonObject.getLong("objectID");
-                                request.setObjectID(id);
-
-                            }catch (Exception e){
-                                request.setObjectID(new Long(AppConstants.ERROR_ID));
-                                completed[0] = false;
-                            }
-                            if(completed[0]) {
-                                FirebaseManagement.getDatabase().getReference().child("requests").child(rId).setValue(request);
-                            }
-                        }
-                        else{
-                            Toast.makeText(getApplicationContext(), "Error in algolia occurred", Toast.LENGTH_SHORT).show();
-                            exception.getMessage();
-                            Log.d("error",exception.toString());
-                            completed[0] = false;
-                            return;
-                        }
-                    }
-                });
-
-
-
-                /*ReferenceRequest referenceRequest = new ReferenceRequest(book.getTitle(),
-                        book.getUrlimage(),
-                        FirebaseManagement.getUser().getDisplayName(),
-                        rId, book.getBId());
-
-                FirebaseManagement.getDatabase().getReference().
-                        child("users").
-                        child(FirebaseManagement.getUser().getUid()).
-                        child("myRequests").
-                        child(rId).setValue(referenceRequest);
-
-                FirebaseManagement.getDatabase().getReference().
-                        child("users").
-                        child(book.getOwner()).
-                        child("othersRequests").
-                        child(book.getBId()).setValue(referenceRequest);*/
-
-                //bookList.get(position).setStato(AppConstants.NOT_AVAILABLE);
-                //progressbar.setVisibility(View.GONE);
-
-                if(completed[0]) {
-                    Toast.makeText(this, "Book added", Toast.LENGTH_SHORT).show();
-                    bReserveOrReturn.setEnabled(false);
-                }
-            }catch (Exception e){
-                Toast.makeText(this, "Exception Occurred", Toast.LENGTH_SHORT).show();
-                e.getMessage();
-            }
-            return;
-        }
-        else{
-            Toast.makeText(this, "Book not available or already requested.", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
     }
 
     public Drawable loadImageFromURL(String url, String name) {
