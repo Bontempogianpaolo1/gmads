@@ -24,6 +24,7 @@ import com.algolia.search.saas.Query;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -40,6 +41,7 @@ import gmads.it.gmads_lab1.model.Book;
 import gmads.it.gmads_lab1.model.Request;
 
 public class ExpandableListAdapter extends BaseExpandableListAdapter {
+
 
     private Context context;
     private List<Book> listHeader; // header titles
@@ -226,6 +228,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
                                             Gson gson = new Gson();
+
                                             try {
                                                 book.setStato(AppConstants.NOT_AVAILABLE);
                                                 book.setHolder(request.getRenterId());
@@ -243,7 +246,19 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                                     .child("books")
                                     .child(request.getbId())
                                     .child("holder")
-                                    .setValue(request.getRenterId());
+                                    .setValue(request.getRenterId()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess( Void aVoid ) {
+                                    List<Request> l=listChild.get(request.getbId());
+                                    l.remove(request);
+                                    listChild.put(request.getbId(),l);
+                                   ExpandableListAdapter.super.notifyDataSetChanged();
+                                    //RequestActivity.refresh(context);
+
+
+                                }
+                            });
+
                         }
 
                     }
@@ -253,11 +268,10 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
                     }
                 });
-        RequestActivity.refresh(context);
+
     }
 
     public void onClickNo(Request request){
-
         FirebaseManagement.getDatabase().getReference()
                 .child("requests")
                 .child(request.getrId())
@@ -275,6 +289,10 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                                         @Override
                                         public void requestCompleted(JSONObject jsonObject, AlgoliaException e) {
 
+                                            List<Request> l=listChild.get(request.getbId());
+                                            l.remove(request);
+                                            listChild.put(request.getbId(),l);
+                                            ExpandableListAdapter.super.notifyDataSetChanged();
                                         }
                                     });
                         } catch (Exception e) {
@@ -282,7 +300,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                         }
                     }
                 });
-        RequestActivity.refresh(context);
+
     }
 
 }

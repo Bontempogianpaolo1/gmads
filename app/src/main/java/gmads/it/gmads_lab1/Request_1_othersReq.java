@@ -48,7 +48,7 @@ public class Request_1_othersReq extends Fragment {
 
 
         Query query = new Query("").setFilters("ownerId:" +FirebaseManagement.getUser().getUid() + " AND requestStatus:"
-                + AppConstants.PENDING + " AND requestStatus:" + AppConstants.ACCEPTED)
+                + AppConstants.PENDING + " OR requestStatus:" + AppConstants.ACCEPTED)
                 .setHitsPerPage(100);
 
         algoIndex.searchAsync(query, ( jsonObject, e ) -> {
@@ -74,7 +74,7 @@ public class Request_1_othersReq extends Fragment {
 
                     listDataChild.get(rr.getbId()).add(rr);
                 }
-                
+                List <String> keys= new ArrayList<>();
                 for(String key : listDataChild.keySet()){
                     List<Request> list2 = listDataChild.get(key);
                     ifAccepted = false;
@@ -84,7 +84,24 @@ public class Request_1_othersReq extends Fragment {
                         }
                     }
                     if(ifAccepted){
-                        listDataChild.remove(key);
+                        //listDataChild.remove(key);
+                        keys.add(key);
+
+                    }
+                }
+                for(String key : keys) {
+                    listDataChild.remove(key);
+                    Book a=new Book();
+                    Boolean taken=false;
+                    for(Book b : listDataHeader){
+                        if(b.getBId()==key){
+                            taken=true;
+                            a=b;
+                        }
+                    }
+                    if(taken) {
+                        listDataHeader.remove(a);
+                        taken=false;
                     }
                 }
 
