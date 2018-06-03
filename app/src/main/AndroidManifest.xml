@@ -29,37 +29,36 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Home"
+            android:name=".HomePackage.Home"
             android:label="Home"
             android:screenOrientation="portrait" />
-        <activity android:name=".LocationProvider"></activity>
-        <activity android:name=".PermissionManager"></activity>
+        <activity android:name=".ToolsPackege.LocationProvider" />
+        <activity android:name=".ToolsPackege.PermissionManager" />
         <activity
-            android:name=".ShowProfile"
+            android:name=".UserPackage.ShowProfile"
             android:label="@string/showProfile"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
-            android:name=".EditProfile"
+            android:name=".UserPackage.EditProfile"
             android:configChanges="orientation"
             android:label="@string/editProfile"
-            android:parentActivityName=".ShowProfile"
+            android:parentActivityName=".UserPackage.ShowProfile"
             android:screenOrientation="portrait" />
-        <activity android:name=".Tools" />
-        <activity android:name=".ImageManagement" />
+        <activity android:name=".ToolsPackege.Tools" />
         <activity
-            android:name=".AddBook"
+            android:name=".BookPackage.AddBook"
             android:label="@string/title_activity_add_book"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:screenOrientation="portrait"/>
-
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".SaveBook"
+            android:name=".BookPackage.SaveBook"
             android:label="@string/title_activity_save_book"
-            android:parentActivityName=".AddBook"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".Scanner"
-                  android:screenOrientation="portrait"/>
+            android:parentActivityName=".BookPackage.AddBook"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ToolsPackege.Scanner"
+            android:screenOrientation="portrait" />
 
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -76,38 +75,48 @@
         <activity
             android:name=".Map.main.MapActivity"
             android:label="@string/title_activity_map_search"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".ShowBook"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".MyLibrary"
-                  android:screenOrientation="portrait"/>
-        <activity android:name=".ShowUserProfile"
-            android:screenOrientation="portrait">
-        </activity>
-        <activity android:name=".Chat.ChatList"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".Chat.ChatActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".RequestActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".AddReview"
-            android:parentActivityName=".RequestActivity"/>
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".BookPackage.ShowBook"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".MyLibrary"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".UserPackage.ShowUserProfile"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".Chat.ChatList"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Chat.ChatActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".RequestPackage.RequestActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ReviewPackage.AddReview"
+            android:parentActivityName=".RequestPackage.RequestActivity" />
 
-        <!--FCM-->
+        <!-- FCM -->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/ic_add_book_24dp" />
-        <service android:name="gmads.it.gmads_lab1.Chat.service.MyFirebaseMessagingService">
+
+        <service android:name=".Chat.service.MyFirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        <service android:name="gmads.it.gmads_lab1.Chat.service.MyFirebaseInstanceIDService">
+        <service android:name=".Chat.service.MyFirebaseInstanceIDService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
-
+        <service
+            android:name=".Service.NotificationService"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>

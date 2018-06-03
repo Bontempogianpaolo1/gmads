@@ -116,6 +116,15 @@
     <string name = "review">Recensione</string>
     <string name = "reviews">Recensione/i</string>
     <string name="accepted">Accepted</string>
+    <string name="insert">Inserisci</string>
+    <string name="permission_denied">permesso camera rifiutato</string>
+    <string name="Failed_to_load_profile">Errore caricamento profilo</string>
+    <string name="failed_book_upload">Errore caricamento libro</string>
+    <string name="title_activity_map_search">Mappa</string>
+    <string name="refused">Rifiutato</string>
+    <string name="pending">Sospeso</string>
+    <string name="completed">Completato</string>
+    <string name="ooops_nothing_found">Ooops...Non trovato!</string>
 
     <!--end-->
 </resources>

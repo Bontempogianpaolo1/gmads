@@ -14,7 +14,7 @@ import com.xwray.groupie.kotlinandroidextensions.Item
 import com.xwray.groupie.kotlinandroidextensions.ViewHolder
 import gmads.it.gmads_lab1.Chat.ChatActivity
 import gmads.it.gmads_lab1.R
-import gmads.it.gmads_lab1.Chat.constants.AppConstants
+import gmads.it.gmads_lab1.constants.AppConstants
 import gmads.it.gmads_lab1.Chat.item.PersonItem
 import gmads.it.gmads_lab1.Chat.util.FirebaseChat
 import kotlinx.android.synthetic.main.fragment_people.*

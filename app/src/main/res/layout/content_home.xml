@@ -8,12 +8,7 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:showIn="@layout/app_bar_home">
 
-    <!-- <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:clipToPadding="false"
-        android:scrollbars="vertical" />-->
+
 
     <ProgressBar
         android:id="@+id/progress_bar"
@@ -36,7 +31,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="45dp"
-        android:text="Ooops...Nothing found!"
+        android:text="@string/ooops_nothing_found"
         android:textAlignment="center"
         android:textColor="@color/dark_gray"
         android:textSize="18sp"
