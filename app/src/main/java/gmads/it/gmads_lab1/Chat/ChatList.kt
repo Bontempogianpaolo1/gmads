@@ -23,16 +23,19 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import gmads.it.gmads_lab1.*
-import gmads.it.gmads_lab1.Chat.constants.AppConstants
+import gmads.it.gmads_lab1.constants.AppConstants
 import gmads.it.gmads_lab1.Chat.fragments.PeopleFragment
-import gmads.it.gmads_lab1.model.Profile
+import gmads.it.gmads_lab1.UserPackage.*
+import gmads.it.gmads_lab1.HomePackage.*
+import gmads.it.gmads_lab1.BookPackage.*
+import gmads.it.gmads_lab1.FirebasePackage.FirebaseManagement
 import kotlinx.android.synthetic.main.activity_chat.*
 import kotlinx.android.synthetic.main.activity_chat_list.*
 import kotlinx.android.synthetic.main.chat_list.*
+import gmads.it.gmads_lab1.RequestPackage.*
 import java.io.File
 import java.io.IOException
 import java.util.*
-
 class ChatList : AppCompatActivity() {
     internal var navName: TextView? =null
     internal var navMail: TextView? =null

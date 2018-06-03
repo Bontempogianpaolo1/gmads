@@ -2,22 +2,18 @@ package gmads.it.gmads_lab1;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.NavigationView;
-
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ProgressBar;
@@ -29,12 +25,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-
 import com.algolia.search.saas.AbstractQuery;
-import com.algolia.search.saas.AlgoliaException;
 import com.algolia.search.saas.Client;
-import com.algolia.search.saas.CompletionHandler;
 import com.algolia.search.saas.Index;
 import com.algolia.search.saas.Query;
 import com.bumptech.glide.Glide;
@@ -43,30 +35,32 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
-import com.google.gson.Gson;
-
-import org.json.JSONObject;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
+import gmads.it.gmads_lab1.BookPackage.AddBook;
+import gmads.it.gmads_lab1.BookPackage.SearchResultsJsonParser;
 import gmads.it.gmads_lab1.Chat.ChatList;
+import gmads.it.gmads_lab1.FirebasePackage.FirebaseManagement;
+import gmads.it.gmads_lab1.HomePackage.Home;
 import gmads.it.gmads_lab1.Map.main.MapActivity;
-import gmads.it.gmads_lab1.fragments.AllHome;
-import gmads.it.gmads_lab1.fragments.FragmentViewPagerAdapter;
-import gmads.it.gmads_lab1.model.Book;
-import gmads.it.gmads_lab1.model.Profile;
+import gmads.it.gmads_lab1.RequestPackage.RequestActivity;
+import gmads.it.gmads_lab1.ToolsPackege.FragmentViewPagerAdapter;
+import gmads.it.gmads_lab1.ToolsPackege.Tools;
+import gmads.it.gmads_lab1.UserPackage.EditProfile;
+import gmads.it.gmads_lab1.UserPackage.ShowProfile;
+import gmads.it.gmads_lab1.HomePackage.fragments.AllHome;
+import gmads.it.gmads_lab1.BookPackage.Book;
+import gmads.it.gmads_lab1.UserPackage.Profile;
 
 public class MyLibrary extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
-    private RecyclerView recyclerView;
-    private BookAdapter adapter;
+
     private List<Book> books;
     SearchView searchview;
     Client algoClient;
     Index algoIndex;
-    Gson gson = new Gson();
     TextView navName;
     TextView navMail;
     ImageView navImage;
@@ -85,7 +79,7 @@ public class MyLibrary extends AppCompatActivity implements NavigationView.OnNav
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mylibrary);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         tools = new Tools();
 
@@ -95,27 +89,11 @@ public class MyLibrary extends AppCompatActivity implements NavigationView.OnNav
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-        CollapsingToolbarLayout collapsingToolbarLayout = findViewById(R.id.collapsing_toolbar);
-        //SearchView mSearchView = (SearchView) findViewById(R.id.searchView); // initiate a search view
-        //mSearchView.attachNavigationDrawerToMenuButton(findViewById(R.id.drawer_layout));
-        //mSearchView.setIconifiedByDefault(false);  // set the default or resting state of the search field
-        //recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         initCollapsingToolbar();
-        /*bookList = new ArrayList<>();
-        adapter = new BookAdapter(this, bookList);*/
-        //RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 2);
-        //recyclerView.setLayoutManager(mLayoutManager);
-        //recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, dpToPx(10), true));
-        //recyclerView.setItemAnimator(new DefaultItemAnimator());
-        //recyclerView.setAdapter(adapter);
-//
         ViewPager pager= findViewById(R.id.viewPager);
         FragmentViewPagerAdapter vpadapter= new FragmentViewPagerAdapter(getSupportFragmentManager());
         vpadapter.addFragment(tab1);
-        //vpadapter.addFragment(new AllHome());
-        //vpadapter.addFragment(new AllHome());
         pager.setAdapter(vpadapter);
-//
         //era per mettere foto libri nell appbar, ma l'abbiamo messa come sfondo per ora
         try {
             Glide.with(this).load(R.drawable.cover).into((ImageView) findViewById(R.id.backdrop));
@@ -134,25 +112,9 @@ public class MyLibrary extends AppCompatActivity implements NavigationView.OnNav
 
     @Override
     public void onBackPressed() {
-        //super.onBackPressed();
-        /*
-        if (getFragmentManager().getBackStackEntryCount() != 0) {
-            getFragmentManager().popBackStack();
-        } else {
-            super.onBackPressed();
-        }
-        */
-        //Intent i = new Intent(this, getCallingActivity().getClass());
         Intent i = new Intent(this, Home.class);
         startActivity(i);
     }
-
-    /*@Override
-    public boolean onQueryTextSubmit(String query) {
-        // do something on text submit
-        //parte la query di gogo
-        return false;
-    }*/
 
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
@@ -196,26 +158,14 @@ public class MyLibrary extends AppCompatActivity implements NavigationView.OnNav
         return true;
     }
 
-     /*mSearchView.setOnQueryChangeListener(new FloatingSearchView.OnQueryChangeListener() {
-        @Override
-        public void onSearchTextChanged(String oldQuery, final String newQuery) {
-
-            //get suggestions based on newQuery
-
-            //pass them on to the search view
-            mSearchView.swapSuggestions(newSuggestions);
-        }
-    });*/
-
     /**
      * Initializing collapsing toolbar
      * Will show and hide the toolbar title on scroll
      */
     private void initCollapsingToolbar() {
-        final CollapsingToolbarLayout collapsingToolbar =
-                (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
+        final CollapsingToolbarLayout collapsingToolbar = findViewById(R.id.collapsing_toolbar);
         collapsingToolbar.setTitle(" ");
-        AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.appbar);
+        AppBarLayout appBarLayout =  findViewById(R.id.appbar);
         appBarLayout.setExpanded(true);
 
         // hiding & showing the title when toolbar expanded & collapsed
@@ -240,8 +190,6 @@ public class MyLibrary extends AppCompatActivity implements NavigationView.OnNav
     }
 
     public void mapcreate( View view ) {
-        SharedPreferences pref= PreferenceManager.getDefaultSharedPreferences(this);
-
         Intent intentMod = new Intent(this, MapActivity.class);
         intentMod.putExtra("query",query);
         intentMod.putExtra("lat",profile.getLat());
@@ -263,7 +211,6 @@ public class MyLibrary extends AppCompatActivity implements NavigationView.OnNav
 
         if(profile!=null) {
             navName.setText(profile.getName());
-            //navName.append(" " + profile.getSurname());
             navMail.setText(profile.getEmail());
 
             if (myProfileBitImage != null) {
@@ -275,8 +222,6 @@ public class MyLibrary extends AppCompatActivity implements NavigationView.OnNav
     }
 
     private void getUserInfo(){
-        //progressbar.setVisibility(View.VISIBLE);
-        //avatar.setVisibility(View.GONE);
 
         if(tools.isOnline(getApplicationContext())) {
 
@@ -295,7 +240,6 @@ public class MyLibrary extends AppCompatActivity implements NavigationView.OnNav
                                     startActivity(i);
                                 }
                                 navName.setText(profile.getName());
-                                //navName.append(" " + profile.getSurname());
                                 navMail.setText(profile.getEmail());
                                 if (profile.getImage() != null) {
                                     try {
@@ -309,9 +253,7 @@ public class MyLibrary extends AppCompatActivity implements NavigationView.OnNav
                                                         .child("profileimage.jpg");
 
                                         profileImageRef.getFile(localFile)
-                                                .addOnSuccessListener(taskSnapshot -> {
-                                                    navImage.setImageBitmap(BitmapFactory.decodeFile(localFile.getPath()));
-                                                }).addOnFailureListener(e -> {
+                                                .addOnSuccessListener(taskSnapshot -> navImage.setImageBitmap(BitmapFactory.decodeFile(localFile.getPath()))).addOnFailureListener(e -> {
                                         });
 
                                     } catch (IOException e) {
@@ -325,12 +267,6 @@ public class MyLibrary extends AppCompatActivity implements NavigationView.OnNav
                             } else {
                                 Intent i = new Intent(getApplicationContext(), EditProfile.class);
                                 startActivity(i);
-                            /*
-                            navName.setText(getString(R.string.name));
-                            navName.append(" " + getString(R.string.surname));
-                            navMail.setText(getString(R.string.email));
-                            navImage.setImageDrawable(getDrawable(R.drawable.default_picture));
-                            */
                             }
                         }
 
@@ -356,29 +292,25 @@ public class MyLibrary extends AppCompatActivity implements NavigationView.OnNav
         Query query = new Query(FirebaseManagement.getUser().getUid())
                 .setAroundLatLng(new AbstractQuery.LatLng(profile.getLat(), profile.getLng()))
                 .setGetRankingInfo(true);
-        //.setAroundLatLngViaIP(true).setGetRankingInfo(true);
-        algoIndex.searchAsync(query, new CompletionHandler() {
-            @Override
-            public void requestCompleted( JSONObject jsonObject, AlgoliaException e ) {
-                if(e==null){
-                    InputMethodManager imm = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    assert imm != null;
-                    imm.hideSoftInputFromWindow(Objects.requireNonNull(getCurrentFocus()).getWindowToken(), 0);
-                    SearchResultsJsonParser search= new SearchResultsJsonParser();
-                    Log.d("lista",jsonObject.toString());
-                    books= search.parseResults(jsonObject);
-                    if(books.isEmpty()){
-                        ImageView notfound = findViewById(R.id.not_found);
-                        TextView tnf = findViewById(R.id.textnotfound);
-                        progressbar.setVisibility(View.GONE);
-                        notfound.setVisibility(View.VISIBLE);
-                        tnf.setVisibility(View.VISIBLE);
-                    }
-                    else {
-                        tab1.getAdapter().setbooks(books);
-                        tab1.getAdapter().notifyDataSetChanged();
-                        progressbar.setVisibility(View.GONE);
-                    }
+        algoIndex.searchAsync(query, ( jsonObject, e ) -> {
+            if(e==null){
+                InputMethodManager imm = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                assert imm != null;
+                imm.hideSoftInputFromWindow(Objects.requireNonNull(getCurrentFocus()).getWindowToken(), 0);
+                SearchResultsJsonParser search= new SearchResultsJsonParser();
+                Log.d("lista",jsonObject.toString());
+                books= search.parseResults(jsonObject);
+                if(books.isEmpty()){
+                    ImageView notfound = findViewById(R.id.not_found);
+                    TextView tnf = findViewById(R.id.textnotfound);
+                    progressbar.setVisibility(View.GONE);
+                    notfound.setVisibility(View.VISIBLE);
+                    tnf.setVisibility(View.VISIBLE);
+                }
+                else {
+                    tab1.getAdapter().setbooks(books);
+                    tab1.getAdapter().notifyDataSetChanged();
+                    progressbar.setVisibility(View.GONE);
                 }
             }
         });
