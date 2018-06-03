@@ -29,36 +29,35 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Home"
+            android:name=".HomePackage.Home"
             android:label="Home"
             android:screenOrientation="portrait" />
-        <activity android:name=".LocationProvider"></activity>
-        <activity android:name=".PermissionManager"></activity>
+        <activity android:name=".ToolsPackege.LocationProvider"></activity>
+        <activity android:name=".ToolsPackege.PermissionManager"></activity>
         <activity
-            android:name=".ShowProfile"
+            android:name=".UserPackage.ShowProfile"
             android:label="@string/showProfile"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".EditProfile"
+            android:name=".UserPackage.EditProfile"
             android:configChanges="orientation"
             android:label="@string/editProfile"
-            android:parentActivityName=".ShowProfile"
+            android:parentActivityName=".UserPackage.ShowProfile"
             android:screenOrientation="portrait" />
-        <activity android:name=".Tools" />
-        <activity android:name=".ImageManagement" />
+        <activity android:name=".ToolsPackege.Tools" />
         <activity
-            android:name=".AddBook"
+            android:name=".BookPackage.AddBook"
             android:label="@string/title_activity_add_book"
             android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name=".SaveBook"
+            android:name=".BookPackage.SaveBook"
             android:label="@string/title_activity_save_book"
-            android:parentActivityName=".AddBook"
+            android:parentActivityName=".BookPackage.AddBook"
             android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait"/>
-        <activity android:name=".Scanner"
+        <activity android:name=".ToolsPackege.Scanner"
                   android:screenOrientation="portrait"/>
 
         <!--
@@ -77,21 +76,21 @@
             android:name=".Map.main.MapActivity"
             android:label="@string/title_activity_map_search"
             android:screenOrientation="portrait"/>
-        <activity android:name=".ShowBook"
+        <activity android:name=".BookPackage.ShowBook"
             android:screenOrientation="portrait"/>
         <activity android:name=".MyLibrary"
                   android:screenOrientation="portrait"/>
-        <activity android:name=".ShowUserProfile"
+        <activity android:name=".UserPackage.ShowUserProfile"
             android:screenOrientation="portrait">
         </activity>
         <activity android:name=".Chat.ChatList"
             android:screenOrientation="portrait"/>
         <activity android:name=".Chat.ChatActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".RequestActivity"
+        <activity android:name=".RequestPackage.RequestActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".AddReview"
-            android:parentActivityName=".RequestActivity"/>
+        <activity android:name=".ReviewPackage.AddReview"
+            android:parentActivityName=".RequestPackage.RequestActivity"/>
 
         <!--FCM-->
         <meta-data

@@ -15,7 +15,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import java.util.ArrayList;
 import java.util.List;
 
-import gmads.it.gmads_lab1.model.Book;
+import gmads.it.gmads_lab1.BookPackage.Book;
 
 public class MapOverlayLayout<V extends MarkerView> extends FrameLayout {
 

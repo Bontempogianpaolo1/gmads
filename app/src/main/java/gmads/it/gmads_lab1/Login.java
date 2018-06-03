@@ -12,6 +12,11 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
+import gmads.it.gmads_lab1.FirebasePackage.Datasource;
+import gmads.it.gmads_lab1.FirebasePackage.FirebaseManagement;
+import gmads.it.gmads_lab1.HomePackage.Home;
+import gmads.it.gmads_lab1.UserPackage.ShowProfile;
+
 public class Login extends AppCompatActivity {
     private static final int RC_SIGN_IN = 123;
 

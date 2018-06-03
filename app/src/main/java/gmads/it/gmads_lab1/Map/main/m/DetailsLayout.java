@@ -18,10 +18,10 @@ import com.bumptech.glide.Glide;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import gmads.it.gmads_lab1.model.Book;
-import gmads.it.gmads_lab1.ShowBook;
+import gmads.it.gmads_lab1.BookPackage.Book;
+import gmads.it.gmads_lab1.BookPackage.ShowBook;
 import gmads.it.gmads_lab1.R;
-import gmads.it.gmads_lab1.ShowUserProfile;
+import gmads.it.gmads_lab1.UserPackage.ShowUserProfile;
 
 
 public class DetailsLayout extends CoordinatorLayout {
