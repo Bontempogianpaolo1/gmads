@@ -40,6 +40,7 @@ class ChatList : AppCompatActivity() {
     internal var navName: TextView? =null
     internal var navMail: TextView? =null
     internal var navImage: ImageView? =null
+    internal var navReqNotification : ImageView? = null
     private var navigationView: NavigationView? =null
     private var profile: Profile? = null
     private val myProfileBitImage: Bitmap? = null
@@ -103,6 +104,7 @@ attivita per vedere la lista delle chat
         navName = headerView?.findViewById(R.id.navName)
         navMail = headerView?.findViewById(R.id.navMail)
         navImage = headerView?.findViewById(R.id.navImage)
+        navReqNotification = headerView?.findViewById(R.id.req_notification)
         headerView?.setBackgroundResource(R.color.colorPrimaryDark)
 
         navigationView?.setNavigationItemSelectedListener{
@@ -166,6 +168,11 @@ attivita per vedere la lista delle chat
 
                     navName?.text = myuser.getName()
                     navMail?.text = myuser.getEmail()
+                    if (myuser.isReqNotified()) {
+                        navReqNotification?.setVisibility(View.VISIBLE)
+                    } else {
+                        navReqNotification?.setVisibility(View.GONE)
+                    }
                     //setto foto
                     if (Objects.requireNonNull(myuser).getImage() != null) {
                         try {

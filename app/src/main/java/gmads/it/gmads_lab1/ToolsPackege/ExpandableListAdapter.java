@@ -207,6 +207,12 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
                                     });
 
+                            FirebaseManagement.getDatabase().getReference()
+                                    .child("users")
+                                    .child(request.getRenterId())
+                                    .child("reqNotified")
+                                    .setValue(true);
+
                         }
 
                     }
@@ -238,6 +244,13 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                                     listChild.put(request.getbId(),l);
                                     ExpandableListAdapter.super.notifyDataSetChanged();
                                 });
+
+                        FirebaseManagement.getDatabase().getReference()
+                                .child("users")
+                                .child(request.getRenterId())
+                                .child("reqNotified")
+                                .setValue(true);
+
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
