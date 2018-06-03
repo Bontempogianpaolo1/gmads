@@ -552,6 +552,11 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
                                 .getDisplayName(), book.getUrlimage(), null);
 
                         FirebaseManagement.getDatabase().getReference().child("requests").child(rId).setValue(request);
+                        FirebaseManagement.getDatabase().getReference()
+                                .child("users")
+                                .child(book.getOwner())
+                                .child("reqNotified")
+                                .setValue(true);
                         request.setrId(rId);
 
                         algoIndex.addObjectAsync(new JSONObject(gson.toJson(request)), ( jsonObject1, exception ) -> {

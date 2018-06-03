@@ -31,6 +31,15 @@ public class Profile implements Serializable{
     private List<String> linkrequestreceived;
     private List<String> linkrequestdone;
     private List<Review> reviews= new ArrayList<>();
+    private boolean reqNotified;
+
+    public boolean isReqNotified() {
+        return reqNotified;
+    }
+
+    public void setReqNotified(boolean reqNotified) {
+        this.reqNotified = reqNotified;
+    }
 
     public List<Review> getReviews() {
         return reviews;
