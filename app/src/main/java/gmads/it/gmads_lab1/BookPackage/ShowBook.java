@@ -48,6 +48,8 @@ import android.view.animation.AlphaAnimation;
 import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import gmads.it.gmads_lab1.ReviewPackage.AddReview;
 import gmads.it.gmads_lab1.constants.AppConstants;
 import gmads.it.gmads_lab1.Chat.glide.GlideApp;
 import gmads.it.gmads_lab1.FirebasePackage.FirebaseManagement;
@@ -463,6 +465,9 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
         //progressbar.setVisibility(View.VISIBLE);
 
         Query query = new Query("").setFilters("bId:"+book.getBId());
+        Intent i= new Intent(this, AddReview.class);
+        i.putExtra("userid", book.getHolder());
+        i.putExtra("bookname", book.getTitle());
 
         algoIndex.searchAsync(query, ( jsonObject, e ) -> {
             if(e == null){
@@ -515,6 +520,8 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
                 //progressbar.setVisibility(View.GONE);
                 Toast.makeText(this, "Book returned successfully", Toast.LENGTH_SHORT).show();
                 bReserveOrReturn.setVisibility(View.GONE);
+
+                startActivity(i);
             }
         });
     }
