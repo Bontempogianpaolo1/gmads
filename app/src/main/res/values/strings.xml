@@ -141,8 +141,20 @@
     <string name = "book_info">More Info</string>
     <string name = "book_photo">Add a book photo</string>
     <string name = "showbookImage">Book photo</string>
+    <string name = "my_req">Sent</string>
+    <string name = "others_req">Received</string>
+    <string name = "request">Requests</string>
+    <string name = "write_review">Write review:</string>
+    <string name = "book">Book: </string>
+    <string name = "review">Review</string>
+    <string name = "reviews">Review/s</string>
 
     <!-- FCM -->
     <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
+    <string name="accepted">Accepted</string>
+    <string name="refused">Refused</string>
+    <string name="pending">Pending</string>
+    <string name="completed">Completed</string>
+    <string name="ooops_nothing_found">Ooops...Nothing found!</string>
 
 </resources>

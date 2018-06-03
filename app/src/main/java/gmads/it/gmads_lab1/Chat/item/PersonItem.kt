@@ -4,7 +4,7 @@ import android.content.Context
 import android.view.View
 import gmads.it.gmads_lab1.R
 import gmads.it.gmads_lab1.Chat.glide.*
-import gmads.it.gmads_lab1.model.Profile
+import gmads.it.gmads_lab1.UserPackage.Profile
 import com.xwray.groupie.kotlinandroidextensions.Item
 import com.xwray.groupie.kotlinandroidextensions.ViewHolder
 import kotlinx.android.synthetic.main.item_person.*

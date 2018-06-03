@@ -107,5 +107,24 @@
     <string name = "book_info">Altre Info</string>
     <string name = "book_photo">Aggiungi una foto del libro</string>
     <string name = "showbookImage">Foto libro</string>
+
+    <string name = "my_req">Fatte</string>
+    <string name = "others_req">Ricevute</string>
+    <string name = "request">Richieste</string>
+    <string name = "write_review">Scrivi recensione:</string>
+    <string name = "book">Libro: </string>
+    <string name = "review">Recensione</string>
+    <string name = "reviews">Recensione/i</string>
+    <string name="accepted">Accepted</string>
+    <string name="insert">Inserisci</string>
+    <string name="permission_denied">permesso camera rifiutato</string>
+    <string name="Failed_to_load_profile">Errore caricamento profilo</string>
+    <string name="failed_book_upload">Errore caricamento libro</string>
+    <string name="title_activity_map_search">Mappa</string>
+    <string name="refused">Rifiutato</string>
+    <string name="pending">Sospeso</string>
+    <string name="completed">Completato</string>
+    <string name="ooops_nothing_found">Ooops...Non trovato!</string>
+
     <!--end-->
 </resources>

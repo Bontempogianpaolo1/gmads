@@ -178,13 +178,5 @@
 
         </android.support.v7.widget.Toolbar>
 
-        <!--<com.facebook.drawee.view.SimpleDraweeView
-            android:id="@+id/avatar"
-            android:layout_width="@dimen/image_width"
-            android:layout_height="@dimen/image_width"
-            android:layout_gravity="center"
-            app:layout_behavior="gmads.it.gmads_lab1.ProfileImageEffect"
-            fresco:roundAsCircle="true" />-->
-
     </android.support.design.widget.CoordinatorLayout>
 </LinearLayout>

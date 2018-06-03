@@ -12,6 +12,11 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
+import gmads.it.gmads_lab1.FirebasePackage.Datasource;
+import gmads.it.gmads_lab1.FirebasePackage.FirebaseManagement;
+import gmads.it.gmads_lab1.HomePackage.Home;
+import gmads.it.gmads_lab1.UserPackage.ShowProfile;
+
 public class Login extends AppCompatActivity {
     private static final int RC_SIGN_IN = 123;
 
@@ -20,6 +25,12 @@ public class Login extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_home);//prima di aprire il login di firebase immagine di home come sfondo
         login();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
     }
 
     public void login(){
@@ -31,6 +42,7 @@ public class Login extends AppCompatActivity {
             FirebaseManagement.loginUser();
             Datasource.getInstance().sincMyProfile();
             Intent intent = new Intent(this, Home.class);
+            intent.putExtra("activity", "login");
             startActivity(intent);
             //finish();
         } else {
@@ -56,7 +68,7 @@ public class Login extends AppCompatActivity {
         //ritorno dall'attività di firebase e se si è loggato vado a home
         if (resultCode == RESULT_OK) {
             Intent intent = new Intent(this, ShowProfile.class);
-
+            intent.putExtra("activity", "login");
             FirebaseManagement.getDatabase().getReference()
                     .child("users")
                     .child(FirebaseAuth.getInstance().getCurrentUser().getUid())

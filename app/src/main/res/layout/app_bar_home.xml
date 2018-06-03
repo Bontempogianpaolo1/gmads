@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@android:color/white"
     android:fitsSystemWindows="true"
-    tools:context=".Home">
+    tools:context=".HomePackage.Home">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
@@ -62,7 +62,7 @@
             app:tabIndicatorColor="@android:color/white"
             app:tabMode="scrollable"
             app:tabSelectedTextColor="@android:color/white"
-            app:tabTextColor="#757575" />
+            app:tabTextColor="#daa5a5" />
 
     </android.support.design.widget.AppBarLayout>
 

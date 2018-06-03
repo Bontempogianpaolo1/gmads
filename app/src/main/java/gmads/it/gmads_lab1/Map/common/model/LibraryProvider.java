@@ -10,9 +10,9 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import java.util.ArrayList;
 import java.util.List;
 
-import gmads.it.gmads_lab1.model.Book;
-import gmads.it.gmads_lab1.FirebaseManagement;
-import gmads.it.gmads_lab1.SearchResultsJsonParser;
+import gmads.it.gmads_lab1.BookPackage.Book;
+import gmads.it.gmads_lab1.FirebasePackage.FirebaseManagement;
+import gmads.it.gmads_lab1.BookPackage.SearchResultsJsonParser;
 
 public class LibraryProvider {
     private final static String JSON_PATH = "bali.json";

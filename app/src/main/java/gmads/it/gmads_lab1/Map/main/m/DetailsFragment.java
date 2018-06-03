@@ -11,7 +11,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 
 import butterknife.BindView;
-import gmads.it.gmads_lab1.model.Book;
+import gmads.it.gmads_lab1.BookPackage.Book;
 import gmads.it.gmads_lab1.Map.common.maps.MapBitmapCache;
 import gmads.it.gmads_lab1.Map.common.maps.PulseOverlayLayout;
 import gmads.it.gmads_lab1.Map.common.mvp.MvpFragment;
