@@ -74,7 +74,7 @@ public class AddReview extends AppCompatActivity {
                     .child(id)
                     .setValue(profile)
                     .addOnSuccessListener(aVoid -> {
-                        Toast.makeText(getApplicationContext(),R.string.messenger_send_button_text,Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), R.string.reviewsent,Toast.LENGTH_LONG).show();
                         startActivity(new Intent(getApplicationContext(),RequestActivity.class));
                         finish();
                     });
