@@ -24,7 +24,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.algolia.search.saas.AlgoliaException;
 import com.algolia.search.saas.Client;
+import com.algolia.search.saas.CompletionHandler;
 import com.algolia.search.saas.Index;
 import com.algolia.search.saas.Query;
 import com.bumptech.glide.Glide;
@@ -77,6 +80,7 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
     // roba di algolia
     private Client algoClient = new Client("L6B7L7WXZW", "9d2de9e724fa9289953e6b2d5ec978a5");
     private Index algoIndex = algoClient.getIndex("requests");
+    private Index algoBookIndex = algoClient.getIndex("BookIndex");
     private Gson gson = new Gson();
     ContextWrapper cw;
     Book book;
@@ -497,6 +501,23 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
                                         null);
                             } catch (Exception e1) {
                                 e1.printStackTrace();
+                            }
+                            try {
+                                book.setStato(AppConstants.AVAILABLE);
+                                book.setHolder(FirebaseManagement.getUser().getUid());
+                                algoBookIndex.saveObjectAsync(new JSONObject(gson.toJson(book)),
+                                        book.getObjectID().toString(),
+                                        new CompletionHandler() {
+                                            @Override
+                                            public void requestCompleted( JSONObject jsonObject, AlgoliaException e ) {
+                                                if(e!=null){
+                                                    e.printStackTrace();
+                                                }
+                                            }
+                                        });
+
+                            } catch (Exception e2) {
+                                e2.printStackTrace();
                             }
                         });
 
