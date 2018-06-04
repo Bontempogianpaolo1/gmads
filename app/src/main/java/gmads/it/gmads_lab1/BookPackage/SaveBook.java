@@ -75,7 +75,7 @@ import gmads.it.gmads_lab1.R;
 import gmads.it.gmads_lab1.ToolsPackege.Tools;
 import gmads.it.gmads_lab1.UserPackage.Profile;
 
-public class SaveBook extends AppCompatActivity  implements AppBarLayout.OnOffsetChangedListener{
+public class SaveBook extends AppCompatActivity{
 
     private static final float PERCENTAGE_TO_SHOW_TITLE_AT_TOOLBAR = 0.9f;
     private static final float PERCENTAGE_TO_HIDE_TITLE_DETAILS = 0.3f;
@@ -86,7 +86,7 @@ public class SaveBook extends AppCompatActivity  implements AppBarLayout.OnOffse
     private AppBarLayout appbar;
     private ImageView coverImage;
     private LinearLayout linearlayoutTitle;
-    private TextView textviewTitle;
+    //private TextView textviewTitle;
     private static final String EXTRA_ISBN ="ISBN";
     private DatabaseReference mProfileReference;
     private DatabaseReference mBooksReference;
@@ -134,12 +134,11 @@ public class SaveBook extends AppCompatActivity  implements AppBarLayout.OnOffse
         setContentView(R.layout.activity_save_book);
         findActViews();
         setupUI(findViewById(R.id.linearlayout));
-        coverImage.setImageResource(R.drawable.cover_edit);
-        toolbar.setTitle("");
-        appbar.addOnOffsetChangedListener(this);
-        textviewTitle.setText(getString(R.string.bookTitle));
+        //coverImage.setImageResource(R.drawable.cover_edit);
+        toolbar.setTitle(getString(R.string.bookTitle));
+        //textviewTitle.setText(getString(R.string.bookTitle));
         setSupportActionBar(toolbar);
-        startAlphaAnimation(textviewTitle, 0, View.INVISIBLE);
+        //startAlphaAnimation(textviewTitle, 0, View.INVISIBLE);
         t1 = new Tools();
         if (!(t1.isOnline(getApplicationContext()))){
             android.app.AlertDialog.Builder ad = t1.showPopup(this, getString(R.string.noInternet), "", "");
@@ -161,54 +160,7 @@ public class SaveBook extends AppCompatActivity  implements AppBarLayout.OnOffse
         algoIndex = algoClient.getIndex("BookIndex");
 
     }
-    public void onOffsetChanged(AppBarLayout appBarLayout, int offset) {
-        int maxScroll = appBarLayout.getTotalScrollRange();
-        float percentage = (float) Math.abs(offset) / (float) maxScroll;
-        handleAlphaOnTitle(percentage);
-        handleToolbarTitleVisibility(percentage);
-    }
-    private void handleAlphaOnTitle(float percentage) {
-        if (percentage >= PERCENTAGE_TO_HIDE_TITLE_DETAILS) {
-            if (mIsTheTitleContainerVisible) {
-                startAlphaAnimation(linearlayoutTitle, ALPHA_ANIMATIONS_DURATION, View.INVISIBLE);
-                mIsTheTitleContainerVisible = false;
-            }
 
-        } else {
-
-            if (!mIsTheTitleContainerVisible) {
-                startAlphaAnimation(linearlayoutTitle, ALPHA_ANIMATIONS_DURATION, View.VISIBLE);
-                mIsTheTitleContainerVisible = true;
-            }
-        }
-    }
-
-    public static void startAlphaAnimation(View v, long duration, int visibility) {
-        AlphaAnimation alphaAnimation = (visibility == View.VISIBLE)
-                ? new AlphaAnimation(0f, 1f)
-                : new AlphaAnimation(1f, 0f);
-
-        alphaAnimation.setDuration(duration);
-        alphaAnimation.setFillAfter(true);
-        v.startAnimation(alphaAnimation);
-    }
-
-    private void handleToolbarTitleVisibility(float percentage) {
-        if (percentage >= PERCENTAGE_TO_SHOW_TITLE_AT_TOOLBAR) {
-
-            if (!mIsTheTitleVisible) {
-                startAlphaAnimation(textviewTitle, ALPHA_ANIMATIONS_DURATION, View.VISIBLE);
-                mIsTheTitleVisible = true;
-            }
-
-        } else {
-
-            if (mIsTheTitleVisible) {
-                startAlphaAnimation(textviewTitle, ALPHA_ANIMATIONS_DURATION, View.INVISIBLE);
-                mIsTheTitleVisible = false;
-            }
-        }
-    }
     public void setReferences(){
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         isbn = prefs.getString(EXTRA_ISBN, null);
@@ -225,7 +177,6 @@ public class SaveBook extends AppCompatActivity  implements AppBarLayout.OnOffse
         coverImage = findViewById(R.id.imageview_placeholder);
         linearlayoutTitle = findViewById(R.id.linearlayout_title);
         toolbar = findViewById(R.id.toolbar);
-        textviewTitle = findViewById(R.id.textview_title);
         ImageView avatar = findViewById(R.id.avatar);
         avatar.setImageDrawable(getDrawable(R.drawable.default_book));
         condition=findViewById(R.id.condition);
