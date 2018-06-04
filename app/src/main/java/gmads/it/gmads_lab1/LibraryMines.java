@@ -1,6 +1,6 @@
 package gmads.it.gmads_lab1;
 
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.content.res.Resources;
 import android.graphics.Rect;
 import android.os.Bundle;

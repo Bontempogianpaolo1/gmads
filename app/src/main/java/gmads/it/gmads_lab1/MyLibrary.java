@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.icu.util.Freezable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
@@ -15,6 +16,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ProgressBar;
@@ -52,7 +54,6 @@ import gmads.it.gmads_lab1.ToolsPackege.FragmentViewPagerAdapter;
 import gmads.it.gmads_lab1.ToolsPackege.Tools;
 import gmads.it.gmads_lab1.UserPackage.EditProfile;
 import gmads.it.gmads_lab1.UserPackage.ShowProfile;
-import gmads.it.gmads_lab1.HomePackage.fragments.AllHome;
 import gmads.it.gmads_lab1.BookPackage.Book;
 import gmads.it.gmads_lab1.UserPackage.Profile;
 
@@ -72,7 +73,6 @@ public class MyLibrary extends AppCompatActivity implements NavigationView.OnNav
     private Profile profile;
     private Bitmap myProfileBitImage;
     View headerView;
-    AllHome tab1= new AllHome();
     Tools tools;
     ProgressBar progressbar;
 
@@ -106,7 +106,8 @@ public class MyLibrary extends AppCompatActivity implements NavigationView.OnNav
         vpadapter.addFragment(libraryRented);
 
         pager.setAdapter(vpadapter);
-        TabLayout tableLayout= findViewById(R.id.tabs);
+        //crasha qui che trova null
+        TabLayout tableLayout=(TabLayout)  findViewById(R.id.tabs);
         tableLayout.setupWithViewPager(pager);
 
         Objects.requireNonNull(tableLayout.getTabAt(0)).setText(getString(R.string.MyBooks));
@@ -354,31 +355,22 @@ public class MyLibrary extends AppCompatActivity implements NavigationView.OnNav
 
         progressbar.setVisibility(View.VISIBLE);
 
-        Query query = new Query(FirebaseManagement.getUser().getUid())
-                .setAroundLatLng(new AbstractQuery.LatLng(profile.getLat(), profile.getLng()))
-                .setGetRankingInfo(true);
-        algoIndex.searchAsync(query, ( jsonObject, e ) -> {
-            if(e==null){
-                InputMethodManager imm = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                assert imm != null;
-                imm.hideSoftInputFromWindow(Objects.requireNonNull(getCurrentFocus()).getWindowToken(), 0);
-                SearchResultsJsonParser search= new SearchResultsJsonParser();
-                Log.d("lista",jsonObject.toString());
-                books= search.parseResults(jsonObject);
-                if(books.isEmpty()){
-                    ImageView notfound = findViewById(R.id.not_found);
-                    TextView tnf = findViewById(R.id.textnotfound);
-                    progressbar.setVisibility(View.GONE);
-                    notfound.setVisibility(View.VISIBLE);
-                    tnf.setVisibility(View.VISIBLE);
-                }
-                else {
-                    tab1.getAdapter().setbooks(books);
-                    tab1.getAdapter().notifyDataSetChanged();
-                    progressbar.setVisibility(View.GONE);
-                }
+        if(tools.isOnline(getApplicationContext())) {
+            if(searchview!= null){
+                libraryMines.setText(searchview.getQuery().toString());
+            }else{
+                libraryMines.setText("");
+
             }
-        });
+            libraryMines.setProfile(profile);
+            libraryMines.fetchdata();
+            libraryMines.setNpage(libraryMines.getNpage()+1);
+        } else {
+            android.app.AlertDialog.Builder ad = tools.showPopup(this, getString(R.string.noInternet), "", "");
+            ad.setPositiveButton(getString(R.string.retry), (vi, w) -> onStart());
+            ad.setCancelable(false);
+            ad.show();
+        }
     }
 
     public void onClickNotify(View view){

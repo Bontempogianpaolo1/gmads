@@ -97,7 +97,7 @@ public class  Home extends AppCompatActivity implements NavigationView.OnNavigat
         vpadapter.addFragment(thrillerHome);
         vpadapter.addFragment(fiction);
         pager.setAdapter(vpadapter);
-        TabLayout tableLayout= findViewById(R.id.tabs);
+        TabLayout tableLayout =findViewById(R.id.tabs);
         tableLayout.setupWithViewPager(pager);
         Objects.requireNonNull(tableLayout.getTabAt(0)).setText(getString(R.string.tab1));
         Objects.requireNonNull(tableLayout.getTabAt(1)).setText("action");
