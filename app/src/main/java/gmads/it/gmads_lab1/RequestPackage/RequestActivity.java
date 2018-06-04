@@ -47,6 +47,8 @@ public class RequestActivity extends AppCompatActivity{
         FragmentViewPagerAdapter vadapter = new FragmentViewPagerAdapter(getSupportFragmentManager());
         vadapter.addFragment(r1);
         vadapter.addFragment(r2);
+        r1.setViewPager(pager);
+        r2.setViewPager(pager);
         pager.setAdapter(vadapter);
         tab.setupWithViewPager(pager);
 
@@ -69,8 +71,10 @@ public class RequestActivity extends AppCompatActivity{
             public void onPageSelected( int position ) {
                 switch (position) {
                     case 0:
+                        r1.prepareListData();
                         break;
                     case 1:
+                        r2.prepareRequest();
                         break;
                     default:
                         break;

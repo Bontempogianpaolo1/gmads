@@ -4,10 +4,13 @@ package gmads.it.gmads_lab1.RequestPackage;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
+import android.widget.Toast;
+
 import com.algolia.search.saas.Client;
 import com.algolia.search.saas.Index;
 import com.algolia.search.saas.Query;
@@ -25,11 +28,14 @@ public class Request_1_othersReq extends Fragment {
     ExpandableListAdapter listAdapter;
     ExpandableListView expListView;
     List<Book> listDataHeader;
+    ViewPager tab;
     HashMap<String, List<Request>> listDataChild;
     Client algoClient = new Client("L6B7L7WXZW", "9d2de9e724fa9289953e6b2d5ec978a5");
     Index algoIndex = algoClient.getIndex("requests");
 
-
+    public void setViewPager(ViewPager vp){
+        tab=vp;
+    }
     public Request_1_othersReq() {
 
     }
@@ -39,14 +45,14 @@ public class Request_1_othersReq extends Fragment {
                               Bundle savedInstanceState ) {
         // preparing list data
         View root = inflater.inflate(R.layout.fragment_list_others_request, container, false);
-
-        prepareListData();
         expListView = root.findViewById(R.id.explv);
+        prepareListData();
+
 
         return root;
     }
 
-    private void prepareListData() {
+    public void prepareListData() {
 
 
 
@@ -57,13 +63,12 @@ public class Request_1_othersReq extends Fragment {
         algoIndex.searchAsync(query, ( jsonObject, e ) -> {
             if(e==null){
                 boolean ifAccepted;
-
                 SearchRequestsJsonParser parser=new  SearchRequestsJsonParser();
                 List<Request> listrequest=parser.parseResults(jsonObject);
+
                 listDataChild = new HashMap<>();
                 listDataHeader= new ArrayList<>();
                 Book tempBook;
-
                 for(Request rr : listrequest){
 
                     if(!listDataChild.containsKey(rr.getbId())){
@@ -106,7 +111,12 @@ public class Request_1_othersReq extends Fragment {
                         taken=false;
                     }
                 }
+                if(listDataChild.size()==0){
+                    tab.setCurrentItem(1);
 
+                    Toast.makeText(getContext(),"nessuna richiesta ricevuta",Toast.LENGTH_LONG).show();
+                    return;
+                }
                 listAdapter = new ExpandableListAdapter(getContext(), listDataHeader, listDataChild);
 
                 // setting list adapter

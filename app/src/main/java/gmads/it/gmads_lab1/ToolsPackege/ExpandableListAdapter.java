@@ -12,7 +12,10 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.algolia.search.saas.AlgoliaException;
 import com.algolia.search.saas.Client;
+import com.algolia.search.saas.CompletionHandler;
 import com.algolia.search.saas.Index;;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -191,7 +194,14 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                                             book.setHolder(request.getRenterId());
                                             algoBookIndex.saveObjectAsync(new JSONObject(gson.toJson(book)),
                                                     book.getObjectID().toString(),
-                                                    null);
+                                                    new CompletionHandler() {
+                                                        @Override
+                                                        public void requestCompleted( JSONObject jsonObject, AlgoliaException e ) {
+                                                            if(e!=null){
+                                                                e.printStackTrace();
+                                                            }
+                                                        }
+                                                    });
 
                                         } catch (Exception e) {
                                             e.printStackTrace();
@@ -204,7 +214,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                                     .child("holder")
                                     .setValue(request.getRenterId()).addOnSuccessListener(aVoid -> {
                                         List<Request> l=listChild.get(request.getbId());
-                                        l.remove(request);
+                                        l.clear();
                                         listChild.put(request.getbId(),l);
                                        ExpandableListAdapter.super.notifyDataSetChanged();
                                         //RequestActivity.refresh(context);
