@@ -73,6 +73,7 @@ public class Request_1_othersReq extends Fragment {
 
                     if(!listDataChild.containsKey(rr.getbId())){
                         tempBook = new Book();
+                        tempBook.setUrlimage(rr.getUrlBookImage());
                         tempBook.setBId(rr.getbId());
                         tempBook.setTitle(rr.getbName());
                         listDataHeader.add(tempBook);
