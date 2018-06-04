@@ -50,8 +50,8 @@ public class Request_1_othersReq extends Fragment {
 
 
 
-        Query query = new Query("").setFilters("ownerId:" + FirebaseManagement.getUser().getUid() + " AND requestStatus:"
-                + AppConstants.PENDING + " OR requestStatus:" + AppConstants.ACCEPTED)
+        Query query = new Query("").setFilters("ownerId:" + FirebaseManagement.getUser().getUid() + " AND ( requestStatus:"
+                + AppConstants.PENDING + " OR requestStatus:" + AppConstants.ACCEPTED+" )")
                 .setHitsPerPage(100);
 
         algoIndex.searchAsync(query, ( jsonObject, e ) -> {
