@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -75,6 +76,11 @@ public class MyLibrary extends AppCompatActivity implements NavigationView.OnNav
     Tools tools;
     ProgressBar progressbar;
 
+    LibraryRented libraryRented = new LibraryRented();
+    LibraryLanded libraryLanded = new LibraryLanded();
+    LibraryMines libraryMines = new LibraryMines();
+    ViewPager pager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,6 +91,7 @@ public class MyLibrary extends AppCompatActivity implements NavigationView.OnNav
         tools = new Tools();
 
         progressbar = findViewById(R.id.progress_bar);
+        pager = findViewById(R.id.viewPager);
 
         setNavViews();
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -93,8 +100,59 @@ public class MyLibrary extends AppCompatActivity implements NavigationView.OnNav
         initCollapsingToolbar();
         ViewPager pager= findViewById(R.id.viewPager);
         FragmentViewPagerAdapter vpadapter= new FragmentViewPagerAdapter(getSupportFragmentManager());
-        vpadapter.addFragment(tab1);
+
+        vpadapter.addFragment(libraryMines);
+        vpadapter.addFragment(libraryLanded);
+        vpadapter.addFragment(libraryRented);
+
         pager.setAdapter(vpadapter);
+        TabLayout tableLayout= findViewById(R.id.tabs);
+        tableLayout.setupWithViewPager(pager);
+
+        Objects.requireNonNull(tableLayout.getTabAt(0)).setText(getString(R.string.MyBooks));
+        Objects.requireNonNull(tableLayout.getTabAt(1)).setText(getString(R.string.LandedBooks));
+        Objects.requireNonNull(tableLayout.getTabAt(2)).setText(getString(R.string.RentedBooks));
+
+        pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled( int position, float positionOffset, int positionOffsetPixels ) {
+
+            }
+
+            @Override
+            public void onPageSelected( int position ) {
+                switch (position){
+                    case 0:
+                        libraryMines.clearlist();
+                        libraryMines.setText(searchview.getQuery().toString());
+                        libraryMines.setProfile(profile);
+                        libraryMines.fetchdata();
+                        libraryMines.setNpage(libraryMines.getNpage()+1);
+                        break;
+                    case 1:
+                        libraryLanded.clearlist();
+                        libraryLanded.setText(searchview.getQuery().toString());
+                        libraryLanded.setProfile(profile);
+                        libraryLanded.fetchdata();
+                        libraryLanded.setNpage(libraryLanded.getNpage()+1);
+                        break;
+                    case 2:
+                        libraryRented.clearlist();
+                        libraryRented.setText(searchview.getQuery().toString());
+                        libraryRented.setProfile(profile);
+                        libraryRented.fetchdata();
+                        libraryRented.setNpage(libraryRented.getNpage()+1);
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged( int state ) {
+
+            }
+        });
         //era per mettere foto libri nell appbar, ma l'abbiamo messa come sfondo per ora
         try {
             Glide.with(this).load(R.drawable.cover).into((ImageView) findViewById(R.id.backdrop));
