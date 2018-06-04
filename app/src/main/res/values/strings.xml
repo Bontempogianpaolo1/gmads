@@ -155,5 +155,6 @@
     <string name="refused">Refused</string>
     <string name="pending">Pending</string>
     <string name="completed">Completed</string>
+    <string name="ooops_nothing_found">Ooops...Nothing found!</string>
 
 </resources>

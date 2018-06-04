@@ -6,7 +6,7 @@ import com.bumptech.glide.Registry
 import com.bumptech.glide.annotation.GlideModule
 import com.bumptech.glide.module.AppGlideModule
 import com.google.firebase.storage.StorageReference
-import gmads.it.gmads_lab1.FirebaseImageLoader
+import gmads.it.gmads_lab1.FirebasePackage.FirebaseImageLoader
 import java.io.InputStream
 
 @GlideModule

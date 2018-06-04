@@ -7,11 +7,11 @@ import com.google.firebase.database.*
 
 import com.xwray.groupie.kotlinandroidextensions.Item
 import gmads.it.gmads_lab1.Chat.model.*
-import gmads.it.gmads_lab1.FirebaseManagement
-import gmads.it.gmads_lab1.model.*
+import gmads.it.gmads_lab1.FirebasePackage.FirebaseManagement
 import gmads.it.gmads_lab1.Chat.item.ImageMessageItem
 import gmads.it.gmads_lab1.Chat.item.PersonItem
 import gmads.it.gmads_lab1.Chat.item.TextMessageItem
+import gmads.it.gmads_lab1.UserPackage.Profile
 
 
 object FirebaseChat {
@@ -25,106 +25,13 @@ object FirebaseChat {
     private val chatChannelsCollectionRef = firebaseInstance.reference.child("chatChannels")
 
     fun addUsersListener(context: Context, onListen: (List<PersonItem>) -> Unit): ValueEventListener {
-        /*return firebaseInstance.reference.child("users")
-                .addValueEventListener(object : ValueEventListener {
-
-                    override fun onDataChange(dataSnapshot: DataSnapshot?) {
-
-                        var items = mutableListOf<Item>()
-                        var notifiedChatNumber : Int = 0
-
-                        dataSnapshot!!.children.mapNotNull {
-
-                            val user = it.getValue<Profile>(Profile::class.java)
-
-                            if (user?.id != FirebaseAuth.getInstance().currentUser?.uid) {
-                                currentUserRef
-                                        .child("engagedChatChannels")
-                                        .child(user?.id)
-                                        .child("channelId")
-                                        .addValueEventListener(object : ValueEventListener {
-                                            override fun onCancelled(p0: DatabaseError?) {
-                                                //To change body of created functions use File | Settings | File Templates.
-                                                return
-                                            }
-
-                                            override fun onDataChange(dataSnapshot: DataSnapshot?) {
-                                                var channelId = dataSnapshot?.getValue(String::class.java)
-
-                                                if(channelId != null) {
-                                                    chatChannelsCollectionRef
-                                                            .child(channelId)
-                                                            .child("notificationNumber")
-                                                            .child(FirebaseAuth.getInstance().currentUser?.uid)
-                                                            .addValueEventListener(object : ValueEventListener {
-                                                                override fun onCancelled(p0: DatabaseError?) {
-                                                                    //To change body of created functions use File | Settings | File Templates.
-                                                                    items.clear()
-                                                                    onListen(items)
-                                                                }
-
-                                                                override fun onDataChange(dataSnapshot: DataSnapshot?) {
-                                                                    var notificationNumber = dataSnapshot?.getValue(Int::class.java)
-
-                                                                    var pToRemove = items.firstOrNull { p -> p as PersonItem; p.userId == user?.id }
-                                                                    if (pToRemove != null) {
-                                                                        pToRemove as PersonItem
-                                                                        if (pToRemove.notificationNumber > 0) {
-                                                                            notifiedChatNumber--
-                                                                        }
-                                                                        items.remove(pToRemove)
-
-                                                                    }
-
-                                                                    user?.let {
-                                                                        if (notificationNumber == 0) {
-                                                                            items.add(notifiedChatNumber, PersonItem(user, user.id, 0, context))
-                                                                        } else {
-                                                                            notifiedChatNumber++
-                                                                            items.add(0, PersonItem(user, user.id, notificationNumber
-                                                                                    ?: 0, context))
-                                                                        }
-                                                                        onListen(items)
-                                                                    }
-                                                                }
-
-                                                            })
-                                                } else {
-                                                    var pToRemove = items.firstOrNull { p -> p as PersonItem ; p.userId == user?.id }
-                                                    if(pToRemove != null)
-                                                        items.remove(pToRemove)
-                                                    user?.let {
-                                                        items.add(notifiedChatNumber, PersonItem(user, user.id, 0, context))
-
-                                                        onListen(items)
-                                                    }
-
-                                                }
-                                            }
-
-                                        })
-
-
-                            }
-
-                        }
-
-                   }
-
-                    override fun onCancelled(p0: DatabaseError?) {
-                        /*
-                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                        */
-                    }
-                })*/
-
         return firebaseInstance.reference
                 .child("users")
                 .child(FirebaseAuth.getInstance().currentUser?.uid)
                 .child("engagedChatChannels")
                 .addValueEventListener(object : ValueEventListener {
                     override fun onCancelled(p0: DatabaseError?) {
-                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
                     }
 
                     override fun onDataChange(dataSnapshot : DataSnapshot?) {
@@ -181,13 +88,9 @@ object FirebaseChat {
                                                                 }
 
                                                                 otherUser?.let {
-                                                                    //if (notificationNumber == 0) {
-                                                                    //    items.add(notifiedChatNumber, PersonItem(otherUser, otherUser.id, 0, context))
-                                                                    //} else {
-                                                                    //    notifiedChatNumber++
+
                                                                     items.add(0, PersonItem(otherUser, otherUser.id, notificationNumber
                                                                             ?: 0, context))
-                                                                    //}
                                                                     onListen(items)
                                                                 }
                                                             }

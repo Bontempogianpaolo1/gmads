@@ -23,20 +23,24 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import gmads.it.gmads_lab1.*
-import gmads.it.gmads_lab1.Chat.constants.AppConstants
+import gmads.it.gmads_lab1.constants.AppConstants
 import gmads.it.gmads_lab1.Chat.fragments.PeopleFragment
-import gmads.it.gmads_lab1.model.Profile
+import gmads.it.gmads_lab1.UserPackage.*
+import gmads.it.gmads_lab1.HomePackage.*
+import gmads.it.gmads_lab1.BookPackage.*
+import gmads.it.gmads_lab1.FirebasePackage.FirebaseManagement
 import kotlinx.android.synthetic.main.activity_chat.*
 import kotlinx.android.synthetic.main.activity_chat_list.*
 import kotlinx.android.synthetic.main.chat_list.*
+import gmads.it.gmads_lab1.RequestPackage.*
 import java.io.File
 import java.io.IOException
 import java.util.*
-
 class ChatList : AppCompatActivity() {
     internal var navName: TextView? =null
     internal var navMail: TextView? =null
     internal var navImage: ImageView? =null
+    internal var navReqNotification : ImageView? = null
     private var navigationView: NavigationView? =null
     private var profile: Profile? = null
     private val myProfileBitImage: Bitmap? = null
@@ -100,6 +104,7 @@ attivita per vedere la lista delle chat
         navName = headerView?.findViewById(R.id.navName)
         navMail = headerView?.findViewById(R.id.navMail)
         navImage = headerView?.findViewById(R.id.navImage)
+        navReqNotification = headerView?.findViewById(R.id.req_notification)
         headerView?.setBackgroundResource(R.color.colorPrimaryDark)
 
         navigationView?.setNavigationItemSelectedListener{
@@ -163,6 +168,11 @@ attivita per vedere la lista delle chat
 
                     navName?.text = myuser.getName()
                     navMail?.text = myuser.getEmail()
+                    if (myuser.isReqNotified()) {
+                        navReqNotification?.setVisibility(View.VISIBLE)
+                    } else {
+                        navReqNotification?.setVisibility(View.GONE)
+                    }
                     //setto foto
                     if (Objects.requireNonNull(myuser).getImage() != null) {
                         try {
