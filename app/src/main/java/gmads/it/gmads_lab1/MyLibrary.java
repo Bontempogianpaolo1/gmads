@@ -64,6 +64,7 @@ public class MyLibrary extends AppCompatActivity implements NavigationView.OnNav
     TextView navName;
     TextView navMail;
     ImageView navImage;
+    ImageView navReqNotification;
     String query="";
     NavigationView navigationView;
     DrawerLayout drawer;
@@ -207,6 +208,7 @@ public class MyLibrary extends AppCompatActivity implements NavigationView.OnNav
         navName =  headerView.findViewById(R.id.navName);
         navMail =  headerView.findViewById(R.id.navMail);
         navImage =  headerView.findViewById(R.id.navImage);
+        navReqNotification = headerView.findViewById(R.id.req_notification);
         headerView.setBackgroundResource(R.color.colorPrimaryDark);
 
         if(profile!=null) {
@@ -241,6 +243,11 @@ public class MyLibrary extends AppCompatActivity implements NavigationView.OnNav
                                 }
                                 navName.setText(profile.getName());
                                 navMail.setText(profile.getEmail());
+                                if(profile.isReqNotified()){
+                                    navReqNotification.setVisibility(View.VISIBLE);
+                                } else {
+                                    navReqNotification.setVisibility(View.GONE);
+                                }
                                 if (profile.getImage() != null) {
                                     try {
                                         File localFile = File.createTempFile("images", "jpg");

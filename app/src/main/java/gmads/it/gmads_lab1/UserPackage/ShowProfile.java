@@ -67,6 +67,7 @@ public class ShowProfile extends AppCompatActivity implements AppBarLayout.OnOff
     TextView navName;
     TextView navMail;
     ImageView navImage;
+    ImageView navReqNotification;
     NavigationView navigationView;
     DrawerLayout drawer;
     //view della attività
@@ -129,6 +130,7 @@ public class ShowProfile extends AppCompatActivity implements AppBarLayout.OnOff
         navName =  headerView.findViewById(R.id.navName);
         navMail =  headerView.findViewById(R.id.navMail);
         navImage =  headerView.findViewById(R.id.navImage);
+        navReqNotification = headerView.findViewById(R.id.req_notification);
         headerView.setBackgroundResource(R.color.colorPrimaryDark);
 
         if(profile!=null) {
@@ -268,6 +270,12 @@ public class ShowProfile extends AppCompatActivity implements AppBarLayout.OnOff
                                 vEmail.setText(profile.getEmail());
                                 navMail.setText(profile.getEmail());
                                 vBio.setText(profile.getDescription());
+                                //setto il pallino notifiche su alarm
+                                if(profile.isReqNotified()){
+                                    navReqNotification.setVisibility(View.VISIBLE);
+                                } else {
+                                    navReqNotification.setVisibility(View.GONE);
+                                }
                                 //commenti in card2
                                 ll_parent.removeAllViews();
                                 String s = "( " + profile.getReviews().size() + " )";

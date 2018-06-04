@@ -203,6 +203,11 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
                                     }
                                     if(completed) {
                                         FirebaseManagement.getDatabase().getReference().child("requests").child(rId).setValue(request);
+                                        FirebaseManagement.getDatabase().getReference()
+                                                .child("users")
+                                                .child(request.getOwnerId())
+                                                .child("reqNotified")
+                                                .setValue(true);
                                     }
                                 }
                                 else{

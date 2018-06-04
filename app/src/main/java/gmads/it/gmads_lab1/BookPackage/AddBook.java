@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
+import android.media.Image;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -65,6 +66,7 @@ public class AddBook extends AppCompatActivity
     private TextView navName;
     private TextView navMail;
     private ImageView navImage;
+    private ImageView navReqNotification;
     NavigationView navigationView;
     View headerView;
 
@@ -101,6 +103,7 @@ public class AddBook extends AppCompatActivity
         navName =  headerView.findViewById(R.id.navName);
         navMail = headerView.findViewById(R.id.navMail);
         navImage = headerView.findViewById(R.id.navImage);
+        navReqNotification = headerView.findViewById(R.id.req_notification);
     }
     public void findActViews(){
         toolbar = findViewById(R.id.toolbar);
@@ -123,6 +126,11 @@ public class AddBook extends AppCompatActivity
                     navName.setText(myuser.getName());
                     //navName.append(" " + myuser.getSurname());
                     navMail.setText(myuser.getEmail());
+                    if(myuser.isReqNotified()){
+                        navReqNotification.setVisibility(View.VISIBLE);
+                    } else {
+                        navReqNotification.setVisibility(View.GONE);
+                    }
                     //setto foto
                     if (Objects.requireNonNull(myuser).getImage() != null) {
                         try {

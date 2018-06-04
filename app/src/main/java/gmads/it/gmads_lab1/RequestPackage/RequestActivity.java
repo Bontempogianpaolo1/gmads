@@ -14,6 +14,7 @@ import android.widget.ExpandableListView;
 import android.widget.Toast;
 import java.util.Objects;
 
+import gmads.it.gmads_lab1.FirebasePackage.FirebaseManagement;
 import gmads.it.gmads_lab1.R;
 import gmads.it.gmads_lab1.ToolsPackege.FragmentViewPagerAdapter;
 
@@ -51,6 +52,12 @@ public class RequestActivity extends AppCompatActivity{
 
         Objects.requireNonNull(tab.getTabAt(0)).setText(getText(R.string.others_req));
         Objects.requireNonNull(tab.getTabAt(1)).setText(getText(R.string.my_req));
+
+        FirebaseManagement.getDatabase().getReference()
+                .child("users")
+                .child(FirebaseManagement.getUser().getUid())
+                .child("reqNotified")
+                .setValue(false);
 
         pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override

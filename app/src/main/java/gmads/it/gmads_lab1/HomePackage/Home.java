@@ -61,6 +61,7 @@ public class  Home extends AppCompatActivity implements NavigationView.OnNavigat
     TextView navName;
     TextView navMail;
     ImageView navImage;
+    ImageView navReqNotification;
     NavigationView navigationView;
     DrawerLayout drawer;
     private Profile profile;
@@ -401,6 +402,7 @@ public class  Home extends AppCompatActivity implements NavigationView.OnNavigat
         navName =  headerView.findViewById(R.id.navName);
         navMail =  headerView.findViewById(R.id.navMail);
         navImage =  headerView.findViewById(R.id.navImage);
+        navReqNotification = headerView.findViewById(R.id.req_notification);
         headerView.setBackgroundResource(R.color.colorPrimaryDark);
 
         if(profile!=null) {
@@ -429,6 +431,11 @@ public class  Home extends AppCompatActivity implements NavigationView.OnNavigat
                             }
                             navName.setText(profile.getName());
                             navMail.setText(profile.getEmail());
+                            if(profile.isReqNotified()){
+                                navReqNotification.setVisibility(View.VISIBLE);
+                            } else {
+                                navReqNotification.setVisibility(View.GONE);
+                            }
 
                             if (profile.getImage() != null) {
                                 try {
