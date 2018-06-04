@@ -90,11 +90,6 @@ public class RequestActivity extends AppCompatActivity{
         context.startActivity(intent);
     }
 
-    public void onClickUsername(View v){
-
-        Toast.makeText(getApplicationContext(), "Link al profilo del tizio",Toast.LENGTH_LONG).show();
-    }
-
     public void onClickYes(View v){
 
         Toast.makeText(getApplicationContext(), "Richiesta accettata",Toast.LENGTH_LONG).show();

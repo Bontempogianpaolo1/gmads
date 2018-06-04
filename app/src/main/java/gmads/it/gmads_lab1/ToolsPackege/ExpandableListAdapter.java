@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import org.json.JSONObject;
 import de.hdodenhof.circleimageview.CircleImageView;
+import gmads.it.gmads_lab1.UserPackage.ShowUserProfile;
 import gmads.it.gmads_lab1.constants.AppConstants;
 import gmads.it.gmads_lab1.Chat.glide.GlideApp;
 import gmads.it.gmads_lab1.BookPackage.Book;
@@ -75,6 +77,9 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 .centerCrop()
                 .into(civ);*/
         txtListChild.setText(childText);
+
+        TextView bProfile = convertView.findViewById(R.id.name);
+        bProfile.setOnClickListener(v -> onClickProfile(child));
 
         ImageView bYes = convertView.findViewById(R.id.yes);
         bYes.setOnClickListener( v -> onClickYes(child));
@@ -256,6 +261,12 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                     }
                 });
 
+    }
+
+    private void onClickProfile(Request request){
+        Intent intent = new Intent(context, ShowUserProfile.class);
+        intent.putExtra("userId", request.getRenterId());
+        context.startActivity(intent);
     }
 
 }
