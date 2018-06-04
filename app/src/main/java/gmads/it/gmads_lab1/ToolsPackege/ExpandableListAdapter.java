@@ -214,7 +214,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                                     .child("holder")
                                     .setValue(request.getRenterId()).addOnSuccessListener(aVoid -> {
                                         List<Request> l=listChild.get(request.getbId());
-                                        l.remove(request);
+                                        l.clear();
                                         listChild.put(request.getbId(),l);
                                        ExpandableListAdapter.super.notifyDataSetChanged();
                                         //RequestActivity.refresh(context);
