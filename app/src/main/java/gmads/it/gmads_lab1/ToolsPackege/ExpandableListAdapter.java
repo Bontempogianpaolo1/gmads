@@ -17,6 +17,8 @@ import com.algolia.search.saas.AlgoliaException;
 import com.algolia.search.saas.Client;
 import com.algolia.search.saas.CompletionHandler;
 import com.algolia.search.saas.Index;;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
@@ -127,10 +129,15 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         TextView number =  convertView.findViewById(R.id.number);
         CircleImageView civ = convertView.findViewById(R.id.bookphoto);
         //settare foto libro se c'è DOPO AVER SETTATO QUELLA DI DEFAULT
-        GlideApp.with(context)
+        RequestOptions requestOptions = new RequestOptions();
+        requestOptions.placeholder(R.drawable.default_book);
+        requestOptions.error(R.drawable.default_book);
+        //if(book.getUrlimage()!=null && book.getUrlimage().length()!=0){
+        Glide.with(context).setDefaultRequestOptions(requestOptions).load(b.getUrlimage()).into(civ);
+       /* GlideApp.with(context)
                 .load(R.drawable.default_book)
                 .centerCrop()
-                .into(civ);
+                .into(civ);*/
         //lblListHeader.setTypeface(null, Typeface.BOLD);
         lblListHeader.setText(headerTitle);
         //setto numerino richieste
