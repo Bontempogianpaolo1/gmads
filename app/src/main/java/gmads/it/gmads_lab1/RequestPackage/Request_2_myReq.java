@@ -2,6 +2,7 @@ package gmads.it.gmads_lab1.RequestPackage;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -22,9 +23,13 @@ public class Request_2_myReq extends Fragment {
     RecyclerView recycle;
     private RequestAdapter adapter;
     private List<Request> requests;
+    ViewPager tab;
     Client algoClient = new Client("L6B7L7WXZW", "9d2de9e724fa9289953e6b2d5ec978a5");
     Index algoIndex = algoClient.getIndex("requests");
 
+    public void setViewPager(ViewPager vp){
+        tab=vp;
+    }
     public Request_2_myReq() {
 
     }
@@ -37,8 +42,9 @@ public class Request_2_myReq extends Fragment {
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         recycle.setLayoutManager(mLayoutManager);
-        prepareRequest();
         recycle.setAdapter(adapter);
+        prepareRequest();
+
         // Inflate the layout for this fragment
         return root;
     }
@@ -56,7 +62,7 @@ public class Request_2_myReq extends Fragment {
     /**
      * Adding few albums for testing
      */
-    private void prepareRequest() {
+    public void prepareRequest() {
 
         Query query = new Query("").setFilters("renterId:" + FirebaseManagement.getUser().getUid())
                 .setHitsPerPage(100);

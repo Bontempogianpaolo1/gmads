@@ -41,7 +41,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
     private Context mContext;
     private List<Book> bookList;
     private List<Request> requestList=new ArrayList<>();
-    private List<String> booksRequested = new LinkedList<String>();
+    private List<String> booksRequested = new LinkedList<>();
     private Client algoClient = new Client("L6B7L7WXZW", "9d2de9e724fa9289953e6b2d5ec978a5");
     private Index algoIndex = algoClient.getIndex("requests");
     private Gson gson = new Gson();
@@ -49,13 +49,14 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView title, owner, rating, distance;
-        public ImageView thumbnail, overflow;
+        public ImageView thumbnail, overflow,status;
 
         MyViewHolder( View view ) {
             super(view);
             title =  view.findViewById(R.id.title);
             owner = view.findViewById(R.id.owner);
             thumbnail =  view.findViewById(R.id.thumbnail);
+            status= view.findViewById(R.id.status);
             //mettere anche rating book
 
             //metere distanza
@@ -113,6 +114,12 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
         //distanza
         holder.distance.setText(String.valueOf(book.getDistance()/1000));
         holder.distance.append(" Km");
+        if(book.getStato()== AppConstants.AVAILABLE){
+            holder.status.setImageDrawable(mContext.getDrawable(android.R.drawable.presence_online));
+        }
+        else{
+            holder.status.setImageDrawable(mContext.getDrawable(android.R.drawable.presence_busy));
+        }
         //rating
         // loading album cover using Glide library
         RequestOptions requestOptions = new RequestOptions();
