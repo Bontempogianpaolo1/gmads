@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -19,6 +20,8 @@ import android.widget.TextView;
 import android.support.design.widget.AppBarLayout;
 import android.view.animation.AlphaAnimation;
 import android.widget.LinearLayout;
+
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
@@ -28,12 +31,16 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 import gmads.it.gmads_lab1.Chat.ChatActivity;
+import gmads.it.gmads_lab1.Chat.glide.GlideApp;
 import gmads.it.gmads_lab1.constants.AppConstants;
 import gmads.it.gmads_lab1.FirebasePackage.Datasource;
 import gmads.it.gmads_lab1.FirebasePackage.FirebaseManagement;
 import gmads.it.gmads_lab1.R;
 import gmads.it.gmads_lab1.ToolsPackege.Tools;
 import gmads.it.gmads_lab1.ReviewPackage.Review;
+import jp.wasabeef.glide.transformations.BlurTransformation;
+
+import static com.bumptech.glide.request.RequestOptions.bitmapTransform;
 
 public class ShowUserProfile extends AppCompatActivity implements AppBarLayout.OnOffsetChangedListener {
 
@@ -61,6 +68,7 @@ public class ShowUserProfile extends AppCompatActivity implements AppBarLayout.O
     private Profile profile;
     private Bitmap myProfileBitImage;
     Tools tools;
+    Context context;
     LinearLayout ll_parent;
     RatingBar rating;
     TextView count;
@@ -136,6 +144,7 @@ public class ShowUserProfile extends AppCompatActivity implements AppBarLayout.O
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         tools = new Tools();
+        context = this;
     }
 
     @Override
@@ -218,6 +227,16 @@ public class ShowUserProfile extends AppCompatActivity implements AppBarLayout.O
                                                         .child("users")
                                                         .child(userId)
                                                         .child("profileimage.jpg");
+
+                                        profileImageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                            @Override
+                                            public void onSuccess(Uri uri) {
+                                                GlideApp.with(context)
+                                                        .load(uri.toString())
+                                                        .apply(bitmapTransform(new BlurTransformation(25, 3)))
+                                                        .into(coverImage);
+                                            }
+                                        });
 
                                         profileImageRef.getFile(localFile)
                                                 .addOnSuccessListener(taskSnapshot -> {
