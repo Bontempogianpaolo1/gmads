@@ -3,6 +3,7 @@ package gmads.it.gmads_lab1.RequestPackage;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -63,18 +64,26 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.MyViewHo
         switch (reqList.get(holder.getAdapterPosition()).getRequestStatus()){
             case AppConstants.ACCEPTED:
               holder.stato.setText(R.string.accepted);
+              holder.stato.setBackground(mContext.getDrawable(R.drawable.rounded_completed));
+                holder.stato.setTextColor(ContextCompat.getColor(mContext, R.color.green));
               holder.button.setVisibility(View.VISIBLE);
               break;
             case AppConstants.REFUSED:
                 holder.stato.setText(R.string.refused);
+                holder.stato.setBackground(mContext.getDrawable(R.drawable.rounded_rejected));
+                holder.stato.setTextColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
                 holder.button.setVisibility(View.GONE);
                 break;
             case AppConstants.PENDING:
                 holder.stato.setText(R.string.pending);
+                holder.stato.setBackground(mContext.getDrawable(R.drawable.rounded_pending));
+                holder.stato.setTextColor(ContextCompat.getColor(mContext, R.color.dark_gray));
                 holder.button.setVisibility(View.GONE);
                 break;
             case AppConstants.COMPLETED:
               holder.stato.setText(R.string.completed);
+                holder.stato.setBackground(mContext.getDrawable(R.drawable.rounded_completed));
+                holder.stato.setTextColor(ContextCompat.getColor(mContext, R.color.green));
               holder.button.setVisibility(View.VISIBLE);
               break;
             default:
