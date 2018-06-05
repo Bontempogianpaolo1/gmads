@@ -56,8 +56,8 @@ import gmads.it.gmads_lab1.UserPackage.Profile;
 import gmads.it.gmads_lab1.HomePackage.fragments.AllHome;
 
 public class  Home extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
-    SearchView searchview;
 
+    SearchView searchview;
     TextView navName;
     TextView navMail;
     ImageView navImage;

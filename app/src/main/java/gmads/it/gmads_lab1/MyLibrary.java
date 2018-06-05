@@ -40,26 +40,21 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 import java.util.Objects;
 
 import gmads.it.gmads_lab1.BookPackage.AddBook;
-import gmads.it.gmads_lab1.BookPackage.SearchResultsJsonParser;
 import gmads.it.gmads_lab1.Chat.ChatList;
 import gmads.it.gmads_lab1.FirebasePackage.FirebaseManagement;
 import gmads.it.gmads_lab1.HomePackage.Home;
-import gmads.it.gmads_lab1.Map.main.MapActivity;
 import gmads.it.gmads_lab1.RequestPackage.RequestActivity;
 import gmads.it.gmads_lab1.ToolsPackege.FragmentViewPagerAdapter;
 import gmads.it.gmads_lab1.ToolsPackege.Tools;
 import gmads.it.gmads_lab1.UserPackage.EditProfile;
 import gmads.it.gmads_lab1.UserPackage.ShowProfile;
-import gmads.it.gmads_lab1.BookPackage.Book;
 import gmads.it.gmads_lab1.UserPackage.Profile;
 
 public class MyLibrary extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
-    private List<Book> books;
     SearchView searchview;
     Client algoClient;
     Index algoIndex;
@@ -106,8 +101,7 @@ public class MyLibrary extends AppCompatActivity implements NavigationView.OnNav
         vpadapter.addFragment(libraryRented);
 
         pager.setAdapter(vpadapter);
-        //crasha qui che trova null
-        TabLayout tableLayout=(TabLayout)  findViewById(R.id.tabs);
+        TabLayout tableLayout =findViewById(R.id.tabsl);
         tableLayout.setupWithViewPager(pager);
 
         Objects.requireNonNull(tableLayout.getTabAt(0)).setText(getString(R.string.MyBooks));
@@ -125,21 +119,21 @@ public class MyLibrary extends AppCompatActivity implements NavigationView.OnNav
                 switch (position){
                     case 0:
                         libraryMines.clearlist();
-                        libraryMines.setText(searchview.getQuery().toString());
+                        //libraryMines.setText(searchview.getQuery().toString());
                         libraryMines.setProfile(profile);
                         libraryMines.fetchdata();
                         libraryMines.setNpage(libraryMines.getNpage()+1);
                         break;
                     case 1:
                         libraryLanded.clearlist();
-                        libraryLanded.setText(searchview.getQuery().toString());
+                        //libraryLanded.setText(searchview.getQuery().toString());
                         libraryLanded.setProfile(profile);
                         libraryLanded.fetchdata();
                         libraryLanded.setNpage(libraryLanded.getNpage()+1);
                         break;
                     case 2:
                         libraryRented.clearlist();
-                        libraryRented.setText(searchview.getQuery().toString());
+                        //libraryRented.setText(searchview.getQuery().toString());
                         libraryRented.setProfile(profile);
                         libraryRented.fetchdata();
                         libraryRented.setNpage(libraryRented.getNpage()+1);
@@ -249,6 +243,8 @@ public class MyLibrary extends AppCompatActivity implements NavigationView.OnNav
         });
     }
 
+    /*
+
     public void mapcreate( View view ) {
         Intent intentMod = new Intent(this, MapActivity.class);
         intentMod.putExtra("query",query);
@@ -258,6 +254,7 @@ public class MyLibrary extends AppCompatActivity implements NavigationView.OnNav
         overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
 
     }
+    */
 
     public void setNavViews(){
         drawer =  findViewById(R.id.drawer_layout);
@@ -273,7 +270,6 @@ public class MyLibrary extends AppCompatActivity implements NavigationView.OnNav
         if(profile!=null) {
             navName.setText(profile.getName());
             navMail.setText(profile.getEmail());
-
             if (myProfileBitImage != null) {
                 navImage.setImageBitmap(myProfileBitImage);
             } else {
@@ -356,12 +352,14 @@ public class MyLibrary extends AppCompatActivity implements NavigationView.OnNav
         progressbar.setVisibility(View.VISIBLE);
 
         if(tools.isOnline(getApplicationContext())) {
+           /*
             if(searchview!= null){
                 libraryMines.setText(searchview.getQuery().toString());
             }else{
                 libraryMines.setText("");
 
             }
+            */
             libraryMines.setProfile(profile);
             libraryMines.fetchdata();
             libraryMines.setNpage(libraryMines.getNpage()+1);
