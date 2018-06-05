@@ -117,7 +117,7 @@ public class Request_1_othersReq extends Fragment {
                 if(listDataChild.size()==0){
                     tab.setCurrentItem(1);
 
-                    Toast.makeText(getContext(),"nessuna richiesta ricevuta",Toast.LENGTH_LONG).show();
+                   // Toast.makeText(getContext(),"nessuna richiesta ricevuta",Toast.LENGTH_LONG).show();
                     return;
                 }
                 listAdapter = new ExpandableListAdapter(getContext(), listDataHeader, listDataChild);
@@ -209,16 +209,19 @@ public class Request_1_othersReq extends Fragment {
                         taken=false;
                     }
                 }
-                ImageView notfound = Objects.requireNonNull(getActivity()).findViewById(R.id.not_found);
-                TextView tnf = getActivity().findViewById(R.id.textnotfound);
+                ImageView notfound = Objects.requireNonNull(getActivity()).findViewById(R.id.not_found2);
+                TextView tnf = getActivity().findViewById(R.id.textnotfound2);
+                ExpandableListView exp= getActivity().findViewById(R.id.explv);
                 if(listDataChild.size()==0){
                     notfound.setVisibility(View.VISIBLE);
                     tnf.setVisibility(View.VISIBLE);
+                    exp.setVisibility(View.INVISIBLE);
                     return;
                 }
                 else{
                     notfound.setVisibility(View.GONE);
                     tnf.setVisibility(View.GONE);
+                    exp.setVisibility(View.VISIBLE);
                 }
 
 
