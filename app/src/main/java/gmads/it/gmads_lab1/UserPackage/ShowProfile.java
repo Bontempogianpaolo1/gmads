@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -25,6 +26,7 @@ import android.support.design.widget.AppBarLayout;
 import android.view.animation.AlphaAnimation;
 import android.widget.LinearLayout;
 import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
@@ -37,6 +39,7 @@ import java.util.Objects;
 
 import gmads.it.gmads_lab1.BookPackage.AddBook;
 import gmads.it.gmads_lab1.Chat.ChatList;
+import gmads.it.gmads_lab1.Chat.glide.GlideApp;
 import gmads.it.gmads_lab1.FirebasePackage.Datasource;
 import gmads.it.gmads_lab1.FirebasePackage.FirebaseManagement;
 import gmads.it.gmads_lab1.HomePackage.Home;
@@ -46,6 +49,9 @@ import gmads.it.gmads_lab1.R;
 import gmads.it.gmads_lab1.RequestPackage.RequestActivity;
 import gmads.it.gmads_lab1.ToolsPackege.Tools;
 import gmads.it.gmads_lab1.ReviewPackage.Review;
+import jp.wasabeef.glide.transformations.BlurTransformation;
+
+import static com.bumptech.glide.request.RequestOptions.bitmapTransform;
 
 public class ShowProfile extends AppCompatActivity implements AppBarLayout.OnOffsetChangedListener {
 
@@ -57,6 +63,7 @@ public class ShowProfile extends AppCompatActivity implements AppBarLayout.OnOff
     private boolean mIsTheTitleContainerVisible = true;
 
     Tools tools;
+    Context context;
 
     private AppBarLayout appbar;
     private ImageView coverImage;
@@ -174,6 +181,7 @@ public class ShowProfile extends AppCompatActivity implements AppBarLayout.OnOff
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         tools = new Tools();
+        context = this;
     }
 
     @Override
@@ -314,6 +322,16 @@ public class ShowProfile extends AppCompatActivity implements AppBarLayout.OnOff
                                                         .child(FirebaseManagement.getUser().getUid())
                                                         .child("profileimage.jpg");
 
+                                        profileImageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                            @Override
+                                            public void onSuccess(Uri uri) {
+                                                GlideApp.with(context)
+                                                        .load(uri.toString())
+                                                        .apply(bitmapTransform(new BlurTransformation(25, 3)))
+                                                        .into(coverImage);
+                                            }
+                                        });
+
                                         profileImageRef.getFile(localFile)
                                                 .addOnSuccessListener(taskSnapshot -> {
                                                     //progressbar.setVisibility(View.GONE);
@@ -323,6 +341,8 @@ public class ShowProfile extends AppCompatActivity implements AppBarLayout.OnOff
                                                 }).addOnFailureListener(e -> {
                                             //progressbar.setVisibility(View.GONE);
                                             avatar.setVisibility(View.VISIBLE);
+
+
                                         });
 
                                     } catch (IOException e) {
