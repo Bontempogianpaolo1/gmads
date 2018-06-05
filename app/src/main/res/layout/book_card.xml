@@ -81,6 +81,7 @@
                 android:layout_height="36dp"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentTop="true"
+                android:layout_margin="5dp"
                 card_view:srcCompat="@android:drawable/presence_online" />
 
         </RelativeLayout>
