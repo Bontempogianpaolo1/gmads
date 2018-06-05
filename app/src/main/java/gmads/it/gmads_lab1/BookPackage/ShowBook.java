@@ -60,6 +60,9 @@ import gmads.it.gmads_lab1.R;
 import gmads.it.gmads_lab1.RequestPackage.SearchRequestsJsonParser;
 import gmads.it.gmads_lab1.ToolsPackege.Tools;
 import gmads.it.gmads_lab1.RequestPackage.Request;
+import jp.wasabeef.glide.transformations.BlurTransformation;
+
+import static com.bumptech.glide.request.RequestOptions.bitmapTransform;
 
 public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffsetChangedListener*/{
 
@@ -102,6 +105,7 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
     TextView titleImg;
     TextView titleConditions;
     ImageView bookPhoto;
+    ImageView bookBackground;
     Button bReserveOrReturn;
     ProgressBar progressBar;
 
@@ -125,6 +129,7 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
         titleNote = findViewById(R.id.tv4);
         titleImg = findViewById(R.id.photoTitle);
         bookPhoto = findViewById(R.id.photoBook);
+        bookBackground = findViewById(R.id.avatar_background);
         bReserveOrReturn = findViewById(R.id.reserveOrReturn);
         progressBar = findViewById(R.id.progress_bar);
     }
@@ -324,6 +329,11 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
                                     GlideApp.with(getApplicationContext())
                                             .load(book.getUrlimage())
                                             .into(avatar);
+
+                                    GlideApp.with(getApplicationContext())
+                                            .load(book.getUrlimage())
+                                            .apply(bitmapTransform(new BlurTransformation(25, 3)))
+                                            .into(bookBackground);
                                 }
                                 //titolo Cé SEMPRE
                                 vTitle.setText(book.getTitle());

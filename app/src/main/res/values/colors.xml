@@ -4,7 +4,7 @@
     <color name="colorPrimaryDark">#7a1004</color>
     <color name="colorAccent">#e64a19</color>
     <color name="colorPale">#e3f2fd</color>
-    <color name="newwhiteBackground">#f9f9f9</color>
+    <color name="newwhiteBackground">#DDDDDD</color>
     <color name="white">#ffffff</color>
     <!--cambiare-->
     <color name="viewBg">#f1f5f8</color>

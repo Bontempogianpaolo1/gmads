@@ -26,7 +26,7 @@ class MyNotificationManager {
     fun showNotification(from : String, notification : String, intent : Intent){
 
         var pendingIntent = PendingIntent.getActivity(
-                ctx,
+                 ctx,
                 NOTIFICATION_ID,
                 intent,
                 PendingIntent.FLAG_ONE_SHOT
