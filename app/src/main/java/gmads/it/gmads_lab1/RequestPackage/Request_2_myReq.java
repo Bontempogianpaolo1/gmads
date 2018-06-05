@@ -8,6 +8,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.algolia.search.saas.Client;
 import com.algolia.search.saas.Index;
@@ -15,6 +17,7 @@ import com.algolia.search.saas.Query;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import gmads.it.gmads_lab1.FirebasePackage.FirebaseManagement;
 import gmads.it.gmads_lab1.R;
@@ -73,6 +76,17 @@ public class Request_2_myReq extends Fragment {
                 List<Request> listrequest = parser.parseResults(jsonObject);
                 adapter.setbooks(listrequest);
                 adapter.notifyDataSetChanged();
+                ImageView notfound = Objects.requireNonNull(getActivity()).findViewById(R.id.not_found);
+                TextView tnf = getActivity().findViewById(R.id.textnotfound);
+                if(listrequest.size()==0){
+                    notfound.setVisibility(View.VISIBLE);
+                    tnf.setVisibility(View.VISIBLE);
+                    return;
+                }
+                else{
+                    notfound.setVisibility(View.GONE);
+                    tnf.setVisibility(View.GONE);
+                }
             }
         });
 

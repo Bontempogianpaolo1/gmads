@@ -36,4 +36,29 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
     </android.support.v4.view.ViewPager>
+    <TextView
+        android:id="@+id/textnotfound"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="45dp"
+        android:text="@string/ooops_nothing_found"
+        android:textAlignment="center"
+        android:textColor="@color/dark_gray"
+        android:textSize="18sp"
+        android:textStyle="italic"
+        android:visibility="gone" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/not_found"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textnotfound"
+        android:layout_centerInParent="false"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="50dp"
+        android:foregroundGravity="top"
+        android:src="@drawable/not_found"
+        android:visibility="gone" />
 </android.support.design.widget.CoordinatorLayout>
