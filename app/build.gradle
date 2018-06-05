@@ -96,6 +96,9 @@ dependencies {
     //groupie
     implementation 'com.xwray:groupie:2.0.3'
     implementation 'com.xwray:groupie-kotlin-android-extensions:2.0.3'
+
+    //GLIDE TRASFORMATIONS
+    implementation 'jp.wasabeef:glide-transformations:3.3.0'
 }
 
 apply plugin: 'com.google.gms.google-services'
@@ -103,4 +106,5 @@ apply plugin: 'com.google.gms.google-services'
 
 repositories {
     mavenCentral()
+    jcenter()
 }

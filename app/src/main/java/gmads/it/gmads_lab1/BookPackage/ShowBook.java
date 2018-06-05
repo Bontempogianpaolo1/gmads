@@ -24,7 +24,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.algolia.search.saas.AlgoliaException;
 import com.algolia.search.saas.Client;
+import com.algolia.search.saas.CompletionHandler;
 import com.algolia.search.saas.Index;
 import com.algolia.search.saas.Query;
 import com.bumptech.glide.Glide;
@@ -57,6 +60,9 @@ import gmads.it.gmads_lab1.R;
 import gmads.it.gmads_lab1.RequestPackage.SearchRequestsJsonParser;
 import gmads.it.gmads_lab1.ToolsPackege.Tools;
 import gmads.it.gmads_lab1.RequestPackage.Request;
+import jp.wasabeef.glide.transformations.BlurTransformation;
+
+import static com.bumptech.glide.request.RequestOptions.bitmapTransform;
 
 public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffsetChangedListener*/{
 
@@ -77,6 +83,7 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
     // roba di algolia
     private Client algoClient = new Client("L6B7L7WXZW", "9d2de9e724fa9289953e6b2d5ec978a5");
     private Index algoIndex = algoClient.getIndex("requests");
+    private Index algoBookIndex = algoClient.getIndex("BookIndex");
     private Gson gson = new Gson();
     ContextWrapper cw;
     Book book;
@@ -98,6 +105,7 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
     TextView titleImg;
     TextView titleConditions;
     ImageView bookPhoto;
+    ImageView bookBackground;
     Button bReserveOrReturn;
     ProgressBar progressBar;
 
@@ -121,6 +129,7 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
         titleNote = findViewById(R.id.tv4);
         titleImg = findViewById(R.id.photoTitle);
         bookPhoto = findViewById(R.id.photoBook);
+        bookBackground = findViewById(R.id.avatar_background);
         bReserveOrReturn = findViewById(R.id.reserveOrReturn);
         progressBar = findViewById(R.id.progress_bar);
     }
@@ -320,6 +329,11 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
                                     GlideApp.with(getApplicationContext())
                                             .load(book.getUrlimage())
                                             .into(avatar);
+
+                                    GlideApp.with(getApplicationContext())
+                                            .load(book.getUrlimage())
+                                            .apply(bitmapTransform(new BlurTransformation(25, 3)))
+                                            .into(bookBackground);
                                 }
                                 //titolo Cé SEMPRE
                                 vTitle.setText(book.getTitle());
@@ -497,6 +511,23 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
                                         null);
                             } catch (Exception e1) {
                                 e1.printStackTrace();
+                            }
+                            try {
+                                book.setStato(AppConstants.AVAILABLE);
+                                book.setHolder(FirebaseManagement.getUser().getUid());
+                                algoBookIndex.saveObjectAsync(new JSONObject(gson.toJson(book)),
+                                        book.getObjectID().toString(),
+                                        new CompletionHandler() {
+                                            @Override
+                                            public void requestCompleted( JSONObject jsonObject, AlgoliaException e ) {
+                                                if(e!=null){
+                                                    e.printStackTrace();
+                                                }
+                                            }
+                                        });
+
+                            } catch (Exception e2) {
+                                e2.printStackTrace();
                             }
                         });
 

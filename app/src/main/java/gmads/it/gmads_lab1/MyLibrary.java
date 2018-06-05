@@ -4,16 +4,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.icu.util.Freezable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ProgressBar;
@@ -37,27 +40,21 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 import java.util.Objects;
 
 import gmads.it.gmads_lab1.BookPackage.AddBook;
-import gmads.it.gmads_lab1.BookPackage.SearchResultsJsonParser;
 import gmads.it.gmads_lab1.Chat.ChatList;
 import gmads.it.gmads_lab1.FirebasePackage.FirebaseManagement;
 import gmads.it.gmads_lab1.HomePackage.Home;
-import gmads.it.gmads_lab1.Map.main.MapActivity;
 import gmads.it.gmads_lab1.RequestPackage.RequestActivity;
 import gmads.it.gmads_lab1.ToolsPackege.FragmentViewPagerAdapter;
 import gmads.it.gmads_lab1.ToolsPackege.Tools;
 import gmads.it.gmads_lab1.UserPackage.EditProfile;
 import gmads.it.gmads_lab1.UserPackage.ShowProfile;
-import gmads.it.gmads_lab1.HomePackage.fragments.AllHome;
-import gmads.it.gmads_lab1.BookPackage.Book;
 import gmads.it.gmads_lab1.UserPackage.Profile;
 
 public class MyLibrary extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
-    private List<Book> books;
     SearchView searchview;
     Client algoClient;
     Index algoIndex;
@@ -71,9 +68,13 @@ public class MyLibrary extends AppCompatActivity implements NavigationView.OnNav
     private Profile profile;
     private Bitmap myProfileBitImage;
     View headerView;
-    AllHome tab1= new AllHome();
     Tools tools;
     ProgressBar progressbar;
+
+    LibraryRented libraryRented = new LibraryRented();
+    LibraryLanded libraryLanded = new LibraryLanded();
+    LibraryMines libraryMines = new LibraryMines();
+    ViewPager pager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +86,7 @@ public class MyLibrary extends AppCompatActivity implements NavigationView.OnNav
         tools = new Tools();
 
         progressbar = findViewById(R.id.progress_bar);
+        pager = findViewById(R.id.viewPager);
 
         setNavViews();
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -93,8 +95,59 @@ public class MyLibrary extends AppCompatActivity implements NavigationView.OnNav
         initCollapsingToolbar();
         ViewPager pager= findViewById(R.id.viewPager);
         FragmentViewPagerAdapter vpadapter= new FragmentViewPagerAdapter(getSupportFragmentManager());
-        vpadapter.addFragment(tab1);
+
+        vpadapter.addFragment(libraryMines);
+        vpadapter.addFragment(libraryLanded);
+        vpadapter.addFragment(libraryRented);
+
         pager.setAdapter(vpadapter);
+        TabLayout tableLayout =findViewById(R.id.tabsl);
+        tableLayout.setupWithViewPager(pager);
+
+        Objects.requireNonNull(tableLayout.getTabAt(0)).setText(getString(R.string.MyBooks));
+        Objects.requireNonNull(tableLayout.getTabAt(1)).setText(getString(R.string.LandedBooks));
+        Objects.requireNonNull(tableLayout.getTabAt(2)).setText(getString(R.string.RentedBooks));
+
+        pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled( int position, float positionOffset, int positionOffsetPixels ) {
+
+            }
+
+            @Override
+            public void onPageSelected( int position ) {
+                switch (position){
+                    case 0:
+                        libraryMines.clearlist();
+                        //libraryMines.setText(searchview.getQuery().toString());
+                        libraryMines.setProfile(profile);
+                        libraryMines.fetchdata();
+                        libraryMines.setNpage(libraryMines.getNpage()+1);
+                        break;
+                    case 1:
+                        libraryLanded.clearlist();
+                        //libraryLanded.setText(searchview.getQuery().toString());
+                        libraryLanded.setProfile(profile);
+                        libraryLanded.fetchdata();
+                        libraryLanded.setNpage(libraryLanded.getNpage()+1);
+                        break;
+                    case 2:
+                        libraryRented.clearlist();
+                        //libraryRented.setText(searchview.getQuery().toString());
+                        libraryRented.setProfile(profile);
+                        libraryRented.fetchdata();
+                        libraryRented.setNpage(libraryRented.getNpage()+1);
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged( int state ) {
+
+            }
+        });
         //era per mettere foto libri nell appbar, ma l'abbiamo messa come sfondo per ora
         try {
             Glide.with(this).load(R.drawable.cover).into((ImageView) findViewById(R.id.backdrop));
@@ -190,6 +243,8 @@ public class MyLibrary extends AppCompatActivity implements NavigationView.OnNav
         });
     }
 
+    /*
+
     public void mapcreate( View view ) {
         Intent intentMod = new Intent(this, MapActivity.class);
         intentMod.putExtra("query",query);
@@ -199,6 +254,7 @@ public class MyLibrary extends AppCompatActivity implements NavigationView.OnNav
         overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
 
     }
+    */
 
     public void setNavViews(){
         drawer =  findViewById(R.id.drawer_layout);
@@ -214,7 +270,6 @@ public class MyLibrary extends AppCompatActivity implements NavigationView.OnNav
         if(profile!=null) {
             navName.setText(profile.getName());
             navMail.setText(profile.getEmail());
-
             if (myProfileBitImage != null) {
                 navImage.setImageBitmap(myProfileBitImage);
             } else {
@@ -296,31 +351,24 @@ public class MyLibrary extends AppCompatActivity implements NavigationView.OnNav
 
         progressbar.setVisibility(View.VISIBLE);
 
-        Query query = new Query(FirebaseManagement.getUser().getUid())
-                .setAroundLatLng(new AbstractQuery.LatLng(profile.getLat(), profile.getLng()))
-                .setGetRankingInfo(true);
-        algoIndex.searchAsync(query, ( jsonObject, e ) -> {
-            if(e==null){
-                InputMethodManager imm = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                assert imm != null;
-                imm.hideSoftInputFromWindow(Objects.requireNonNull(getCurrentFocus()).getWindowToken(), 0);
-                SearchResultsJsonParser search= new SearchResultsJsonParser();
-                Log.d("lista",jsonObject.toString());
-                books= search.parseResults(jsonObject);
-                if(books.isEmpty()){
-                    ImageView notfound = findViewById(R.id.not_found);
-                    TextView tnf = findViewById(R.id.textnotfound);
-                    progressbar.setVisibility(View.GONE);
-                    notfound.setVisibility(View.VISIBLE);
-                    tnf.setVisibility(View.VISIBLE);
-                }
-                else {
-                    tab1.getAdapter().setbooks(books);
-                    tab1.getAdapter().notifyDataSetChanged();
-                    progressbar.setVisibility(View.GONE);
-                }
+        if(tools.isOnline(getApplicationContext())) {
+           /*
+            if(searchview!= null){
+                libraryMines.setText(searchview.getQuery().toString());
+            }else{
+                libraryMines.setText("");
+
             }
-        });
+            */
+            libraryMines.setProfile(profile);
+            libraryMines.fetchdata();
+            libraryMines.setNpage(libraryMines.getNpage()+1);
+        } else {
+            android.app.AlertDialog.Builder ad = tools.showPopup(this, getString(R.string.noInternet), "", "");
+            ad.setPositiveButton(getString(R.string.retry), (vi, w) -> onStart());
+            ad.setCancelable(false);
+            ad.show();
+        }
     }
 
     public void onClickNotify(View view){

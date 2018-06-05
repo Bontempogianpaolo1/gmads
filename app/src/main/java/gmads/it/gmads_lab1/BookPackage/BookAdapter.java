@@ -41,7 +41,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
     private Context mContext;
     private List<Book> bookList;
     private List<Request> requestList=new ArrayList<>();
-    private List<String> booksRequested = new LinkedList<String>();
+    private List<String> booksRequested = new LinkedList<>();
     private Client algoClient = new Client("L6B7L7WXZW", "9d2de9e724fa9289953e6b2d5ec978a5");
     private Index algoIndex = algoClient.getIndex("requests");
     private Gson gson = new Gson();
@@ -49,13 +49,14 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView title, owner, rating, distance;
-        public ImageView thumbnail, overflow;
+        public ImageView thumbnail, overflow,status;
 
         MyViewHolder( View view ) {
             super(view);
             title =  view.findViewById(R.id.title);
             owner = view.findViewById(R.id.owner);
             thumbnail =  view.findViewById(R.id.thumbnail);
+            status= view.findViewById(R.id.status);
             //mettere anche rating book
 
             //metere distanza
@@ -113,6 +114,12 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
         //distanza
         holder.distance.setText(String.valueOf(book.getDistance()/1000));
         holder.distance.append(" Km");
+        if(book.getStato()== AppConstants.AVAILABLE){
+            holder.status.setImageDrawable(mContext.getDrawable(android.R.drawable.presence_online));
+        }
+        else{
+            holder.status.setImageDrawable(mContext.getDrawable(android.R.drawable.presence_busy));
+        }
         //rating
         // loading album cover using Glide library
         RequestOptions requestOptions = new RequestOptions();
@@ -165,7 +172,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
 
                     Query query = new Query().setFilters("ownerId:" + bookList.get(position).getOwner() + " AND "
                                     + "renterId:" + FirebaseManagement.getUser().getUid() + " AND "
-                                    + "bId:" + bookList.get(position).getBId()).setFilters("requestStatus:" + AppConstants.PENDING);
+                                    + "bId:" + bookList.get(position).getBId() + " AND " + "requestStatus:" + AppConstants.PENDING);
 
                     algoIndex.searchAsync(query, ( jsonObject, e ) -> {
                         if(e == null){
@@ -177,62 +184,83 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
                             if(requestList.size() != 0){
                                 alreadyRequested = true;
                             }
+
+                            FirebaseManagement.getDatabase().getReference()
+                                    .child("books")
+                                    .child(bookList.get(position).getBId())
+                                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                            Book book = dataSnapshot.getValue(Book.class);
+
+                                            if(book.getStato() == AppConstants.AVAILABLE && !alreadyRequested) {
+                                                try {
+                                                    // aggiungo i dati su firebase
+                                                    Request request = new Request("0", AppConstants.NOT_REVIEWED, AppConstants.NOT_REVIEWED,
+                                                            AppConstants.PENDING, book.getOwner(),
+                                                            book.getBId(), book.getTitle(), FirebaseManagement.getUser().getUid(), book.getNomeproprietario(),
+                                                            FirebaseManagement.getUser().getDisplayName(), book.getUrlimage(), null);
+
+                                                    String rId = FirebaseManagement.getDatabase().getReference().child("requests").push().getKey();
+                                                    request.setrId(rId);
+
+                                                    algoIndex.addObjectAsync(new JSONObject(gson.toJson(request)), ( jsonObject1, exception ) -> {
+                                                        if(exception == null){
+                                                            try{
+                                                                Long id= jsonObject1.getLong("objectID");
+                                                                request.setObjectID(id);
+
+                                                            }catch (Exception e1){
+                                                                completed = false;
+                                                            }
+                                                            if(completed) {
+                                                                FirebaseManagement.getDatabase().getReference().child("requests").child(rId).setValue(request);
+                                                                FirebaseManagement.getDatabase().getReference()
+                                                                        .child("users")
+                                                                        .child(request.getOwnerId())
+                                                                        .child("reqNotified")
+                                                                        .setValue(true);
+                                                            }
+                                                        }
+                                                        else{
+                                                            Toast.makeText(mContext, "Error in algolia occurred", Toast.LENGTH_SHORT).show();
+                                                            exception.getMessage();
+                                                            Log.d("error",exception.toString());
+                                                            completed = false;
+
+                                                        }
+                                                    });
+
+                                                    if(completed) {
+                                                        Toast.makeText(mContext, "Book added", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                }catch (Exception e2){
+                                                    Toast.makeText(mContext, "Exception Occurred", Toast.LENGTH_SHORT).show();
+                                                    e2.getMessage();
+                                                    Log.d("error",e2.toString());
+                                                }
+                                                return;
+                                            }
+                                            else{
+                                                Toast.makeText(mContext, "Book not available or already requested.", Toast.LENGTH_SHORT).show();
+                                                return;
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
+
+                                        }
+                                    });
+
                         }
 
                     });
 
-                    if(bookList.get(position).getStato() == AppConstants.AVAILABLE && !alreadyRequested) {
-                        try {
-                            // aggiungo i dati su firebase
-                            Request request = new Request("0", AppConstants.NOT_REVIEWED, AppConstants.NOT_REVIEWED,
-                                    AppConstants.PENDING, bookList.get(position).getOwner(),
-                                    bookList.get(position).getBId(), bookList.get(position).getTitle(), FirebaseManagement.getUser().getUid(), bookList.get(position).getNomeproprietario(),
-                                    FirebaseManagement.getUser().getDisplayName(), bookList.get(position).getUrlimage(), null);
+                    return true;
 
-                            String rId = FirebaseManagement.getDatabase().getReference().child("requests").push().getKey();
-                            request.setrId(rId);
 
-                            algoIndex.addObjectAsync(new JSONObject(gson.toJson(request)), ( jsonObject, exception ) -> {
-                                if(exception == null){
-                                    try{
-                                        Long id= jsonObject.getLong("objectID");
-                                        request.setObjectID(id);
-
-                                    }catch (Exception e){
-                                        completed = false;
-                                    }
-                                    if(completed) {
-                                        FirebaseManagement.getDatabase().getReference().child("requests").child(rId).setValue(request);
-                                        FirebaseManagement.getDatabase().getReference()
-                                                .child("users")
-                                                .child(request.getOwnerId())
-                                                .child("reqNotified")
-                                                .setValue(true);
-                                    }
-                                }
-                                else{
-                                    Toast.makeText(mContext, "Error in algolia occurred", Toast.LENGTH_SHORT).show();
-                                    exception.getMessage();
-                                    Log.d("error",exception.toString());
-                                    completed = false;
-
-                                }
-                            });
-
-                            if(completed) {
-                                Toast.makeText(mContext, "Book added", Toast.LENGTH_SHORT).show();
-                            }
-                        }catch (Exception e){
-                            Toast.makeText(mContext, "Exception Occurred", Toast.LENGTH_SHORT).show();
-                            e.getMessage();
-                            Log.d("error",e.toString());
-                        }
-                        return true;
-                    }
-                    else{
-                        Toast.makeText(mContext, "Book not available or already requested.", Toast.LENGTH_SHORT).show();
-                        return false;
-                    }
                 case R.id.action_viewP:
                     Intent intent = new Intent(mContext, ShowUserProfile.class);
                     intent.putExtra("userId", bookList.get(position).getOwner());

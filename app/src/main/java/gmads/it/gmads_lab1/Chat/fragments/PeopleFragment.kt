@@ -55,8 +55,10 @@ class PeopleFragment : Fragment() {
                         add(peopleSection)
                         setOnItemClickListener(onItemClick)
                     }
+
+                    shouldInitRecyclerView = false
                 }
-                shouldInitRecyclerView = false
+                //shouldInitRecyclerView = false
             }
         }
 
