@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RatingBar;
@@ -63,7 +64,7 @@ public class AddReview extends AppCompatActivity {
         String name=getIntent().getStringExtra("bookname");
         bookname.setText(name);
         invia.setOnClickListener(v -> {
-            Review r= new Review(FirebaseManagement.getUser().getDisplayName(),recensione.getText().toString(),rating.getRating());
+            Review r= new Review(FirebaseManagement.getUser().getDisplayName(),FirebaseManagement.getUser().getUid(),recensione.getText().toString(),rating.getRating());
             List<Review> reviews=profile.getReviews();
             reviews.add(r);
             profile.setReviews(reviews);
@@ -97,6 +98,12 @@ public class AddReview extends AppCompatActivity {
                     public void onDataChange( DataSnapshot dataSnapshot ) {
                         profile = dataSnapshot.getValue(Profile.class);
                         if(profile!=null){
+                            //
+                            if(profile.getReviews()!=null && alreadyReviewed(profile.getReviews())){
+                                invia.setVisibility(View.GONE);
+                                Toast.makeText(getApplicationContext(),R.string.alreadyreviewed,Toast.LENGTH_SHORT).show();
+                            }
+                            //
                             owner.setText(profile.getName());
                             StorageReference profileImageRef =
                                     FirebaseManagement
@@ -128,6 +135,15 @@ public class AddReview extends AppCompatActivity {
                     }
                 });
 
+    }
+
+    private boolean alreadyReviewed( List<Review> reviews ) {
+        String me=FirebaseManagement.getUser().getUid();
+        for(Review r : reviews){
+            if(r.getUserid()!=null && r.getUserid().equals(me))
+                return true;
+        }
+        return false;
     }
 
     @Override

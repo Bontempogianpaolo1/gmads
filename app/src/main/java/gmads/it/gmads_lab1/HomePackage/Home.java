@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
@@ -75,13 +76,16 @@ public class  Home extends AppCompatActivity implements NavigationView.OnNavigat
     Tools tools;
     ProgressBar progressbar;
     ViewPager pager;
+    CollapsingToolbarLayout collapsingtb;
+    AppBarLayout appbarLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         Toolbar toolbar =  findViewById(R.id.toolbar);
         tools = new Tools();
-
+        appbarLayout = findViewById(R.id.appbar);
         setSupportActionBar(toolbar);
         setNavViews();
 
@@ -250,12 +254,14 @@ public class  Home extends AppCompatActivity implements NavigationView.OnNavigat
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
                 item.getActionView().requestFocus();
+                collapseToolbar();
                 ((InputMethodManager) Objects.requireNonNull(getSystemService(Context.INPUT_METHOD_SERVICE))).toggleSoftInput(0, 0);
                 return true;
             }
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
+                expandToolbar();
                 ((InputMethodManager) Objects.requireNonNull(getSystemService(Context.INPUT_METHOD_SERVICE))).hideSoftInputFromWindow(item.getActionView().getWindowToken(), 0);
                 return true;
             }
@@ -511,6 +517,14 @@ public class  Home extends AppCompatActivity implements NavigationView.OnNavigat
             ad.show();
         }
     }
+    public void collapseToolbar(){
+        appbarLayout.setExpanded(false);
+    }
+
+    public void expandToolbar(){
+        appbarLayout.setExpanded(true);
+    }
+
 
 }
 

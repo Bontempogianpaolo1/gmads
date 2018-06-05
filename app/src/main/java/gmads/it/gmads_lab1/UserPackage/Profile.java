@@ -33,6 +33,16 @@ public class Profile implements Serializable{
     private List<Review> reviews= new ArrayList<>();
     private boolean reqNotified;
 
+    public HashMap<String, UserChatChannel> getEngagedChatChannels() {
+        return engagedChatChannels;
+    }
+
+    public void setEngagedChatChannels(HashMap<String, UserChatChannel> engagedChatChannels) {
+        this.engagedChatChannels = engagedChatChannels;
+    }
+
+    private HashMap<String, UserChatChannel> engagedChatChannels = new HashMap<>();
+
     public boolean isReqNotified() {
         return reqNotified;
     }
@@ -231,4 +241,25 @@ public class Profile implements Serializable{
     public void setNrates(int nrates) {
         this.nrates = nrates;
     }
+
+}
+
+class UserChatChannel {
+
+    private String channelId;
+
+    public UserChatChannel(String channelId){
+        this.channelId = channelId;
+    }
+
+    public UserChatChannel(){}
+
+    public String getChannelId() {
+        return channelId;
+    }
+
+    public void setChannelId(String channelId) {
+        this.channelId = channelId;
+    }
+
 }

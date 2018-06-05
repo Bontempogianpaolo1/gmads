@@ -51,7 +51,7 @@ public class RequestActivity extends AppCompatActivity{
         r2.setViewPager(pager);
         pager.setAdapter(vadapter);
         tab.setupWithViewPager(pager);
-
+        r1.prepareListDataonCreate();
         Objects.requireNonNull(tab.getTabAt(0)).setText(getText(R.string.others_req));
         Objects.requireNonNull(tab.getTabAt(1)).setText(getText(R.string.my_req));
 
