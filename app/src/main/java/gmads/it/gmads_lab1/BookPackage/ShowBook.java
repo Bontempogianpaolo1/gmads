@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
@@ -35,6 +36,12 @@ import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
@@ -64,7 +71,7 @@ import jp.wasabeef.glide.transformations.BlurTransformation;
 
 import static com.bumptech.glide.request.RequestOptions.bitmapTransform;
 
-public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffsetChangedListener*/{
+public class ShowBook extends AppCompatActivity implements OnMapReadyCallback /*implements AppBarLayout.OnOffsetChangedListener*/{
 
     //private static final float PERCENTAGE_TO_SHOW_TITLE_AT_TOOLBAR = 0.9f;
     //private static final float PERCENTAGE_TO_HIDE_TITLE_DETAILS = 0.3f;
@@ -108,7 +115,7 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
     ImageView bookBackground;
     Button bReserveOrReturn;
     ProgressBar progressBar;
-
+    GoogleMap mmap;
     private void findViews() {
         card2 = findViewById(R.id.card2);
         toolbar =  findViewById(R.id.toolbar);
@@ -154,13 +161,16 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         bReserveOrReturn.setOnClickListener(this::onReserveOrReturnClick);
         tools = new Tools();
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
 
-        getBookInfo();
+        //getBookInfo();
     }
 
     private void setFocusOnClick(View v){
@@ -347,6 +357,10 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
                                         authors.append(a);
                                     }
                                 }
+
+                                mmap.addMarker(new MarkerOptions().position(new LatLng(book.get_geoloc().getLat(),book.get_geoloc().getLng())).title("Book"));
+                                mmap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(book.get_geoloc().getLat(),book.get_geoloc().getLng()),18));
+
                                 vAuthor.setText(authors.toString());
                                 //}
                                 //owner
@@ -669,5 +683,11 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
                         Activity.INPUT_METHOD_SERVICE);
         Objects.requireNonNull(inputMethodManager).hideSoftInputFromWindow(
                 Objects.requireNonNull(activity.getCurrentFocus()).getWindowToken(), 0);
+    }
+
+    @Override
+    public void onMapReady( GoogleMap googleMap ) {
+        mmap=googleMap;
+        getBookInfo();
     }
 }
