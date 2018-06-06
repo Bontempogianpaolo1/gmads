@@ -64,7 +64,7 @@ public class ShowProfile extends AppCompatActivity implements AppBarLayout.OnOff
 
     Tools tools;
     Context context;
-
+    private TextView downloaded;
     private AppBarLayout appbar;
     private ImageView coverImage;
     private LinearLayout linearlayoutTitle;
@@ -94,6 +94,7 @@ public class ShowProfile extends AppCompatActivity implements AppBarLayout.OnOff
     RatingBar rating;
 
     private void findViews() {
+        downloaded=findViewById(R.id.downloaded);
         total=findViewById(R.id.totbooks);
         uploaded= findViewById(R.id.uploaded);
         appbar = findViewById(R.id.appbar);
@@ -284,6 +285,7 @@ public class ShowProfile extends AppCompatActivity implements AppBarLayout.OnOff
                                 } else {
                                     navReqNotification.setVisibility(View.GONE);
                                 }
+
                                 //commenti in card2
                                 ll_parent.removeAllViews();
                                 String s = "( " + profile.getReviews().size() + " )";
@@ -315,9 +317,10 @@ public class ShowProfile extends AppCompatActivity implements AppBarLayout.OnOff
                                     }
                                 }
                                 //
+                                downloaded.setText(String.valueOf(profile.getLent()));
                                 if (profile.hasUploaded()) {
                                     uploaded.setText(String.valueOf(profile.takennBooks()));
-                                    total.setText(String.valueOf(profile.takennBooks()));
+                                    total.setText(String.valueOf(profile.takennBooks()+profile.getLent()));
                                 } else {
                                     uploaded.setText("0");
                                     total.setText("0");

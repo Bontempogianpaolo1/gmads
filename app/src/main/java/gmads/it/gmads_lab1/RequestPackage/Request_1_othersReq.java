@@ -119,6 +119,14 @@ public class Request_1_othersReq extends Fragment {
 
                    // Toast.makeText(getContext(),"nessuna richiesta ricevuta",Toast.LENGTH_LONG).show();
                     return;
+                }else{
+                    ImageView notfound = Objects.requireNonNull(getActivity()).findViewById(R.id.not_found2);
+                    TextView tnf = getActivity().findViewById(R.id.textnotfound2);
+                    ExpandableListView exp= getActivity().findViewById(R.id.explv);
+                        notfound.setVisibility(View.GONE);
+                        tnf.setVisibility(View.GONE);
+                        exp.setVisibility(View.VISIBLE);
+
                 }
                 listAdapter = new ExpandableListAdapter(getContext(), listDataHeader, listDataChild);
 

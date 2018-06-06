@@ -640,7 +640,28 @@ public class ShowBook extends AppCompatActivity implements OnMapReadyCallback /*
                             }
                         });
 
+                FirebaseManagement.getDatabase().getReference()
+                        .child("users")
+                        .child(book.getHolder())
+                        .child("lent")
+                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange( DataSnapshot dataSnapshot ) {
+                               Long value =(Long) dataSnapshot.getValue();
+                               if(value !=null) {
+                                   value = value - 1;
+                                   dataSnapshot.getRef().setValue(value);
+                               }else{
+                                   value = 0L;
+                                   dataSnapshot.getRef().setValue(value);
+                               }
+                            }
 
+                            @Override
+                            public void onCancelled( DatabaseError databaseError ) {
+
+                            }
+                        });
                         book.setStato(AppConstants.AVAILABLE);
                         book.setHolder(req.getOwnerId());
                 try {
