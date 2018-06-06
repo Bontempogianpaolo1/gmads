@@ -5,6 +5,7 @@ import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -23,6 +24,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -36,6 +38,7 @@ import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -66,6 +69,8 @@ import org.json.JSONObject;
 
 import gmads.it.gmads_lab1.ReviewPackage.AddReview;
 import gmads.it.gmads_lab1.UserPackage.Profile;
+import gmads.it.gmads_lab1.UserPackage.Profile;
+import gmads.it.gmads_lab1.UserPackage.ShowUserProfile;
 import gmads.it.gmads_lab1.constants.AppConstants;
 import gmads.it.gmads_lab1.Chat.glide.GlideApp;
 import gmads.it.gmads_lab1.FirebasePackage.FirebaseManagement;
@@ -121,6 +126,11 @@ public class ShowBook extends AppCompatActivity implements OnMapReadyCallback /*
     ImageView bookBackground;
     Button bReserveOrReturn;
     ProgressBar progressBar;
+
+    LinearLayout vOwnerInfo;
+    TextView vOwnerName;
+    ImageView vOwnerImage;
+
     GoogleMap mmap;
     private void findViews() {
         card2 = findViewById(R.id.card2);
@@ -145,6 +155,10 @@ public class ShowBook extends AppCompatActivity implements OnMapReadyCallback /*
         bookBackground = findViewById(R.id.avatar_background);
         bReserveOrReturn = findViewById(R.id.reserveOrReturn);
         progressBar = findViewById(R.id.progress_bar);
+
+        vOwnerInfo = findViewById(R.id.owner_info);
+        vOwnerName = findViewById(R.id.owner_name);
+        vOwnerImage = findViewById(R.id.owner_image);
     }
 
     @Override
@@ -152,10 +166,16 @@ public class ShowBook extends AppCompatActivity implements OnMapReadyCallback /*
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_showbook);
         findViews();
+
         GlideApp.with(getApplicationContext())
                 .load(R.drawable.default_book)
                 .into(avatar);
         toolbar.setTitle(R.string.showBook);
+
+        GlideApp.with(this)
+                .load(R.drawable.default_picture)
+                .into(vOwnerImage);
+
         setSupportActionBar(toolbar);
 
         //set avatar and cover
@@ -292,6 +312,48 @@ public class ShowBook extends AppCompatActivity implements OnMapReadyCallback /*
                 bReserveOrReturn.setEnabled(false);
 
             }*/
+
+            FirebaseManagement.getDatabase().getReference()
+                    .child("users")
+                    .child(book.getOwner())
+                    .addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+
+                            Profile profile = dataSnapshot.getValue(Profile.class);
+
+                            FirebaseManagement.getStorage().getReference()
+                                    .child("users")
+                                    .child(book.getOwner())
+                                    .child("profileimage.jpg")
+                                    .getDownloadUrl()
+                                    .addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
+                                    GlideApp.with(cw)
+                                            .load(profile.getImage())
+                                            .into(vOwnerImage);
+                                }
+
+                            });
+
+                            Intent intent = new Intent(cw, ShowUserProfile.class);
+                            intent.putExtra("userId", book.getOwner());
+
+                            vOwnerImage.setOnClickListener(v -> startActivity(intent));
+
+                            vOwnerName.setText(book.getNomeproprietario());
+
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+
+            vOwnerInfo.setVisibility(View.VISIBLE);
+
         }
     }
 
