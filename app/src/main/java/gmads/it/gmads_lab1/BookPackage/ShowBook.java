@@ -36,11 +36,16 @@ import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -60,6 +65,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import gmads.it.gmads_lab1.ReviewPackage.AddReview;
+import gmads.it.gmads_lab1.UserPackage.Profile;
 import gmads.it.gmads_lab1.constants.AppConstants;
 import gmads.it.gmads_lab1.Chat.glide.GlideApp;
 import gmads.it.gmads_lab1.FirebasePackage.FirebaseManagement;
@@ -357,9 +363,36 @@ public class ShowBook extends AppCompatActivity implements OnMapReadyCallback /*
                                         authors.append(a);
                                     }
                                 }
+                                FirebaseManagement.getDatabase().getReference().child("users").child(FirebaseManagement.getUser().getUid())
+                                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                                                                            @Override
+                                                                            public void onDataChange( DataSnapshot dataSnapshot ) {
+                                                                                Profile profile= dataSnapshot.getValue(Profile.class);
+                                                                                if(profile!= null){
+                                                                                    mmap.clear();
+                                                                                    Marker mbook = mmap.addMarker(new MarkerOptions().position(new LatLng(book.get_geoloc().getLat(), book.get_geoloc().getLng())).title(book.getTitle()));
+                                                                                    MarkerOptions mprofile = new MarkerOptions().position(new LatLng(profile.getLat(), profile.getLng())).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)).title("you");
 
-                                mmap.addMarker(new MarkerOptions().position(new LatLng(book.get_geoloc().getLat(),book.get_geoloc().getLng())).title("Book"));
-                                mmap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(book.get_geoloc().getLat(),book.get_geoloc().getLng()),18));
+                                                                                    mmap.addMarker(mprofile);
+
+                                                                                    LatLngBounds.Builder builder = new LatLngBounds.Builder();
+
+                                                                                        builder.include(mbook.getPosition());
+                                                                                    builder.include(mprofile.getPosition());
+
+                                                                                    LatLngBounds bounds = builder.build();
+                                                                                    CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, 16);
+                                                                                    mmap.setPadding(0, 100, 0, 0);
+                                                                                    mmap.moveCamera(cu);
+
+                                                                                }
+                                                                            }
+
+                                                                            @Override
+                                                                            public void onCancelled( DatabaseError databaseError ) {
+
+                                                                            }
+                                                                        });
 
                                 vAuthor.setText(authors.toString());
                                 //}
