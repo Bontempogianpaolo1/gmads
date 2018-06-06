@@ -44,7 +44,7 @@ import gmads.it.gmads_lab1.FirebasePackage.Datasource;
 import gmads.it.gmads_lab1.FirebasePackage.FirebaseManagement;
 import gmads.it.gmads_lab1.HomePackage.Home;
 import gmads.it.gmads_lab1.Login;
-import gmads.it.gmads_lab1.MyLibrary;
+import gmads.it.gmads_lab1.MyLibraryPackage.MyLibrary;
 import gmads.it.gmads_lab1.R;
 import gmads.it.gmads_lab1.RequestPackage.RequestActivity;
 import gmads.it.gmads_lab1.ToolsPackege.Tools;
@@ -290,18 +290,29 @@ public class ShowProfile extends AppCompatActivity implements AppBarLayout.OnOff
                                 count.setText(s);
                                 float average= averageReviews(profile.getReviews());
                                 rating.setRating(average);
+                                int c = 0;
                                 for(Review r: profile.getReviews()){
                                     LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                                     final View rowView = Objects.requireNonNull(inflater).inflate(R.layout.card_recensioni, null);
                                     ll_parent.addView(rowView, ll_parent.getChildCount());
                                     RelativeLayout rl;
                                     rl = (RelativeLayout) ll_parent.getChildAt(ll_parent.getChildCount()-1);
-                                    TextView name = (TextView) rl.getChildAt(0);
-                                    TextView rate = (TextView) rl.getChildAt(1);
-                                    TextView comment = (TextView) rl.getChildAt(2);
+                                    if(c == 0){
+                                        View v = (View) rl.getChildAt(0);
+                                        v.setVisibility(View.GONE);
+                                    }
+                                    c++;
+                                    TextView name = (TextView) rl.getChildAt(1);
+                                    TextView rate = (TextView) rl.getChildAt(2);
+                                    TextView comment = (TextView) rl.getChildAt(3);
                                     name.setText(r.getUser());
                                     rate.setText(String.valueOf(r.getRate()));
-                                    comment.setText(r.getComment());
+                                    if(r.getComment().isEmpty() || r.getComment()==null) {
+                                        comment.setVisibility(View.GONE);
+                                    }
+                                    else{
+                                        comment.setText(r.getComment());
+                                    }
                                 }
                                 //
                                 if (profile.hasUploaded()) {

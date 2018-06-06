@@ -36,7 +36,7 @@ import gmads.it.gmads_lab1.BookPackage.SearchResultsJsonParser;
 import gmads.it.gmads_lab1.BookPackage.Book;
 import gmads.it.gmads_lab1.UserPackage.Profile;
 
-public class ComedyHome extends Fragment {
+public class ComedyHome extends Fragment{
     RecyclerView recycle;
     private BookAdapter adapter;
     private List<Book> bookList;
@@ -187,8 +187,6 @@ public class ComedyHome extends Fragment {
      * Adding few albums for testing
      */
     private void prepareBooks() {
-
-
         adapter.notifyDataSetChanged();
     }
 

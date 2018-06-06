@@ -29,6 +29,7 @@ import gmads.it.gmads_lab1.UserPackage.*
 import gmads.it.gmads_lab1.HomePackage.*
 import gmads.it.gmads_lab1.BookPackage.*
 import gmads.it.gmads_lab1.FirebasePackage.FirebaseManagement
+import gmads.it.gmads_lab1.MyLibraryPackage.MyLibrary
 import kotlinx.android.synthetic.main.activity_chat.*
 import kotlinx.android.synthetic.main.activity_chat_list.*
 import kotlinx.android.synthetic.main.chat_list.*

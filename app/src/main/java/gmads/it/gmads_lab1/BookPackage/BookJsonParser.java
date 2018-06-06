@@ -22,7 +22,9 @@ public class BookJsonParser
         String author= jsonObject.optString("author");
         String publishdate=jsonObject.optString("publishDate");
         String categories= jsonObject.optString("categories");
-        Long distance=jsonObject.optJSONObject("_rankingInfo").optLong("geoDistance");
+
+        Long distance = jsonObject.optJSONObject("_rankingInfo").optLong("geoDistance");
+
         Double finderlat=jsonObject.optJSONObject("_rankingInfo").optJSONObject("matchedGeoLocation").optDouble("lat");
         Double finderlng=jsonObject.optJSONObject("_rankingInfo").optJSONObject("matchedGeoLocation").optDouble("lng");
         Long id=jsonObject.optLong("objectID");

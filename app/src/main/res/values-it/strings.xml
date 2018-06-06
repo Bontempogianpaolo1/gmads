@@ -36,6 +36,10 @@
     <string name="saveProfile">Salva Profilo</string>
     <string name="addBook">Aggiungi Libro</string>
     <string name="choose_country">Scegli una nazione</string>
+    <string name="MyBooks">I Miei libri</string>
+    <string name="RentedBooks">Libri Affittati</string>
+    <string name="LandedBooks">Libri Prestati</string>
+
 
     <!--stringhe per dati non trovati-->
     <string name="notFound">Non trovato</string>
