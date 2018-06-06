@@ -32,6 +32,15 @@ public class Profile implements Serializable{
     private List<String> linkrequestdone;
     private List<Review> reviews= new ArrayList<>();
     private boolean reqNotified;
+    private boolean chatNotified;
+
+    public boolean isChatNotified() {
+        return chatNotified;
+    }
+
+    public void setChatNotified(boolean chatNotified) {
+        this.chatNotified = chatNotified;
+    }
 
     public HashMap<String, UserChatChannel> getEngagedChatChannels() {
         return engagedChatChannels;
@@ -133,6 +142,8 @@ public class Profile implements Serializable{
         lng = 0;
         linkrequestreceived=new ArrayList<>();
         linkrequestdone= new ArrayList<>();
+        reqNotified = false;
+        chatNotified = false;
 
         this.registrationTokens.add(FirebaseInstanceId.getInstance().getToken());
 

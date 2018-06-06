@@ -56,4 +56,7 @@
     <dimen name="image_width">110dp</dimen>
     <dimen name="image_small_width">32dp</dimen>
 
+    <!--showbook-->
+    <dimen name="owner_image_radius">50dp</dimen>
+
 </resources>
