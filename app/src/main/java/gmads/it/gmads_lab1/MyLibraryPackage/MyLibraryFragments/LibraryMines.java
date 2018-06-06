@@ -1,4 +1,4 @@
-package gmads.it.gmads_lab1;
+package gmads.it.gmads_lab1.MyLibraryPackage.MyLibraryFragments;
 
 import android.support.v4.app.Fragment;
 import android.content.res.Resources;
@@ -18,11 +18,13 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.algolia.search.saas.AbstractQuery;
 import com.algolia.search.saas.Client;
 import com.algolia.search.saas.Index;
 import com.algolia.search.saas.Query;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -30,9 +32,12 @@ import gmads.it.gmads_lab1.BookPackage.Book;
 import gmads.it.gmads_lab1.BookPackage.BookAdapter;
 import gmads.it.gmads_lab1.BookPackage.SearchResultsJsonParser;
 import gmads.it.gmads_lab1.FirebasePackage.FirebaseManagement;
+import gmads.it.gmads_lab1.HomePackage.fragments.ComedyHome;
+import gmads.it.gmads_lab1.R;
 import gmads.it.gmads_lab1.UserPackage.Profile;
 
-public class LibraryLanded extends Fragment {
+public class LibraryMines extends Fragment {
+
     RecyclerView recycle;
     private BookAdapter adapter;
     private List<Book> bookList;
@@ -97,6 +102,10 @@ public class LibraryLanded extends Fragment {
         this.profile = profile;
     }
 
+    public void clearlist() {
+        bookList.clear();
+        npage=0;
+    }
 
     public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
 
@@ -139,8 +148,11 @@ public class LibraryLanded extends Fragment {
 
     public void fetchdata() {
         Query query = new Query(text)
-                .setFilters("owner:" + FirebaseManagement.getUser().getUid() + " AND NOT holder:" +
-                FirebaseManagement.getUser().getUid());
+                .setAroundLatLng(new AbstractQuery.LatLng(profile.getLat(), profile.getLng()))
+                .setGetRankingInfo(true)
+                .setPage(npage)
+                .setHitsPerPage(20)
+                .setFilters("owner:" + FirebaseManagement.getUser().getUid());
 
         algoIndex.searchAsync(query, ( jsonObject, e ) -> {
             if(e==null){
@@ -210,10 +222,6 @@ public class LibraryLanded extends Fragment {
 
     public void setCurrentItems(int currentItems) {
         this.currentItems = currentItems;
-    }
-    public void clearlist() {
-        bookList.clear();
-        npage=0;
     }
 
     public int getTotalItems() {

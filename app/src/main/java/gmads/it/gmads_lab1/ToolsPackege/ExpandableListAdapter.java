@@ -225,8 +225,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                                         listChild.put(request.getbId(),l);
                                        ExpandableListAdapter.super.notifyDataSetChanged();
                                         //RequestActivity.refresh(context);
-
-
                                     });
 
                             FirebaseManagement.getDatabase().getReference()
