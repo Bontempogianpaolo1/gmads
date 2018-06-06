@@ -161,5 +161,6 @@
     <string name="completed">Completed</string>
     <string name="ooops_nothing_found">Ooops...Nothing found!</string>
     <string name="reviewsent">Sent</string>
+    <string name="alreadyreviewed">Already Reviewed</string>
 
 </resources>
