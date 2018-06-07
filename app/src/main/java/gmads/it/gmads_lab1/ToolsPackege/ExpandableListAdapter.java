@@ -210,6 +210,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                                                             if(value!=null) {
                                                                 value = value + 1;
                                                                 dataSnapshot.getRef().setValue(value);
+                                                                FirebaseManagement.sendMessage(context.getResources().getString(R.string.notify_accepted_request),FirebaseManagement.getUser().getDisplayName(),book.getHolder());
                                                             }else{
                                                                 value = 1L;
                                                                 dataSnapshot.getRef().setValue(value);
@@ -268,6 +269,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     }
 
     private void onClickNo( Request request ){
+        FirebaseManagement.sendMessage(context.getResources().getString(R.string.notify_refused_request),FirebaseManagement.getUser().getDisplayName(),request.getRenterId());
+
         FirebaseManagement.getDatabase().getReference()
                 .child("requests")
                 .child(request.getrId())

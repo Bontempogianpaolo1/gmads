@@ -444,7 +444,7 @@ public class ShowBook extends AppCompatActivity implements OnMapReadyCallback /*
 
                                                                                     LatLngBounds bounds = builder.build();
                                                                                     CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, 16);
-                                                                                    mmap.setPadding(0, 100, 0, 0);
+                                                                                    mmap.setPadding(50, 200, 50, 50);
                                                                                     mmap.moveCamera(cu);
 
                                                                                 }
@@ -617,7 +617,14 @@ public class ShowBook extends AppCompatActivity implements OnMapReadyCallback /*
                                 req.setRequestStatus(AppConstants.COMPLETED);
                                 algoIndex.saveObjectAsync(new JSONObject(gson.toJson(req)),
                                         req.getObjectID().toString(),
-                                        null);
+                                        new CompletionHandler() {
+                                            @Override
+                                            public void requestCompleted( JSONObject jsonObject, AlgoliaException e ) {
+                                                if(e!=null){
+                                                    e.printStackTrace();
+                                                }
+                                            }
+                                        });
                             } catch (Exception e1) {
                                 e1.printStackTrace();
                             }
@@ -639,6 +646,7 @@ public class ShowBook extends AppCompatActivity implements OnMapReadyCallback /*
                                 e2.printStackTrace();
                             }
                         });
+                FirebaseManagement.sendMessage(getString(R.string.notify_end_request),FirebaseManagement.getUser().getDisplayName(),book.getHolder());
 
                 FirebaseManagement.getDatabase().getReference()
                         .child("users")
@@ -665,7 +673,7 @@ public class ShowBook extends AppCompatActivity implements OnMapReadyCallback /*
                         book.setStato(AppConstants.AVAILABLE);
                         book.setHolder(req.getOwnerId());
                 try {
-                    algoIndex.saveObjectAsync(new JSONObject(gson.toJson(book)),
+                    algoBookIndex.saveObjectAsync(new JSONObject(gson.toJson(book)),
                             book.getObjectID().toString(),
                             null);
                 } catch (JSONException e1) {
@@ -712,6 +720,7 @@ public class ShowBook extends AppCompatActivity implements OnMapReadyCallback /*
 
                 if(book.getStato() == AppConstants.AVAILABLE && !alreadyRequested[0]) {
                     try {
+                        FirebaseManagement.sendMessage(getString(R.string.notify_new_request),FirebaseManagement.getUser().getDisplayName(),book.getOwner());
 
                         String rId = FirebaseManagement.getDatabase().getReference().child("requests").push().getKey();
                         Request request = new Request("0", AppConstants.NOT_REVIEWED, AppConstants.NOT_REVIEWED,

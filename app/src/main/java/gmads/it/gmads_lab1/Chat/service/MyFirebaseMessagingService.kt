@@ -19,11 +19,11 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         if (remoteMessage.notification != null) {
             notifyUser(remoteMessage.from as String, remoteMessage.notification?.body as String)
-
+            sendNotification(remoteMessage)
             Log.d("FCM", "FCM message received!")
 
         }
-        sendNotification(remoteMessage)
+        //sendNotification(remoteMessage)
     }
 
     fun notifyUser(from : String, notification : String){
@@ -44,9 +44,10 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
                 .setContentText(remoteMessage.notification?.body as String)
                 .setContentTitle(remoteMessage.from as String)
                 .setAutoCancel(true)
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.mipmap.my_launcher_overbooking_layer)
                 .setSound(defaultSoundUri)
                 .setContentIntent(pendingIntent)
+
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.notify(0 /* ID of notification */, notificationBuilder.build())
     }

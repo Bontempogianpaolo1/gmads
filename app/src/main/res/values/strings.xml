@@ -162,5 +162,9 @@
     <string name="ooops_nothing_found">Ooops...Nothing found!</string>
     <string name="reviewsent">Sent</string>
     <string name="alreadyreviewed">Already Reviewed</string>
+    <string name="notify_accepted_request">Request Accepted</string>
+    <string name="notify_refused_request">Request Refused</string>
+    <string name="notify_new_request">New Request</string>
+    <string name="notify_end_request">Book Returned</string>
 
 </resources>
