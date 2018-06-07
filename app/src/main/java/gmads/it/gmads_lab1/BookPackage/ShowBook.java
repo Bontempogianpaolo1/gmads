@@ -130,6 +130,7 @@ public class ShowBook extends AppCompatActivity implements OnMapReadyCallback /*
     LinearLayout vOwnerInfo;
     TextView vOwnerName;
     ImageView vOwnerImage;
+    TextView vOwnerRating;
 
     GoogleMap mmap;
     private void findViews() {
@@ -159,6 +160,7 @@ public class ShowBook extends AppCompatActivity implements OnMapReadyCallback /*
         vOwnerInfo = findViewById(R.id.owner_info);
         vOwnerName = findViewById(R.id.owner_name);
         vOwnerImage = findViewById(R.id.owner_image);
+        vOwnerRating = findViewById(R.id.owner_rating);
     }
 
     @Override
@@ -301,7 +303,6 @@ public class ShowBook extends AppCompatActivity implements OnMapReadyCallback /*
             booksRequested = new LinkedList<>();
             //booksRequested.add(book.getBId());
             bReserveOrReturn.setText(R.string.reserve);
-            bReserveOrReturn.setVisibility(View.VISIBLE);
             getIsReservedByMe();
             /*
             if(book.getStato() == AppConstants.AVAILABLE){
@@ -338,14 +339,17 @@ public class ShowBook extends AppCompatActivity implements OnMapReadyCallback /*
                                             }
 
                                         });
+
+                                Intent intent = new Intent(cw, ShowUserProfile.class);
+                                intent.putExtra("userId", book.getOwner());
+
+                                vOwnerImage.setOnClickListener(v -> startActivity(intent));
+
+                                vOwnerName.setText(book.getNomeproprietario());
+
+                                vOwnerRating.setText(String.valueOf(profile.getValutation()));
                             }
 
-                            Intent intent = new Intent(cw, ShowUserProfile.class);
-                            intent.putExtra("userId", book.getOwner());
-
-                            vOwnerImage.setOnClickListener(v -> startActivity(intent));
-
-                            vOwnerName.setText(book.getNomeproprietario());
 
                         }
 
@@ -372,14 +376,16 @@ public class ShowBook extends AppCompatActivity implements OnMapReadyCallback /*
                 List<Request> tempReqList = new ArrayList<>(search.parseResults(jsonObject));
 
                 for(Request tempReq : tempReqList){
-                    if(tempReq.getRequestStatus()== AppConstants.PENDING)
+                    if(tempReq.getRequestStatus() != AppConstants.COMPLETED )
                         booksRequested.add(tempReq.getbId());
                 }
 
-                if(booksRequested.contains(book.getBId())){
+                if(booksRequested.contains(book.getBId()) || book.getStato() == AppConstants.NOT_AVAILABLE){
                     bReserveOrReturn.setEnabled(false);
+                    bReserveOrReturn.setVisibility(View.GONE);
                 } else {
                     bReserveOrReturn.setEnabled(true);
+                    bReserveOrReturn.setVisibility(View.VISIBLE);
                 }
 
             }
@@ -549,9 +555,9 @@ public class ShowBook extends AppCompatActivity implements OnMapReadyCallback /*
                                     }
                                     vNotes.setText(notes.toString());
                                 }
-                            }
 
-                            getIsMyBook();
+                                getIsMyBook();
+                            }
 
                             //foto libro (fare come gli altri controlli:
                             //NON Cè: titleImg e bookPhoto vanno rese invisibili
