@@ -19,7 +19,9 @@
             android:text="@string/reserve"
             android:background="@color/colorAccent"
             android:textColor="@color/white"
-            android:layout_margin="5dp"/>
+            android:layout_margin="5dp"
+            android:enabled="false"
+            android:visibility="gone"/>
 
         <TextView
             android:id="@+id/title"
@@ -75,10 +77,12 @@
                     android:layout_height="wrap_content">
 
                     <TextView
+                        android:id="@+id/owner_rating"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_gravity="center_vertical"
                         android:text="3.5"/>
+
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
