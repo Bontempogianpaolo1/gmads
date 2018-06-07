@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
@@ -38,6 +39,17 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
@@ -57,6 +69,7 @@ import org.json.JSONObject;
 
 import gmads.it.gmads_lab1.ReviewPackage.AddReview;
 import gmads.it.gmads_lab1.UserPackage.Profile;
+import gmads.it.gmads_lab1.UserPackage.Profile;
 import gmads.it.gmads_lab1.UserPackage.ShowUserProfile;
 import gmads.it.gmads_lab1.constants.AppConstants;
 import gmads.it.gmads_lab1.Chat.glide.GlideApp;
@@ -69,7 +82,7 @@ import jp.wasabeef.glide.transformations.BlurTransformation;
 
 import static com.bumptech.glide.request.RequestOptions.bitmapTransform;
 
-public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffsetChangedListener*/{
+public class ShowBook extends AppCompatActivity implements OnMapReadyCallback /*implements AppBarLayout.OnOffsetChangedListener*/{
 
     //private static final float PERCENTAGE_TO_SHOW_TITLE_AT_TOOLBAR = 0.9f;
     //private static final float PERCENTAGE_TO_HIDE_TITLE_DETAILS = 0.3f;
@@ -118,6 +131,7 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
     TextView vOwnerName;
     ImageView vOwnerImage;
 
+    GoogleMap mmap;
     private void findViews() {
         card2 = findViewById(R.id.card2);
         toolbar =  findViewById(R.id.toolbar);
@@ -173,13 +187,16 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         bReserveOrReturn.setOnClickListener(this::onReserveOrReturnClick);
         tools = new Tools();
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
 
-        getBookInfo();
+        //getBookInfo();
     }
 
     private void setFocusOnClick(View v){
@@ -411,6 +428,37 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
                                         authors.append(a);
                                     }
                                 }
+                                FirebaseManagement.getDatabase().getReference().child("users").child(FirebaseManagement.getUser().getUid())
+                                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                                                                            @Override
+                                                                            public void onDataChange( DataSnapshot dataSnapshot ) {
+                                                                                Profile profile= dataSnapshot.getValue(Profile.class);
+                                                                                if(profile!= null){
+                                                                                    mmap.clear();
+                                                                                    Marker mbook = mmap.addMarker(new MarkerOptions().position(new LatLng(book.get_geoloc().getLat(), book.get_geoloc().getLng())).title(book.getTitle()));
+                                                                                    MarkerOptions mprofile = new MarkerOptions().position(new LatLng(profile.getLat(), profile.getLng())).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)).title("you");
+
+                                                                                    mmap.addMarker(mprofile);
+
+                                                                                    LatLngBounds.Builder builder = new LatLngBounds.Builder();
+
+                                                                                        builder.include(mbook.getPosition());
+                                                                                    builder.include(mprofile.getPosition());
+
+                                                                                    LatLngBounds bounds = builder.build();
+                                                                                    CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, 16);
+                                                                                    mmap.setPadding(0, 100, 0, 0);
+                                                                                    mmap.moveCamera(cu);
+
+                                                                                }
+                                                                            }
+
+                                                                            @Override
+                                                                            public void onCancelled( DatabaseError databaseError ) {
+
+                                                                            }
+                                                                        });
+
                                 vAuthor.setText(authors.toString());
                                 //}
                                 //owner
@@ -595,7 +643,28 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
                             }
                         });
 
+                FirebaseManagement.getDatabase().getReference()
+                        .child("users")
+                        .child(book.getHolder())
+                        .child("lent")
+                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange( DataSnapshot dataSnapshot ) {
+                               Long value =(Long) dataSnapshot.getValue();
+                               if(value !=null) {
+                                   value = value - 1;
+                                   dataSnapshot.getRef().setValue(value);
+                               }else{
+                                   value = 0L;
+                                   dataSnapshot.getRef().setValue(value);
+                               }
+                            }
 
+                            @Override
+                            public void onCancelled( DatabaseError databaseError ) {
+
+                            }
+                        });
                         book.setStato(AppConstants.AVAILABLE);
                         book.setHolder(req.getOwnerId());
                 try {
@@ -733,5 +802,11 @@ public class ShowBook extends AppCompatActivity /*implements AppBarLayout.OnOffs
                         Activity.INPUT_METHOD_SERVICE);
         Objects.requireNonNull(inputMethodManager).hideSoftInputFromWindow(
                 Objects.requireNonNull(activity.getCurrentFocus()).getWindowToken(), 0);
+    }
+
+    @Override
+    public void onMapReady( GoogleMap googleMap ) {
+        mmap=googleMap;
+        getBookInfo();
     }
 }

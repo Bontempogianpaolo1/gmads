@@ -1,10 +1,8 @@
-package gmads.it.gmads_lab1;
+package gmads.it.gmads_lab1.MyLibraryPackage;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.icu.util.Freezable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
@@ -16,9 +14,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v4.app.Fragment;
-import android.util.Log;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -28,10 +23,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.algolia.search.saas.AbstractQuery;
+
 import com.algolia.search.saas.Client;
 import com.algolia.search.saas.Index;
-import com.algolia.search.saas.Query;
 import com.bumptech.glide.Glide;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.database.DataSnapshot;
@@ -46,6 +40,11 @@ import gmads.it.gmads_lab1.BookPackage.AddBook;
 import gmads.it.gmads_lab1.Chat.ChatList;
 import gmads.it.gmads_lab1.FirebasePackage.FirebaseManagement;
 import gmads.it.gmads_lab1.HomePackage.Home;
+import gmads.it.gmads_lab1.MyLibraryPackage.MyLibraryFragments.LibraryLanded;
+import gmads.it.gmads_lab1.MyLibraryPackage.MyLibraryFragments.LibraryMines;
+import gmads.it.gmads_lab1.MyLibraryPackage.MyLibraryFragments.LibraryRented;
+import gmads.it.gmads_lab1.Login;
+import gmads.it.gmads_lab1.R;
 import gmads.it.gmads_lab1.RequestPackage.RequestActivity;
 import gmads.it.gmads_lab1.ToolsPackege.FragmentViewPagerAdapter;
 import gmads.it.gmads_lab1.ToolsPackege.Tools;
@@ -105,7 +104,7 @@ public class MyLibrary extends AppCompatActivity implements NavigationView.OnNav
         tableLayout.setupWithViewPager(pager);
 
         Objects.requireNonNull(tableLayout.getTabAt(0)).setText(getString(R.string.MyBooks));
-        Objects.requireNonNull(tableLayout.getTabAt(1)).setText(getString(R.string.LandedBooks));
+        Objects.requireNonNull(tableLayout.getTabAt(1)).setText(getString(R.string.LentBooks));
         Objects.requireNonNull(tableLayout.getTabAt(2)).setText(getString(R.string.RentedBooks));
 
         pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {

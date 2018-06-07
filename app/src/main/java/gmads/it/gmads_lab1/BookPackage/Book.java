@@ -38,6 +38,7 @@ public class Book implements Serializable{
     private List<String> linkrequest;
     private int stato;
     private Long objectID;
+    private long distance;
 
     public Long getObjectID() {
         return objectID;
@@ -98,7 +99,6 @@ public class Book implements Serializable{
         this.distance = distance;
     }
 
-    private long  distance;
 
     public List<String> getAuthor() {
         return author;
@@ -163,6 +163,7 @@ public class Book implements Serializable{
         avgRating=0;
         nRates=0;
         sumRates=0;
+        this.holder = owner;
 
     }
 

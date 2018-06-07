@@ -1,4 +1,4 @@
-package gmads.it.gmads_lab1;
+package gmads.it.gmads_lab1.MyLibraryPackage.MyLibraryFragments;
 
 import android.support.v4.app.Fragment;
 import android.content.res.Resources;
@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.algolia.search.saas.AbstractQuery;
 import com.algolia.search.saas.Client;
 import com.algolia.search.saas.Index;
 import com.algolia.search.saas.Query;
@@ -30,6 +31,7 @@ import gmads.it.gmads_lab1.BookPackage.Book;
 import gmads.it.gmads_lab1.BookPackage.BookAdapter;
 import gmads.it.gmads_lab1.BookPackage.SearchResultsJsonParser;
 import gmads.it.gmads_lab1.FirebasePackage.FirebaseManagement;
+import gmads.it.gmads_lab1.R;
 import gmads.it.gmads_lab1.UserPackage.Profile;
 
 public class LibraryRented extends Fragment {
@@ -144,6 +146,10 @@ public class LibraryRented extends Fragment {
 
     public void fetchdata() {
         Query query = new Query(text)
+                .setAroundLatLng(new AbstractQuery.LatLng(profile.getLat(), profile.getLng()))
+                .setGetRankingInfo(true)
+                .setPage(npage)
+                .setHitsPerPage(20)
                 .setFilters("holder:" + FirebaseManagement.getUser().getUid() +
                 " AND NOT owner:" + FirebaseManagement.getUser().getUid());
 

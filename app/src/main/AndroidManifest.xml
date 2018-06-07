@@ -80,7 +80,7 @@
             android:name=".BookPackage.ShowBook"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".MyLibrary"
+            android:name=".MyLibraryPackage.MyLibrary"
             android:screenOrientation="portrait" />
         <activity
             android:name=".UserPackage.ShowUserProfile"
