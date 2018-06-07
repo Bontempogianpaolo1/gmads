@@ -94,11 +94,16 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                         .child("users")
                         .child(child.getOwnerId())
                         .child("profileimage.jpg");
-
+/*
         GlideApp.with(context)
                 .load(userImageRef)
                 .placeholder(R.drawable.default_picture)
-                .into(bimage);
+                .into(bimage);*/
+
+        RequestOptions requestOptions = new RequestOptions();
+        requestOptions.placeholder(R.drawable.default_picture);
+        requestOptions.error(R.drawable.default_picture);
+        Glide.with(context).setDefaultRequestOptions(requestOptions).load(userImageRef).into(bimage);
 
         txtListChild.setText(childText);
 
