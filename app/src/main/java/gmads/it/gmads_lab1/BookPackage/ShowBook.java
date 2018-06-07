@@ -252,8 +252,8 @@ public class ShowBook extends AppCompatActivity implements OnMapReadyCallback /*
                 mIsTheTitleContainerVisible = true;
             }
         }
-    }*/
-
+    }
+*/
     public static void startAlphaAnimation(View v, long duration, int visibility) {
         AlphaAnimation alphaAnimation = (visibility == View.VISIBLE)
                 ? new AlphaAnimation(0f, 1f)
@@ -376,7 +376,7 @@ public class ShowBook extends AppCompatActivity implements OnMapReadyCallback /*
                 List<Request> tempReqList = new ArrayList<>(search.parseResults(jsonObject));
 
                 for(Request tempReq : tempReqList){
-                    if(tempReq.getRequestStatus() != AppConstants.COMPLETED )
+                    if((tempReq.getRequestStatus() != AppConstants.COMPLETED) )
                         booksRequested.add(tempReq.getbId());
                 }
 
