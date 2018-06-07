@@ -322,20 +322,23 @@ public class ShowBook extends AppCompatActivity implements OnMapReadyCallback /*
 
                             Profile profile = dataSnapshot.getValue(Profile.class);
 
-                            FirebaseManagement.getStorage().getReference()
-                                    .child("users")
-                                    .child(book.getOwner())
-                                    .child("profileimage.jpg")
-                                    .getDownloadUrl()
-                                    .addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                @Override
-                                public void onSuccess(Uri uri) {
-                                    GlideApp.with(cw)
-                                            .load(profile.getImage())
-                                            .into(vOwnerImage);
-                                }
+                            if(profile != null) {
 
-                            });
+                                FirebaseManagement.getStorage().getReference()
+                                        .child("users")
+                                        .child(book.getOwner())
+                                        .child("profileimage.jpg")
+                                        .getDownloadUrl()
+                                        .addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                            @Override
+                                            public void onSuccess(Uri uri) {
+                                                GlideApp.with(cw)
+                                                        .load(profile.getImage())
+                                                        .into(vOwnerImage);
+                                            }
+
+                                        });
+                            }
 
                             Intent intent = new Intent(cw, ShowUserProfile.class);
                             intent.putExtra("userId", book.getOwner());
