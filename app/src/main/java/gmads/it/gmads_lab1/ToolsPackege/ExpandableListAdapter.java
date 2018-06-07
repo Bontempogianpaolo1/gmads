@@ -199,6 +199,28 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                                         try {
                                             book.setStato(AppConstants.NOT_AVAILABLE);
                                             book.setHolder(request.getRenterId());
+                                            FirebaseManagement.getDatabase().getReference()
+                                                    .child("users")
+                                                    .child(book.getHolder())
+                                                    .child("lent")
+                                                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                                                        @Override
+                                                        public void onDataChange( DataSnapshot dataSnapshot ) {
+                                                            Long value =(Long) dataSnapshot.getValue();
+                                                            if(value!=null) {
+                                                                value = value + 1;
+                                                                dataSnapshot.getRef().setValue(value);
+                                                            }else{
+                                                                value = 1L;
+                                                                dataSnapshot.getRef().setValue(value);
+                                                            }
+                                                        }
+
+                                                        @Override
+                                                        public void onCancelled( DatabaseError databaseError ) {
+
+                                                        }
+                                                    });
                                             algoBookIndex.saveObjectAsync(new JSONObject(gson.toJson(book)),
                                                     book.getObjectID().toString(),
                                                     new CompletionHandler() {
@@ -225,8 +247,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                                         listChild.put(request.getbId(),l);
                                        ExpandableListAdapter.super.notifyDataSetChanged();
                                         //RequestActivity.refresh(context);
-
-
                                     });
 
                             FirebaseManagement.getDatabase().getReference()

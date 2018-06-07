@@ -41,7 +41,7 @@ import gmads.it.gmads_lab1.Chat.ChatList;
 import gmads.it.gmads_lab1.FirebasePackage.FirebaseManagement;
 import gmads.it.gmads_lab1.Login;
 import gmads.it.gmads_lab1.Map.main.MapActivity;
-import gmads.it.gmads_lab1.MyLibrary;
+import gmads.it.gmads_lab1.MyLibraryPackage.MyLibrary;
 import gmads.it.gmads_lab1.R;
 import gmads.it.gmads_lab1.RequestPackage.RequestActivity;
 import gmads.it.gmads_lab1.ToolsPackege.Tools;
@@ -56,8 +56,8 @@ import gmads.it.gmads_lab1.UserPackage.Profile;
 import gmads.it.gmads_lab1.HomePackage.fragments.AllHome;
 
 public class  Home extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
-    SearchView searchview;
 
+    SearchView searchview;
     TextView navName;
     TextView navMail;
     ImageView navImage;
@@ -75,13 +75,16 @@ public class  Home extends AppCompatActivity implements NavigationView.OnNavigat
     Tools tools;
     ProgressBar progressbar;
     ViewPager pager;
+    CollapsingToolbarLayout collapsingtb;
+    AppBarLayout appbarLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         Toolbar toolbar =  findViewById(R.id.toolbar);
         tools = new Tools();
-
+        appbarLayout = findViewById(R.id.appbar);
         setSupportActionBar(toolbar);
         setNavViews();
 
@@ -89,6 +92,7 @@ public class  Home extends AppCompatActivity implements NavigationView.OnNavigat
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         initCollapsingToolbar();
+
         pager= findViewById(R.id.viewPager);
         FragmentViewPagerAdapter vpadapter= new FragmentViewPagerAdapter(getSupportFragmentManager());
         vpadapter.addFragment(tab1);
@@ -97,7 +101,7 @@ public class  Home extends AppCompatActivity implements NavigationView.OnNavigat
         vpadapter.addFragment(thrillerHome);
         vpadapter.addFragment(fiction);
         pager.setAdapter(vpadapter);
-        TabLayout tableLayout= findViewById(R.id.tabs);
+        TabLayout tableLayout =findViewById(R.id.tabs);
         tableLayout.setupWithViewPager(pager);
         Objects.requireNonNull(tableLayout.getTabAt(0)).setText(getString(R.string.tab1));
         Objects.requireNonNull(tableLayout.getTabAt(1)).setText("action");
@@ -250,12 +254,14 @@ public class  Home extends AppCompatActivity implements NavigationView.OnNavigat
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
                 item.getActionView().requestFocus();
+                collapseToolbar();
                 ((InputMethodManager) Objects.requireNonNull(getSystemService(Context.INPUT_METHOD_SERVICE))).toggleSoftInput(0, 0);
                 return true;
             }
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
+                expandToolbar();
                 ((InputMethodManager) Objects.requireNonNull(getSystemService(Context.INPUT_METHOD_SERVICE))).hideSoftInputFromWindow(item.getActionView().getWindowToken(), 0);
                 return true;
             }
@@ -511,6 +517,14 @@ public class  Home extends AppCompatActivity implements NavigationView.OnNavigat
             ad.show();
         }
     }
+    public void collapseToolbar(){
+        appbarLayout.setExpanded(false);
+    }
+
+    public void expandToolbar(){
+        appbarLayout.setExpanded(true);
+    }
+
 
 }
 

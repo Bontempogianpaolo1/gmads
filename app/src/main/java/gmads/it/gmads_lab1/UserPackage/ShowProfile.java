@@ -44,7 +44,7 @@ import gmads.it.gmads_lab1.FirebasePackage.Datasource;
 import gmads.it.gmads_lab1.FirebasePackage.FirebaseManagement;
 import gmads.it.gmads_lab1.HomePackage.Home;
 import gmads.it.gmads_lab1.Login;
-import gmads.it.gmads_lab1.MyLibrary;
+import gmads.it.gmads_lab1.MyLibraryPackage.MyLibrary;
 import gmads.it.gmads_lab1.R;
 import gmads.it.gmads_lab1.RequestPackage.RequestActivity;
 import gmads.it.gmads_lab1.ToolsPackege.Tools;
@@ -64,7 +64,7 @@ public class ShowProfile extends AppCompatActivity implements AppBarLayout.OnOff
 
     Tools tools;
     Context context;
-
+    private TextView downloaded;
     private AppBarLayout appbar;
     private ImageView coverImage;
     private LinearLayout linearlayoutTitle;
@@ -94,6 +94,7 @@ public class ShowProfile extends AppCompatActivity implements AppBarLayout.OnOff
     RatingBar rating;
 
     private void findViews() {
+        downloaded=findViewById(R.id.downloaded);
         total=findViewById(R.id.totbooks);
         uploaded= findViewById(R.id.uploaded);
         appbar = findViewById(R.id.appbar);
@@ -284,29 +285,42 @@ public class ShowProfile extends AppCompatActivity implements AppBarLayout.OnOff
                                 } else {
                                     navReqNotification.setVisibility(View.GONE);
                                 }
+
                                 //commenti in card2
                                 ll_parent.removeAllViews();
                                 String s = "( " + profile.getReviews().size() + " )";
                                 count.setText(s);
                                 float average= averageReviews(profile.getReviews());
                                 rating.setRating(average);
+                                int c = 0;
                                 for(Review r: profile.getReviews()){
                                     LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                                     final View rowView = Objects.requireNonNull(inflater).inflate(R.layout.card_recensioni, null);
                                     ll_parent.addView(rowView, ll_parent.getChildCount());
                                     RelativeLayout rl;
                                     rl = (RelativeLayout) ll_parent.getChildAt(ll_parent.getChildCount()-1);
-                                    TextView name = (TextView) rl.getChildAt(0);
-                                    TextView rate = (TextView) rl.getChildAt(1);
-                                    TextView comment = (TextView) rl.getChildAt(2);
+                                    if(c == 0){
+                                        View v = (View) rl.getChildAt(0);
+                                        v.setVisibility(View.GONE);
+                                    }
+                                    c++;
+                                    TextView name = (TextView) rl.getChildAt(1);
+                                    TextView rate = (TextView) rl.getChildAt(2);
+                                    TextView comment = (TextView) rl.getChildAt(3);
                                     name.setText(r.getUser());
                                     rate.setText(String.valueOf(r.getRate()));
-                                    comment.setText(r.getComment());
+                                    if(r.getComment().isEmpty() || r.getComment()==null) {
+                                        comment.setVisibility(View.GONE);
+                                    }
+                                    else{
+                                        comment.setText(r.getComment());
+                                    }
                                 }
                                 //
+                                downloaded.setText(String.valueOf(profile.getLent()));
                                 if (profile.hasUploaded()) {
                                     uploaded.setText(String.valueOf(profile.takennBooks()));
-                                    total.setText(String.valueOf(profile.takennBooks()));
+                                    total.setText(String.valueOf(profile.takennBooks()+profile.getLent()));
                                 } else {
                                     uploaded.setText("0");
                                     total.setText("0");

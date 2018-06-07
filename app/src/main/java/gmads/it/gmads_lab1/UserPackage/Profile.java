@@ -33,6 +33,15 @@ public class Profile implements Serializable{
     private List<Review> reviews= new ArrayList<>();
     private boolean reqNotified;
     private boolean chatNotified;
+    private int lent=0;
+
+    public int getLent() {
+        return lent;
+    }
+
+    public void setLent( int lent ) {
+        this.lent = lent;
+    }
 
     public boolean isChatNotified() {
         return chatNotified;
@@ -154,6 +163,7 @@ public class Profile implements Serializable{
         npublishedBooks=0;
         ntakenBooks=0;
         nrates=0;
+        lent=0;
     }
 
     public HashMap<String, String> getMyBooks() {

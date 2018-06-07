@@ -31,7 +31,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/thumbnail"
-                android:layout_toStartOf="@id/overflow"
                 android:ellipsize="end"
                 android:maxLines="3"
                 android:paddingEnd="2dp"
@@ -45,14 +44,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/title"
-                android:layout_toStartOf="@id/overflow"
                 android:ellipsize="end"
                 android:maxLines="2"
                 android:paddingBottom="5dp"
                 android:paddingEnd="2dp"
                 android:paddingStart="10dp"
                 android:textSize="@dimen/songs_count" />
-
+<!--
             <ImageView
                 android:id="@+id/overflow"
                 android:layout_width="@dimen/ic_album_overflow_width"
@@ -62,7 +60,7 @@
                 android:layout_marginTop="@dimen/ic_album_overflow_margin_top"
                 android:scaleType="centerCrop"
                 android:src="@drawable/ic_dots" />
-
+-->
             <TextView
                 android:id="@+id/distance"
                 android:layout_width="80dp"
@@ -81,6 +79,7 @@
                 android:layout_height="36dp"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentTop="true"
+                android:layout_margin="5dp"
                 card_view:srcCompat="@android:drawable/presence_online" />
 
         </RelativeLayout>
