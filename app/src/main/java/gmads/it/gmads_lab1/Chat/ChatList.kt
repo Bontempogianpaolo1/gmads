@@ -78,6 +78,8 @@ attivita per vedere la lista delle chat
         drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
         replaceFragment(PeopleFragment())
+
+        mProfileReference?.child("chatNotified")?.setValue(false);
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

@@ -49,7 +49,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView title, owner, rating, distance;
-        public ImageView thumbnail, overflow,status;
+        public ImageView thumbnail, status;
 
         MyViewHolder( View view ) {
             super(view);
@@ -61,7 +61,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
 
             //metere distanza
             distance =  view.findViewById(R.id.distance);
-            overflow =  view.findViewById(R.id.overflow);
+            //overflow =  view.findViewById(R.id.overflow);
         }
     }
 
@@ -135,7 +135,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
             mContext.startActivity(intent);
         });
 
-        holder.overflow.setOnClickListener(view -> showPopupMenu(holder.overflow, position));
+        //holder.overflow.setOnClickListener(view -> showPopupMenu(holder.overflow, position));
     }
 
     /**
