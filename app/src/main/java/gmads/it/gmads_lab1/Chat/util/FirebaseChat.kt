@@ -231,6 +231,11 @@ invio messaggi al token desiderato")
                                                                 .child("notificationNumber")
                                                                 .child(dataUser)
                                                                 .setValue(chatChannel.notificationNumber.get(dataUser)!!.toInt() + 1)
+                                                        FirebaseManagement.getDatabase().getReference()
+                                                                .child("users")
+                                                                .child(dataUser)
+                                                                .child("chatNotified")
+                                                                .setValue(true);
                                                     }
                                                 }
                                             }
