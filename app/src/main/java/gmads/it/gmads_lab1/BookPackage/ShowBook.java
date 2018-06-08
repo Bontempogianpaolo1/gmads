@@ -686,7 +686,7 @@ public class ShowBook extends AppCompatActivity implements OnMapReadyCallback /*
                                 e2.printStackTrace();
                             }
                         });
-                FirebaseManagement.sendMessage(getString(R.string.notify_end_request),FirebaseManagement.getUser().getDisplayName(),book.getHolder());
+                FirebaseManagement.sendMessage(getString(R.string.notify_end_request),FirebaseManagement.getUser().getDisplayName(),book.getHolder(),1);
 
                 FirebaseManagement.getDatabase().getReference()
                         .child("users")
@@ -760,7 +760,7 @@ public class ShowBook extends AppCompatActivity implements OnMapReadyCallback /*
 
                 if(book.getStato() == AppConstants.AVAILABLE && !alreadyRequested[0]) {
                     try {
-                        FirebaseManagement.sendMessage(getString(R.string.notify_new_request),FirebaseManagement.getUser().getDisplayName(),book.getOwner());
+                        FirebaseManagement.sendMessage(getString(R.string.notify_new_request),FirebaseManagement.getUser().getDisplayName(),book.getOwner(),1);
 
                         String rId = FirebaseManagement.getDatabase().getReference().child("requests").push().getKey();
                         Request request = new Request("0", AppConstants.NOT_REVIEWED, AppConstants.NOT_REVIEWED,

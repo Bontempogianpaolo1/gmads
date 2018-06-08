@@ -225,7 +225,7 @@ invio messaggi al token desiderato")
 
                                                 for (dataUser in dataUsers){
                                                     if(dataUser != myUser.id){
-                                                        FirebaseManagement.sendMessage(message.text, myUser.name, dataUser)
+                                                        FirebaseManagement.sendMessage(message.text, myUser.name, dataUser,0)
                                                         chatChannelsCollectionRef
                                                                 .child(channelId)
                                                                 .child("notificationNumber")

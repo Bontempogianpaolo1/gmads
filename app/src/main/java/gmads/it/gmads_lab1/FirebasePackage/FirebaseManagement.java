@@ -53,12 +53,13 @@ public class FirebaseManagement {
         }
         return storage;
     }
-    public static void sendMessage(String text,String from,String to){
+    public static void sendMessage(String text,String from,String to,int type){
         mFunctions = FirebaseFunctions.getInstance();
      java.util.Map<String, Object> data = new java.util.HashMap<>();
     data.put("text", text);
     data.put("from",from);
     data.put("to",to);
+    data.put("type",type);
     Task<String> r=mFunctions
             .getHttpsCallable("addMessage")
             .call(data)
