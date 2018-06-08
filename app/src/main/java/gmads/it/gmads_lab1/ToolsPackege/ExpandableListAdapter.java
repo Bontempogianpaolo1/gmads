@@ -94,11 +94,16 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                         .child("users")
                         .child(child.getOwnerId())
                         .child("profileimage.jpg");
-
+/*
         GlideApp.with(context)
                 .load(userImageRef)
                 .placeholder(R.drawable.default_picture)
                 .into(bimage);*/
+
+        RequestOptions requestOptions = new RequestOptions();
+        requestOptions.placeholder(R.drawable.default_picture);
+        requestOptions.error(R.drawable.default_picture);
+        Glide.with(context).setDefaultRequestOptions(requestOptions).load(userImageRef).into(bimage);
 
         txtListChild.setText(childText);
 
@@ -231,6 +236,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                                                             if(value!=null) {
                                                                 value = value + 1;
                                                                 dataSnapshot.getRef().setValue(value);
+                                                                FirebaseManagement.sendMessage(context.getResources().getString(R.string.notify_accepted_request),FirebaseManagement.getUser().getDisplayName(),book.getHolder(),1);
                                                             }else{
                                                                 value = 1L;
                                                                 dataSnapshot.getRef().setValue(value);
@@ -289,6 +295,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     }
 
     private void onClickNo( Request request ){
+        FirebaseManagement.sendMessage(context.getResources().getString(R.string.notify_refused_request),FirebaseManagement.getUser().getDisplayName(),request.getRenterId(),1);
+
         FirebaseManagement.getDatabase().getReference()
                 .child("requests")
                 .child(request.getrId())

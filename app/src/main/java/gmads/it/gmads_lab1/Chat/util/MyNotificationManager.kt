@@ -39,12 +39,12 @@ class MyNotificationManager {
         var builder = NotificationCompat.Builder(ctx, channelId)
 
         var mNotification = builder
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.drawable.ic_add_book_24dp)
                 .setAutoCancel(true)
                 .setContentIntent(pendingIntent)
                 .setContentTitle(from)
                 .setContentText(notification)
-                .setLargeIcon(BitmapFactory.decodeResource(ctx.resources, R.mipmap.ic_launcher))
+                .setLargeIcon(BitmapFactory.decodeResource(ctx.resources, R.mipmap.my_launcher_overbooking_layer))
                 .setSound(defaultSoundUri)
                 .build()
 

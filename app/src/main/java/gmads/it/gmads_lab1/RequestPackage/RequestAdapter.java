@@ -65,8 +65,12 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.MyViewHo
             case AppConstants.ACCEPTED:
               holder.stato.setText(R.string.accepted);
               holder.stato.setBackground(mContext.getDrawable(R.drawable.rounded_completed));
-                holder.stato.setTextColor(ContextCompat.getColor(mContext, R.color.green));
-              holder.button.setVisibility(View.VISIBLE);
+              holder.stato.setTextColor(ContextCompat.getColor(mContext, R.color.green));
+              if(reqList.get(holder.getAdapterPosition()).getReviewStatusRenter()==AppConstants.REVIEWED){
+                  holder.button.setVisibility(View.GONE);
+              }else {
+                  holder.button.setVisibility(View.VISIBLE);
+              }
               break;
             case AppConstants.REFUSED:
                 holder.stato.setText(R.string.refused);
@@ -84,7 +88,11 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.MyViewHo
               holder.stato.setText(R.string.completed);
                 holder.stato.setBackground(mContext.getDrawable(R.drawable.rounded_completed));
                 holder.stato.setTextColor(ContextCompat.getColor(mContext, R.color.green));
-              holder.button.setVisibility(View.VISIBLE);
+                if(reqList.get(holder.getAdapterPosition()).getReviewStatusRenter()==AppConstants.REVIEWED){
+                    holder.button.setVisibility(View.GONE);
+                }else {
+                    holder.button.setVisibility(View.VISIBLE);
+                }
               break;
             default:
                   break;
@@ -94,6 +102,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.MyViewHo
             Intent i= new Intent(mContext,AddReview.class);
             i.putExtra("userid",reqList.get(holder.getAdapterPosition()).getOwnerId());
             i.putExtra("bookname",reqList.get(holder.getAdapterPosition()).getbName());
+            i.putExtra("reqid",reqList.get(holder.getAdapterPosition()).getrId());
             mContext.startActivity(i);
         });
         holder.owner.setText(request.getOwnerName());

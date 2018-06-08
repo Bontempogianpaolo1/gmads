@@ -12,27 +12,38 @@ import com.google.firebase.messaging.RemoteMessage
 import gmads.it.gmads_lab1.Chat.ChatList
 import gmads.it.gmads_lab1.R
 import gmads.it.gmads_lab1.Chat.util.MyNotificationManager
+import gmads.it.gmads_lab1.RequestPackage.RequestActivity
 
 
 class MyFirebaseMessagingService : FirebaseMessagingService() {
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         if (remoteMessage.notification != null) {
-            notifyUser(remoteMessage.from as String, remoteMessage.notification?.body as String)
 
+            notifyUser(remoteMessage.data["fromname"] as String, remoteMessage.notification?.body as String,remoteMessage.data["type"] as String)
+            //sendNotification(remoteMessage)
             Log.d("FCM", "FCM message received!")
 
         }
-        sendNotification(remoteMessage)
+        //sendNotification(remoteMessage)
     }
 
-    fun notifyUser(from : String, notification : String){
+    fun notifyUser(from : String, notification : String,type : String){
+        if(type == "0"){
         var myNotificationManager = MyNotificationManager(this)
         var intent = Intent(this, ChatList::class.java)
 
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
 
         myNotificationManager.showNotification(from, notification, intent)
+        }else{
+            var myNotificationManager = MyNotificationManager(this)
+            var intent = Intent(this, RequestActivity::class.java)
+
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+
+            myNotificationManager.showNotification(from, notification, intent)
+        }
     }
     private fun sendNotification(remoteMessage: RemoteMessage) {
         val intent = Intent(this, ChatList::class.java)
@@ -44,9 +55,10 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
                 .setContentText(remoteMessage.notification?.body as String)
                 .setContentTitle(remoteMessage.from as String)
                 .setAutoCancel(true)
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.mipmap.my_launcher_overbooking_layer)
                 .setSound(defaultSoundUri)
                 .setContentIntent(pendingIntent)
+
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.notify(0 /* ID of notification */, notificationBuilder.build())
     }

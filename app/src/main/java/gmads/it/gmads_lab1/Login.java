@@ -56,6 +56,8 @@ public class Login extends AppCompatActivity {
                                     new AuthUI.IdpConfig.GoogleBuilder().build()
                                     ,new AuthUI.IdpConfig.FacebookBuilder().build()
                             ))
+                            .setLogo(R.mipmap.my_launcher_overbooking)
+                            .setTheme(R.style.LoginTheme)
                             .build(),
                     RC_SIGN_IN);
             // not signed in

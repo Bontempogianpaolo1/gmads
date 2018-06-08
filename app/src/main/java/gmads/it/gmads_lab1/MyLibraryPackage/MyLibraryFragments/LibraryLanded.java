@@ -29,6 +29,7 @@ import java.util.Objects;
 
 import gmads.it.gmads_lab1.BookPackage.Book;
 import gmads.it.gmads_lab1.BookPackage.BookAdapter;
+import gmads.it.gmads_lab1.BookPackage.BookLibraryAdapter;
 import gmads.it.gmads_lab1.BookPackage.SearchResultsJsonParser;
 import gmads.it.gmads_lab1.FirebasePackage.FirebaseManagement;
 import gmads.it.gmads_lab1.R;
@@ -36,7 +37,7 @@ import gmads.it.gmads_lab1.UserPackage.Profile;
 
 public class LibraryLanded extends Fragment {
     RecyclerView recycle;
-    private BookAdapter adapter;
+    private BookLibraryAdapter adapter;
     private List<Book> bookList;
     private boolean isscrolling=false;
     private int currentItems;
@@ -57,7 +58,7 @@ public class LibraryLanded extends Fragment {
         View root = inflater.inflate(R.layout.fragment_home_1, container, false);
         recycle = root.findViewById(R.id.recycler_view);
         bookList = new ArrayList<>();
-        adapter = new BookAdapter(getActivity().getBaseContext(), bookList);
+        adapter = new BookLibraryAdapter(getActivity().getBaseContext(), bookList);
 
         manager = new GridLayoutManager(getActivity().getBaseContext(), 2);
 
@@ -186,11 +187,11 @@ public class LibraryLanded extends Fragment {
         this.recycle = recycle;
     }
 
-    public BookAdapter getAdapter() {
+    public BookLibraryAdapter getAdapter() {
         return adapter;
     }
 
-    public void setAdapter(BookAdapter adapter) {
+    public void setAdapter(BookLibraryAdapter adapter) {
         this.adapter = adapter;
     }
 

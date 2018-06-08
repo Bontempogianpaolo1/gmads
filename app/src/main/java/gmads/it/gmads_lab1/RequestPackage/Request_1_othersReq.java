@@ -123,8 +123,8 @@ public class Request_1_othersReq extends Fragment {
                     ImageView notfound = Objects.requireNonNull(getActivity()).findViewById(R.id.not_found2);
                     TextView tnf = getActivity().findViewById(R.id.textnotfound2);
                     ExpandableListView exp= getActivity().findViewById(R.id.explv);
-                        notfound.setVisibility(View.GONE);
-                        tnf.setVisibility(View.GONE);
+                       // notfound.setVisibility(View.GONE);
+                       // tnf.setVisibility(View.GONE);
                         exp.setVisibility(View.VISIBLE);
 
                 }
@@ -232,8 +232,7 @@ public class Request_1_othersReq extends Fragment {
                     exp.setVisibility(View.VISIBLE);
                 }
 
-
-                listAdapter = new ExpandableListAdapter(getContext(), listDataHeader, listDataChild);
+        listAdapter = new ExpandableListAdapter(getContext(), listDataHeader, listDataChild);
 
                 // setting list adapter
                 expListView.setAdapter(listAdapter);

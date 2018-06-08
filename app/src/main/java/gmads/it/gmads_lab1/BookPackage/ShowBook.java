@@ -10,6 +10,7 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
@@ -68,6 +69,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import gmads.it.gmads_lab1.ReviewPackage.AddReview;
+import gmads.it.gmads_lab1.ToolsPackege.ViewPagerAdapter;
 import gmads.it.gmads_lab1.UserPackage.Profile;
 import gmads.it.gmads_lab1.UserPackage.Profile;
 import gmads.it.gmads_lab1.UserPackage.ShowUserProfile;
@@ -126,13 +128,17 @@ public class ShowBook extends AppCompatActivity implements OnMapReadyCallback /*
     ImageView bookBackground;
     Button bReserveOrReturn;
     ProgressBar progressBar;
-
+    ViewPager viewPager;
+    ViewPagerAdapter adapter;
     LinearLayout vOwnerInfo;
     TextView vOwnerName;
     ImageView vOwnerImage;
-
+    TextView vOwnerRating;
+    List<String> images=new ArrayList<>();
     GoogleMap mmap;
+
     private void findViews() {
+        viewPager= findViewById(R.id.viewPager);
         card2 = findViewById(R.id.card2);
         toolbar =  findViewById(R.id.toolbar);
         avatar = findViewById(R.id.avatar);
@@ -159,6 +165,7 @@ public class ShowBook extends AppCompatActivity implements OnMapReadyCallback /*
         vOwnerInfo = findViewById(R.id.owner_info);
         vOwnerName = findViewById(R.id.owner_name);
         vOwnerImage = findViewById(R.id.owner_image);
+        vOwnerRating = findViewById(R.id.owner_rating);
     }
 
     @Override
@@ -177,7 +184,8 @@ public class ShowBook extends AppCompatActivity implements OnMapReadyCallback /*
                 .into(vOwnerImage);
 
         setSupportActionBar(toolbar);
-
+        adapter= new ViewPagerAdapter(ShowBook.this,images);
+        viewPager.setAdapter(adapter);
         //set avatar and cover
         avatar.setImageResource(R.drawable.default_book);
         cw = new ContextWrapper(getApplicationContext());
@@ -190,6 +198,7 @@ public class ShowBook extends AppCompatActivity implements OnMapReadyCallback /*
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        setupUI(findViewById(R.id.root));
     }
 
     @Override
@@ -250,8 +259,8 @@ public class ShowBook extends AppCompatActivity implements OnMapReadyCallback /*
                 mIsTheTitleContainerVisible = true;
             }
         }
-    }*/
-
+    }
+*/
     public static void startAlphaAnimation(View v, long duration, int visibility) {
         AlphaAnimation alphaAnimation = (visibility == View.VISIBLE)
                 ? new AlphaAnimation(0f, 1f)
@@ -280,8 +289,13 @@ public class ShowBook extends AppCompatActivity implements OnMapReadyCallback /*
     //animation back button
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out);
+
+        if(viewPager.getVisibility()==View.VISIBLE){
+            viewPager.setVisibility(View.GONE);
+        }else{
+            super.onBackPressed();
+            overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out);
+        }
     }
 
     private void getIsMyBook(){
@@ -301,7 +315,6 @@ public class ShowBook extends AppCompatActivity implements OnMapReadyCallback /*
             booksRequested = new LinkedList<>();
             //booksRequested.add(book.getBId());
             bReserveOrReturn.setText(R.string.reserve);
-            bReserveOrReturn.setVisibility(View.VISIBLE);
             getIsReservedByMe();
             /*
             if(book.getStato() == AppConstants.AVAILABLE){
@@ -332,20 +345,24 @@ public class ShowBook extends AppCompatActivity implements OnMapReadyCallback /*
                                         .addOnSuccessListener(new OnSuccessListener<Uri>() {
                                             @Override
                                             public void onSuccess(Uri uri) {
+
                                                 GlideApp.with(cw)
                                                         .load(profile.getImage())
                                                         .into(vOwnerImage);
                                             }
 
                                         });
+
+                                Intent intent = new Intent(cw, ShowUserProfile.class);
+                                intent.putExtra("userId", book.getOwner());
+
+                                vOwnerImage.setOnClickListener(v -> startActivity(intent));
+
+                                vOwnerName.setText(book.getNomeproprietario());
+
+                                vOwnerRating.setText(String.valueOf(profile.getValutation()));
                             }
 
-                            Intent intent = new Intent(cw, ShowUserProfile.class);
-                            intent.putExtra("userId", book.getOwner());
-
-                            vOwnerImage.setOnClickListener(v -> startActivity(intent));
-
-                            vOwnerName.setText(book.getNomeproprietario());
 
                         }
 
@@ -372,14 +389,16 @@ public class ShowBook extends AppCompatActivity implements OnMapReadyCallback /*
                 List<Request> tempReqList = new ArrayList<>(search.parseResults(jsonObject));
 
                 for(Request tempReq : tempReqList){
-                    if(tempReq.getRequestStatus()== AppConstants.PENDING)
+                    if((tempReq.getRequestStatus() != AppConstants.COMPLETED) )
                         booksRequested.add(tempReq.getbId());
                 }
 
-                if(booksRequested.contains(book.getBId())){
+                if(booksRequested.contains(book.getBId()) || book.getStato() == AppConstants.NOT_AVAILABLE){
                     bReserveOrReturn.setEnabled(false);
+                    bReserveOrReturn.setVisibility(View.GONE);
                 } else {
                     bReserveOrReturn.setEnabled(true);
+                    bReserveOrReturn.setVisibility(View.VISIBLE);
                 }
 
             }
@@ -407,6 +426,15 @@ public class ShowBook extends AppCompatActivity implements OnMapReadyCallback /*
                                 if (book.getUrlimage() == null || book.getUrlimage().compareTo("") == 0) {
                                     avatar.setImageDrawable(getDrawable(R.drawable.default_book));
                                 } else {
+                                    images.add(book.getUrlimage());
+                                    adapter.notifyDataSetChanged();
+                                    avatar.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick( View v ) {
+                                            viewPager.setVisibility(View.VISIBLE);
+                                        }
+                                    });
+                                    adapter.notifyDataSetChanged();
                                     GlideApp.with(getApplicationContext())
                                             .load(book.getUrlimage())
                                             .into(avatar);
@@ -447,7 +475,7 @@ public class ShowBook extends AppCompatActivity implements OnMapReadyCallback /*
 
                                                                                     LatLngBounds bounds = builder.build();
                                                                                     CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, 16);
-                                                                                    mmap.setPadding(0, 100, 0, 0);
+                                                                                    mmap.setPadding(50, 200, 50, 50);
                                                                                     mmap.moveCamera(cu);
 
                                                                                 }
@@ -485,6 +513,8 @@ public class ShowBook extends AppCompatActivity implements OnMapReadyCallback /*
                                                 .child(bookId)
                                                 .child("personal_images")
                                                 .child("1.jpg");
+
+
                                 Glide.with(getApplicationContext() /* context */)
                                         .load(bookImageRef)
                                         .listener(new RequestListener<Drawable>() {
@@ -503,6 +533,13 @@ public class ShowBook extends AppCompatActivity implements OnMapReadyCallback /*
                                             public boolean onResourceReady( Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource ) {
                                                 bookPhoto.setVisibility(View.VISIBLE);
                                                 titleImg.setVisibility(View.VISIBLE);
+                                               bookImageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                                   @Override
+                                                   public void onSuccess( Uri uri ) {
+                                                  adapter.addUrl(uri.toString());
+                                                  adapter.notifyDataSetChanged();
+                                                   }
+                                               });
 
                                                 return false;
                                             }
@@ -549,9 +586,9 @@ public class ShowBook extends AppCompatActivity implements OnMapReadyCallback /*
                                     }
                                     vNotes.setText(notes.toString());
                                 }
-                            }
 
-                            getIsMyBook();
+                                getIsMyBook();
+                            }
 
                             //foto libro (fare come gli altri controlli:
                             //NON Cè: titleImg e bookPhoto vanno rese invisibili
@@ -590,7 +627,7 @@ public class ShowBook extends AppCompatActivity implements OnMapReadyCallback /*
         // prendo riD
         //progressbar.setVisibility(View.VISIBLE);
 
-        Query query = new Query("").setFilters("bId:"+book.getBId());
+        Query query = new Query("").setFilters("bId:"+book.getBId()+" AND (requestStatus:"+ AppConstants.ACCEPTED+" )");
         Intent i= new Intent(this, AddReview.class);
         i.putExtra("userid", book.getHolder());
         i.putExtra("bookname", book.getTitle());
@@ -620,7 +657,14 @@ public class ShowBook extends AppCompatActivity implements OnMapReadyCallback /*
                                 req.setRequestStatus(AppConstants.COMPLETED);
                                 algoIndex.saveObjectAsync(new JSONObject(gson.toJson(req)),
                                         req.getObjectID().toString(),
-                                        null);
+                                        new CompletionHandler() {
+                                            @Override
+                                            public void requestCompleted( JSONObject jsonObject, AlgoliaException e ) {
+                                                if(e!=null){
+                                                    e.printStackTrace();
+                                                }
+                                            }
+                                        });
                             } catch (Exception e1) {
                                 e1.printStackTrace();
                             }
@@ -642,6 +686,7 @@ public class ShowBook extends AppCompatActivity implements OnMapReadyCallback /*
                                 e2.printStackTrace();
                             }
                         });
+                FirebaseManagement.sendMessage(getString(R.string.notify_end_request),FirebaseManagement.getUser().getDisplayName(),book.getHolder(),1);
 
                 FirebaseManagement.getDatabase().getReference()
                         .child("users")
@@ -668,7 +713,7 @@ public class ShowBook extends AppCompatActivity implements OnMapReadyCallback /*
                         book.setStato(AppConstants.AVAILABLE);
                         book.setHolder(req.getOwnerId());
                 try {
-                    algoIndex.saveObjectAsync(new JSONObject(gson.toJson(book)),
+                    algoBookIndex.saveObjectAsync(new JSONObject(gson.toJson(book)),
                             book.getObjectID().toString(),
                             null);
                 } catch (JSONException e1) {
@@ -684,8 +729,10 @@ public class ShowBook extends AppCompatActivity implements OnMapReadyCallback /*
                 //progressbar.setVisibility(View.GONE);
                 Toast.makeText(this, "Book returned successfully", Toast.LENGTH_SHORT).show();
                 bReserveOrReturn.setVisibility(View.GONE);
-
-                startActivity(i);
+                if(req.getReviewStatusOwner()== AppConstants.NOT_REVIEWED) {
+                    i.putExtra("reqid",req.getrId());
+                    startActivity(i);
+                }
             }
         });
     }
@@ -715,6 +762,7 @@ public class ShowBook extends AppCompatActivity implements OnMapReadyCallback /*
 
                 if(book.getStato() == AppConstants.AVAILABLE && !alreadyRequested[0]) {
                     try {
+                        FirebaseManagement.sendMessage(getString(R.string.notify_new_request),FirebaseManagement.getUser().getDisplayName(),book.getOwner(),1);
 
                         String rId = FirebaseManagement.getDatabase().getReference().child("requests").push().getKey();
                         Request request = new Request("0", AppConstants.NOT_REVIEWED, AppConstants.NOT_REVIEWED,
@@ -779,10 +827,12 @@ public class ShowBook extends AppCompatActivity implements OnMapReadyCallback /*
     public void setupUI(View view) {
 
         // Set up touch listener for non-text box views to hide keyboard.
-        if (!(view instanceof EditText)) {
+        if (!(view instanceof ViewPager)) {
+
             view.setOnTouchListener(new View.OnTouchListener() {
                 public boolean onTouch(View v, MotionEvent event) {
-                    hideSoftKeyboard(ShowBook.this);
+                    //hideSoftKeyboard(ShowBook.this);
+                    viewPager.setVisibility(View.GONE);
                     return false;
                 }
             });
