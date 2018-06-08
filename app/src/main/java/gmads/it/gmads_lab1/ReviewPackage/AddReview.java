@@ -14,10 +14,21 @@ import android.widget.EditText;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.algolia.search.saas.AlgoliaException;
+import com.algolia.search.saas.Client;
+import com.algolia.search.saas.CompletionHandler;
+import com.algolia.search.saas.Index;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.util.List;
@@ -25,9 +36,12 @@ import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import gmads.it.gmads_lab1.FirebasePackage.FirebaseManagement;
+import gmads.it.gmads_lab1.HomePackage.Home;
 import gmads.it.gmads_lab1.R;
+import gmads.it.gmads_lab1.RequestPackage.Request;
 import gmads.it.gmads_lab1.RequestPackage.RequestActivity;
 import gmads.it.gmads_lab1.UserPackage.Profile;
+import gmads.it.gmads_lab1.constants.AppConstants;
 
 
 public class AddReview extends AppCompatActivity {
@@ -40,7 +54,10 @@ public class AddReview extends AppCompatActivity {
     CircleImageView photo;
     String id;
     Toolbar toolbar;
-
+    String reqid;
+    JSONObject  json;
+    private Client algoClient = new Client("L6B7L7WXZW", "9d2de9e724fa9289953e6b2d5ec978a5");
+    private Index algoIndex = algoClient.getIndex("requests");
     public void findviews(){
         owner = findViewById(R.id.owner);
         bookname= findViewById(R.id.bookname);
@@ -48,7 +65,6 @@ public class AddReview extends AppCompatActivity {
         invia= findViewById(R.id.invia_button);
         rating = findViewById(R.id.rating);
         toolbar = findViewById(R.id.toolbar);
-
         photo=findViewById(R.id.photo);
     }
     @Override
@@ -62,8 +78,64 @@ public class AddReview extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         id= getIntent().getStringExtra("userid");
         String name=getIntent().getStringExtra("bookname");
+        reqid=getIntent().getStringExtra("reqid");
         bookname.setText(name);
         invia.setOnClickListener(v -> {
+
+        FirebaseManagement.getDatabase().getReference().child("requests").child(reqid).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange( DataSnapshot dataSnapshot ) {
+                Request req= dataSnapshot.getValue(Request.class);
+                json=new JSONObject();
+                if(req!=null){
+                    Request req2= new Request();
+                    req2.setObjectID(req.getObjectID()); try {
+                    if(req.getOwnerId().equals(FirebaseManagement.getUser().getUid())){
+                        req.setReviewStatusOwner(AppConstants.REVIEWED);
+                        req2.setReviewStatusOwner(AppConstants.REVIEWED);
+
+                            json= new JSONObject().put("reviewStatusOwner",AppConstants.REVIEWED).put("objectID",req.getObjectID());
+
+                    }else{
+                        req.setReviewStatusRenter(AppConstants.REVIEWED);
+                        req2.setReviewStatusRenter(AppConstants.REVIEWED);
+
+                            json= new JSONObject().put("reviewStatusRenter",AppConstants.REVIEWED).put("objectID",req.getObjectID());
+
+
+                    }
+
+                    FirebaseManagement.getDatabase().getReference().child("requests").child(reqid).child("reviewStatusRenter").setValue(AppConstants.REVIEWED).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess( Void aVoid ) {
+                            Gson gson = new Gson();
+
+
+
+                                algoIndex.partialUpdateObjectAsync((json),
+                                        req.getObjectID().toString(),true,new CompletionHandler() {
+                                            @Override
+                                            public void requestCompleted( JSONObject jsonObject, AlgoliaException e ) {
+                                                startActivity(new Intent(getApplicationContext(),Home.class));
+                                                finish();
+                                            }
+                                        });
+
+                        }
+                    });
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            }
+
+            @Override
+            public void onCancelled( DatabaseError databaseError ) {
+
+            }
+        });
+            /*
             Review r= new Review(FirebaseManagement.getUser().getDisplayName(),FirebaseManagement.getUser().getUid(),recensione.getText().toString(),rating.getRating());
             List<Review> reviews=profile.getReviews();
             reviews.add(r);
@@ -78,7 +150,7 @@ public class AddReview extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), R.string.reviewsent,Toast.LENGTH_LONG).show();
                         startActivity(new Intent(getApplicationContext(),RequestActivity.class));
                         finish();
-                    });
+                    });*/
 
         });
     }

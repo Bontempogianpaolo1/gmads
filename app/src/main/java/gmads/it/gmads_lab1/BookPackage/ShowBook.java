@@ -729,8 +729,10 @@ public class ShowBook extends AppCompatActivity implements OnMapReadyCallback /*
                 //progressbar.setVisibility(View.GONE);
                 Toast.makeText(this, "Book returned successfully", Toast.LENGTH_SHORT).show();
                 bReserveOrReturn.setVisibility(View.GONE);
-
-                startActivity(i);
+                if(req.getReviewStatusOwner()== AppConstants.NOT_REVIEWED) {
+                    i.putExtra("reqid",req.getrId());
+                    startActivity(i);
+                }
             }
         });
     }
