@@ -10,6 +10,7 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
@@ -68,6 +69,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import gmads.it.gmads_lab1.ReviewPackage.AddReview;
+import gmads.it.gmads_lab1.ToolsPackege.ViewPagerAdapter;
 import gmads.it.gmads_lab1.UserPackage.Profile;
 import gmads.it.gmads_lab1.UserPackage.Profile;
 import gmads.it.gmads_lab1.UserPackage.ShowUserProfile;
@@ -126,14 +128,17 @@ public class ShowBook extends AppCompatActivity implements OnMapReadyCallback /*
     ImageView bookBackground;
     Button bReserveOrReturn;
     ProgressBar progressBar;
-
+    ViewPager viewPager;
+    ViewPagerAdapter adapter;
     LinearLayout vOwnerInfo;
     TextView vOwnerName;
     ImageView vOwnerImage;
     TextView vOwnerRating;
-
+    List<String> images=new ArrayList<>();
     GoogleMap mmap;
+
     private void findViews() {
+        viewPager= findViewById(R.id.viewPager);
         card2 = findViewById(R.id.card2);
         toolbar =  findViewById(R.id.toolbar);
         avatar = findViewById(R.id.avatar);
@@ -179,7 +184,8 @@ public class ShowBook extends AppCompatActivity implements OnMapReadyCallback /*
                 .into(vOwnerImage);
 
         setSupportActionBar(toolbar);
-
+        adapter= new ViewPagerAdapter(ShowBook.this,images);
+        viewPager.setAdapter(adapter);
         //set avatar and cover
         avatar.setImageResource(R.drawable.default_book);
         cw = new ContextWrapper(getApplicationContext());
@@ -192,6 +198,7 @@ public class ShowBook extends AppCompatActivity implements OnMapReadyCallback /*
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        setupUI(findViewById(R.id.root));
     }
 
     @Override
@@ -282,8 +289,13 @@ public class ShowBook extends AppCompatActivity implements OnMapReadyCallback /*
     //animation back button
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out);
+
+        if(viewPager.getVisibility()==View.VISIBLE){
+            viewPager.setVisibility(View.GONE);
+        }else{
+            super.onBackPressed();
+            overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out);
+        }
     }
 
     private void getIsMyBook(){
@@ -333,6 +345,7 @@ public class ShowBook extends AppCompatActivity implements OnMapReadyCallback /*
                                         .addOnSuccessListener(new OnSuccessListener<Uri>() {
                                             @Override
                                             public void onSuccess(Uri uri) {
+
                                                 GlideApp.with(cw)
                                                         .load(profile.getImage())
                                                         .into(vOwnerImage);
@@ -413,6 +426,15 @@ public class ShowBook extends AppCompatActivity implements OnMapReadyCallback /*
                                 if (book.getUrlimage() == null || book.getUrlimage().compareTo("") == 0) {
                                     avatar.setImageDrawable(getDrawable(R.drawable.default_book));
                                 } else {
+                                    images.add(book.getUrlimage());
+                                    adapter.notifyDataSetChanged();
+                                    avatar.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick( View v ) {
+                                            viewPager.setVisibility(View.VISIBLE);
+                                        }
+                                    });
+                                    adapter.notifyDataSetChanged();
                                     GlideApp.with(getApplicationContext())
                                             .load(book.getUrlimage())
                                             .into(avatar);
@@ -491,6 +513,8 @@ public class ShowBook extends AppCompatActivity implements OnMapReadyCallback /*
                                                 .child(bookId)
                                                 .child("personal_images")
                                                 .child("1.jpg");
+
+
                                 Glide.with(getApplicationContext() /* context */)
                                         .load(bookImageRef)
                                         .listener(new RequestListener<Drawable>() {
@@ -509,6 +533,13 @@ public class ShowBook extends AppCompatActivity implements OnMapReadyCallback /*
                                             public boolean onResourceReady( Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource ) {
                                                 bookPhoto.setVisibility(View.VISIBLE);
                                                 titleImg.setVisibility(View.VISIBLE);
+                                               bookImageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                                   @Override
+                                                   public void onSuccess( Uri uri ) {
+                                                  adapter.addUrl(uri.toString());
+                                                  adapter.notifyDataSetChanged();
+                                                   }
+                                               });
 
                                                 return false;
                                             }
@@ -794,10 +825,12 @@ public class ShowBook extends AppCompatActivity implements OnMapReadyCallback /*
     public void setupUI(View view) {
 
         // Set up touch listener for non-text box views to hide keyboard.
-        if (!(view instanceof EditText)) {
+        if (!(view instanceof ViewPager)) {
+
             view.setOnTouchListener(new View.OnTouchListener() {
                 public boolean onTouch(View v, MotionEvent event) {
-                    hideSoftKeyboard(ShowBook.this);
+                    //hideSoftKeyboard(ShowBook.this);
+                    viewPager.setVisibility(View.GONE);
                     return false;
                 }
             });
