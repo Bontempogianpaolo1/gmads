@@ -100,7 +100,8 @@ public class AddReview extends AppCompatActivity {
                         if(profile!=null){
                             //
                             if(profile.getReviews()!=null && alreadyReviewed(profile.getReviews())){
-                                invia.setVisibility(View.GONE);
+                               // invia.setVisibility(View.GONE);
+                                invia.setText(R.string.updatereview);
                                 Toast.makeText(getApplicationContext(),R.string.alreadyreviewed,Toast.LENGTH_SHORT).show();
                             }
                             //

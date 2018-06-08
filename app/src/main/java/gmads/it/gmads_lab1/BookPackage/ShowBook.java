@@ -627,7 +627,7 @@ public class ShowBook extends AppCompatActivity implements OnMapReadyCallback /*
         // prendo riD
         //progressbar.setVisibility(View.VISIBLE);
 
-        Query query = new Query("").setFilters("bId:"+book.getBId());
+        Query query = new Query("").setFilters("bId:"+book.getBId()+" AND (requestStatus:"+ AppConstants.ACCEPTED+" )");
         Intent i= new Intent(this, AddReview.class);
         i.putExtra("userid", book.getHolder());
         i.putExtra("bookname", book.getTitle());

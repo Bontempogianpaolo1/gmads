@@ -166,5 +166,6 @@
     <string name="notify_refused_request">Request Refused</string>
     <string name="notify_new_request">New Request</string>
     <string name="notify_end_request">Book Returned</string>
+    <string name="updatereview">Update your review</string>
 
 </resources>
