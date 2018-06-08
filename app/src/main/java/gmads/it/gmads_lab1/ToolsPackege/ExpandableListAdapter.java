@@ -87,14 +87,14 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         CircleImageView bimage = convertView.findViewById(R.id.userphoto);
         //CircleImageView civ = (CircleImageView) convertView.findViewById(R.id.ownerphoto);
         //settare foto user se c'è DOPO AVER SETTATO QUELLA DI DEFAULT
-        /*StorageReference userImageRef =
+        StorageReference userImageRef =
                 FirebaseManagement
                         .getStorage()
                         .getReference()
                         .child("users")
                         .child(child.getOwnerId())
                         .child("profileimage.jpg");
-/*
+        /*
         GlideApp.with(context)
                 .load(userImageRef)
                 .placeholder(R.drawable.default_picture)
