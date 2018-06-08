@@ -135,7 +135,6 @@ public class SaveBook extends AppCompatActivity{
         findActViews();
         setupUI(findViewById(R.id.linearlayout));
         controlFocus();
-
         //coverImage.setImageResource(R.drawable.cover_edit);
         toolbar.setTitle(getString(R.string.bookTitle));
         //textviewTitle.setText(getString(R.string.bookTitle));
