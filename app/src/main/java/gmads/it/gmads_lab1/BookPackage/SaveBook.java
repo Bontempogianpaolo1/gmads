@@ -630,4 +630,9 @@ public class SaveBook extends AppCompatActivity{
         inputMethodManager.hideSoftInputFromWindow(
                 activity.getCurrentFocus().getWindowToken(), 0);
     }
+
+    public void collapseToolbar(View v){
+        AppBarLayout appbarLayout = v.findViewById(R.id.appbar);
+        appbarLayout.setExpanded(false);
+    }
 }
