@@ -163,6 +163,7 @@ public class Book implements Serializable{
         avgRating=0;
         nRates=0;
         sumRates=0;
+        this.holder = owner;
 
     }
 

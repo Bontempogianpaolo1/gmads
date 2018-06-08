@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Objects;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,10 +20,15 @@ import com.algolia.search.saas.Client;
 import com.algolia.search.saas.CompletionHandler;
 import com.algolia.search.saas.Index;;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.StorageReference;
 import com.google.gson.Gson;
 import org.json.JSONObject;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -32,6 +39,8 @@ import gmads.it.gmads_lab1.BookPackage.Book;
 import gmads.it.gmads_lab1.FirebasePackage.FirebaseManagement;
 import gmads.it.gmads_lab1.R;
 import gmads.it.gmads_lab1.RequestPackage.Request;
+
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
@@ -75,21 +84,38 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         }
 
         TextView txtListChild = (TextView) convertView.findViewById(R.id.name);
+        CircleImageView bimage = convertView.findViewById(R.id.userphoto);
         //CircleImageView civ = (CircleImageView) convertView.findViewById(R.id.ownerphoto);
-        //settare foto libro se c'è DOPO AVER SETTATO QUELLA DI DEFAULT
-        /*GlideApp.with(context)
-                .load(R.drawable.default_picture)
-                .centerCrop()
-                .into(civ);*/
+        //settare foto user se c'è DOPO AVER SETTATO QUELLA DI DEFAULT
+        StorageReference userImageRef =
+                FirebaseManagement
+                        .getStorage()
+                        .getReference()
+                        .child("users")
+                        .child(child.getOwnerId())
+                        .child("profileimage.jpg");
+/*
+        GlideApp.with(context)
+                .load(userImageRef)
+                .placeholder(R.drawable.default_picture)
+                .into(bimage);*/
+
+        RequestOptions requestOptions = new RequestOptions();
+        requestOptions.placeholder(R.drawable.default_picture);
+        requestOptions.error(R.drawable.default_picture);
+        Glide.with(context).setDefaultRequestOptions(requestOptions).load(userImageRef).into(bimage);
+
         txtListChild.setText(childText);
 
         TextView bProfile = convertView.findViewById(R.id.name);
-        bProfile.setOnClickListener(v -> onClickProfile(child));
 
-        ImageView bYes = convertView.findViewById(R.id.yes);
+        bProfile.setOnClickListener(v -> onClickProfile(child));
+        bimage.setOnClickListener(v->onClickProfile(child));
+
+        TextView bYes = convertView.findViewById(R.id.yes);
         bYes.setOnClickListener( v -> onClickYes(child));
 
-        ImageView bNo = convertView.findViewById(R.id.no);
+        TextView bNo = convertView.findViewById(R.id.no);
         bNo.setOnClickListener( v -> onClickNo(child));
 
         return convertView;
@@ -210,6 +236,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                                                             if(value!=null) {
                                                                 value = value + 1;
                                                                 dataSnapshot.getRef().setValue(value);
+                                                                FirebaseManagement.sendMessage(context.getResources().getString(R.string.notify_accepted_request),FirebaseManagement.getUser().getDisplayName(),book.getHolder(),1);
                                                             }else{
                                                                 value = 1L;
                                                                 dataSnapshot.getRef().setValue(value);
@@ -268,6 +295,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     }
 
     private void onClickNo( Request request ){
+        FirebaseManagement.sendMessage(context.getResources().getString(R.string.notify_refused_request),FirebaseManagement.getUser().getDisplayName(),request.getRenterId(),1);
+
         FirebaseManagement.getDatabase().getReference()
                 .child("requests")
                 .child(request.getrId())

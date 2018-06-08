@@ -49,7 +49,7 @@
     <string name="choose_country">Choose a Country</string>
     <string name="MyBooks">My Books</string>
     <string name="RentedBooks">Rented Books</string>
-    <string name="LandedBooks">Landed Books</string>
+    <string name="LentBooks">Lent Books</string>
 
     <!--string for data not found-->
     <string name="notFound">Not Found</string>
@@ -162,5 +162,10 @@
     <string name="ooops_nothing_found">Ooops...Nothing found!</string>
     <string name="reviewsent">Sent</string>
     <string name="alreadyreviewed">Already Reviewed</string>
+    <string name="notify_accepted_request">Request Accepted</string>
+    <string name="notify_refused_request">Request Refused</string>
+    <string name="notify_new_request">New Request</string>
+    <string name="notify_end_request">Book Returned</string>
+    <string name="updatereview">Update your review</string>
 
 </resources>

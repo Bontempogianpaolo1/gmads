@@ -79,9 +79,11 @@ public class Request_2_myReq extends Fragment {
                 ImageView notfound = Objects.requireNonNull(getActivity()).findViewById(R.id.not_found2);
                 TextView tnf = getActivity().findViewById(R.id.textnotfound2);
                 if(listrequest.size()==0){
-                    notfound.setVisibility(View.VISIBLE);
-                    tnf.setVisibility(View.VISIBLE);
-                    return;
+                    if(tab.getCurrentItem()==1) {
+                        notfound.setVisibility(View.VISIBLE);
+                        tnf.setVisibility(View.VISIBLE);
+                        return;
+                    }
                 }
                 else{
                     notfound.setVisibility(View.GONE);

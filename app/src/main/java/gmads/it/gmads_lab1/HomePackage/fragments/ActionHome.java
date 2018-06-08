@@ -133,6 +133,9 @@ public class ActionHome extends Fragment {
                 .setHitsPerPage(20).setFilters("categories:action OR categories:azione");
 
         algoIndex.searchAsync(query, ( jsonObject, e ) -> {
+            ImageView notfound = Objects.requireNonNull(getActivity()).findViewById(R.id.not_found);
+            TextView tnf = getActivity().findViewById(R.id.textnotfound);
+            ProgressBar p= Objects.requireNonNull(getActivity()).findViewById(R.id.progress_bar);
             if(e==null){
                 SearchResultsJsonParser search= new SearchResultsJsonParser();
                 Log.d("lista",jsonObject.toString());
@@ -147,8 +150,7 @@ public class ActionHome extends Fragment {
                 for(Book b: books2){
                     bookList.remove(b);
                 }
-                ImageView notfound = Objects.requireNonNull(getActivity()).findViewById(R.id.not_found);
-                TextView tnf = getActivity().findViewById(R.id.textnotfound);
+
                 if(bookList.size()==0){
 
                     notfound.setVisibility(View.VISIBLE);
@@ -158,9 +160,12 @@ public class ActionHome extends Fragment {
                     notfound.setVisibility(View.GONE);
                     tnf.setVisibility(View.GONE);
                 }
+            }else{
+                notfound.setVisibility(View.VISIBLE);
+                tnf.setVisibility(View.VISIBLE);
             }
             adapter.notifyDataSetChanged();
-            ProgressBar p= Objects.requireNonNull(getActivity()).findViewById(R.id.progress_bar);
+
             p.setVisibility(View.INVISIBLE);
         });
     }

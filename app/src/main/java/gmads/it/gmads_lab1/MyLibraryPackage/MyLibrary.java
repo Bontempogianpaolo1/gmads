@@ -104,7 +104,7 @@ public class MyLibrary extends AppCompatActivity implements NavigationView.OnNav
         tableLayout.setupWithViewPager(pager);
 
         Objects.requireNonNull(tableLayout.getTabAt(0)).setText(getString(R.string.MyBooks));
-        Objects.requireNonNull(tableLayout.getTabAt(1)).setText(getString(R.string.LandedBooks));
+        Objects.requireNonNull(tableLayout.getTabAt(1)).setText(getString(R.string.LentBooks));
         Objects.requireNonNull(tableLayout.getTabAt(2)).setText(getString(R.string.RentedBooks));
 
         pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
