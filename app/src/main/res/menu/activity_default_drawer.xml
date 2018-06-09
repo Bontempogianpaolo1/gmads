@@ -20,6 +20,12 @@
             android:id="@+id/nav_mylibrary"
             android:icon="@drawable/ic_baseline_library_books_24px"
             android:title="@string/nav_library" />
+
+        <item
+            android:id="@+id/nav_requests"
+            android:icon="@drawable/ic_people_black_24dp"
+            android:title="@string/request" />
+
         <item
             android:id="@+id/nav_chat"
             android:icon="@drawable/ic_baseline_chat_24px"

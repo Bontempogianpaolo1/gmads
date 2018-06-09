@@ -32,6 +32,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.gson.Gson;
 import org.json.JSONObject;
 import de.hdodenhof.circleimageview.CircleImageView;
+import gmads.it.gmads_lab1.UserPackage.Profile;
 import gmads.it.gmads_lab1.UserPackage.ShowUserProfile;
 import gmads.it.gmads_lab1.constants.AppConstants;
 import gmads.it.gmads_lab1.Chat.glide.GlideApp;
@@ -84,6 +85,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         }
 
         TextView txtListChild = (TextView) convertView.findViewById(R.id.name);
+        TextView vRate = convertView.findViewById(R.id.rate);
         CircleImageView bimage = convertView.findViewById(R.id.userphoto);
         //CircleImageView civ = (CircleImageView) convertView.findViewById(R.id.ownerphoto);
         //settare foto user se c'è DOPO AVER SETTATO QUELLA DI DEFAULT
@@ -106,6 +108,27 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         Glide.with(context).setDefaultRequestOptions(requestOptions).load(userImageRef).into(bimage);
 
         txtListChild.setText(childText);
+
+        FirebaseManagement.getDatabase().getReference()
+                .child("users")
+                .child(child.getRenterId())
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Profile profile = dataSnapshot.getValue(Profile.class);
+
+                        if(profile.getNrates() > 0){
+                            if(profile.getValutation() != 0) {
+                                vRate.setText(String.valueOf(profile.getValutation()));
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
 
         TextView bProfile = convertView.findViewById(R.id.name);
 
@@ -153,7 +176,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
         TextView lblListHeader =  convertView.findViewById(R.id.bookname);
         TextView number =  convertView.findViewById(R.id.number);
-        CircleImageView civ = convertView.findViewById(R.id.bookphoto);
+        ImageView civ = convertView.findViewById(R.id.bookphoto);
         //settare foto libro se c'è DOPO AVER SETTATO QUELLA DI DEFAULT
         RequestOptions requestOptions = new RequestOptions();
         requestOptions.placeholder(R.drawable.default_book);

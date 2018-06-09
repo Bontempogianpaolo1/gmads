@@ -10,8 +10,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.List;
 
+import gmads.it.gmads_lab1.BookPackage.Book;
+import gmads.it.gmads_lab1.BookPackage.ShowBook;
+import gmads.it.gmads_lab1.Chat.glide.GlideApp;
+import gmads.it.gmads_lab1.FirebasePackage.FirebaseManagement;
 import gmads.it.gmads_lab1.ReviewPackage.AddReview;
 import gmads.it.gmads_lab1.constants.AppConstants;
 import gmads.it.gmads_lab1.R;
@@ -23,10 +32,11 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.MyViewHo
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView title, owner, bookname,stato;
-        public ImageView button;
+        public ImageView button, bookImage;
 
         MyViewHolder( View view ) {
             super(view);
+            bookImage = view.findViewById(R.id.book_image);
             bookname =  view.findViewById(R.id.bookname);
             owner =  view.findViewById(R.id.ownername);
             stato = view.findViewById(R.id.stato);
@@ -60,6 +70,33 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.MyViewHo
         //titolo libro
         holder.bookname.setText(request.getbName());
         //owner
+
+        FirebaseManagement.getDatabase().getReference()
+                .child("books")
+                .child(request.getbId())
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Book book = dataSnapshot.getValue(Book.class);
+
+                        if(book != null){
+                            GlideApp.with(mContext)
+                                    .load(book.getUrlimage())
+                                    .into(holder.bookImage);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+        holder.bookImage.setOnClickListener(v -> {
+            Intent intent = new Intent(mContext, ShowBook.class);
+            intent.putExtra("book_id", request.getbId());
+            mContext.startActivity(intent);
+        });
 
         switch (reqList.get(holder.getAdapterPosition()).getRequestStatus()){
             case AppConstants.ACCEPTED:

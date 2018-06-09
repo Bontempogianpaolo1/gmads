@@ -76,17 +76,18 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
 
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_star_black_24dp"/>
+
                     <TextView
                         android:id="@+id/owner_rating"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_gravity="center_vertical"
-                        android:text="3.5"/>
+                        android:text="-"/>
 
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/ic_star_black_24dp"/>
                 </LinearLayout>
 
                 <!--<RatingBar
@@ -117,6 +118,25 @@
 
 
         </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/progress_bar_request"
+            android:layout_width="30dp"
+            android:layout_height="39dp"
+            android:visibility="gone"
+            android:layout_gravity="center_horizontal"/>
+
+        <Button
+            android:id="@+id/reserveOrReturn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/reserve"
+            android:background="@color/colorAccent"
+            android:textColor="@color/white"
+            android:layout_margin="5dp"
+            android:layout_marginTop="8dp"
+            android:enabled="false"
+            android:visibility="gone"/>
 
         <TextView
             android:layout_width="match_parent"
