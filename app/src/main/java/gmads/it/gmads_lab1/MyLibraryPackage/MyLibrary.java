@@ -188,6 +188,10 @@ public class MyLibrary extends AppCompatActivity implements NavigationView.OnNav
             startActivity(intentMod);
             finish();
             return true;
+        } else if (id == R.id.nav_requests) {
+            Intent intent = new Intent(this, RequestActivity.class);
+            startActivity(intent);
+            return true;
         } else if (id == R.id.nav_chat){
             Intent intent = new Intent(this, ChatList.class);
             startActivity(intent);

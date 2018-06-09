@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/cardView_item_person"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="90dp"
     android:layout_margin="4dp"
     android:clickable="true"
     android:focusable="true"
@@ -14,15 +14,24 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical">
+
+        <ImageView
+            android:id="@+id/book_image"
+            android:layout_width="60dp"
+            android:layout_height="70dp"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="13dp"
+            android:src="@drawable/default_book" />
 
         <TextView
             android:id="@+id/bookname"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
+            android:layout_alignStart="@+id/tv1"
             android:layout_marginEnd="8dp"
-            android:layout_marginStart="16dp"
             android:layout_marginTop="5dp"
             android:layout_toStartOf="@+id/rl_end"
             android:ellipsize="end"
@@ -35,10 +44,10 @@
             android:id="@+id/tv1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/bookname"
-            android:layout_marginBottom="5dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="5dp"
+            android:layout_alignBaseline="@+id/ownername"
+            android:layout_alignBottom="@+id/ownername"
+            android:layout_marginStart="28dp"
+            android:layout_toEndOf="@+id/book_image"
             android:text="@string/bp_owner"
             android:textStyle="bold" />
 

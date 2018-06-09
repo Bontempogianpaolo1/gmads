@@ -99,7 +99,8 @@
     <string name="bp_descr">Descrizione</string>
     <string name="bp_condiz">Condizioni</string>
     <string name="bp_notes">Altri</string>
-    <string name="returnBook">Ricevi libro</string>
+    <string name="returnBook">Ritorna Libro</string>
+    <string name="request_sent">Richiesta inviata con successo!</string>
 
     <!-- navbar -->
     <string name="nav_home">Home</string>
@@ -129,6 +130,11 @@
     <string name="pending">Sospeso</string>
     <string name="completed">Completato</string>
     <string name="ooops_nothing_found">Ooops...Non trovato!</string>
+
+
+    <!-- REQUEST -->
+    <string name="request_accepted">Richiesta Accettata</string>
+    <string name="request_refused">Richiesta Rifiutata</string>
 
     <!--end-->
 </resources>

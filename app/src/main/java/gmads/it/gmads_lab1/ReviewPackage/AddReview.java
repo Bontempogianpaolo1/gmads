@@ -135,7 +135,7 @@ public class AddReview extends AppCompatActivity {
 
             }
         });
-            /*
+
             Review r= new Review(FirebaseManagement.getUser().getDisplayName(),FirebaseManagement.getUser().getUid(),recensione.getText().toString(),rating.getRating());
             List<Review> reviews=profile.getReviews();
             reviews.add(r);
@@ -150,7 +150,7 @@ public class AddReview extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), R.string.reviewsent,Toast.LENGTH_LONG).show();
                         startActivity(new Intent(getApplicationContext(),RequestActivity.class));
                         finish();
-                    });*/
+                    });
 
         });
     }

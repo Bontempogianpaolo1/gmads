@@ -219,6 +219,10 @@ public class AddBook extends AppCompatActivity
             Intent intentMod = new Intent(this, Home.class);
             startActivity(intentMod);
             return true;
+        } else if (id == R.id.nav_requests) {
+            Intent intent = new Intent(this, RequestActivity.class);
+            startActivity(intent);
+            return true;
         } else if (id == R.id.nav_chat){
             Intent intent = new Intent(this, ChatList.class);
             startActivity(intent);

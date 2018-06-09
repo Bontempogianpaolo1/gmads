@@ -133,6 +133,12 @@ attivita per vedere la lista delle chat
                     finish()
                     true
                 }
+                R.id.nav_requests -> {
+                    val intent = Intent(this, RequestActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                    true
+                }
                 R.id.nav_chat -> true
                 R.id.nav_logout -> {
                     AuthUI.getInstance().signOut(this).addOnCompleteListener { v ->
