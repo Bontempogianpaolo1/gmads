@@ -94,7 +94,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                         .child("users")
                         .child(child.getOwnerId())
                         .child("profileimage.jpg");
-/*
+        /*
         GlideApp.with(context)
                 .load(userImageRef)
                 .placeholder(R.drawable.default_picture)

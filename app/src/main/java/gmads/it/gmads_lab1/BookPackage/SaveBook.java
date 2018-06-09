@@ -134,6 +134,7 @@ public class SaveBook extends AppCompatActivity{
         setContentView(R.layout.activity_save_book);
         findActViews();
         setupUI(findViewById(R.id.linearlayout));
+        controlFocus();
         //coverImage.setImageResource(R.drawable.cover_edit);
         toolbar.setTitle(getString(R.string.bookTitle));
         //textviewTitle.setText(getString(R.string.bookTitle));
@@ -489,6 +490,7 @@ public class SaveBook extends AppCompatActivity{
         mi.inflate(R.menu.save_book, menu);
         return true;
     }
+
     private void setFocusOnClick(View v){
         InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         assert imm != null;
@@ -539,7 +541,7 @@ public class SaveBook extends AppCompatActivity{
             newBitMapBookImage = (Bitmap) Objects.requireNonNull(imageUri).get("data");
             addImage.setImageBitmap(newBitMapBookImage);
             //manage request image from gallery
-        } else if ( requestCode==REQUEST_IMAGE_LIBRARY && resultCode == RESULT_OK) {
+        } else if (requestCode==REQUEST_IMAGE_LIBRARY && resultCode == RESULT_OK) {
             imagechanged=true;
             try{
                 final Uri imageUri = data.getData();
@@ -629,5 +631,40 @@ public class SaveBook extends AppCompatActivity{
                         Activity.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(
                 activity.getCurrentFocus().getWindowToken(), 0);
+    }
+
+    public void collapseToolbar(){
+        AppBarLayout appbarLayout = findViewById(R.id.appbar);
+        appbarLayout.setExpanded(false);
+    }
+
+    public void controlFocus(){
+        //
+        vTitle.setOnFocusChangeListener((arg0, hasfocus) -> {
+            if (hasfocus) {
+                collapseToolbar();
+            }
+        });
+        vAuthor.setOnFocusChangeListener((arg0, hasfocus) -> {
+            if (hasfocus) {
+                collapseToolbar();
+            }
+        });
+        vCategories.setOnFocusChangeListener((arg0, hasfocus) -> {
+            if (hasfocus) {
+                collapseToolbar();
+            }
+        });
+        vPublisher.setOnFocusChangeListener((arg0, hasfocus) -> {
+            if (hasfocus) {
+                collapseToolbar();
+            }
+        });
+        vDescription.setOnFocusChangeListener((arg0, hasfocus) -> {
+            if (hasfocus) {
+                collapseToolbar();
+            }
+        });
+        //
     }
 }

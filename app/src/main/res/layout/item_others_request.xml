@@ -10,12 +10,14 @@
 
         <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/userphoto"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_alignParentStart="true"
+            android:layout_centerInParent="true"
             android:layout_marginBottom="5dp"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="5dp"
+            android:baselineAlignBottom="false"
             tools:src="@drawable/default_picture" />
 
         <TextView
@@ -69,37 +71,38 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/userphoto"
-            android:orientation="horizontal">
+            android:layout_below="@+id/rate"
+            android:layout_marginBottom="5dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_toEndOf="@+id/userphoto"
+            android:orientation="horizontal"
+            android:weightSum="2">
 
                 <TextView
                     android:id="@+id/yes"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="4dp"
-                    android:layout_marginStart="16dp"
                     android:layout_weight="1"
                     android:background="@drawable/accept_button"
                     android:onClick="onClickYes"
-                    android:padding="3dp"
+                    android:padding="4dp"
                     android:text="ACCEPT"
                     android:textAlignment="center"
-                    android:textColor="@android:color/white"
-                    android:textStyle="bold" />
+                    android:textColor="@android:color/white" />
 
                 <TextView
                     android:id="@+id/no"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="16dp"
                     android:layout_marginStart="4dp"
                     android:layout_weight="1"
                     android:background="@drawable/deny_button"
                     android:onClick="onClickNo"
-                    android:padding="3dp"
+                    android:padding="4dp"
                     android:text="DENY"
-                    android:textAlignment="center"
-                    android:textStyle="bold" />
+                    android:textAlignment="center" />
 
         </LinearLayout>
 

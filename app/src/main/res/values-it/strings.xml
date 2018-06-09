@@ -118,7 +118,7 @@
     <string name = "write_review">Scrivi recensione:</string>
     <string name = "book">Libro: </string>
     <string name = "review">Recensione</string>
-    <string name = "reviews">Recensione/i</string>
+    <string name = "reviews">Recensioni</string>
     <string name="accepted">Accepted</string>
     <string name="insert">Inserisci</string>
     <string name="permission_denied">permesso camera rifiutato</string>
