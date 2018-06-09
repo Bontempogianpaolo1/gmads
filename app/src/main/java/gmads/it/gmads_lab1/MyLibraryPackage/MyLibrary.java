@@ -217,7 +217,7 @@ public class MyLibrary extends AppCompatActivity implements NavigationView.OnNav
      */
     private void initCollapsingToolbar() {
         final CollapsingToolbarLayout collapsingToolbar = findViewById(R.id.collapsing_toolbar);
-        collapsingToolbar.setTitle(" ");
+        collapsingToolbar.setTitle("My Library");
         AppBarLayout appBarLayout =  findViewById(R.id.appbar);
         appBarLayout.setExpanded(true);
 
@@ -232,10 +232,10 @@ public class MyLibrary extends AppCompatActivity implements NavigationView.OnNav
                     scrollRange = appBarLayout.getTotalScrollRange();
                 }
                 if (scrollRange + verticalOffset == 0) {
-                    collapsingToolbar.setTitle(getString(R.string.library));
+                    collapsingToolbar.setTitle("My Library");
                     isShow = true;
                 } else if (isShow) {
-                    collapsingToolbar.setTitle(" ");
+                    collapsingToolbar.setTitle("My Library ");
                     isShow = false;
                 }
             }

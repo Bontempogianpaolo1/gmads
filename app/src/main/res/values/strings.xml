@@ -47,9 +47,9 @@
     <string name="title_activity_save_book">SaveBook</string>
     <string name="addBook">Add Book</string>
     <string name="choose_country">Choose a Country</string>
-    <string name="MyBooks">My Books</string>
-    <string name="RentedBooks">Rented Books</string>
-    <string name="LentBooks">Lent Books</string>
+    <string name="MyBooks">Added</string>
+    <string name="RentedBooks">Rented</string>
+    <string name="LentBooks">Lent</string>
 
     <!--string for data not found-->
     <string name="notFound">Not Found</string>

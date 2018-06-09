@@ -363,7 +363,7 @@ public class  Home extends AppCompatActivity implements NavigationView.OnNavigat
 
     private void initCollapsingToolbar() {
         final CollapsingToolbarLayout collapsingToolbar = findViewById(R.id.collapsing_toolbar);
-        collapsingToolbar.setTitle(" ");
+        collapsingToolbar.setTitle("Book It Up");
         AppBarLayout appBarLayout = findViewById(R.id.appbar);
         appBarLayout.setExpanded(true);
 
@@ -378,10 +378,10 @@ public class  Home extends AppCompatActivity implements NavigationView.OnNavigat
                     scrollRange = appBarLayout.getTotalScrollRange();
                 }
                 if (scrollRange + verticalOffset == 0) {
-                    collapsingToolbar.setTitle("Home");
+                    collapsingToolbar.setTitle("Book It Up");
                     isShow = true;
                 } else if (isShow) {
-                    collapsingToolbar.setTitle(" ");
+                    collapsingToolbar.setTitle("Book It Up");
                     isShow = false;
                 }
             }
