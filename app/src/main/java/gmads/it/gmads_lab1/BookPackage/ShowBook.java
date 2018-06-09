@@ -128,6 +128,7 @@ public class ShowBook extends AppCompatActivity implements OnMapReadyCallback /*
     ImageView bookBackground;
     Button bReserveOrReturn;
     ProgressBar progressBar;
+    ProgressBar progressBarRequest;
     ViewPager viewPager;
     ViewPagerAdapter adapter;
     LinearLayout vOwnerInfo;
@@ -136,6 +137,7 @@ public class ShowBook extends AppCompatActivity implements OnMapReadyCallback /*
     TextView vOwnerRating;
     List<String> images=new ArrayList<>();
     GoogleMap mmap;
+    View vMap;
 
     private void findViews() {
         viewPager= findViewById(R.id.viewPager);
@@ -161,11 +163,13 @@ public class ShowBook extends AppCompatActivity implements OnMapReadyCallback /*
         bookBackground = findViewById(R.id.avatar_background);
         bReserveOrReturn = findViewById(R.id.reserveOrReturn);
         progressBar = findViewById(R.id.progress_bar);
+        progressBarRequest = findViewById(R.id.progress_bar_request);
 
         vOwnerInfo = findViewById(R.id.owner_info);
         vOwnerName = findViewById(R.id.owner_name);
         vOwnerImage = findViewById(R.id.owner_image);
         vOwnerRating = findViewById(R.id.owner_rating);
+        vMap = findViewById(R.id.map);
     }
 
     @Override
@@ -301,6 +305,7 @@ public class ShowBook extends AppCompatActivity implements OnMapReadyCallback /*
     private void getIsMyBook(){
         if(book.getOwner().equals(FirebaseManagement.getUser().getUid())){
             isMyBook = true;
+            vMap.setVisibility(View.GONE);
             bReserveOrReturn.setText(R.string.returnBook);
             if(book.getStato() == AppConstants.NOT_AVAILABLE){
                 bReserveOrReturn.setVisibility(View.VISIBLE);
@@ -360,7 +365,9 @@ public class ShowBook extends AppCompatActivity implements OnMapReadyCallback /*
 
                                 vOwnerName.setText(book.getNomeproprietario());
 
-                                vOwnerRating.setText(String.valueOf(profile.getValutation()));
+                                if(profile.getNrates() > 0) {
+                                    vOwnerRating.setText(String.valueOf(profile.getValutation()));
+                                }
                             }
 
 
@@ -762,6 +769,10 @@ public class ShowBook extends AppCompatActivity implements OnMapReadyCallback /*
 
                 if(book.getStato() == AppConstants.AVAILABLE && !alreadyRequested[0]) {
                     try {
+
+                        bReserveOrReturn.setVisibility(View.GONE);
+                        progressBarRequest.setVisibility(View.VISIBLE);
+
                         FirebaseManagement.sendMessage(getString(R.string.notify_new_request),FirebaseManagement.getUser().getDisplayName(),book.getOwner(),1);
 
                         String rId = FirebaseManagement.getDatabase().getReference().child("requests").push().getKey();
@@ -789,8 +800,7 @@ public class ShowBook extends AppCompatActivity implements OnMapReadyCallback /*
                                 if(completed[0]) {
                                     FirebaseManagement.getDatabase().getReference().child("requests").child(rId).setValue(request);
                                 }
-                            }
-                            else{
+                            } else{
                                 Toast.makeText(getApplicationContext(), "Error in algolia occurred", Toast.LENGTH_SHORT).show();
                                 exception.getMessage();
                                 Log.d("error",exception.toString());
@@ -798,9 +808,11 @@ public class ShowBook extends AppCompatActivity implements OnMapReadyCallback /*
                                 return;
                             }
                             if(completed[0]) {
-                                Toast.makeText(getApplicationContext(), "Book added", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), R.string.request_sent, Toast.LENGTH_SHORT).show();
+                                progressBarRequest.setVisibility(View.GONE);
                                 bReserveOrReturn.setEnabled(false);
                             }
+                            
                         });
 
                     }catch (Exception e2){

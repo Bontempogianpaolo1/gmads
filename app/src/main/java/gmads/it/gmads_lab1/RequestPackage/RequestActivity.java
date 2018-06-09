@@ -96,12 +96,12 @@ public class RequestActivity extends AppCompatActivity{
 
     public void onClickYes(View v){
 
-        Toast.makeText(getApplicationContext(), "Richiesta accettata",Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), R.string.request_accepted,Toast.LENGTH_LONG).show();
     }
 
     public void onClickNo(View v){
 
-        Toast.makeText(getApplicationContext(), "Richiesta rifiutata",Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), R.string.request_refused,Toast.LENGTH_LONG).show();
     }
 
     @Override

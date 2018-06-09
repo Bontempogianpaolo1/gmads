@@ -42,7 +42,7 @@
             android:drawableStart="@drawable/ic_star_black_24dp"
             android:ellipsize="end"
             android:maxLines="2"
-            android:text="4.5"
+            android:text="-"
             android:layout_toEndOf="@id/userphoto"
             android:textSize="16sp" />
 
