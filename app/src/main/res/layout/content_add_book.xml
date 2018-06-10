@@ -41,20 +41,32 @@
                 android:layout_alignParentTop="false"
                 android:layout_below="@+id/scan1"
                 android:layout_centerHorizontal="true"
+                android:layout_marginBottom="15dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/roundedbutton"
                 android:text="@string/insert"
                 android:textColor="#FFFFFF"
                 android:textSize="@dimen/button_text_size" />
 
+            <View
+                android:id="@+id/line1"
+                android:layout_width="wrap_content"
+                android:layout_height="1dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="15dp"
+                android:layout_marginTop="15dp"
+                android:layout_below="@id/insert"
+                android:background="@color/light_gray" />
+
             <TextView
                 android:id="@+id/scan2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="false"
-                android:layout_below="@id/insert"
+                android:layout_below="@id/line1"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="15dp"
                 android:text="@string/scan2"
                 android:textAlignment="center"
                 android:textSize="@dimen/label" />
@@ -63,11 +75,11 @@
                 android:id="@+id/b_next"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
+                android:layout_alignParentEnd="true"
                 android:layout_alignTop="@id/et_isbn"
                 android:layout_below="@id/scan2"
                 android:layout_marginEnd="16dp"
-                android:layout_alignParentEnd="true"
-                android:background="@color/colorPrimaryDark"
+                android:background="@color/colorAccent"
                 android:contentDescription="@string/selectImage"
                 app:srcCompat="@android:drawable/ic_menu_search" />
 
@@ -77,22 +89,34 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="false"
                 android:layout_below="@+id/scan2"
-                android:layout_marginStart="16dp"
-                android:layout_toStartOf="@+id/b_next"
                 android:layout_centerInParent="false"
+                android:layout_marginBottom="15dp"
+                android:layout_marginStart="16dp"
                 android:layout_marginTop="10dp"
+                android:layout_toStartOf="@+id/b_next"
                 android:ems="10"
                 android:hint="ISBN"
                 android:inputType="number" />
+
+            <View
+                android:id="@+id/line2"
+                android:layout_width="wrap_content"
+                android:layout_height="1dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="15dp"
+                android:layout_marginTop="15dp"
+                android:layout_below="@id/et_isbn"
+                android:background="@color/light_gray" />
 
             <TextView
                 android:id="@+id/scan3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="false"
-                android:layout_below="@id/et_isbn"
+                android:layout_below="@+id/line2"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="15dp"
                 android:text="@string/scan3"
                 android:textSize="@dimen/label" />
 

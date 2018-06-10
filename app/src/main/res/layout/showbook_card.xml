@@ -12,6 +12,17 @@
         android:orientation="vertical"
         android:paddingBottom="16dp">
 
+        <Button
+            android:id="@+id/reserveOrReturn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:background="@color/colorAccent"
+            android:enabled="false"
+            android:text="@string/reserve"
+            android:textColor="@color/white"
+            android:visibility="gone" />
+
         <TextView
             android:id="@+id/title"
             android:layout_width="match_parent"

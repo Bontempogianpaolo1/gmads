@@ -36,9 +36,9 @@
     <string name="saveProfile">Salva Profilo</string>
     <string name="addBook">Aggiungi Libro</string>
     <string name="choose_country">Scegli una nazione</string>
-    <string name="MyBooks">I Miei libri</string>
-    <string name="RentedBooks">Libri Affittati</string>
-    <string name="LentBooks">Libri Prestati</string>
+    <string name="MyBooks">Aggiunti</string>
+    <string name="RentedBooks">Affittati</string>
+    <string name="LentBooks">Prestati</string>
 
 
     <!--stringhe per dati non trovati-->
@@ -119,7 +119,7 @@
     <string name = "write_review">Scrivi recensione:</string>
     <string name = "book">Libro: </string>
     <string name = "review">Recensione</string>
-    <string name = "reviews">Recensione/i</string>
+    <string name = "reviews">Recensioni</string>
     <string name="accepted">Accepted</string>
     <string name="insert">Inserisci</string>
     <string name="permission_denied">permesso camera rifiutato</string>
