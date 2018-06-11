@@ -14,13 +14,13 @@
     <application
         android:allowBackup="true"
         android:fullBackupContent="true"
-        android:icon="@mipmap/my_launcher_overbooking"
-        android:roundIcon="@mipmap/my_launcher_overbooking_layer"
+        android:icon="@mipmap/ic_launcher_bookitapp_round"
+        android:roundIcon="@mipmap/ic_launcher_bookitapp_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
             android:name=".Login"
-            android:label="Overbooking"
+            android:label="BookItApp"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -101,7 +101,7 @@
         <!-- FCM -->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
-            android:resource="@drawable/ic_add_book_24dp" />
+            android:resource="@mipmap/ic_launcher_bookitapp_final_round" />
 
         <service android:name=".Chat.service.MyFirebaseMessagingService">
             <intent-filter>
@@ -113,10 +113,6 @@
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
-        <service
-            android:name=".Service.NotificationService"
-            android:enabled="true"
-            android:exported="true"></service>
     </application>
 
 </manifest>
