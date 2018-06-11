@@ -74,7 +74,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.MyViewHo
         FirebaseManagement.getDatabase().getReference()
                 .child("books")
                 .child(request.getbId())
-                .addValueEventListener(new ValueEventListener() {
+                .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         Book book = dataSnapshot.getValue(Book.class);

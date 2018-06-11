@@ -334,7 +334,7 @@ public class ShowBook extends AppCompatActivity implements OnMapReadyCallback /*
             FirebaseManagement.getDatabase().getReference()
                     .child("users")
                     .child(book.getOwner())
-                    .addValueEventListener(new ValueEventListener() {
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
 
