@@ -35,7 +35,7 @@ class MyNotificationManager {
         var builder = NotificationCompat.Builder(ctx, channelId)
 
         var mNotification = builder
-                .setSmallIcon(R.drawable.ic_add_book_24dp)
+                .setSmallIcon(android.R.drawable.sym_action_chat)
                 .setAutoCancel(true)
                 .setContentIntent(pendingIntent)
                 .setContentTitle(from)
