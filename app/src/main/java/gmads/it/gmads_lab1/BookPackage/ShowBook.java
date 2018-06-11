@@ -334,7 +334,7 @@ public class ShowBook extends AppCompatActivity implements OnMapReadyCallback /*
             FirebaseManagement.getDatabase().getReference()
                     .child("users")
                     .child(book.getOwner())
-                    .addValueEventListener(new ValueEventListener() {
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
 
@@ -497,7 +497,7 @@ public class ShowBook extends AppCompatActivity implements OnMapReadyCallback /*
                                 vAuthor.setText(authors.toString());
                                 //}
                                 //owner
-                                vOwner.setText(book.getNomeproprietario());
+                                //vOwner.setText(book.getNomeproprietario());
                                 //categorie Cé SEMPRE
                                 c = 0;
 

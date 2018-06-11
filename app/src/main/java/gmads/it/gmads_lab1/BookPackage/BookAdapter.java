@@ -84,7 +84,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
                 .child("users")
                 .child(FirebaseManagement.getUser().getUid())
                 .child("myRequests")
-                .addValueEventListener(new ValueEventListener() {
+                .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         Iterable<DataSnapshot> dataList = dataSnapshot.getChildren();
@@ -115,10 +115,10 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
         holder.distance.setText(String.valueOf(book.getDistance()/1000));
         holder.distance.append(" Km");
         if(book.getStato()== AppConstants.AVAILABLE){
-            holder.status.setImageDrawable(mContext.getDrawable(android.R.drawable.presence_online));
+            holder.status.getDrawable().setTint(mContext.getResources().getColor(R.color.viewfinder_border));
         }
         else{
-            holder.status.setImageDrawable(mContext.getDrawable(android.R.drawable.presence_busy));
+            holder.status.getDrawable().setTint(mContext.getResources().getColor(R.color.viewfinder_laser));
         }
         //rating
         // loading album cover using Glide library

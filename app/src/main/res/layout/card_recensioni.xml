@@ -36,6 +36,7 @@
         android:drawableStart="@drawable/ic_star_black_24dp"
         android:paddingStart="8dp"
         android:text="2.5"
+        android:drawableTint="@color/colorAccent"
         android:textSize="18sp" />
 
     <TextView

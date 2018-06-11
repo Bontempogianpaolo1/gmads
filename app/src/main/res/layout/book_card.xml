@@ -75,12 +75,13 @@
 
             <ImageView
                 android:id="@+id/status"
-                android:layout_width="35dp"
-                android:layout_height="36dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentTop="true"
                 android:layout_margin="5dp"
-                card_view:srcCompat="@android:drawable/presence_online" />
+                android:tint="@color/viewfinder_border"
+                card_view:srcCompat="@drawable/ic_round_fiber_manual_record_24px" />
 
         </RelativeLayout>
 
