@@ -126,9 +126,18 @@ public class AddBook extends AppCompatActivity
                     //navName.append(" " + myuser.getSurname());
                     navMail.setText(myuser.getEmail());
                     if(myuser.isReqNotified()){
-                        navReqNotification.setVisibility(View.VISIBLE);
+                        //per ricezione notifiche
+                        Menu menu = navigationView.getMenu();
+                        MenuItem item = menu.getItem(4);
+                        item.setIcon(R.drawable.ic_round_notification_important_24px);
+                        //
+                        //navReqNotification.setVisibility(View.VISIBLE);
                     } else {
-                        navReqNotification.setVisibility(View.GONE);
+                        Menu menu = navigationView.getMenu();
+                        MenuItem item = menu.getItem(4);
+                        //item.setIcon(R.drawable.ic_round_notifications_24px);
+                        item.setIcon(R.drawable.ic_round_notifications_24px);
+                        //navReqNotification.setVisibility(View.GONE);
                     }
                     //setto foto
                     if (Objects.requireNonNull(myuser).getImage() != null) {

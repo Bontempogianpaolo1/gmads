@@ -178,9 +178,19 @@ attivita per vedere la lista delle chat
                     navName?.text = myuser.getName()
                     navMail?.text = myuser.getEmail()
                     if (myuser.isReqNotified()) {
-                        navReqNotification?.setVisibility(View.VISIBLE)
+                        //per ricezione notifiche
+                        val menu = navigationView.getMenu()
+                        val item = menu.getItem(4)
+                        item.setIcon(R.drawable.ic_round_notification_important_24px)
+                        //
+                        //navReqNotification.setVisibility(View.VISIBLE);
                     } else {
-                        navReqNotification?.setVisibility(View.GONE)
+                        val menu = navigationView.getMenu()
+                        val item = menu.getItem(4)
+                        //item.setIcon(R.drawable.ic_round_notifications_24px);
+                        item.setIcon(R.drawable.ic_round_notifications_24px)
+                        //navReqNotification.setVisibility(View.GONE);
+                    }
                     }
                     //setto foto
                     if (Objects.requireNonNull(myuser).getImage() != null) {
