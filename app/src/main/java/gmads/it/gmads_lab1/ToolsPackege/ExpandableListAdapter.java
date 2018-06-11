@@ -94,7 +94,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                         .getStorage()
                         .getReference()
                         .child("users")
-                        .child(child.getOwnerId())
+                        .child(child.getRenterId())
                         .child("profileimage.jpg");
         /*
         GlideApp.with(context)
