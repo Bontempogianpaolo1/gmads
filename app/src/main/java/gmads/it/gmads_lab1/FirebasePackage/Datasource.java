@@ -99,7 +99,7 @@ public class Datasource {
                     }
                 };
 
-        profileRef.addListenerForSingleValueEvent(profileListener);
+        profileRef.addValueEventListener(profileListener);
 
         if(myProfileBitImage == null && myProfileImage != null) {
             myProfileBitImage = BitmapFactory.decodeFile(myProfileImage.getPath());

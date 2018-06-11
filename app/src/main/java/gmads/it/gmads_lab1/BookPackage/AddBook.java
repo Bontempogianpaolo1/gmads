@@ -168,7 +168,7 @@ public class AddBook extends AppCompatActivity
             public void onCancelled(DatabaseError databaseError) {
             }
         };
-        mProfileReference.addListenerForSingleValueEvent(postListener);
+        mProfileReference.addValueEventListener(postListener);
         mProfileListener = postListener;
     }
     public void onNextClick(){
