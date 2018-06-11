@@ -87,12 +87,11 @@ public class  Home extends AppCompatActivity implements NavigationView.OnNavigat
         appbarLayout = findViewById(R.id.appbar);
         setSupportActionBar(toolbar);
         setNavViews();
-
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         initCollapsingToolbar();
-
+       
         pager= findViewById(R.id.viewPager);
         FragmentViewPagerAdapter vpadapter= new FragmentViewPagerAdapter(getSupportFragmentManager());
         vpadapter.addFragment(tab1);
@@ -367,7 +366,7 @@ public class  Home extends AppCompatActivity implements NavigationView.OnNavigat
 
     private void initCollapsingToolbar() {
         final CollapsingToolbarLayout collapsingToolbar = findViewById(R.id.collapsing_toolbar);
-        collapsingToolbar.setTitle("Book It Up");
+        collapsingToolbar.setTitle("Home");
         AppBarLayout appBarLayout = findViewById(R.id.appbar);
         appBarLayout.setExpanded(true);
 
@@ -382,10 +381,10 @@ public class  Home extends AppCompatActivity implements NavigationView.OnNavigat
                     scrollRange = appBarLayout.getTotalScrollRange();
                 }
                 if (scrollRange + verticalOffset == 0) {
-                    collapsingToolbar.setTitle("Book It Up");
+                    collapsingToolbar.setTitle("Home");
                     isShow = true;
                 } else if (isShow) {
-                    collapsingToolbar.setTitle("Book It Up");
+                    collapsingToolbar.setTitle("Home");
                     isShow = false;
                 }
             }
@@ -412,7 +411,7 @@ public class  Home extends AppCompatActivity implements NavigationView.OnNavigat
         navName =  headerView.findViewById(R.id.navName);
         navMail =  headerView.findViewById(R.id.navMail);
         navImage =  headerView.findViewById(R.id.navImage);
-        navReqNotification = headerView.findViewById(R.id.req_notification);
+        //navReqNotification = headerView.findViewById(R.id.req_notification);
         headerView.setBackgroundResource(R.color.colorPrimaryDark);
 
         if(profile!=null) {
@@ -442,9 +441,18 @@ public class  Home extends AppCompatActivity implements NavigationView.OnNavigat
                             navName.setText(profile.getName());
                             navMail.setText(profile.getEmail());
                             if(profile.isReqNotified()){
-                                navReqNotification.setVisibility(View.VISIBLE);
+                                //per ricezione notifiche
+                                Menu menu = navigationView.getMenu();
+                                MenuItem item = menu.getItem(4);
+                                item.setIcon(R.drawable.ic_round_notification_important_24px);
+                                //
+                                //navReqNotification.setVisibility(View.VISIBLE);
                             } else {
-                                navReqNotification.setVisibility(View.GONE);
+                                Menu menu = navigationView.getMenu();
+                                MenuItem item = menu.getItem(4);
+                                //item.setIcon(R.drawable.ic_round_notifications_24px);
+                                item.setIcon(R.drawable.round_notification);
+                                //navReqNotification.setVisibility(View.GONE);
                             }
 
                             if (profile.getImage() != null) {
@@ -480,7 +488,6 @@ public class  Home extends AppCompatActivity implements NavigationView.OnNavigat
                         // Getting Post failed, log a message
                     }
                 });
-
     }
 
 
@@ -499,7 +506,6 @@ public class  Home extends AppCompatActivity implements NavigationView.OnNavigat
             }
         }
     }
-
 
     private void getStartingHomeBooks(){
 
