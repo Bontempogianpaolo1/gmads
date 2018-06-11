@@ -219,7 +219,7 @@ attivita per vedere la lista delle chat
             }
             override fun onCancelled(databaseError: DatabaseError) {}
         }
-        mProfileReference?.addListenerForSingleValueEvent(postListener)
+        mProfileReference?.addValueEventListener(postListener)
         mProfileListener = postListener
 
     }

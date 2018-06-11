@@ -90,7 +90,7 @@ public class BookLibraryAdapter extends RecyclerView.Adapter<BookLibraryAdapter.
                 .child("users")
                 .child(FirebaseManagement.getUser().getUid())
                 .child("myRequests")
-                .addListenerForSingleValueEvent(new ValueEventListener() {
+                .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         Iterable<DataSnapshot> dataList = dataSnapshot.getChildren();

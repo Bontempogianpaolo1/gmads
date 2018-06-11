@@ -18,7 +18,7 @@ public class ProfileInfoSync {
 
     public void loadProfileInfo(){
         FirebaseManagement.getDatabase().getReference().child("users").child(FirebaseManagement.getUser().getUid())
-                .addListenerForSingleValueEvent(new ValueEventListener() {
+                .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         myProfile = dataSnapshot.getValue(Profile.class);
