@@ -497,7 +497,7 @@ public class ShowBook extends AppCompatActivity implements OnMapReadyCallback /*
                                 vAuthor.setText(authors.toString());
                                 //}
                                 //owner
-                                vOwner.setText(book.getNomeproprietario());
+                                //vOwner.setText(book.getNomeproprietario());
                                 //categorie Cé SEMPRE
                                 c = 0;
 

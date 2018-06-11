@@ -30,6 +30,7 @@ import gmads.it.gmads_lab1.HomePackage.*
 import gmads.it.gmads_lab1.BookPackage.*
 import gmads.it.gmads_lab1.FirebasePackage.FirebaseManagement
 import gmads.it.gmads_lab1.MyLibraryPackage.MyLibrary
+import gmads.it.gmads_lab1.R.id.drawer_layout
 import kotlinx.android.synthetic.main.activity_chat.*
 import kotlinx.android.synthetic.main.activity_chat_list.*
 import kotlinx.android.synthetic.main.chat_list.*
@@ -179,18 +180,17 @@ attivita per vedere la lista delle chat
                     navMail?.text = myuser.getEmail()
                     if (myuser.isReqNotified()) {
                         //per ricezione notifiche
-                        val menu = navigationView.getMenu()
-                        val item = menu.getItem(4)
-                        item.setIcon(R.drawable.ic_round_notification_important_24px)
+                        val menu = navigationView?.getMenu()
+                        val item = menu?.getItem(4)
+                        item?.setIcon(R.drawable.ic_round_notification_important_24px)
                         //
                         //navReqNotification.setVisibility(View.VISIBLE);
                     } else {
-                        val menu = navigationView.getMenu()
-                        val item = menu.getItem(4)
+                        val menu = navigationView?.getMenu()
+                        val item = menu?.getItem(4)
                         //item.setIcon(R.drawable.ic_round_notifications_24px);
-                        item.setIcon(R.drawable.ic_round_notifications_24px)
+                        item?.setIcon(R.drawable.ic_round_notifications_24px)
                         //navReqNotification.setVisibility(View.GONE);
-                    }
                     }
                     //setto foto
                     if (Objects.requireNonNull(myuser).getImage() != null) {
