@@ -48,7 +48,7 @@
     <string name="addBook">Add Book</string>
     <string name="choose_country">Choose a Country</string>
     <string name="MyBooks">Added</string>
-    <string name="RentedBooks">Rented</string>
+    <string name="RentedBooks">Borrowed</string>
     <string name="LentBooks">Lent</string>
 
     <!--string for data not found-->
