@@ -11,10 +11,6 @@ import gmads.it.gmads_lab1.R
 import android.media.RingtoneManager
 
 
-/**
- * Created by giorgiocrepaldi on 19/05/18.
- */
-
 class MyNotificationManager {
     val ctx : Context
     val NOTIFICATION_ID = 254

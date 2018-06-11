@@ -112,7 +112,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         FirebaseManagement.getDatabase().getReference()
                 .child("users")
                 .child(child.getRenterId())
-                .addValueEventListener(new ValueEventListener() {
+                .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         Profile profile = dataSnapshot.getValue(Profile.class);
