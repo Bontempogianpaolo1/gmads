@@ -91,7 +91,7 @@ public class  Home extends AppCompatActivity implements NavigationView.OnNavigat
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         initCollapsingToolbar();
-       
+
         pager= findViewById(R.id.viewPager);
         FragmentViewPagerAdapter vpadapter= new FragmentViewPagerAdapter(getSupportFragmentManager());
         vpadapter.addFragment(tab1);
@@ -451,7 +451,7 @@ public class  Home extends AppCompatActivity implements NavigationView.OnNavigat
                                 Menu menu = navigationView.getMenu();
                                 MenuItem item = menu.getItem(4);
                                 //item.setIcon(R.drawable.ic_round_notifications_24px);
-                                item.setIcon(R.drawable.round_notification);
+                                item.setIcon(R.drawable.ic_round_notifications_24px);
                                 //navReqNotification.setVisibility(View.GONE);
                             }
 
