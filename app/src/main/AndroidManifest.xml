@@ -15,7 +15,7 @@
         android:allowBackup="true"
         android:fullBackupContent="true"
         android:icon="@mipmap/my_launcher_overbooking"
-        android:roundIcon="@mipmap/my_launcher_overbooking_round"
+        android:roundIcon="@android:drawable/sym_action_chat"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity

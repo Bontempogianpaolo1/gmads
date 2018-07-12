@@ -38,6 +38,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.maps.CameraUpdate;
@@ -57,6 +58,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.gson.Gson;
 import java.io.InputStream;
+import java.lang.ref.Reference;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -342,21 +344,16 @@ public class ShowBook extends AppCompatActivity implements OnMapReadyCallback /*
 
                             if(profile != null) {
 
-                                FirebaseManagement.getStorage().getReference()
+                                StorageReference sr= FirebaseManagement.getStorage().getReference()
                                         .child("users")
                                         .child(book.getOwner())
-                                        .child("profileimage.jpg")
-                                        .getDownloadUrl()
-                                        .addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                            @Override
-                                            public void onSuccess(Uri uri) {
+                                        .child("profileimage.jpg");
+                                RequestOptions requestOptions = new RequestOptions();
+                                requestOptions.placeholder(R.drawable.default_book);
+                                requestOptions.error(R.drawable.default_book);
+                                //if(book.getUrlimage()!=null && book.getUrlimage().length()!=0){
+                                Glide.with(getApplicationContext()).setDefaultRequestOptions(requestOptions).load(sr).into(vOwnerImage);
 
-                                                GlideApp.with(cw)
-                                                        .load(profile.getImage())
-                                                        .into(vOwnerImage);
-                                            }
-
-                                        });
 
                                 Intent intent = new Intent(cw, ShowUserProfile.class);
                                 intent.putExtra("userId", book.getOwner());

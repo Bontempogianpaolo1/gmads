@@ -80,9 +80,13 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.MyViewHo
                         Book book = dataSnapshot.getValue(Book.class);
 
                         if(book != null){
-                            GlideApp.with(mContext)
-                                    .load(book.getUrlimage())
-                                    .into(holder.bookImage);
+                            try {
+                                GlideApp.with(mContext)
+                                        .load(book.getUrlimage())
+                                        .into(holder.bookImage);
+                            }catch(Exception e){
+                                e.printStackTrace();
+                            }
                         }
                     }
 

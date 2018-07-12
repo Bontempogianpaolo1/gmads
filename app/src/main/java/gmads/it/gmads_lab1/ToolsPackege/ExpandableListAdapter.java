@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -259,6 +260,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                                                             if(value!=null) {
                                                                 value = value + 1;
                                                                 dataSnapshot.getRef().setValue(value);
+                                                                Log.d("Status",context.getResources().getString(R.string.notify_accepted_request));
                                                                 FirebaseManagement.sendMessage(context.getResources().getString(R.string.notify_accepted_request),FirebaseManagement.getUser().getDisplayName(),book.getHolder(),1);
                                                             }else{
                                                                 value = 1L;
@@ -318,6 +320,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     }
 
     private void onClickNo( Request request ){
+        Log.d("Status",context.getResources().getString(R.string.notify_refused_request));
         FirebaseManagement.sendMessage(context.getResources().getString(R.string.notify_refused_request),FirebaseManagement.getUser().getDisplayName(),request.getRenterId(),1);
 
         FirebaseManagement.getDatabase().getReference()

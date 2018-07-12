@@ -2,6 +2,8 @@ package gmads.it.gmads_lab1.Chat.item;
 
 import android.content.Context
 import android.view.View
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import gmads.it.gmads_lab1.R
 import gmads.it.gmads_lab1.Chat.glide.*
 import gmads.it.gmads_lab1.UserPackage.Profile
@@ -27,9 +29,9 @@ class PersonItem(val person: Profile,
             }
         //viewHolder.textView_bio.text = person.description
         if (person.image != null)
-                GlideApp.with(context)
+
+                Glide.with(context)
                 .load(person.image)
-                .placeholder(R.drawable.default_picture)
                 .into(viewHolder.imageView_profile_picture)
         else
                 GlideApp.with(context)
